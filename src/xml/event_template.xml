@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EVENTS>
+	<ORLANDOHEADER TYPE="TEXT">
+		<FILEDESC>
+			<TITLESTMT>
+				<DOCTITLE>Sample Document Title</DOCTITLE>
+			</TITLESTMT>
+			<PUBLICATIONSTMT>
+				<P>Created from original research by members of CWRC/CSÉC unless otherwise
+					noted.</P>
+			</PUBLICATIONSTMT>
+			<SOURCEDESC/>
+		</FILEDESC>
+	</ORLANDOHEADER>
+	<DIV0>
+		<DIV1>
+			<HEADING>Sample Event Title</HEADING>
+			<CHRONEVENT>
+				<CHRONSTRUCT>
+					<DATE>Insert Event Date</DATE>
+					<CHRONPROSE>Short event description</CHRONPROSE>
+				</CHRONSTRUCT>
+				<SHORTPROSE>
+					<P>Extended event description. <BIBCITS>
+							<BIBCIT>Sample parenthetical citation</BIBCIT>
+							<BIBCIT>Sample parenthetical citation</BIBCIT>
+						</BIBCITS></P>
+				</SHORTPROSE>
+			</CHRONEVENT>
+		</DIV1>
+		<DIV1>
+			<HEADING>Sample Event: Publication of <TITLE TITLETYPE="MONOGRAPHIC">Le Magasin des
+					enfants</TITLE></HEADING>
+			<CHRONEVENT>
+				<CHRONSTRUCT CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="PERIOD" RESP="SIB">
+					<DATE CALENDAR="NEWSTYLE" CERTAINTY="CERT">1756</DATE>
+					<CHRONPROSE><NAME STANDARD="Le Prince de Beaumont, Jeanne">Jeanne Le Prince de
+							Beaumont </NAME> published <TITLE TITLETYPE="MONOGRAPHIC">Le Magasin des
+							enfants</TITLE>, a collection containing a first influential and
+						literary formulation of the popular <TGENRE GENRENAME="FAIRYTALE">fairy story </TGENRE><TITLE TITLETYPE="ANALYTIC">Beauty and the Beast</TITLE>.<BIBCITS>
+							<BIBCIT DBREF="65785" PLACEHOLDER="Zipes 125-6">125-6</BIBCIT>
+						</BIBCITS></CHRONPROSE>
+				</CHRONSTRUCT>
+				<SHORTPROSE>
+					<P>The origins of this story lie in folk-tale and in the second-century text
+							<TITLE TITLETYPE="MONOGRAPHIC">The Golden Ass</TITLE> by
+							<NAME>Apuleius</NAME>. Its outlines are legible in several tales by
+							<NAME>Marie-Catherine d'Aulnoy</NAME>. It became a drama by
+							<NAME>Stéphanie-Félicité de Genlis </NAME> in 1785 and an opera by <NAME
+							STANDARD="Marmontel, Jean-Francois">Marmontel</NAME> and <NAME
+							STANDARD="Grtry, Andr">Grétry</NAME> in 1788.<BIBCITS>
+							<BIBCIT PLACEHOLDER="Zipe 128-9" DBREF="65785">128-9</BIBCIT>
+						</BIBCITS></P>
+				</SHORTPROSE>
+			</CHRONEVENT>
+		</DIV1>
+	</DIV0>
+</EVENTS>

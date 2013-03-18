@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:id="struct_10" xmlns="http://www.tei-c.org/ns/1.0">
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:w="http://cwrctc.artsrn.ualberta.ca/#">
+<rdf:Description rdf:about="http://localhost:8080/editor/documents/null">
+	<w:mode>0</w:mode>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_10">
+	<w:id type="offset">struct_10</w:id>
+	<w:offset type="offset">0</w:offset>
+	<w:length type="offset">375</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_11">
+	<w:id type="offset">struct_11</w:id>
+	<w:offset type="offset">0</w:offset>
+	<w:length type="offset">111</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_12">
+	<w:id type="offset">struct_12</w:id>
+	<w:offset type="offset">0</w:offset>
+	<w:length type="offset">109</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_13">
+	<w:id type="offset">struct_13</w:id>
+	<w:offset type="offset">0</w:offset>
+	<w:length type="offset">23</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_14">
+	<w:id type="offset">struct_14</w:id>
+	<w:offset type="offset">0</w:offset>
+	<w:length type="offset">21</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_15">
+	<w:id type="offset">struct_15</w:id>
+	<w:offset type="offset">21</w:offset>
+	<w:length type="offset">2</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_16">
+	<w:id type="offset">struct_16</w:id>
+	<w:offset type="offset">21</w:offset>
+	<w:length type="offset">0</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_17">
+	<w:id type="offset">struct_17</w:id>
+	<w:offset type="offset">21</w:offset>
+	<w:length type="offset">80</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_18">
+	<w:id type="offset">struct_18</w:id>
+	<w:offset type="offset">21</w:offset>
+	<w:length type="offset">78</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_19">
+	<w:id type="offset">struct_19</w:id>
+	<w:offset type="offset">99</w:offset>
+	<w:length type="offset">263</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_20">
+	<w:id type="offset">struct_20</w:id>
+	<w:offset type="offset">99</w:offset>
+	<w:length type="offset">261</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_21">
+	<w:id type="offset">struct_21</w:id>
+	<w:offset type="offset">99</w:offset>
+	<w:length type="offset">259</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_22">
+	<w:id type="offset">struct_22</w:id>
+	<w:offset type="offset">99</w:offset>
+	<w:length type="offset">21</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_23">
+	<w:id type="offset">struct_23</w:id>
+	<w:offset type="offset">99</w:offset>
+	<w:length type="offset">19</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_24">
+	<w:id type="offset">struct_24</w:id>
+	<w:offset type="offset">118</w:offset>
+	<w:length type="offset">134</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_25">
+	<w:id type="offset">struct_25</w:id>
+	<w:offset type="offset">118</w:offset>
+	<w:length type="offset">50</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_26">
+	<w:id type="offset">struct_26</w:id>
+	<w:offset type="offset">118</w:offset>
+	<w:length type="offset">48</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_27">
+	<w:id type="offset">struct_27</w:id>
+	<w:offset type="offset">166</w:offset>
+	<w:length type="offset">42</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_28">
+	<w:id type="offset">struct_28</w:id>
+	<w:offset type="offset">166</w:offset>
+	<w:length type="offset">40</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_29">
+	<w:id type="offset">struct_29</w:id>
+	<w:offset type="offset">206</w:offset>
+	<w:length type="offset">38</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_30">
+	<w:id type="offset">struct_30</w:id>
+	<w:offset type="offset">237</w:offset>
+	<w:length type="offset">6</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="ent_36">
+	<w:id type="offset">ent_36</w:id>
+	<w:offset type="offset">237</w:offset>
+	<w:length type="offset">6</w:length>
+	<w:entity type="offset">true</w:entity>
+	<w:type type="props">person</w:type>
+	<w:content type="props">Miquel</w:content>
+	<w:term type="info">Miquel Martí i Pol, 1929-2003</w:term>
+	<w:viafid type="info">7399648</w:viafid>
+	<w:nkc type="info">jn20010602169</w:nkc>
+	<w:bne type="info">xx852978</w:bne>
+	<w:bnf type="info">11986926</w:bnf>
+	<w:selibr type="info">74690</w:selibr>
+	<w:dnb type="info">119317346</w:dnb>
+	<w:lc type="info">n79063260</w:lc>
+	<w:certainty type="info">definite</w:certainty>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_31">
+	<w:id type="offset">struct_31</w:id>
+	<w:offset type="offset">244</w:offset>
+	<w:length type="offset">21</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_32">
+	<w:id type="offset">struct_32</w:id>
+	<w:offset type="offset">265</w:offset>
+	<w:length type="offset">78</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_33">
+	<w:id type="offset">struct_33</w:id>
+	<w:offset type="offset">265</w:offset>
+	<w:length type="offset">44</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_34">
+	<w:id type="offset">struct_34</w:id>
+	<w:offset type="offset">309</w:offset>
+	<w:length type="offset">31</w:length>
+</rdf:Description>
+<rdf:Description rdf:ID="struct_35">
+	<w:id type="offset">struct_35</w:id>
+	<w:offset type="offset">309</w:offset>
+	<w:length type="offset">29</w:length>
+</rdf:Description>
+</rdf:RDF>
+<teiHeader xml:id="struct_11"> <fileDesc xml:id="struct_12"> <titleStmt xml:id="struct_13"> <title xml:id="struct_14">Sample Document Title</title> </titleStmt> <publicationStmt xml:id="struct_15"> <p xml:id="struct_16"></p> </publicationStmt> <sourceDesc xml:id="struct_17" sameAs="http://www.cwrc.ca"> <p xml:id="struct_18">Created from original research by members of CWRC/CSÉC unless otherwise noted.</p> </sourceDesc> </fileDesc> </teiHeader> <text xml:id="struct_19"> <body xml:id="struct_20"> <div xml:id="struct_21" type="letter"> <head xml:id="struct_22"> <title xml:id="struct_23">Sample Letter Title</title> </head> <opener xml:id="struct_24"> <note xml:id="struct_25" type="setting"> <p xml:id="struct_26">Some opening note describing the writing setting</p> </note> <dateline xml:id="struct_27"> <date xml:id="struct_28">Some date (set date value in attribute).</date> </dateline> <salute xml:id="struct_29">Some salutation, e.g. "Dearest <persName xml:id="struct_30" sameAs="http://www.freebase.com/view/en/miquel_brown">Miquel</persName>"</salute> </opener> <p xml:id="struct_31">Sample letter content</p> <closer xml:id="struct_32"> <salute xml:id="struct_33">Some closing salutation, e.g. "With love..."</salute> <signed xml:id="struct_34"> <persName xml:id="struct_35" sameAs="http://www.example.org/bertrand_russell">Sender name and/or signature.</persName> </signed> </closer> </div> </body> </text></TEI>

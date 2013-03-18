@@ -1,0 +1,234 @@
+span[_tag="TEI"] { margin: 10px 25px; font-family: Georgia,serif; line-height: 1.5; }
+span[_tag="abbr"] { display: inline; }
+span[_tag="add"] { display: inline; color: green; background-color: inherit; text-decoration: underline; }
+span[_tag="anchor"] { display: none; }
+span[_tag="argument"] { display: block; margin-bottom: 0.5em; }
+span[_tag="att"] { display: inline; font-family: sans-serif; color: blue; background-color: inherit; }
+span[_tag="att"]:before { content: "@"; }
+span[_tag="author"] { display: inline; }
+span[_tag="back"] { display: block; border: thin solid black; margin-top: 1em; padding: 0.5em; }
+span[_tag="bibl"] { display: inline; }
+span[_tag="div"][type="works"] { text-indent: -2em; margin: 0px 0px 0px 2em; }
+span[_tag="bibl"] > span[_tag="note"] { display: inline; }
+span[_tag="bibl"] > span[_tag="title"][type="subtitle"] { content: ""; }
+span[_tag="argument"] > span[_tag="bibl"], span[_tag="body"] > span[_tag="bibl"], span[_tag="cit"] > span[_tag="bibl"], span[_tag="div"] > span[_tag="bibl"], span[_tag="div0"] > span[_tag="bibl"], span[_tag="div1"] > span[_tag="bibl"], span[_tag="div2"] > span[_tag="bibl"], span[_tag="div3"] > span[_tag="bibl"], span[_tag="div4"] > span[_tag="bibl"], span[_tag="div5"] > span[_tag="bibl"], span[_tag="div6"] > span[_tag="bibl"], span[_tag="div7"] > span[_tag="bibl"], span[_tag="epigraph"] > span[_tag="bibl"], span[_tag="listBibl"] > span[_tag="bibl"] > span[_tag="bibl"], span[_tag="taxonomy"] > span[_tag="bibl"] { display: block; margin-bottom: 0.5em; }
+span[_tag="biblFull"] { display: inline; }
+span[_tag="argument"] > span[_tag="biblFull"], span[_tag="body"] > span[_tag="biblFull"], span[_tag="cit"] > span[_tag="biblFull"], span[_tag="div"] > span[_tag="biblFull"], span[_tag="div0"] > span[_tag="biblFull"], span[_tag="div1"] > span[_tag="biblFull"], span[_tag="div2"] > span[_tag="biblFull"], span[_tag="div3"] > span[_tag="biblFull"], span[_tag="div4"] > span[_tag="biblFull"], span[_tag="div5"] > span[_tag="biblFull"], span[_tag="div6"] > span[_tag="biblFull"], span[_tag="div7"] > span[_tag="biblFull"], span[_tag="epigraph"] > span[_tag="biblFull"], span[_tag="listBibl"] > span[_tag="biblFull"] > span[_tag="biblFull"], span[_tag="taxonomy"] > span[_tag="biblFull"] { display: block; margin-bottom: 0.5em; }
+span[_tag="biblScope"] { display: inline; }
+span[_tag="imprint"] > span[_tag="biblScope"] { display: block; }
+span[_tag="body"] { margin-top: 5px; padding: 0px 2em 0px 0px; display: block; counter-reset: div1; }
+span[_tag="byline"] { display: block; font-style: italic; margin-bottom: 0.5em; }
+span[_tag="category"] { display: block; margin-bottom: 1em; }
+span[_tag="catRef"] { display: none; }
+span[_tag="cell"] { display: table-cell; border: 1px solid rgb(238, 239, 238); padding: 3px; color: inherit; background-color: inherit; }
+span[_tag="cell"][role="label"] { color: inherit; background-color: rgb(187, 187, 187); }
+span[_tag="change"] { display: block; margin-bottom: 1em; margin-left: 2em; }
+span[_tag="cit"] { display: inline; }
+span[_tag="argument"] > span[_tag="cit"], span[_tag="body"] > span[_tag="cit"], span[_tag="div"] > span[_tag="cit"], span[_tag="div0"] > span[_tag="cit"], span[_tag="div1"] > span[_tag="cit"], span[_tag="div2"] > span[_tag="cit"], span[_tag="div3"] > span[_tag="cit"], span[_tag="div4"] > span[_tag="cit"], span[_tag="div5"] > span[_tag="cit"], span[_tag="div6"] > span[_tag="cit"], span[_tag="div7"] > span[_tag="cit"], span[_tag="epigraph"] > span[_tag="cit"] { display: block; margin-bottom: 0.5em; margin-top: 0.5em; }
+span[_tag="classCode"] { display: block; }
+span[_tag="elementSpec"], span[_tag="macroSpec"], span[_tag="classSpec"] { display: block; margin-bottom: 1em; }
+span[_tag="closer"] { display: block; margin-bottom: 1em; width: 95%; }
+span[_tag="code"] { display: inline; font-family: monospace; }
+span[_tag="corr"] { display: inline; color: green; background-color: inherit; }
+span[_tag="creation"] { display: block; }
+span[_tag="date"] { display: inline; }
+span[_tag="change"] > span[_tag="date"], span[_tag="publicationStmt"] > span[_tag="date"] { display: block; font-weight: bold; }
+span[_tag="dateline"] { display: inline; }
+span[_tag="del"] { display: inline; color: red; background-color: inherit; text-decoration: line-through; }
+span[_tag="distributor"] { display: block; margin-bottom: 0.5em; }
+span[_tag="body"] > span[_tag="div"] { display: block; counter-increment: div1; counter-reset: div2; margin: 0px 0px 1.5em; }
+span[_tag="body"] > span[_tag="div"] > span[_tag="div"] { display: block; margin-bottom: 1em; counter-increment: div2; counter-reset: div3; }
+span[_tag="body"] > span[_tag="div"] > span[_tag="div"] > span[_tag="div"] { display: block; margin-bottom: 1em; counter-increment: div3; }
+span[_tag="body"] > span[_tag="div"][type="letter"] { margin-bottom: 2em ! important; }
+span[_tag="div"][type="poem"] { counter-reset: line; }
+span[_tag="div1"] { display: block; margin-bottom: 1em; counter-increment: div1; counter-reset: div2; }
+span[_tag="div2"] { display: block; margin-bottom: 1em; counter-increment: div2; counter-reset: div3; }
+span[_tag="div3"] { display: block; margin-bottom: 1em; counter-increment: div3; counter-reset: div4; }
+span[_tag="div4"] { display: block; margin-bottom: 1em; counter-increment: div4; counter-reset: div5; }
+span[_tag="div5"] { display: block; margin-bottom: 1em; counter-increment: div5; counter-reset: div6; }
+span[_tag="div6"] { display: block; margin-bottom: 1em; counter-increment: div6; counter-reset: div7; }
+span[_tag="div7"] { display: block; margin-bottom: 1em; counter-increment: div7; }
+span[_tag="divGen"] { display: none; }
+span[_tag="docAuthor"] { display: block; margin-bottom: 0.5em; }
+span[_tag="byline"] span[_tag="docAuthor"] { display: inline; }
+span[_tag="titlePage"] span[_tag="docAuthor"] { }
+span[_tag="titlePage"] span[_tag="docTitle"] { }
+span[_tag="edition"] { display: block; margin-bottom: 0.5em; }
+span[_tag="bibl"] span[_tag="edition"] { display: inline; }
+span[_tag="editionStmt"] { display: block; margin-bottom: 1em; }
+span[_tag="editor"] { display: block; }
+span[_tag="bibl"] span[_tag="editor"] { display: inline; }
+span[_tag="eg"] { font-family: monospace; padding-top: 3mm; padding-left: 4pt; padding-bottom: 2pt; display: block; margin-top: 12pt; margin-bottom: 12pt; white-space: pre; color: inherit; background-color: rgb(255, 204, 153); }
+span[_tag="argument"] > span[_tag="eg"], span[_tag="body"] > span[_tag="eg"], span[_tag="div"] > span[_tag="eg"], span[_tag="div0"] > span[_tag="eg"], span[_tag="div1"] > span[_tag="eg"], span[_tag="div2"] > span[_tag="eg"], span[_tag="div3"] > span[_tag="eg"], span[_tag="div4"] > span[_tag="eg"], span[_tag="div5"] > span[_tag="eg"], span[_tag="div6"] > span[_tag="eg"], span[_tag="div7"] > span[_tag="eg"], span[_tag="epigraph"] > span[_tag="eg"] { display: block; margin-bottom: 1em; }
+span[_tag="emph"] { display: inline; font-style: italic; }
+span[_tag="epigraph"] { display: block; margin-bottom: 1em; text-align: center; }
+span[_tag="extent"] { display: block; margin-bottom: 1em; }
+span[_tag="bibl"] span[_tag="extent"] { display: inline; }
+span[_tag="graphic"] { color: gray; background-color: inherit; content: "{" attr(url) "}"; }
+span[_tag="figure"] { display: block; margin-bottom: 1em; }
+span[_tag="foreign"] { display: inline; font-style: italic; }
+span[_tag="formula"] { display: inline; font-style: italic; }
+span[_tag="front"] { display: block; margin-bottom: 1em; padding: 0.5em; }
+span[_tag="funder"] { display: block; margin-bottom: 0.5em; }
+span[_tag="gap"] { display: none; }
+span[_tag="gap"]:after { content: "[...]"; font-style: italic; }
+span[_tag="gi"], span[_tag="tag"] { display: inline; font-family: sans-serif; color: blue; background-color: inherit; }
+span[_tag="tag"]:before, span[_tag="gi"]:before { content: "<"; }
+span[_tag="tag"]:after, span[_tag="gi"]:after { content: ">"; }
+span[_tag="gloss"] { display: inline; }
+span[_tag="group"] { display: block; margin-bottom: 1em; }
+span[_tag="body"] > span[_tag="div"] > span[_tag="head"] { display: block; padding-top: 7px; padding-bottom: 10px; color: inherit; font-weight: bold; margin-bottom: 0.5em; margin-top: 1em; font-size: 18px; }
+span[_tag="body"] > span[_tag="div"][type="poem"] > span[_tag="head"] span[_tag="author"] { font-weight: normal; }
+span[_tag="body"] > span[_tag="div"] > span[_tag="div"] > span[_tag="head"] { display: block; padding-top: 14px; padding-bottom: 10px; padding-left: 10px; color: inherit; background-color: rgb(187, 187, 187); font-weight: bold; margin-bottom: 0.5em; margin-top: 11px; }
+span[_tag="body"] > span[_tag="div"] > span[_tag="div"] > span[_tag="div"] > span[_tag="head"] { display: block; padding-top: 14px; padding-bottom: 10px; padding-left: 10px; color: inherit; background-color: rgb(187, 187, 187); font-weight: bold; margin-bottom: 0.5em; margin-top: 1em; }
+span[_tag="div"] span[_tag="opener"] span[_tag="dateline"] { display: block; text-align: right; width: 95%; }
+span[_tag="div1"] > span[_tag="head"]:before { color: black; background-color: inherit; }
+span[_tag="div2"] > span[_tag="head"]:before { color: black; background-color: inherit; }
+span[_tag="div3"] > span[_tag="head"]:before { color: black; background-color: inherit; }
+span[_tag="body"] > span[_tag="div"] > span[_tag="head"]:before { color: black; background-color: inherit; }
+span[_tag="body"] > span[_tag="div"] > span[_tag="div"] > span[_tag="head"]:before { color: black; background-color: inherit; }
+span[_tag="body"] > span[_tag="div"] > span[_tag="div"] > span[_tag="div"] > span[_tag="head"]:before { color: black; background-color: inherit; }
+span[_tag="hi"] { display: inline; background-color: yellow; color: black; }
+span[_tag="hi"][rend] { background-color: inherit; color: inherit; }
+span[_tag="hi"][rend="bold"] { display: inline; font-weight: bold; }
+span[_tag="hi"][rend="italic"] { display: inline; font-style: italic; }
+span[_tag="hi"][rend="underline"] { display: inline; text-decoration: underline; }
+span[_tag="hi"][rend="it"] { display: inline; font-style: italic; }
+span[_tag="hi"][rend="sc"] { display: inline; font-variant: small-caps; }
+span[_tag="hi"][rend="sup"] { display: inline; vertical-align: super; font-size: smaller; }
+span[_tag="hi"][rend="sub"] { display: inline; vertical-align: sub; font-size: smaller; }
+span[_tag="hi"][rend="ul"] { display: inline; text-decoration: underline; }
+span[_tag="ident"] { display: inline; font-family: monospace; }
+span[_tag="idno"] { display: block; margin-bottom: 1em; }
+span[_tag="bibl"] span[_tag="idno"] { display: inline; }
+span[_tag="imprint"] { display: inline; }
+span[_tag="index"] { display: none; }
+span[_tag="interp"] { display: none; }
+span[_tag="interpGrp"] { display: none; }
+span[_tag="list"][type="gloss"] span[_tag="item"] { display: block; margin-left: 1em; }
+span[_tag="list"] span[_tag="item"] { display: list-item; margin-left: 12pt; }
+span[_tag="item"] { display: list-item; margin-left: 12pt; }
+span[_tag="item"][n]:before { content: attr(n) ". "; list-style: none outside none; }
+span[_tag="change"] span[_tag="item"] { display: block; margin-bottom: 0.5em; margin-left: 1em; margin-top: 0.5em; }
+span[_tag="keywords"] { display: block; margin-bottom: 0.5em; }
+span[_tag="kw"] { display: inline; font-style: italic; }
+span[_tag="l"] { display: block; white-space: nowrap; }
+span[_tag="l"]:after { content: counter(line, decimal); counter-increment: line; text-align: right; float: right; color: silver; margin-right: 50px; }
+span[_tag="label"] { display: inline; font-weight: bold; }
+span[_tag="Label"] { display: inline; font-weight: bold; color: rgb(47, 79, 79); background-color: inherit; }
+span[_tag="argument"] > span[_tag="label"], span[_tag="body"] > span[_tag="label"], span[_tag="div"] > span[_tag="label"], span[_tag="div0"] > span[_tag="label"], span[_tag="div1"] > span[_tag="label"], span[_tag="div2"] > span[_tag="label"], span[_tag="div3"] > span[_tag="label"], span[_tag="div4"] > span[_tag="label"], span[_tag="div5"] > span[_tag="label"], span[_tag="div6"] > span[_tag="label"], span[_tag="div7"] > span[_tag="label"], span[_tag="epigraph"] > span[_tag="label"] { display: block; font-weight: bold; }
+span[_tag="langUsage"] { display: block; margin-bottom: 1em; }
+span[_tag="lb"] { display: block; }
+span[_tag="lg"] { display: block; margin-bottom: 0.5em; }
+span[_tag="list"] { display: block; list-style-type: disc; list-style-position: outside; margin-bottom: 1em; margin-left: 2em; margin-top: 1em; }
+span[_tag="list"][rend="runon"] { display: inline; }
+span[_tag="list"][type="bulleted"] { list-style-type: disc; list-style-position: outside; }
+span[_tag="list"][type="unordered"] { list-style-type: disc; list-style-position: outside; }
+span[_tag="list"][type="ordered"] { list-style-type: decimal; list-style-position: outside; }
+span[_tag="list"][type="numbered"] { list-style-type: decimal; list-style-position: outside; }
+span[_tag="list"][type="none"] { list-style-type: none; }
+span[_tag="listBibl"] { display: block; margin-bottom: 0.5em; }
+span[_tag="mentioned"] { display: inline; font-style: italic; }
+span[_tag="milestone"] { display: none; }
+span[_tag="name"] { display: inline; }
+span[_tag="note"] { display: block; color: rgb(153, 153, 153); }
+span[_tag="note"]:before { content: "note: "; font-variant: small-caps; }
+span[_tag="note"][type]:before { content: attr(type) ": "; }
+span[_tag="opener"] span[_tag="note"] { display: block; color: rgb(153, 153, 153); }
+span[_tag="opener"] span[_tag="note"]:before { content: ""; font-variant: normal; }
+span[_tag="opener"] span[_tag="note"][type]:before { content: ""; }
+span[_tag="note"][n]:before { content: attr(n) " "; vertical-align: super; }
+span[_tag="div"] span[_tag="note"] span[_tag="persName"], span[_tag="div"] span[_tag="note"] span[_tag="orgName"], span[_tag="div"] span[_tag="note"] span[_tag="title"], span[_tag="div"] span[_tag="note"] span[_tag="placeName"] { color: rgb(109, 176, 204) ! important; }
+span[_tag="note"][place="left"] { float: left; }
+span[_tag="note"][place="right"] { float: right; }
+span[_tag="note"][place="inline"], span[_tag="note"][place="unspecified"] { display: inline; }
+span[_tag="notesStmt"] { display: block; }
+span[_tag="num"] { display: inline; }
+span[_tag="opener"] { display: block; margin-bottom: 0.5em; }
+span[_tag="opener"] span[_tag="p"] { text-align: justify ! important; text-indent: 0px ! important; }
+span[_tag="orig"] { display: inline; }
+span[_tag="p"] { display: block; margin-bottom: 0.5em; }
+span[_tag="pb"] { display: none; }
+span[_tag="pb"]:after { content: attr(n); font-weight: bold; margin-bottom: 1em; margin-top: 1em; text-align: center; }
+span[_tag="div"] span[_tag="persName"], span[_tag="div"] span[_tag="placeName"], span[_tag="div"] span[_tag="orgName"], span[_tag="div"] span[_tag="title"] { color: rgb(51, 102, 153); }
+span[_tag="principal"] { display: block; margin-bottom: 0.5em; }
+span[_tag="ptr"] { color: navy; text-decoration: underline; background-color: inherit; }
+span[_tag="ptr"]:before { background-color: inherit; color: red; content: "[" attr(target) "]"; }
+span[_tag="publicationStmt"] { }
+span[_tag="publicationStmt"] span[_tag="p"] { display: block; margin-bottom: 0px; }
+span[_tag="publisher"] { display: inline; }
+span[_tag="imprint"] > span[_tag="publisher"], span[_tag="publicationStmt"] > span[_tag="publisher"] { display: block; margin-bottom: 0.5em; }
+span[_tag="pubPlace"] { display: inline; }
+span[_tag="imprint"] > span[_tag="pubPlace"], span[_tag="publicationStmt"] > span[_tag="pubPlace"] { display: block; margin-bottom: 0.5em; }
+span[_tag="q"] { display: inline; quotes: "\"" "\"" "\'" "\'"; margin: 0em; }
+span[_tag="q"][rend="display"], span[_tag="argument"] > span[_tag="q"], span[_tag="body"] > span[_tag="q"], span[_tag="cit"] > span[_tag="q"], span[_tag="div"] > span[_tag="q"], span[_tag="div0"] > span[_tag="q"], span[_tag="div1"] > span[_tag="q"], span[_tag="div2"] > span[_tag="q"], span[_tag="div3"] > span[_tag="q"], span[_tag="div4"] > span[_tag="q"], span[_tag="div5"] > span[_tag="q"], span[_tag="div6"] > span[_tag="q"], span[_tag="div7"] > span[_tag="q"], span[_tag="epigraph"] > span[_tag="q"] { display: block; margin-bottom: 0.5em; margin-left: 3em; margin-right: 3em; quotes: none; }
+span[_tag="q"]:before { content: open-quote; }
+span[_tag="q"]:after { content: close-quote; }
+span[_tag="ref"] { display: inline; color: blue; background-color: inherit; }
+span[_tag="ref"]:before { color: gray; background-color: inherit; text-decoration: underline; }
+span[_tag="reg"] { display: inline; font-style: italic; }
+span[_tag="rendition"] { display: block; margin-bottom: 0.5em; }
+span[_tag="resp"] { display: block; }
+span[_tag="respStmt"] { display: block; margin-left: 1em; }
+span[_tag="respStmt"] > span[_tag="name"]:before { content: attr(role) ": "; display: block ! important; font-variant: small-caps; }
+span[_tag="bibl"] span[_tag="respStmt"] { display: inline; }
+span[_tag="rdg"]:before { background-color: inherit; content: "[" attr(wit) "] "; color: red; }
+span[_tag="row"] { display: table-row; }
+span[_tag="row"][role="label"] { color: inherit; background-color: rgb(187, 187, 187); }
+span[_tag="rs"] { display: inline; }
+span[_tag="s"] { display: inline; }
+span[_tag="salute"] { display: block; margin-bottom: 0.5em; margin-top: 1em; }
+span[_tag="samplingDecl"] { display: block; margin-bottom: 1em; }
+span[_tag="seg"] { display: inline; }
+span[_tag="seriesStmt"] { display: block; margin-bottom: 1em; }
+span[_tag="sic"] { display: inline; color: red; background-color: inherit; }
+span[_tag="sic"]:after { content: " [sic]"; }
+span[_tag="signed"] { display: block; text-align: right; }
+span[_tag="soCalled"] { display: inline; font-style: italic; quotes: "\'" "\'"; }
+span[_tag="soCalled"]:before { content: open-quote; }
+span[_tag="soCalled"]:after { content: close-quote; }
+span[_tag="sp"] { display: block; margin-bottom: 0.5em; margin-left: 2em; }
+span[_tag="div"] span[_tag="p"] { text-align: justify; text-indent: 30px; }
+span[_tag="speaker"] { display: inline; font-weight: bold; }
+span[_tag="sponsor"] { display: block; margin-bottom: 0.5em; }
+span[_tag="stage"] { display: inline; font-style: italic; }
+span[_tag="table"] { text-align: center; display: table; margin: 1em; }
+span[_tag="table"] > span[_tag="head"] { display: table-caption; font-style: italic; margin-bottom: 6pt; }
+span[_tag="tagUsage"] { display: block; margin-bottom: 0.5em; }
+span[_tag="taxonomy"] { display: block; margin-bottom: 0.5em; }
+span[_tag="term"] { font-family: sans-serif; color: blue; background-color: inherit; display: inline; }
+span[_tag="textClass"] { display: block; margin-bottom: 0.5em; }
+span[_tag="time"] { display: inline; }
+span[_tag="title"] { display: inline; }
+span[_tag="title"][type="subtitle"] { display: block; font-weight: normal; }
+span[_tag="title"][level="m"], span[_tag="title"][level="j"] { font-style: italic; }
+span[_tag="title"][level="s"] { font-style: normal; }
+span[_tag="title"][level="a"], span[_tag="title"][level="u"] { font-style: normal; }
+span[_tag="title"][level="a"]:before, span[_tag="title"][level="u"]:before { content: open-quote; }
+span[_tag="title"][level="a"]:after, span[_tag="title"][level="u"]:after { content: close-quote; }
+span[_tag="seriesStmt"] > span[_tag="title"], span[_tag="titleStmt"] > span[_tag="title"] { color: gray; font-weight: bold; }
+span[_tag="titlePage"] { display: block; border: thin solid black; margin-bottom: 2em; text-align: center; padding: 1em; }
+span[_tag="titlePart"] { display: block; }
+span[_tag="titleStmt"] { margin-bottom: 1em; color: rgb(51, 51, 51); }
+span[_tag="trailer"] { display: block; margin-bottom: 1em; }
+span[_tag="unclear"] { display: inline; color: gray; background-color: inherit; font-style: italic; }
+span[_tag="teiHeader"] { display: block; color: gray; background-color: rgb(251, 242, 234); padding: 0.5em; }
+span[_tag="teiHeader"] span[_tag="author"]:before { font-variant: small-caps; content: "author: "; }
+span[_tag="teiHeader"] span[_tag="editor"]:before { font-variant: small-caps; content: "editor: "; }
+span[_tag="teiHeader"] span[_tag="title"] { color: gray; }
+span[_tag="titleStmt"] > span[_tag="author"] { display: block; margin-left: 1em; }
+span[_tag="authority"] { display: block; margin-bottom: 0.5em; }
+span[_tag="availability"] { display: block; margin-bottom: 0.5em; }
+span[_tag="fileDesc"] { }
+span[_tag="sourceDesc"] { }
+span[_tag="sourceDesc"] span[_tag="p"] { margin: 0px; }
+span[_tag="revisionDesc"] { display: block; margin-bottom: 1em; }
+span[_tag="catDesc"] { display: block; margin-bottom: 0.5em; }
+span[_tag="encodingDesc"] { display: block; margin-bottom: 1em; }
+span[_tag="profileDesc"] { display: block; margin-bottom: 1em; }
+span[_tag="projectDesc"] { display: block; margin-bottom: 1em; }
+span[_tag="docDate"] { display: block; margin-bottom: 0.5em; }
+span[_tag="docImprint"] span[_tag="docDate"] { display: inline; }
+span[_tag="docEdition"] { display: block; margin-bottom: 0.5em; }
+span[_tag="docImprint"] { display: block; margin-bottom: 0.5em; }
+span[_tag="docTitle"] { display: block; margin-bottom: 0.5em; font-weight: bold; } 

@@ -1,0 +1,47 @@
+span[_tag="EVENTS"] { font-family: Georgia,serif; line-height: 1.5; color: rgb(51, 51, 51); margin: 10px 25px; }
+span[_tag="ORLANDOHEADER"] { font-size: 16px; display: block; background: none repeat scroll 0% 0% rgb(238, 238, 238); margin-bottom: 1.5em; padding: 0.5em; }
+span[_tag="FILEDESC"] { background-color: rgb(255, 255, 255); color: gray; }
+span[_tag="DOCTITLE"] { color: gray; font-weight: bold; }
+span[_tag="DOCAUTHOR"], span[_tag="DOCEDITOR"], span[_tag="DOCEXTENT"], span[_tag="PUBLICATIONSTMT"], span[_tag="TITLESTMT"], span[_tag="PUBPLACE"] { display: block; }
+span[_tag="RESPONSIBILITY"] { font-family: Verdana,Geneva,sans-serif; font-size: small; background-color: rgb(240, 237, 252); display: list-item; }
+span[_tag="EMPH"] { font-style: italic; }
+span[_tag="FOREIGN"] { font-style: italic; }
+span[_tag="TITLE"][TITLETYPE="MONOGRAPHIC"], span[_tag="TITLE"][TITLETYPE="JOURNAL"] { font-style: italic; color: rgb(51, 102, 153); }
+span[_tag="TITLE"][TITLETYPE="SERIES"] { font-style: normal; color: rgb(51, 102, 153); }
+span[_tag="TITLE"][TITLETYPE="ANALYTIC"], span[_tag="TITLE"][TITLETYPE="UNPUBLISHED"] { font-style: normal; color: rgb(51, 102, 153); }
+span[_tag="TITLE"][TITLETYPE="ANALYTIC"]:before, span[_tag="TITLE"][TITLETYPE="UNPUBLISHED"]:before { content: open-quote; }
+span[_tag="TITLE"][TITLETYPE="ANALYTIC"]:after, span[_tag="TITLE"][TITLETYPE="UNPUBLISHED"]:after { content: close-quote; }
+span[_tag="ADDRLINE"] { display: list-item; }
+span[_tag="IDNO"] { display: list-item; }
+span[_tag="AVAILABILITY"] { display: inline; }
+span[_tag="P"] { display: block; }
+span[_tag="RESEARCHNOTE"] { background-color: rgb(251, 239, 239); color: rgb(102, 51, 102); font-family: Arial,Helvetica,sans-serif; font-size: smaller; display: list-item; }
+span[_tag="DIV0"] span[_tag="HEADING"] { display: list-item; font-weight: bold; font-size: x-large; color: rgb(0, 51, 153); margin: 25px 0px 0px; }
+span[_tag="DIV1"] { margin: 20px 0px 0px; }
+span[_tag="DIV1"] span[_tag="HEADING"] { display: block; font-weight: bold; font-size: large; color: rgb(0, 51, 153); }
+span[_tag="CHRONEVENT"] { display: block; margin: 15px 0px; }
+span[_tag="CHRONSTRUCT"] { display: block; padding: 0px 0px 0px 30px; }
+span[_tag="CHRONSTRUCT"] span[_tag="DATE"] { font-weight: bold; display: inline; }
+span[_tag="CHRONSTRUCT"] span[_tag="DATE"]:after { content: ": "; }
+span[_tag="CHRONSTRUCT"][CHRONCOLUMN="WOMENWRITERS"] { background-image: url("img/orlando/pen1.gif"); background-repeat: no-repeat; }
+span[_tag="CHRONSTRUCT"][CHRONCOLUMN="NATIONALINTERNATIONAL"] { background-image: url("img/orlando/earth1.gif"); background-repeat: no-repeat; }
+span[_tag="CHRONSTRUCT"][CHRONCOLUMN="SOCIALCLIMATE"] { background-image: url("img/orlando/people1.gif"); background-repeat: no-repeat; }
+span[_tag="CHRONSTRUCT"][CHRONCOLUMN="WRITINGCLIMATE"] { background-image: url("img/orlando/book1.gif"); background-repeat: no-repeat; }
+span[_tag="SHORTPROSE"] span[_tag="P"] { padding-left: 4em; margin: 10px 0px 0px; }
+span[_tag="BIBCIT"] { }
+span[_tag="BIBCIT"]:before { content: "("; }
+span[_tag="BIBCIT"]:after { content: ")"; }
+span[_tag="SCHOLARNOTE"] span[_tag="P"] { content: url("img/orlando/note.gif"); background-color: rgb(224, 224, 248); }
+span[_tag="NAME"] { color: rgb(51, 102, 153); }
+span[_tag="ORGNAME"] { color: rgb(51, 102, 153); }
+span[_tag="SETTLEMENT"] { font-weight: bold; color: rgb(51, 102, 153); }
+span[_tag="REGION"] { font-weight: bold; color: rgb(51, 102, 153); }
+span[_tag="GEOG"] { font-weight: bold; color: rgb(51, 102, 153); }
+span[_tag="AREA"] { font-weight: bold; color: rgb(51, 102, 153); }
+span[_tag="TOPIC"] { font-weight: bold; color: rgb(51, 102, 153); }
+span[_tag="QUOTE"]:before { content: open-quote; }
+span[_tag="QUOTE"]:after { content: close-quote; }
+span[_tag="QUOTE"][DIRECT="N"]:before { content: "\'"; }
+span[_tag="QUOTE"][DIRECT="N"]:after { content: "\'"; }
+span[_tag="SOCALLED"]:before { content: "\'"; }
+span[_tag="SOCALLED"]:after { content: "\'"; } 

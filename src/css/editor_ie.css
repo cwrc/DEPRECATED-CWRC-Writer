@@ -1,0 +1,51 @@
+body {
+	font-size: 12px;
+}
+
+.entity {
+	zoom: 1;
+	height: 11px;
+	width: 2px;
+}
+.start {
+	border-left: 2px solid;
+	border-top: 2px solid;
+	border-bottom: 2px solid;
+}
+
+.end {
+	border-right: 2px solid;
+	border-top: 2px solid;
+	border-bottom: 2px solid;
+}
+
+#entityHighlight {
+}
+
+.person {
+	border-color: #FF0000;
+}
+
+.date {
+	border-color: #FF7400;
+}
+
+.place {
+	border-color: #009999;
+}
+
+.event {
+	border-color: #00CC00;
+}
+
+.org {
+	border-color: #3914AF; 
+}
+
+.citation {
+	border-color: #CD0074;
+}
+
+.note {
+	border-color: #0D56A6;
+}
