@@ -971,18 +971,19 @@ function Writer(config) {
 			forced_root_block: w.root,
 			keep_styles: false, // false, otherwise tinymce interprets our spans as style elements
 			
-			paste_auto_cleanup_on_paste: true,
+			paste_auto_cleanup_on_paste: true, // true, otherwise paste_postprocess isn't called
 			paste_postprocess: function(pl, o) {
 				function stripTags(index, node) {
-					if (node.nodeName.toLowerCase() != 'p' && node.nodeName.toLowerCase() != 'br') {
+					if (node.hasAttribute('_tag') || node.hasAttribute('_entity') ||
+						node.nodeName.toLowerCase() == 'p' && node.nodeName.toLowerCase() == 'br') {
+						$(node).children().each(stripTags);
+					} else {
 						if ($(node).contents().length == 0) {
 							$(node).remove();
 						} else {
 							var contents = $(node).contents().unwrap();
 							contents.not(':text').each(stripTags);
 						}
-					} else {
-						$(node).children().each(stripTags);
 					}
 				}
 				
