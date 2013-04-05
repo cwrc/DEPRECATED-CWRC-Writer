@@ -37,19 +37,22 @@ function StructureTree(config) {
 				
 				var parentInfo = w.structs[parentNode.attr('name')];
 				
-				var validKeys = w.editor.execCommand('getChildrenForTag', {tag: info._tag, type: 'element', returnType: 'object'});
-				var parentKeys = w.editor.execCommand('getParentsForTag', info._tag);
+				var validKeys = w.editor.execCommand('getChildrenForTag', {tag: info._tag, type: 'element', returnType: 'array'});
+				var parentKeys = w.editor.execCommand('getParentsForTag', {tag: info._tag, returnType: 'array'});
 				var siblingKeys = {};
 				if (parentInfo) {
-					siblingKeys = w.editor.execCommand('getChildrenForTag', {tag: parentInfo._tag, type: 'element', returnType: 'object'});
+					siblingKeys = w.editor.execCommand('getChildrenForTag', {tag: parentInfo._tag, type: 'element', returnType: 'array'});
 				}
 				
-				function getSubmenu(keys) {
+				function getSubmenu(tags) {
 					var inserts = {};
 					var inserted = false;
-					for (var key in keys) {
+					var i, tag, key;
+					for (i = 0; i < tags.length; i++) {
+						tag = tags[i];
+						key = tag.name;
 						inserted = true;
-						var doc = keys[key].documentation;
+						var doc = tag.documentation;
 						if (doc == '') {
 							doc = key;
 						}

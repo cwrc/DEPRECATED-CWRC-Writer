@@ -240,7 +240,7 @@ function Utilities(config) {
 	/**
 	 * @param tag The element name to get children of
 	 * @param type The type of children to get: "element" or "attribute"
-	 * @param returnType Either: "array" or "object"
+	 * @param returnType Either: "array", "object", "names" (which is an array of just the element names)
 	 */
 	u.getChildrenForTag = function(config) {
 		var type = config.type || 'element';
@@ -258,24 +258,32 @@ function Utilities(config) {
 			var defHits = {};
 			var level = 0;
 			_getChildren(element, defHits, level, type, children);
-	
+			children.sort(function(a, b) {
+				if (a.name > b.name) return 1;
+				if (a.name < b.name) return -1;
+				return 0;
+			});
+			
 			if (useLocalStorage) {
 				localStorage['cwrc.'+tag+'.'+type+'.children'] = JSON.stringify(children);
 			}
 		}
 		
-		if (config.returnType == 'array') {
-			children.sort(function(a, b) {
-				return a.level - b.level;
-			});
-			return children;
-		} else {
+		if (config.returnType == 'object') {
 			var childrenObj = {};
 			for (var i = 0; i < children.length; i++) {
 				var c = children[i];
 				childrenObj[c.name] = c;
 			}
 			return childrenObj;
+		} else if (config.returnType == 'names') {
+			var names = [];
+			for (var i = 0; i < children.length; i++) {
+				names.push(children[i].name);
+			}
+			return names;
+		} else {
+			return children;
 		}
 	};
 	
@@ -286,7 +294,7 @@ function Utilities(config) {
 				defHits[name] = true;
 				var element = $(el).find('element').first();
 				if (element.length == 1) {
-					parents[element.attr('name')] = {name: element.attr('name'), level: level+0};
+					parents.push({name: element.attr('name'), level: level+0});
 				} else {
 					_getParentElementsFromDef(name, defHits, level+1, parents);
 				}
@@ -294,24 +302,53 @@ function Utilities(config) {
 		});
 	};
 	
-	u.getParentsForTag = function(tag) {
+	/**
+	 * @param tag The element name to get parents of
+	 * @param returnType Either: "array", "object", "names" (which is an array of just the element names)
+	 */
+	u.getParentsForTag = function(config) {
+		var tag = config.tag;
+		var parents = [];
+		
 		if (useLocalStorage) {
 			var localData = localStorage['cwrc.'+tag+'.parents'];
-			if (localData) return JSON.parse(localData);
+			if (localData) {
+				parents = JSON.parse(localData);
+			}
+		}
+		if (parents.length == 0) {
+			var element = $('element[name="'+tag+'"]', writer.schemaXML);
+			var defName = element.parents('define').attr('name');
+			var defHits = {};
+			var level = 0;
+			_getParentElementsFromDef(defName, defHits, level, parents);
+			parents.sort(function(a, b) {
+				if (a.name > b.name) return 1;
+				if (a.name < b.name) return -1;
+				return 0;
+			});
+			
+			if (useLocalStorage) {
+				localStorage['cwrc.'+tag+'.parents'] = JSON.stringify(parents);
+			}
 		}
 		
-		var element = $('element[name="'+tag+'"]', writer.schemaXML);
-		var defName = element.parents('define').attr('name');
-		var parents = {};
-		var defHits = {};
-		var level = 0;
-		_getParentElementsFromDef(defName, defHits, level, parents);
-		
-		if (useLocalStorage) {
-			localStorage['cwrc.'+tag+'.parents'] = JSON.stringify(parents);
+		if (config.returnType == 'object') {
+			var parentsObj = {};
+			for (var i = 0; i < parents.length; i++) {
+				var c = parents[i];
+				parentsObj[c.name] = c;
+			}
+			return parentsObj;
+		} else if (config.returnType == 'names') {
+			var names = [];
+			for (var i = 0; i < parents.length; i++) {
+				names.push(parents[i].name);
+			}
+			return names;
+		} else {
+			return parents;
 		}
-		
-		return parents;
 	};
 	
 	/**

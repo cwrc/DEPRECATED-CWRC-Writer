@@ -39,16 +39,16 @@
 						filterKey = $(node).parent().attr('_tag');
 					}
 					
-					var validKeys = {};
+					var validKeys = [];
 					if (filterKey != t.editor.writer.header) {
-						validKeys = t.editor.execCommand('getChildrenForTag', {tag: filterKey, returnType: 'object'});
+						validKeys = t.editor.execCommand('getChildrenForTag', {tag: filterKey, returnType: 'names'});
 					}
 					var item;
 					var count = 0, disCount = 0;
 					for (var itemId in m.items) {
 						count++;
 						item = m.items[itemId];
-						if (validKeys[item.settings.key]) {
+						if (validKeys.indexOf(item.settings.key) != -1) {
 							item.setDisabled(false);
 						} else {
 							item.setDisabled(true);

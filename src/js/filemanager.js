@@ -1056,6 +1056,7 @@ function FileManager(config) {
 					var schemaTags = w.root.toLowerCase()+' { display: block; }';
 					schemaTags += '.showStructBrackets '+w.root.toLowerCase()+':before { color: #aaa; font-weight: normal; font-style: normal; font-family: monospace; content: "<'+tag+'>"; }';
 					schemaTags += '.showStructBrackets '+w.root.toLowerCase()+':after { color: #aaa; font-weight: normal; font-style: normal; font-family: monospace; content: "</'+tag+'>"; }';
+					
 					var elements = [];
 					$('element', w.schemaXML).each(function(index, el) {
 						var tag = $(el).attr('name');
@@ -1065,6 +1066,8 @@ function FileManager(config) {
 							schemaTags += '.showStructBrackets span[_tag='+tag+']:after { color: #aaa; font-weight: normal; font-style: normal; font-family: monospace; content: "</'+tag+'>"; }';
 						}
 					});
+					elements.sort();
+					
 					// hide the header
 					schemaTags += 'span[_tag='+w.header+'] { display: none !important; }';
 					
@@ -1182,24 +1185,24 @@ function FileManager(config) {
 	};
 	
 	fm.loadInitialDocument = function(start) {
-//		if (start.match('load')) {
-//			fm.openLoader();
-//		} else if (start.match('sample_letter')) {
-//			_loadTemplate('xml/sample_letter.xml');
-//		} else if (start.match('sample_poem')) {
-//			_loadTemplate('xml/sample_poem.xml');
-//		} else if (start.match('event')) {
-//			_loadTemplate('xml/event_template.xml');
-//		} else if (start.match('letter')) {
-//			_loadTemplate('xml/letter_template.xml');
-//		} else if (start.match('poem')) {
-//			_loadTemplate('xml/poem_template.xml');
-//		} else if (start.match('prose')) {
-//			_loadTemplate('xml/prose_template.xml');
-//		} else {
+		if (start.match('load')) {
+			fm.openLoader();
+		} else if (start.match('sample_letter')) {
+			_loadTemplate('xml/sample_letter.xml');
+		} else if (start.match('sample_poem')) {
+			_loadTemplate('xml/sample_poem.xml');
+		} else if (start.match('event')) {
+			_loadTemplate('xml/event_template.xml');
+		} else if (start.match('letter')) {
+			_loadTemplate('xml/letter_template.xml');
+		} else if (start.match('poem')) {
+			_loadTemplate('xml/poem_template.xml');
+		} else if (start.match('prose')) {
+			_loadTemplate('xml/prose_template.xml');
+		} else {
+			w.fm.loadEMICDocument();
 //			fm.loadSchema('cwrcbasic', true);
-//		}
-		w.fm.loadEMICDocument();
+		}
 	};
 	
 	var _loadTemplate = function(url) {
