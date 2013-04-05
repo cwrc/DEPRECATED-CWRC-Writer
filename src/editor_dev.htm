@@ -42,8 +42,12 @@
 		<script type="text/javascript" src="js/relations.js"></script>
 		<script type="text/javascript" src="js/validation.js"></script>
 
+		<link type="text/css" rel="stylesheet" href="css/style.css" />
+		
 		<script type="text/javascript">
 			$(function() {
+				PID = null;
+				cwrc_params = {};
 				writer = null;
 				$.ajax({
 					url: 'http://apps.testing.cwrc.ca/editor/documents/info/projectname',
@@ -52,10 +56,12 @@
 							project: data
 						});
 						writer.init();
+						writer.layout.close('east');
 					},
 					error: function() {
 						writer = new Writer();
 						writer.init();
+						writer.layout.close('east');
 					}
 				});
 			});
