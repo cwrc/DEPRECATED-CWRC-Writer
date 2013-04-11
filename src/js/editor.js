@@ -114,19 +114,25 @@ function Writer(config) {
 		w.fm.loadInitialDocument(window.location.hash);
 	};
 	
-	var _findDeletedTags = function() {
-		var wereTagsDeleted = false;
+	var _findNewAndDeletedTags = function() {
+		var updateRequired = false;
+		
+		// new tags
+		var newTags = w.editor.dom.select('span[_tag]:not([id])');
+		if (newTags.length > 0) updateRequired = true;
+		
+		// deleted tags
 		for (var id in w.entities) {
 			var nodes = w.editor.dom.select('span[name="'+id+'"]');
 			switch (nodes.length) {
 				case 0:
-					wereTagsDeleted = true;
+					updateRequired = true;
 					w.entitiesList.remove(id);
 					w.deletedEntities[id] = w.entities[id];
 					delete w.entities[id];
 					break;
 				case 1:
-					wereTagsDeleted = true;
+					updateRequired = true;
 					w.editor.dom.remove(nodes[0]);
 					w.entitiesList.remove(id);
 					w.deletedEntities[id] = w.entities[id];
@@ -136,12 +142,12 @@ function Writer(config) {
 		for (var id in w.structs) {
 			var nodes = w.editor.dom.select('#'+id);
 			if (nodes.length == 0) {
-				wereTagsDeleted = true;
+				updateRequired = true;
 				w.deletedStructs[id] = w.structs[id];
 				delete w.structs[id];
 			}
 		}
-		return wereTagsDeleted;
+		return updateRequired;
 	};
 	
 	var _findDuplicateTags = function() {
@@ -181,7 +187,7 @@ function Writer(config) {
 	var _onKeyDownHandler = function(ed, evt) {
 		// redo/undo listener
 		if ((evt.which == 89 || evt.which == 90) && evt.ctrlKey) {
-			var doUpdate = _findDeletedTags();
+			var doUpdate = _findNewAndDeletedTags();
 			if (doUpdate) {
 				w.entitiesList.update();
 				w.tree.update();
@@ -257,7 +263,7 @@ function Writer(config) {
 		// delete keys check
 		// need to do this here instead of in onchangehandler because that one doesn't update often enough
 		if (evt.which == 8 || evt.which == 46) {
-			var doUpdate = _findDeletedTags();
+			var doUpdate = _findNewAndDeletedTags();
 			if (doUpdate) w.tree.update();
 		}
 	};
@@ -265,7 +271,7 @@ function Writer(config) {
 	var _onChangeHandler = function(ed, event) {
 		if (ed.isDirty()) {
 			ed.$('br').remove();
-			var doUpdate = _findDeletedTags();
+			var doUpdate = _findNewAndDeletedTags();
 			if (doUpdate) w.tree.update();
 		}
 	};
@@ -713,9 +719,16 @@ function Writer(config) {
 		w.structs[id] = attributes;
 		w.editor.currentStruct = id;
 		
-		var node = bookmark.rng.commonAncestorContainer;
-		while (node.nodeType == 3) {
-			node = node.parentNode;
+		var node;
+		if (bookmark.tagId) {
+			// this is used when adding tags through the structure tree
+			node = w.editor.$('#'+bookmark.tagId)[0];
+		} else {
+			// this is meant for user text selections
+			node = bookmark.rng.commonAncestorContainer;
+			while (node.nodeType == 3) {
+				node = node.parentNode;
+			}
 		}
 		
 		var tag = 'span';
@@ -944,6 +957,7 @@ function Writer(config) {
 		
 		$(document.body).click(_hideContextMenus);
 		$('#westTabs').tabs({
+			active: 1,
 			create: function(event, ui) {
 				$('#westTabs').parent().find('.ui-corner-all').removeClass('ui-corner-all');
 			}

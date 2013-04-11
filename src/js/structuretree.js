@@ -44,7 +44,8 @@ function StructureTree(config) {
 					siblingKeys = w.editor.execCommand('getChildrenForTag', {tag: parentInfo._tag, type: 'element', returnType: 'array'});
 				}
 				
-				function getSubmenu(tags) {
+				function getSubmenu(tags, info) {
+					var tagInfo = info;
 					var inserts = {};
 					var inserted = false;
 					var i, tag, key;
@@ -71,6 +72,7 @@ function StructureTree(config) {
 									w.editor.execCommand('changeTag', {key: key, pos: pos, id: id});
 								} else {
 									w.editor.currentBookmark = w.editor.selection.getBookmark(1);
+									w.editor.currentBookmark.tagId = tagInfo.id;
 									w.editor.execCommand('addSchemaTag', {key: key, pos: pos, action: actionType});
 								}
 							}
@@ -86,9 +88,9 @@ function StructureTree(config) {
 					return inserts;
 				}
 				
-				var submenu = getSubmenu(validKeys);
-				var parentSubmenu = getSubmenu(parentKeys);
-				var siblingSubmenu = getSubmenu(siblingKeys);
+				var submenu = getSubmenu(validKeys, info);
+				var parentSubmenu = getSubmenu(parentKeys, info);
+				var siblingSubmenu = getSubmenu(siblingKeys, info);
 				
 
 				var items = {
