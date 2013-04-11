@@ -726,7 +726,7 @@ function Writer(config) {
 		} else {
 			// this is meant for user text selections
 			node = bookmark.rng.commonAncestorContainer;
-			while (node.nodeType == 3) {
+			while (node.nodeType == 3 || (node.nodeType == 1 && !node.hasAttribute('_tag'))) {
 				node = node.parentNode;
 			}
 		}

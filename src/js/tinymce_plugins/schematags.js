@@ -27,7 +27,7 @@
 					// get the node from currentBookmark if available, otherwise use currentNode
 					if (t.editor.currentBookmark != null) {
 						node = t.editor.currentBookmark.rng.commonAncestorContainer;
-						while (node.nodeType == 3) {
+						while (node.nodeType == 3 || (node.nodeType == 1 && !node.hasAttribute('_tag'))) {
 							node = node.parentNode;
 						}
 					} else {
