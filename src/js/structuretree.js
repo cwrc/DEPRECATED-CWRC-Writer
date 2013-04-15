@@ -249,6 +249,9 @@ function StructureTree(config) {
 		}
 		ignoreSelect = false;
 	});
+	$('#tree').bind('deselect_node.jstree', function(event, data) {
+		tree.currentlySelectedNode = null;
+	});
 	$('#tree').bind('hover_node.jstree', function(event, data) {
 		if ($('#vakata-contextmenu').css('visibility') == 'visible') return;
 		
