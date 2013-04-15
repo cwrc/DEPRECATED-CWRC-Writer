@@ -18,8 +18,11 @@ function Relations(config) {
 		w.d.show('triple');
 	});
 	$('#relations div.ui-layout-south button:eq(1)').button().click(function() {
-		if (pm.currentlySelectedNode != null) {
-			pm.currentlySelectedNode = null;
+		var selected = $('#relations ul li.selected');
+		if (selected.length == 1) {
+			var i = selected.data('index');
+			w.triples.splice(i, 1);
+			pm.update();
 		} else {
 			w.d.show('message', {
 				title: 'No Relation Selected',
@@ -62,6 +65,8 @@ function Relations(config) {
 		
 		$('#relations ul li').each(function(index, el) {
 			$(this).data('index', index);
+		}).click(function() {
+			$(this).addClass('selected').siblings().removeClass('selected');
 		}).contextMenu('relationsMenu', {
 			bindings: {
 				'removeRelation': function(r) {

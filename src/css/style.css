@@ -317,16 +317,16 @@ label {
 }
 
 .relationsList li:hover, .validationList li:hover {
-	background-color: #ddd !important;
+	background-color: #eee !important;
 	cursor: pointer;
 }
 
-.relationsList li:nth-child(odd) {
+.relationsList li {
 	background-color: #fff;
 }
 
-.relationsList li:nth-child(even) {
-	background-color: #eee;
+.relationsList li.selected {
+	background-color: #d3d3d3 !important;
 }
 
 .validationList li {
@@ -1470,6 +1470,7 @@ ul.relationsList li
   word-wrap: break-word;
 }
 
+/*
 ul.relationsList li:nth-child(2n+1)
 {
   background-color: #eee;
@@ -1480,7 +1481,7 @@ ul.relationsList li:hover
   background-color: #eee !important;
   cursor: auto;
 }
-
+*/
 
 
 
