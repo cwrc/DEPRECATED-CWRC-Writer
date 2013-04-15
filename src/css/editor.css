@@ -143,8 +143,3 @@ body {
 .emphTag {
 	font-style: italic;
 }
-
-span[_tag='p'] {
-	display: block;
-	margin: 10px 0;
-}
