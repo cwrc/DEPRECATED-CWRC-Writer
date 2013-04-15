@@ -5,9 +5,9 @@ var EntitiesList = function(config) {
 	var metaKeys = ['_id', '_ref'];
 	var showMetaKeys = false;
 	
-	$(config.parentId).append('<div id="entities">'+
+	$(config.parentId).append('<div id="entities" class="tabWithLayout">'+
 			'<ul class="entitiesList ui-layout-center"></ul>'+
-			'<div id="entitiesOptions" class="ui-layout-south">'+
+			'<div id="entitiesOptions" class="ui-layout-south tabButtons">'+
 			'<div id="sortBy"><span>Sort By</span> '+
 			'<input type="radio" id="sequence" name="sortBy" checked="checked" /><label for="sequence">Sequence</label>'+
 			'<input type="radio" id="category" name="sortBy" /><label for="category">Category</label></div>'+

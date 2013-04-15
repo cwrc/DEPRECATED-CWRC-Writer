@@ -9,6 +9,7 @@
 		<script type="text/javascript" src="js/jquery/jquery-1.8.2.js"></script>
 		<script type="text/javascript" src="js/jquery/jquery-ui-1.9.0.custom.js"></script>
 		<script type="text/javascript" src="js/jquery/jquery.layout-latest.min.js"></script>
+		<script type="text/javascript" src="js/jquery/jquery.layout.resizeTabLayout-1.3.js"></script>
 		<script type="text/javascript" src="js/jquery/jquery.contextmenu.js"></script>
 		<script type="text/javascript" src="js/jquery/jquery.tmpl.min.js"></script>
 		<script type="text/javascript" src="js/jquery/jquery.watermark.min.js"></script>

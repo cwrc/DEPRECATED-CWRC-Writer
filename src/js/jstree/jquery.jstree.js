@@ -734,7 +734,7 @@
 				if(!is_loaded && !this._is_loaded(obj)) { this.load_node(obj, function () { this.create_node(obj, position, js, callback, true); }); return false; }
 
 				this.__rollback();
-
+				
 				if(typeof js === "string") { js = { "data" : js }; }
 				if(!js) { js = {}; }
 				if(js.attr) { d.attr(js.attr); }
@@ -760,12 +760,18 @@
 					}
 					d.append(tmp);
 				});
-				d.prepend("<ins class='jstree-icon'>&#160;</ins>");
+				
 				if(obj === -1) {
 					obj = this.get_container();
 					if(position === "before") { position = "first"; }
 					if(position === "after") { position = "last"; }
 				}
+				
+				d.prepend("<ins class='jstree-icon'>&#160;</ins>");
+				var indent = (obj.parents().length - 8) * 10;
+				d.prepend("<span class='jstree-indent' style='width: "+indent+"px;'/>");
+				
+				
 				switch(position) {
 					case "before": obj.before(d); tmp = this._get_parent(obj); break;
 					case "after" : obj.after(d);  tmp = this._get_parent(obj); break;

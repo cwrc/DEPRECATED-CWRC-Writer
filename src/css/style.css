@@ -81,14 +81,14 @@ label {
 	background-image: url('../img/arrow_right.gif');
 }
 
-#entities {
+#westTabsContent .tabWithLayout {
 	height: 100%;
 	padding: 0 !important;
 }
 
-#entitiesOptions {
+#westTabsContent .tabButtons {
 	border-top: 1px solid #BBBBBB;
-	padding: 5px 10px 0px;
+	padding: 5px;
 }
 
 #entitiesOptions > div {
@@ -609,12 +609,17 @@ label {
 }
 
 #tripleColumnsParent .column > ul {
-	overflow: auto;
+	overflow-y: auto;
+	overflow-x: hidden;
 	position: absolute;
 	top: 23px;
 	bottom: 27px;
 	left: 0;
 	right: 0;
+}
+
+#tripleColumnsParent .column > ul li {
+	white-space: nowrap;
 }
 
 #tripleColumnsParent .entitiesList li.selected {
@@ -891,12 +896,45 @@ div.mceDropDown {
 	background-color: #DBECF3 !important;
 }
 
-.jstree #root > ins, .jstree #root > a {
-	display: none;
+#tree.jstree li {
+	width: 100%;
+	margin-left: 0;
 }
 
-.jstree #root > ul {
-	margin-left: -18px;
+#tree.jstree a {
+	display: block;
+	font-size: 14px;
+	height: 20px;
+	line-height: 18px;
+	background: none;
+	border: none;
+	border-bottom: 1px solid #d3d3d3;
+}
+
+#tree.jstree a.ui-state-hover {
+	background-color: #eeeeee;
+}
+
+#tree.jstree a.ui-state-active {
+	background-color: #d3d3d3;
+}
+
+#tree.jstree ins {
+	float: left;
+	margin-top: 2px;
+}
+
+#tree.jstree li > ins {
+	cursor: pointer;
+}
+
+.jstree-indent {
+	float: left;
+	height: 2px;
+}
+
+.jstree #root > ins, .jstree #root > a {
+	display: none;
 }
 
 .jstree .paraTag a .ui-icon {

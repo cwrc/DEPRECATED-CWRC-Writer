@@ -897,6 +897,7 @@ function Writer(config) {
 				onresize: function(region, pane, state, options) {
 					var tabsHeight = $('#westTabs > ul').outerHeight();
 					$('#westTabsContent').height(state.layoutHeight - tabsHeight);
+//					$.layout.callbacks.resizeTabLayout(region, pane);
 				}
 			}
 		});
@@ -915,6 +916,9 @@ function Writer(config) {
 			south: {
 				size: 250,
 				initClosed: true,
+				activate: function(event, ui) {
+					$.layout.callbacks.resizeTabLayout(event, ui);
+				},
 				onopen_start: function(region, pane, state, options) {
 					var southTabs = $('#southTabs');
 					if (!southTabs.hasClass('ui-tabs')) {
@@ -958,6 +962,9 @@ function Writer(config) {
 		$(document.body).click(_hideContextMenus);
 		$('#westTabs').tabs({
 			active: 1,
+			activate: function(event, ui) {
+				$.layout.callbacks.resizeTabLayout(event, ui);
+			},
 			create: function(event, ui) {
 				$('#westTabs').parent().find('.ui-corner-all').removeClass('ui-corner-all');
 			}

@@ -2,14 +2,48 @@ function Relations(config) {
 	
 	var w = config.writer;
 	
-	$(config.parentId).append('<div id="relations"><ul class="relationsList"></ul></div>');
+	$(config.parentId).append('<div id="relations" class="tabWithLayout">'+
+			'<div class="ui-layout-center"><ul class="relationsList"></ul></div>'+
+			'<div class="ui-layout-south tabButtons">'+
+			'<button>Add Relation</button><button>Remove Relation</button>'+
+			'</div>'+
+		'</div>');
 	$(document.body).append(''+
 		'<div id="relationsMenu" class="contextMenu" style="display: none;"><ul>'+
 		'<li id="removeRelation"><ins style="background:url(img/cross.png) center center no-repeat;" />Remove Relation</li>'+
 		'</ul></div>'
 	);
 	
-	var pm = {};
+	$('#relations div.ui-layout-south button:eq(0)').button().click(function() {
+		w.d.show('triple');
+	});
+	$('#relations div.ui-layout-south button:eq(1)').button().click(function() {
+		if (pm.currentlySelectedNode != null) {
+			pm.currentlySelectedNode = null;
+		} else {
+			w.d.show('message', {
+				title: 'No Relation Selected',
+				msg: 'You must first select a relation to remove.',
+				type: 'error'
+			});
+		}
+	});
+	
+	var pm = {
+		currentlySelectedNode: null
+	};
+	
+	pm.layout = $('#relations').layout({
+		defaults: {
+			resizable: false,
+			slidable: false,
+			closable: false
+		},
+		south: {
+			size: 'auto',
+			spacing_open: 0
+		}
+	});
 	
 	/**
 	 * @memberOf pm

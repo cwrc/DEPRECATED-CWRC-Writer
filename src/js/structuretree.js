@@ -2,12 +2,69 @@ function StructureTree(config) {
 	
 	var w = config.writer;
 	
-	var tree = {};
+	var tree = {
+		currentlySelectedNode: null
+	};
 	
 	var ignoreSelect = false; // used when we want to highlight a node without selecting it's counterpart in the editor
-
-	$(config.parentId).append('<div id="structure"><div id="tree"></div></div>');
+	
+	$(config.parentId).append('<div id="structure" class="tabWithLayout">'+
+			'<div id="tree" class="ui-layout-center"></div>'+
+			'<div id="structureTreeActions" class="ui-layout-south tabButtons">'+
+			'<button>Edit Tag</button><button>Remove Tag</button><button>Remove Tag and All Content</button>'+
+			'</div>'+
+	'</div>');
 	$(document.body).append('<div id="tree_popup"></div>');
+	
+	$('#structureTreeActions button:eq(0)').button().click(function() {
+		if (tree.currentlySelectedNode != null) {
+			w.editor.execCommand('editTag', tree.currentlySelectedNode);
+		} else {
+			w.d.show('message', {
+				title: 'No Tag Selected',
+				msg: 'You must first select a tag to edit.',
+				type: 'error'
+			});
+		}
+	});
+	$('#structureTreeActions button:eq(1)').button().click(function() {
+		if (tree.currentlySelectedNode != null) {
+			w.removeStructureTag(tree.currentlySelectedNode);
+			tree.currentlySelectedNode = null;
+		} else {
+			w.d.show('message', {
+				title: 'No Tag Selected',
+				msg: 'You must first select a tag to remove.',
+				type: 'error'
+			});
+		}
+	});
+	$('#structureTreeActions button:eq(2)').button().click(function() {
+		if (tree.currentlySelectedNode != null) {
+			w.removeStructureTag(tree.currentlySelectedNode, true);
+			tree.currentlySelectedNode = null;
+		} else {
+			w.d.show('message', {
+				title: 'No Tag Selected',
+				msg: 'You must first select a tag to remove.',
+				type: 'error'
+			});
+		}
+	});
+	
+	$('#tree').bind('loaded.jstree', function(event, data) {
+		tree.layout = $('#structure').layout({
+			defaults: {
+				resizable: false,
+				slidable: false,
+				closable: false
+			},
+			south: {
+				size: 'auto',
+				spacing_open: 0
+			}
+		});
+	});
 	
 	$('#tree').jstree({
 		core: {},
@@ -135,21 +192,21 @@ function StructureTree(config) {
 							};
 							w.editor.execCommand('editTag', obj.attr('name'), pos);
 						}
-					},
-					'delete': {
-						label: 'Remove Tag Only',
-						icon: 'img/tag_blue_delete.png',
-						action: function(obj) {
-							w.removeStructureTag(obj.attr('name'));
-						}
-					},
-					'delete_all': {
-						label: 'Remove Tag and All Content',
-						icon: 'img/tag_blue_delete.png',
-						action: function(obj) {
-							w.removeStructureTag(obj.attr('name'), true);
-						}
 					}
+//					'delete': {
+//						label: 'Remove Tag Only',
+//						icon: 'img/tag_blue_delete.png',
+//						action: function(obj) {
+//							w.removeStructureTag(obj.attr('name'));
+//						}
+//					},
+//					'delete_all': {
+//						label: 'Remove Tag and All Content',
+//						icon: 'img/tag_blue_delete.png',
+//						action: function(obj) {
+//							w.removeStructureTag(obj.attr('name'), true);
+//						}
+//					}
 				};
 				if (info._tag == w.root) {
 					delete items['delete'];
@@ -182,6 +239,7 @@ function StructureTree(config) {
 			var node = data.rslt.obj;
 			var id = node.attr('name');
 			if (id) {
+				tree.currentlySelectedNode = id;
 				if (w.structs[id]._tag == w.header) {
 					w.d.show('header');
 				} else {
@@ -212,7 +270,10 @@ function StructureTree(config) {
 	$('#tree').bind('dehover_node.jstree', function(event, data) {
 		_hidePopup();
 	});
-
+	$('#tree').bind('dehover_node.jstree', function(event, data) {
+		_hidePopup();
+	});
+	
 	/**
 	 * @memberOf tree
 	 */
