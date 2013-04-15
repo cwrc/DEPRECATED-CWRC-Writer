@@ -76,7 +76,7 @@ var SearchDialog = function(config) {
 		if (type == 'name') {
 			msg = 'Enter a first and last name, which will be encoded as a FOAF URN.';
 		} else if (type == 'localid') {
-			msg = 'Enter the local id that you system uses for this person. It will be encoded as an URN.';
+			msg = 'Enter the local id that your system uses for this person. It will be encoded as an URN.';
 		} else if (type == 'uri') {
 			msg = 'Enter a resolvable URI that identifies this person, e.g. their VIAF URI, LOC URI, etc.';
 		}
