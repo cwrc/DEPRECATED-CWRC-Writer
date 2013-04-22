@@ -243,7 +243,6 @@
 						// Paste divs duplicated in paste divs seems to happen when you paste plain text so lets first look for that broken behavior in WebKit
 						if (!dom.select('div.mcePaste > div.mcePaste').length) {
 							nl = dom.select('div.mcePaste');
-							console.log(nl[0].outerHTML);
 
 							// WebKit will split the div into multiple ones so this will loop through then all and join them to get the whole HTML string
 							each(nl, function(n) {
