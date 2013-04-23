@@ -324,7 +324,7 @@ function StructureTree(config) {
 					}
 				// duplicate struct check
 				} else {
-					var match = w.editor.$('[id='+id+']');
+					var match = $('[id='+id+']', w.editor.getBody());
 					if (match.length > 1) {
 						match.each(function(index, el) {
 							if (index > 0) {

@@ -53,67 +53,6 @@ function Writer(config) {
 	w.d = null; // dialog
 	w.settings = null; // settings dialog
 	
-	var _onInitHandler = function(ed) {
-		// modify isBlock method to check _tag attributes
-		ed.dom.isBlock = function(node) {
-			var type = node.nodeType;
-
-			// If it's a node then check the type and use the nodeName
-			if (type) {
-				if (type === 1) {
-					var tag = node.getAttribute('_tag') || node.nodeName;
-					return !!(ed.schema.getBlockElements()[tag]);
-				}
-			}
-
-			return !!ed.schema.getBlockElements()[node];
-		};
-		
-		var settings = w.settings.getSettings();
-		if (settings.showEntityBrackets) ed.$('body').addClass('showEntityBrackets');
-		if (settings.showStructBrackets) ed.$('body').addClass('showStructBrackets');
-		
-		ed.addCommand('isSelectionValid', w.u.isSelectionValid);
-		ed.addCommand('showError', w.showError);
-		ed.addCommand('addEntity', w.addEntity);
-		ed.addCommand('editTag', w.editTag);
-		ed.addCommand('changeTag', w.changeTag);
-		ed.addCommand('removeTag', w.removeTag);
-		ed.addCommand('copyEntity', w.copyEntity);
-		ed.addCommand('pasteEntity', w.pasteEntity);
-		ed.addCommand('removeEntity', w.removeEntity);
-		ed.addCommand('addStructureTag', w.addStructureTag);
-		ed.addCommand('editStructureTag', w.editStructureTag);
-		ed.addCommand('changeStructureTag', w.changeStructureTag);
-		ed.addCommand('updateStructureTree', w.tree.update);
-		ed.addCommand('removeHighlights', w.removeHighlights);
-		ed.addCommand('exportDocument', w.fm.exportDocument);
-		ed.addCommand('loadDocument', w.fm.loadDocument);
-		ed.addCommand('getChildrenForTag', w.u.getChildrenForTag);
-		ed.addCommand('getParentsForTag', w.u.getParentsForTag);
-		ed.addCommand('getDocumentationForTag', w.getDocumentationForTag);
-		
-		// used in conjunction with the paste plugin
-		// needs to be false in order for paste postprocessing to function properly
-		ed.pasteAsPlainText = false;
-		
-		// highlight tracking
-		ed.onMouseUp.add(function(ed, evt) {
-			_hideContextMenus(evt);
-			_doHighlightCheck(ed, evt);
-		});
-		
-		ed.onKeyDown.add(_onKeyDownHandler);
-		ed.onKeyUp.add(_onKeyUpHandler);
-		
-		setTimeout(function() {
-			w.layout.resizeAll(); // now that the editor is loaded, set proper sizing
-		}, 250);
-		
-		// load a starting document
-		w.fm.loadInitialDocument(window.location.hash);
-	};
-	
 	var _findNewAndDeletedTags = function() {
 		var updateRequired = false;
 		
@@ -152,7 +91,7 @@ function Writer(config) {
 	
 	var _findDuplicateTags = function() {
 		for (id in w.entities) {
-			var match = w.editor.$('span[class~="start"][name="'+id+'"]');
+			var match = $('span[class~="start"][name="'+id+'"]', w.editor.getBody());
 			if (match.length > 1) {
 				match.each(function(index, el) {
 					if (index > 0) {
@@ -170,7 +109,7 @@ function Writer(config) {
 			}
 		}
 		for (var id in w.structs) {
-			var match = w.editor.$('*[id='+id+']');
+			var match = $('*[id='+id+']', w.editor.getBody());
 			if (match.length == 2) {
 				var newStruct = match.last();
 				var newId = tinymce.DOM.uniqueId('struct_');
@@ -203,7 +142,7 @@ function Writer(config) {
 		
 		// update current entity
 		if (ed.currentEntity) {
-			var content = ed.$('#entityHighlight').text();
+			var content = $('#entityHighlight', ed.getBody()).text();
 			var entity = w.entities[ed.currentEntity];
 			entity.content = content;
 			entity.title = w.u.getTitleFromContent(content);
@@ -212,7 +151,7 @@ function Writer(config) {
 		
 		if (w.fixEmptyTag) {
 			w.fixEmptyTag = false;
-			ed.$('[class="empty_tag_remove_me"]').remove();
+			$('[class="empty_tag_remove_me"]', ed.getBody()).remove();
 		}
 		
 		if (w.emptyTagId) {
@@ -224,7 +163,7 @@ function Writer(config) {
 				w.insertBoundaryTags(w.emptyTagId, w.entities[w.emptyTagId].props.type, range);
 				
 				// TODO get working in IE
-				var tags = ed.$('[name='+w.emptyTagId+']');
+				var tags = $('[name='+w.emptyTagId+']', ed.getBody());
 				range = ed.selection.getRng(true);
 				range.setStartAfter(tags[0]);
 				range.setEndBefore(tags[1]);
@@ -255,8 +194,8 @@ function Writer(config) {
 			// replace br's inserted on shift+enter
 			if (evt.shiftKey && evt.which == 13) {
 				var node = ed.currentNode;
-				if (ed.$(node).attr('_tag') == 'lb') node = node.parentNode;
-				ed.$(node).find('br').replaceWith('<span _tag="lb"></span>');
+				if ($(node).attr('_tag') == 'lb') node = node.parentNode;
+				$(node).find('br').replaceWith('<span _tag="lb"></span>');
 			}
 		}
 		
@@ -270,7 +209,7 @@ function Writer(config) {
 	
 	var _onChangeHandler = function(ed, event) {
 		if (ed.isDirty()) {
-			ed.$('br').remove();
+			$('br', ed.getBody()).remove();
 			var doUpdate = _findNewAndDeletedTags();
 			if (doUpdate) w.tree.update();
 		}
@@ -278,8 +217,7 @@ function Writer(config) {
 	
 	var _onNodeChangeHandler = function(ed, cm, e) {
 		if (e.nodeType != 1) {
-			var root = ed.$(w.root, ed.getBody());
-			ed.currentNode = root[0];
+			ed.currentNode = ed.dom.select(w.root)[0];
 		} else {
 			if (e.getAttribute('_tag') == null && e.nodeName != w.root) {
 				e = e.parentNode;
@@ -294,6 +232,17 @@ function Writer(config) {
 		if (w.emptyTagId) {
 			delete w.entities[w.emptyTagId];
 			w.emptyTagId = null;
+		}
+	};
+	
+	var _onCopyHandler = function(ed, event) {
+		if (ed.copiedElement != null) {
+			$(ed.copiedElement).remove();
+		}
+		if (ed.currentStruct != null) {
+			ed.copiedElement = $('#'+ed.currentStruct, ed.getBody()).clone()[0];
+		} else {
+			ed.copiedElement = null;
 		}
 	};
 	
@@ -325,7 +274,7 @@ function Writer(config) {
 		
 		if (entityEnd == null || entityStart == null) {
 			w.highlightEntity();
-			var parentNode = ed.$(ed.selection.getNode());
+			var parentNode = $(ed.selection.getNode());
 			if (parentNode.attr('_tag')) {
 				var id = parentNode.attr('id');
 				w.editor.currentStruct = id;
@@ -426,7 +375,7 @@ function Writer(config) {
 	w.highlightEntity = function(id, bm, doScroll) {
 		w.editor.currentEntity = null;
 		
-		var prevHighlight = w.editor.$('#entityHighlight');
+		var prevHighlight = $('#entityHighlight', w.editor.getBody());
 		if (prevHighlight.length == 1) {
 			var parent = prevHighlight.parent()[0];
 			prevHighlight.contents().unwrap();
@@ -451,7 +400,7 @@ function Writer(config) {
 				nodes.push(currentNode);
 			}
 			
-			w.editor.$(nodes).wrapAll('<span id="entityHighlight" class="'+type+'"/>');
+			$(nodes).wrapAll('<span id="entityHighlight" class="'+type+'"/>');
 			
 			// maintain the original caret position
 			if (bm) {
@@ -459,8 +408,8 @@ function Writer(config) {
 			}
 			
 			if (doScroll) {
-				var val = w.editor.$(start).offset().top;
-				w.editor.$(w.editor.dom.doc.body).scrollTop(val);
+				var val = $(start).offset().top;
+				$(w.editor.dom.doc.body).scrollTop(val);
 			}
 			
 			$('#entities > ul > li[name="'+id+'"]').addClass('selected').find('div[class="info"]').show();
@@ -574,10 +523,10 @@ function Writer(config) {
 		var tag = {entity: null, struct: null};
 		if (id != null) {
 			if (w.entities[id]) tag.entity = w.entities[id];
-			else if (w.structs[id]) tag.struct = w.editor.$('#'+id);
+			else if (w.structs[id]) tag.struct = $('#'+id, w.editor.getBody());
 		} else {
 			if (w.editor.currentEntity != null) tag.entity = w.entities[w.editor.currentEntity];
-			else if (w.editor.currentStruct != null) tag.struct = w.editor.$('#'+w.editor.currentStruct);
+			else if (w.editor.currentStruct != null) tag.struct = $('#'+w.editor.currentStruct, w.editor.getBody());
 		}
 		return tag;
 	};
@@ -586,7 +535,7 @@ function Writer(config) {
 	w.editTag = function(id, pos) {
 		var tag = _getCurrentTag(id);
 		if (tag.struct) {
-			if (w.editor.$(tag.struct).attr('_tag')) {
+			if ($(tag.struct, w.editor.getBody()).attr('_tag')) {
 				w.editor.execCommand('editSchemaTag', tag.struct, pos);
 			} else {
 				w.editor.execCommand('editCustomTag', tag.struct, pos);
@@ -601,7 +550,7 @@ function Writer(config) {
 	w.changeTag = function(params) {
 		var tag = _getCurrentTag(params.id);
 		if (tag.struct) {
-			if (w.editor.$(tag.struct).attr('_tag')) {
+			if ($(tag.struct, w.editor.getBody()).attr('_tag')) {
 				w.editor.execCommand('changeSchemaTag', {tag: tag.struct, pos: params.pos, key: params.key});
 			}
 		} else if (tag.entity) {
@@ -684,7 +633,7 @@ function Writer(config) {
 		id = id || w.editor.currentEntity;
 		
 		delete w.entities[id];
-		var node = w.editor.$('span[name="'+id+'"]');
+		var node = $('span[name="'+id+'"]', w.editor.getBody());
 		var parent = node[0].parentNode;
 		node.remove();
 		parent.normalize();
@@ -722,7 +671,7 @@ function Writer(config) {
 		var node;
 		if (bookmark.tagId) {
 			// this is used when adding tags through the structure tree
-			node = w.editor.$('#'+bookmark.tagId)[0];
+			node = $('#'+bookmark.tagId, w.editor.getBody())[0];
 		} else {
 			// this is meant for user text selections
 			node = bookmark.rng.commonAncestorContainer;
@@ -762,7 +711,7 @@ function Writer(config) {
 		if (selection == '<span class="empty_tag_remove_me"></span>') {
 			// TODO inserting empty struct isn't working
 			w.fixEmptyTag = true;
-			var nodeEl = w.editor.$('span[class="empty_tag_remove_me"]').parent()[0];
+			var nodeEl = $('span[class="empty_tag_remove_me"]', w.editor.getBody()).parent()[0];
 			var range = w.editor.selection.getRng(true);
 			range.setStart(nodeEl.firstChild, 0);
 			range.setEnd(nodeEl.lastChild, nodeEl.lastChild.length);
@@ -793,7 +742,7 @@ function Writer(config) {
 		id = id || w.editor.currentStruct;
 		
 		delete w.structs[id];
-		var node = w.editor.$('#'+id);
+		var node = $('#'+id, w.editor.getBody());
 		if (removeContents) {
 			node.remove();
 		} else {
@@ -812,7 +761,7 @@ function Writer(config) {
 	
 	w.selectStructureTag = function(id) {
 		w.editor.currentStruct = id;
-		var node = w.editor.$('#'+id);
+		var node = $('#'+id, w.editor.getBody());
 		w.fixEmptyTag = true;
 		node.append('<span class="empty_tag_remove_me"></span>');
 		
@@ -973,11 +922,11 @@ function Writer(config) {
 		/**
 		 * Init tinymce
 		 */
-		$('#editor').tinymce({
-			script_url : 'js/tinymce/jscripts/tiny_mce/tiny_mce.js',
-//		tinyMCE.init({
-//			mode: 'exact',
-//			elements: 'editor',
+//		$('#editor').tinymce({
+//			script_url : 'js/tinymce/jscripts/tiny_mce/tiny_mce.js',
+		tinyMCE.init({
+			mode: 'exact',
+			elements: 'editor',
 			theme: 'advanced',
 			
 			content_css: 'css/editor.css',
@@ -1043,10 +992,74 @@ function Writer(config) {
 				ed.currentNode = null; // the node that the cursor is currently in
 				ed.entityCopy = null; // store a copy of an entity for pasting
 				ed.contextMenuPos = null; // the position of the context menu (used to position related dialog box)
+				ed.copiedElement = null; // the element that was copied (when first selected through the structure tree)
 				
-				ed.onInit.add(_onInitHandler);
+				ed.onInit.add(function(ed) {
+					// modify isBlock method to check _tag attributes
+					ed.dom.isBlock = function(node) {
+						var type = node.nodeType;
+
+						// If it's a node then check the type and use the nodeName
+						if (type) {
+							if (type === 1) {
+								var tag = node.getAttribute('_tag') || node.nodeName;
+//								console.log(tag);
+//								return !!(ed.schema.getBlockElements()[tag]);
+								return true;
+							}
+						}
+
+						return !!ed.schema.getBlockElements()[node];
+					};
+					
+					var settings = w.settings.getSettings();
+					var body = $('body', ed.getBody());
+					if (settings.showEntityBrackets) body.addClass('showEntityBrackets');
+					if (settings.showStructBrackets) body.addClass('showStructBrackets');
+					
+					ed.addCommand('isSelectionValid', w.u.isSelectionValid);
+					ed.addCommand('showError', w.showError);
+					ed.addCommand('addEntity', w.addEntity);
+					ed.addCommand('editTag', w.editTag);
+					ed.addCommand('changeTag', w.changeTag);
+					ed.addCommand('removeTag', w.removeTag);
+					ed.addCommand('copyEntity', w.copyEntity);
+					ed.addCommand('pasteEntity', w.pasteEntity);
+					ed.addCommand('removeEntity', w.removeEntity);
+					ed.addCommand('addStructureTag', w.addStructureTag);
+					ed.addCommand('editStructureTag', w.editStructureTag);
+					ed.addCommand('changeStructureTag', w.changeStructureTag);
+					ed.addCommand('updateStructureTree', w.tree.update);
+					ed.addCommand('removeHighlights', w.removeHighlights);
+					ed.addCommand('exportDocument', w.fm.exportDocument);
+					ed.addCommand('loadDocument', w.fm.loadDocument);
+					ed.addCommand('getChildrenForTag', w.u.getChildrenForTag);
+					ed.addCommand('getParentsForTag', w.u.getParentsForTag);
+					ed.addCommand('getDocumentationForTag', w.getDocumentationForTag);
+					
+					// used in conjunction with the paste plugin
+					// needs to be false in order for paste postprocessing to function properly
+					ed.pasteAsPlainText = false;
+					
+					// highlight tracking
+					ed.onMouseUp.add(function(ed, evt) {
+						_hideContextMenus(evt);
+						_doHighlightCheck(ed, evt);
+					});
+					
+					ed.onKeyDown.add(_onKeyDownHandler);
+					ed.onKeyUp.add(_onKeyUpHandler);
+					
+					setTimeout(function() {
+						w.layout.resizeAll(); // now that the editor is loaded, set proper sizing
+					}, 250);
+					
+					// load a starting document
+					w.fm.loadInitialDocument(window.location.hash);
+				});
 				ed.onChange.add(_onChangeHandler);
 				ed.onNodeChange.add(_onNodeChangeHandler);
+				ed.onCopy.add(_onCopyHandler);
 				ed.onPaste.add(_onPasteHandler);
 				
 				// add schema file and method

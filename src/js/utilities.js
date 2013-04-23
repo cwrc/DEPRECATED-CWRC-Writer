@@ -48,7 +48,7 @@ function Utilities(config) {
 		
 		// fix for select all and root node select
 		if (range.commonAncestorContainer.nodeName.toLowerCase() == 'body') {
-			var root = w.editor.$('body > *')[0];
+			var root = w.editor.dom.select('body > *')[0];
 			range.setStartBefore(root.firstChild);
 			range.setEndAfter(root.lastChild);
 		}

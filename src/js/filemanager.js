@@ -1060,7 +1060,7 @@ function FileManager(config) {
 					var elements = [];
 					$('element', w.schemaXML).each(function(index, el) {
 						var tag = $(el).attr('name');
-						if (elements.indexOf(tag) == -1) {
+						if (tag != null && elements.indexOf(tag) == -1) {
 							elements.push(tag);
 							schemaTags += '.showStructBrackets span[_tag='+tag+']:before { color: #aaa; font-weight: normal; font-style: normal; font-family: monospace; content: "<'+tag+'>"; }';
 							schemaTags += '.showStructBrackets span[_tag='+tag+']:after { color: #aaa; font-weight: normal; font-style: normal; font-family: monospace; content: "</'+tag+'>"; }';

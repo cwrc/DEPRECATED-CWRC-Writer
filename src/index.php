@@ -13,6 +13,10 @@
 		<script type="text/javascript" src="js/jquery/jquery.contextmenu.js"></script>
 		<script type="text/javascript" src="js/jquery/jquery.tmpl.min.js"></script>
 		<script type="text/javascript" src="js/jquery/jquery.watermark.min.js"></script>
+		
+		<script type="text/javascript" src="js/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+		<script type="text/javascript" src="js/tinymce/jscripts/tiny_mce/copy_event.js"></script>
+		
 		<script type="text/javascript" src="js/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>
 		<script type="text/javascript" src="js/jstree/jquery.hotkeys.js"></script>
 		<!-- can't use jquery.jtree.min.js due to modification -->

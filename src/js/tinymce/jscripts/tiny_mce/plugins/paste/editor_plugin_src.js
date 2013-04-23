@@ -273,6 +273,11 @@
 							h = '<p>' + dom.encode(textContent).replace(/\r?\n\r?\n/g, '</p><p>').replace(/\r?\n/g, '<br />') + '</p>';
 						}
 
+						// CHANGED use our custom element if available
+						if (ed.copiedElement) {
+							h = ed.copiedElement.outerHTML;
+						}
+						
 						// Remove the nodes
 						each(dom.select('div.mcePaste'), function(n) {
 							dom.remove(n);
