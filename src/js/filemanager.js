@@ -239,7 +239,7 @@ function FileManager(config) {
 	};
 	
 	fm.validate = function(callback) {
-		var docText = _exportDocument(false);
+		var docText = fm.getDocumentContent(false);
 		$.ajax({
 			url: w.baseUrl+'services/validator/validate.html',
 			type: 'POST',
@@ -283,7 +283,7 @@ function FileManager(config) {
 			fm.openSaver();
 		} else {
 			function doSave() {
-				var docText = _exportDocument(true);
+				var docText = fm.getDocumentContent(true);
 				$.ajax({
 					url : cwrc_params.BASE_PATH + '/cwrc/save/',
 			        type: 'POST',
@@ -406,7 +406,12 @@ function FileManager(config) {
 		return xmlString;
 	};
 	
-	var _exportDocument = function(includeRDF) {
+	/**
+	 * Gets the content of the document, converted from internal format to the schema format
+	 * @param includeRDF True to include RDF in the header
+	 * @returns {String}
+	 */
+	fm.getDocumentContent = function(includeRDF) {
 		// remove highlights
 		w.highlightEntity();
 		
@@ -975,7 +980,7 @@ function FileManager(config) {
 	};
 	
 	fm.editSource = function() {
-		var docText = _exportDocument(true);
+		var docText = fm.getDocumentContent(true);
 		$('textarea', edit).val(docText);
 		edit.dialog('open');
 	};
