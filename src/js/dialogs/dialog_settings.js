@@ -10,6 +10,12 @@ var SettingsDialog = function(writer, config) {
 	
 	jQuery.extend(settings, config);
 	
+	var defaultSettings = {
+		mode: w.mode,
+		validationSchema: w.validationSchema
+	};
+	jQuery.extend(defaultSettings, settings);
+	
 	$('#headerButtons').append(''+
 	'<div id="helpLink"><h2>Help</h2></div>'+
 	'<div id="settingsLink"><h2>Settings</h2></div>');
@@ -84,11 +90,16 @@ var SettingsDialog = function(writer, config) {
 		modal: true,
 		resizable: false,
 		closeOnEscape: true,
-		height: 270,
+		height: 203,
 		width: 325,
 		autoOpen: false,
 		buttons: {
 			'Ok': function() {
+				applySettings();
+				$('#settingsDialog').dialog('close');
+			},
+			'Revert to Defaults': function() {
+				setDefaults();
 				applySettings();
 				$('#settingsDialog').dialog('close');
 			},
@@ -153,6 +164,16 @@ var SettingsDialog = function(writer, config) {
 			fontFamily: settings.fontFamily
 		};
 		w.editor.dom.setStyles(w.editor.dom.getRoot(), styles);
+	};
+	
+	var setDefaults = function() {
+		$('select[name="fontsize"]', $('#settingsDialog')).val(defaultSettings.fontSize);
+		$('select[name="fonttype"]', $('#settingsDialog')).val(defaultSettings.fontFamily);
+		$('#showentitybrackets').prop('checked', defaultSettings.showEntityBrackets);
+		$('#showstructbrackets').prop('checked', defaultSettings.showStructBrackets);
+		
+		$('select[name="editormode"]', $('#settingsDialog')).val(defaultSettings.mode);
+		$('select[name="schema"]', $('#settingsDialog')).val(defaultSettings.validationSchema);
 	};
 	
 	var _doEntitiesOverlap = function() {

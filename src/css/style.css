@@ -1557,15 +1557,6 @@ ul.relationsList li:hover
 
 
 
-/* Settings box */
-
-#settingsDialog
-{
-  height: 105px !important;
-}
-
-
-
 /* JQuery UI overrides */
 
 .ui-state-default,
