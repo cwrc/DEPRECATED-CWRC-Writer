@@ -115,6 +115,13 @@ body {
 	border-color: #3366ff;
 }
 
+span[data-mce-bogus] {
+	height: 0px;
+	width: 0px;
+	line-height: 0px;
+	font-size: 0px;
+}
+
 .titleTagQuotes:before, .quoteTagShort:before {
 	content: open-quote;
 }

@@ -272,10 +272,17 @@
 							// So this logic will replace double enter with paragraphs and single enter with br so it kind of looks the same
 							h = '<p>' + dom.encode(textContent).replace(/\r?\n\r?\n/g, '</p><p>').replace(/\r?\n/g, '<br />') + '</p>';
 						}
-
+						
 						// CHANGED use our custom element if available
 						if (ed.copiedElement) {
-							h = ed.copiedElement.outerHTML;
+							var id = 'id="'+ed.copiedElement.getAttribute('id')+'"';
+							// see if the copiedElement id is in the content to be pasted
+							// if so, replace it with the copiedElement
+							if (h.search(id) != -1) {
+								h = ed.copiedElement.outerHTML;
+							} else {
+								ed.copiedElement = null;
+							}
 						}
 						
 						// Remove the nodes

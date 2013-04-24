@@ -767,8 +767,18 @@ function Writer(config) {
 		
 		var nodeEl = node[0];
 		
-		// select node and its contents
-		w.editor.selection.select(nodeEl);
+		var display = node.css('display');
+		// hack to fix selection of inline elements
+		if (display == 'inline') {
+			node.before('<span data-mce-bogus="1">\uFEFF</span>').after('<span data-mce-bogus="1">\uFEFF</span>');
+			
+			var rng = w.editor.dom.createRng();
+			rng.setStart(nodeEl.previousSibling, 0);
+			rng.setEnd(nodeEl.nextSibling, 0);
+			w.editor.selection.setRng(rng);
+		} else {
+			w.editor.selection.select(nodeEl);
+		}
 		
 		// select node contents only
 //		if (tinymce.isWebKit) {
