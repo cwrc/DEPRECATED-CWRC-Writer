@@ -89,24 +89,31 @@ var SettingsDialog = function(writer, config) {
 		title: 'Settings',
 		modal: true,
 		resizable: false,
+		dialogClass: 'splitButtons',
 		closeOnEscape: true,
 		height: 203,
 		width: 325,
 		autoOpen: false,
-		buttons: {
-			'Ok': function() {
-				applySettings();
-				$('#settingsDialog').dialog('close');
-			},
-			'Revert to Defaults': function() {
+		buttons: [{
+			text: 'Revert to Defaults',
+			'class': 'left',
+			click: function() {
 				setDefaults();
 				applySettings();
 				$('#settingsDialog').dialog('close');
 			},
-			'Cancel': function() {
+		},{
+			text: 'Ok',
+			click: function() {
+				applySettings();
 				$('#settingsDialog').dialog('close');
 			}
-		}
+		},{
+			text: 'Cancel',
+			click: function() {
+				$('#settingsDialog').dialog('close');
+			}
+		}]
 	});
 	
 	$('#helpDialog').dialog({
