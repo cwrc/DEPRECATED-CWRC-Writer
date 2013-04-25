@@ -46,6 +46,7 @@
 		<script type="text/javascript" src="js/entities_model.js"></script>
 		<script type="text/javascript" src="js/relations.js"></script>
 		<script type="text/javascript" src="js/validation.js"></script>
+		<script type="text/javascript" src="js/delegator.js"></script>
 
 		<link type="text/css" rel="stylesheet" href="css/style.css" />
 		
@@ -58,13 +59,16 @@
 					url: 'http://apps.testing.cwrc.ca/editor/documents/info/projectname',
 					success: function(data, status, xhr) {
 						writer = new Writer({
-							project: data
+							project: data,
+							delegator: Delegator
 						});
 						writer.init();
 						writer.layout.close('east');
 					},
 					error: function() {
-						writer = new Writer();
+						writer = new Writer({
+							delegator: Delegator
+						});
 						writer.init();
 						writer.layout.close('east');
 					}

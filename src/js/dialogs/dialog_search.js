@@ -104,71 +104,23 @@ var SearchDialog = function(config) {
 		
 		var query = searchInput.value;
 		
-		if (lookupService == 'lookup_project') {
-			$.ajax({
-				url: cwrc_params.authority_url + type + '/' + query,
-				dataType: 'text json',
-				success: function(data, status, xhr) {
-					if ($.isPlainObject(data)) data = [data];
-					if (data != null) {
-						handleResults(data, 'project');
-					} else {
-						$('#lookupServices div.ui-accordion-content-active div.searchResultsParent ul').first().html('<li class="unselectable last"><span>No results.</span></li>');
-					}
-				},
-				error: function(xhr, status, error) {
-					if (status == 'parsererror') {
-						var lines = xhr.responseText.split(/\n/);
-						if (lines[lines.length-1] == '') {
-							lines.pop();
-						}
-						var string = lines.join(',');
-						var data = $.parseJSON('['+string+']');
-						handleResults(data, 'project');
-					} else {
-						$('#lookupServices div.ui-accordion-content-active div.searchResultsParent ul').first().html('<li class="unselectable last"><span>Server error.</span></li>');
-					}
-				}
-			});
-		} else if (lookupService == 'lookup_viaf') {
-			$.ajax({
-				url: 'http://viaf.org/viaf/AutoSuggest',
-				data: {
-					query: query
-				},
-				dataType: 'jsonp',
-				success: function(data, status, xhr) {
-					if (data != null && data.result != null) {
-						handleResults(data.result, 'viaf');
-					} else {
-						$('#lookupServices div.ui-accordion-content-active div.searchResultsParent ul').first().html('<li class="unselectable last"><span>No results.</span></li>');
-					}
-				},
-				error: function() {
-					$('#lookupServices div.ui-accordion-content-active div.searchResultsParent ul').first().html('<li class="unselectable last"><span>Server error.</span></li>');
-				}
-			});
-		}
+		w.delegator.lookupEntity({type: type, query: query, lookupService: lookupService}, handleResults);
 	};
 	
-	var handleResults = function(results, lookup) {
+	var handleResults = function(results) {
 		var formattedResults = '';
 		var last = '';
 		
-		if (results.length == 0) {
+		if (results == null) {
+			$('#lookupServices div.ui-accordion-content-active div.searchResultsParent ul').first().html('<li class="unselectable last"><span>Server error.</span></li>');
+		} else if (results.length == 0) {
 			$('#lookupServices div.ui-accordion-content-active div.searchResultsParent ul').first().html('<li class="unselectable last"><span>No results.</span></li>');
 		} else {
 			var r, i, label;
 			for (i = 0; i < results.length; i++) {
 				r = results[i];
 				
-				if (lookup == 'project') {
-					label = r.identifier;
-				} else if (lookup == 'viaf') {
-					label = r.term;
-				} else {
-					label = r[currentType];
-				}
+				label = r.identifier || r.term || r[currentType];
 
 				if (i == results.length - 1) last = 'last';
 				else last = '';

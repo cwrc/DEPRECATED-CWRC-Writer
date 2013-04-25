@@ -5,7 +5,7 @@ function Validation(config) {
 	$(config.parentId).append('<div id="validation"><button>Validate</button><button>Clear</button><ul class="validationList"></ul></div>');
 	
 	$('#validation button:eq(0)').button().click(function() {
-		w.fm.validate();
+		w.delegator.validate();
 	});
 	$('#validation button:eq(1)').button().click(function() {
 		$('#validation > ul').empty();

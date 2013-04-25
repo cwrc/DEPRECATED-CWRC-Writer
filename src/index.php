@@ -48,6 +48,7 @@
 		<script type="text/javascript" src="js/entities_model.js"></script>
 		<script type="text/javascript" src="js/relations.js"></script>
 		<script type="text/javascript" src="js/validation.js"></script>
+		<script type="text/javascript" src="js/delegator.js"></script>
 
       <!-- CWRC stylesheets -->
 

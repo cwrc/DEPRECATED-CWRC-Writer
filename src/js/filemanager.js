@@ -238,46 +238,6 @@ function FileManager(config) {
 		return name.match(/[^A-Za-z]+/) == null;
 	};
 	
-	fm.validate = function(callback) {
-		var docText = fm.getDocumentContent(false);
-		$.ajax({
-			url: w.baseUrl+'services/validator/validate.html',
-			type: 'POST',
-			dataType: 'XML',
-			data: {
-				sch: 'http://cwrc.ca/schema/'+w.validationSchema,
-				type: 'RNG_XML',
-				content: docText
-			},
-			success: function(data, status, xhr) {
-				if (callback) {
-					var valid = $('status', data).text() == 'pass';
-					callback(valid);
-				} else {
-					w.validation.showValidationResult(data, docText);
-				}
-			},
-			error: function() {
-//				 $.ajax({
-//					url : 'xml/validation.xml',
-//					success : function(data, status, xhr) {
-//						if (callback) {
-//							var valid = $('status', data).text() == 'pass';
-//							callback(valid);
-//						} else {
-//							w.validation.showValidationResult(data, docText);
-//						}
-//					}
-//				}); 
-				w.d.show('message', {
-					title: 'Error',
-					msg: 'An error occurred while trying to validate '+currentDoc+'.',
-					type: 'error'
-				});
-			}
-		});
-	};
-	
 	fm.saveDocument = function() {
 		if (currentDoc == null) {
 			fm.openSaver();
@@ -327,7 +287,7 @@ function FileManager(config) {
 				}
 			}
 			
-			fm.validate(validationHandler);
+			w.delegator.validate(validationHandler);
 		}
 	};
 	
@@ -604,6 +564,10 @@ function FileManager(config) {
 			},
 			dataType: 'xml'
 		});
+	};
+	
+	fm.loadDocumentFromXml = function(docXml) {
+		_loadDocumentHandler(docXml);
 	};
 	
 	fm.loadDocument = function(docName) {

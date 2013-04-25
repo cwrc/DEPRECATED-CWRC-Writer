@@ -52,6 +52,7 @@ function Writer(config) {
 	w.relations = null; // relations list
 	w.d = null; // dialog
 	w.settings = null; // settings dialog
+	w.delegator = null;
 	
 	var _findNewAndDeletedTags = function() {
 		var updateRequired = false;
@@ -814,6 +815,35 @@ function Writer(config) {
 	};
 	
 	/**
+	 * Load a document into the editor
+	 * @param docXml The XML content of the document
+	 * @param schemaURI The URI for the corresponding schema
+	 */
+	w.loadDocument = function(docXml, schemaURI) {
+		w.fm.loadDocumentFromXml(docXml);
+	};
+	
+	/**
+	 * Get the current document from the editor
+	 * @returns Element The XML document serialized to a string
+	 */
+	w.getDocument = function() {
+		var docString = w.fm.getDocumentContent(true);
+		var doc = null;
+		try {
+			var parser = new DOMParser();
+			doc = parser.parseFromString(docString, 'application/xml');
+		} catch(e) {
+			w.d.show('message', {
+				title: 'Error',
+				msg: 'There was an error getting the document:'+e,
+				type: 'error'
+			});
+		}
+		return doc;
+	};
+	
+	/**
 	 * Begin init functions
 	 */
 	w.init = function() {
@@ -917,6 +947,11 @@ function Writer(config) {
 			showEntityBrackets: true,
 			showStructBrackets: false
 		});
+		if (config.delegator != null) {
+			w.delegator = new config.delegator({writer: w});
+		} else {
+			alert('Error: you must specify a delegator in the Writer config for full functionality!');
+		}
 		
 		$(document.body).click(_hideContextMenus);
 		$('#westTabs').tabs({
@@ -1023,7 +1058,7 @@ function Writer(config) {
 					};
 					
 					var settings = w.settings.getSettings();
-					var body = $('body', ed.getBody());
+					var body = $(ed.getBody());
 					if (settings.showEntityBrackets) body.addClass('showEntityBrackets');
 					if (settings.showStructBrackets) body.addClass('showStructBrackets');
 					
@@ -1177,7 +1212,7 @@ function Writer(config) {
 				});
 				ed.addButton('validate', {title: 'Validate', image: 'img/validate.png', 'class': 'entityButton',
 					onclick: function() {
-						w.fm.validate();
+						w.delegator.validate();
 					}
 				});
 				ed.addButton('addtriple', {title: 'Add Relation', image: 'img/chart_org.png', 'class': 'entityButton',
