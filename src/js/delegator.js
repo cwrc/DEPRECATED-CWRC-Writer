@@ -8,7 +8,7 @@ function Delegator(config) {
 		var query = params.query;
 		var lookupService = params.lookupService;
 		
-		if (lookupService == 'lookup_project') {
+		if (lookupService == 'project') {
 			$.ajax({
 				url: cwrc_params.authority_url + type + '/' + query,
 				dataType: 'text json',
@@ -34,7 +34,7 @@ function Delegator(config) {
 					}
 				}
 			});
-		} else if (lookupService == 'lookup_viaf') {
+		} else if (lookupService == 'viaf') {
 			$.ajax({
 				url: 'http://viaf.org/viaf/AutoSuggest',
 				data: {

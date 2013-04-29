@@ -95,7 +95,7 @@ var SearchDialog = function(config) {
 	$('#certainty').buttonset();
 	
 	var doQuery = function() {
-		var lookupService = $('#lookupServices div.ui-accordion-content-active').parent()[0].id;
+		var lookupService = $('#lookupServices div.ui-accordion-content-active').parent()[0].id.replace('lookup_', '');
 		var type = search.dialog('option', 'title');
 		
 		$('#lookupServices div.ui-accordion-content-active div.searchResultsParent').css({borderColor: '#fff'});
