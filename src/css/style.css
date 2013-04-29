@@ -754,9 +754,13 @@ label {
 	height: auto !important;
 }
 
-#menu_editor_editor_schemaTagsButton_menu_co, #menu_structTagsContextMenu_co, #menu_changeTagContextMenu_co {
-	/*max-height: 600px;
-	overflow: auto;*/
+#menu_editor_editor_schemaTagsButton_menu_co {
+    border: 1px solid #D4D0C8;
+    direction: ltr;
+    left: 0;
+    position: absolute;
+    top: 26px;
+    z-index: 1000;
 }
 
 #menu_editor_editor_schemaTagsButton_menu_co .mceMenuItemDisabled, #menu_structTagsContextMenu_co .mceMenuItemDisabled, #menu_changeTagContextMenu_co .mceMenuItemDisabled {
@@ -767,6 +771,29 @@ label {
 	height: 0;
 	margin: 0;
 	padding: 0;
+}
+
+#menu_editor_editor_schemaTagsButton_menu_inputParent {
+	background-color: #ffffff;
+	border: 1px solid #D4D0C8;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1000;
+	width: 100%;
+	font-size: 11px;
+}
+
+#menu_editor_editor_schemaTagsButton_menu_inputParent span {
+	margin: 4px 0 4px 3px;
+	display: inline-block;
+}
+
+#menu_editor_editor_schemaTagsButton_menu_inputParent input {
+	margin: 4px 3px;
+	position: relative;
+	display: inline-block;
+	cursor: text;
 }
 
 /* used by the entity plugin */
@@ -868,6 +895,27 @@ div.mceDropDown {
     display: block;
     float: right;
     width: 20px;
+}
+
+#vakata-contextmenu .submenu .filterParent {
+	position: absolute;
+	display: none;
+	background-color: #fff !important;
+	border: 1px solid #D4D0C8 !important;
+    box-shadow: 1px 1px 2px #CCCCCC;
+}
+
+#vakata-contextmenu .submenu .filterParent span {
+	margin: 2px 3px;
+	font-size: 11px;
+}
+
+#vakata-contextmenu .submenu .filterParent input {
+	margin: 2px 3px 2px 0;
+	width: 90px;
+	position: relative;
+	font-size: 11px;
+	border: 1px solid #D4D0C8;
 }
 
 #jqContextMenu li.separator {

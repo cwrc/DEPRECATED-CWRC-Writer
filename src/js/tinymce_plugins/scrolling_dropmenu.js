@@ -166,6 +166,8 @@
 			DOM.show(co);
 			t.update();
 
+			t.textInput.value = '';
+			
 			x += s.offset_x || 0;
 			y += s.offset_y || 0;
 			vp.w -= 4;
@@ -275,6 +277,61 @@
 			m.onAddItem.add(t.onAddItem.dispatch, t.onAddItem);
 
 			return m;
+		},
+		
+		renderNode : function() {
+			var t = this, s = t.settings, n, tb, co, w;
+
+			w = DOM.create('div', {role: 'listbox', id : 'menu_' + t.id, 'class' : s['class'], 'style' : 'position:absolute;left:0;top:0;z-index:200000;outline:0'});
+			if (t.settings.parent) {
+				DOM.setAttrib(w, 'aria-parent', 'menu_' + t.settings.parent.id);
+			}
+			
+			// add input box
+			var inputDiv = DOM.add(w, 'div', {id : 'menu_' + t.id + '_inputParent', 'class' : t.classPrefix + (s['class'] ? ' ' + s['class'] : '')}, '<span>Filter</span>');
+			t.textInput = DOM.add(inputDiv, 'input', {id : 'menu_' + t.id + '_input', type: 'text', 'class' : t.classPrefix + (s['class'] ? ' ' + s['class'] : '')});
+			
+			Event.add(t.textInput, 'keyup', t.filterMenuItems, t);
+			
+			
+			co = DOM.add(w, 'div', {role: 'presentation', id : 'menu_' + t.id + '_co', 'class' : t.classPrefix + (s['class'] ? ' ' + s['class'] : '')});
+			t.element = new Element('menu_' + t.id, {blocker : 1, container : s.container});
+
+			if (s.menu_line)
+				DOM.add(co, 'span', {'class' : t.classPrefix + 'Line'});
+
+//			n = DOM.add(co, 'div', {id : 'menu_' + t.id + '_co', 'class' : 'mceMenuContainer'});
+			n = DOM.add(co, 'table', {role: 'presentation', id : 'menu_' + t.id + '_tbl', border : 0, cellPadding : 0, cellSpacing : 0});
+			tb = DOM.add(n, 'tbody');
+
+			each(t.items, function(o) {
+				t._add(tb, o);
+			});
+
+			t.rendered = true;
+
+			return w;
+		},
+		
+		filterMenuItems: function(e) {
+			if (e.which == e.DOM_VK_DOWN) {
+				// TODO add keyboard navigation
+//				var item = $('#menu_' + this.id + '_co tr[class*=mceMenuItemEnabled]').filter(':first');
+			} else {
+				var query = $(this.textInput).val();
+				var item;
+				for (var itemId in this.items) {
+					item = this.items[itemId];
+					if (query == '') {
+						item.setDisabled(item.settings.initialFilterState);
+					} else if (!item.settings.initialFilterState && item.settings.key.indexOf(query) != -1) {
+						item.setDisabled(false);
+					} else {
+						item.setDisabled(true);
+					}
+				}
+				this.update();
+			}
 		}
 	});
 })(tinymce);

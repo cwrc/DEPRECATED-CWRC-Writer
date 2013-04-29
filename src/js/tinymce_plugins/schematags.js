@@ -49,8 +49,10 @@
 						count++;
 						item = m.items[itemId];
 						if (validKeys.indexOf(item.settings.key) != -1) {
+							item.settings.initialFilterState = false;
 							item.setDisabled(false);
 						} else {
+							item.settings.initialFilterState = true;
 							item.setDisabled(true);
 							disCount++;
 						}
@@ -66,6 +68,7 @@
 					var menuitem = menu.add({
 						title: key,
 						key: key,
+						initialFilterState: null,
 						icon_src: url + 'tag_blue.png',
 						onclick : function() {
 							if (mode == 'change') {

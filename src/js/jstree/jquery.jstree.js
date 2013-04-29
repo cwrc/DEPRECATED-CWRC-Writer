@@ -3552,29 +3552,15 @@
 				.css({ "left" : x, "top" : y })
 				.find("li:has(ul)")
 					.bind("mouseenter", function (e) { 
-						var mx = $(document.body).width(),
-							my = $(document.body).height();
+						$.vakata.context.updateHeight($(this));
 						
-						var ul = $(this).children("ul");
-						ul.css({
-							overflow: 'hidden',
-							height: 'auto'
-						});
+						var ul = $(this).children('ul');
 						
+						var mx = $(document.body).width();
 						var cntWidth = $.vakata.context.cnt.width();
 						var offset = $.vakata.context.cnt.offset();
-						var ulHeight = ul.outerHeight();
 						var ulWidth = ul.outerWidth();
 						
-						var targetOffset = $(e.target).parents('li').offset();
-						
-						// height constraint
-						if (ulHeight + targetOffset.top > my) {
-							ul.css({
-								overflow: 'auto',
-								height: (my-(targetOffset.top+25))+'px'
-							});
-						}
 						// width constraint
 						var x = cntWidth;
 						var y = -2;
@@ -3586,16 +3572,62 @@
 							left: x+'px',
 							top: y+'px'
 						});
+						
+						// set filter css
+						var filter = $(this).children('div.filterParent');
+						filter.css({
+							left: x+'px',
+							top: (y-24)+'px',
+							width: ul.innerWidth()+'px'
+						});
+						
 						ul.show();
+						filter.show();
 					})
 					.bind("mouseleave", function (e) { 
 						$(this).children("ul").hide(); 
+						$(this).children('div.filterParent').hide();
+					})
+					.end()
+				.find('div.filterParent > input')
+					.bind('keyup', function(e) {
+						var query = $(this).val();
+						$(this).parent().next('ul').children('li').each(function(index, el) {
+							if (query == '' || $('a', el).attr('rel').indexOf(query) != -1) {
+								$(el).show();
+							} else {
+								$(el).hide();
+							}
+						});
+						$.vakata.context.updateHeight($(this).parent().parent());
 					})
 					.end()
 				.css({ "visibility" : "visible" })
 				.show();
 			$(document).triggerHandler("context_show.vakata");
 		},
+		
+		updateHeight : function(submenuContainer) {
+			var my = $(document.body).height();
+		
+			var ul = submenuContainer.children("ul");
+			ul.css({
+				overflow: 'hidden',
+				height: 'auto'
+			});
+			
+			var ulHeight = ul.outerHeight();
+			var targetOffset = submenuContainer.offset();
+			
+			// height constraint
+			if (ulHeight + targetOffset.top > my) {
+				ul.css({
+					overflow: 'auto',
+					height: (my-(targetOffset.top+25))+'px'
+				});
+			}
+		},
+		
 		hide	: function () {
 			$.vakata.context.vis = false;
 			$.vakata.context.cnt.attr("class","").css({ "visibility" : "hidden" });
@@ -3605,12 +3637,20 @@
 			if(!s) { return false; }
 			var str = "",
 				tmp = false,
-				was_sep = true;
-			if(!is_callback) { $.vakata.context.func = {}; }
+				was_sep = true,
+				first = true;
+			if(!is_callback) {
+				$.vakata.context.func = {};
+			} else if (is_callback == true) {
+				// it's a submenu, add filtering
+				str += '<div class="filterParent"><span>Filter</span> <input type="text"/></div>';
+			}
+			
 			str += "<ul>";
 			$.each(s, function (i, val) {
 				if(!val) { return true; }
 				$.vakata.context.func[i] = val.action;
+				
 				if(!was_sep && val.separator_before) {
 					str += "<li class='vakata-separator vakata-separator-before'></li>";
 				}
