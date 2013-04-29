@@ -98,6 +98,7 @@
 
       <!-- CWRC stylesheets -->
 	  <link type="text/css" rel="stylesheet" href="css/style.css" />
+	  <link type="text/css" rel="stylesheet" href="css/islandora_style.css" />
 
     </head>
     <body>
