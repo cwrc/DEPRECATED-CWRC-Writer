@@ -137,7 +137,7 @@ var EntitiesList = function(config) {
 		}).contextMenu('entitiesMenu', {
 			bindings: {
 				'editEntity': function(tag) {
-					w.editTag($(tag).attr('name'));
+					w.tagger.editTag($(tag).attr('name'));
 				},
 				'removeEntity': function(tag) {
 					w.removeEntity($(tag).attr('name'));

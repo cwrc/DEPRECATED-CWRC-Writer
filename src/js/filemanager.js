@@ -930,7 +930,7 @@ function FileManager(config) {
 					try {
 						range.setStart(startNode, startOffset);
 						range.setEnd(endNode, endOffset);
-						w.insertBoundaryTags(id, w.entities[id].props.type, range);
+						w.tagger.insertBoundaryTags(id, w.entities[id].props.type, range);
 					} catch (e) {
 						
 					}

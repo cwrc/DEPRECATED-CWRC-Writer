@@ -32,6 +32,46 @@ function Utilities(config) {
 		}
 	};
 	
+	u.getPreviousTextNode = function(node) {
+		function doGet(currNode) {
+			var prevNode = currNode.previousSibling;
+			if (prevNode == null) {
+				prevNode = currNode.parentNode.previousSibling;
+				if (prevNode.nodeType == 1) {
+					prevNode = prevNode.lastChild;
+				}
+			}
+			if (prevNode.nodeType == 3) {
+				return prevNode;
+			} else {
+				return doGet(prevNode);
+			}
+		}
+		
+		var prevTextNode = doGet(node);
+		return prevTextNode;
+	};
+	
+	u.getNextTextNode = function(node) {
+		function doGet(currNode) {
+			var nextNode = currNode.nextSibling;
+			if (nextNode == null) {
+				nextNode = currNode.parentNode.nextSibling;
+				if (nextNode.nodeType == 1) {
+					nextNode = nextNode.firstChild;
+				}
+			}
+			if (nextNode.nodeType == 3) {
+				return nextNode;
+			} else {
+				return doGet(nextNode);
+			}
+		}
+		
+		var nextTextNode = doGet(node);
+		return nextTextNode;
+	};
+	
 	/**
 	 * checks the user selection and potential entity markers
 	 * @param isStructTag Is the tag a structure tag
@@ -182,6 +222,12 @@ function Utilities(config) {
 		return w.VALID;
 	};
 
+	u.getDocumentationForTag = function(tag) {
+		var element = $('element[name="'+tag+'"]', w.schemaXML);
+		var doc = $('a\\:documentation, documentation', element).first().text();
+		return doc;
+	};
+	
 	function supportsLocalStorage() {
 		try {
 			return 'localStorage' in window && window['localStorage'] !== null;

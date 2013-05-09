@@ -29,7 +29,7 @@ function StructureTree(config) {
 	});
 	$('#structureTreeActions button:eq(1)').button().click(function() {
 		if (tree.currentlySelectedNode != null) {
-			w.removeStructureTag(tree.currentlySelectedNode);
+			w.tagger.removeStructureTag(tree.currentlySelectedNode);
 			tree.currentlySelectedNode = null;
 		} else {
 			w.d.show('message', {
@@ -41,7 +41,7 @@ function StructureTree(config) {
 	});
 	$('#structureTreeActions button:eq(2)').button().click(function() {
 		if (tree.currentlySelectedNode != null) {
-			w.removeStructureTag(tree.currentlySelectedNode, true);
+			w.tagger.removeStructureTag(tree.currentlySelectedNode, true);
 			tree.currentlySelectedNode = null;
 		} else {
 			w.d.show('message', {
@@ -197,14 +197,14 @@ function StructureTree(config) {
 //						label: 'Remove Tag Only',
 //						icon: 'img/tag_blue_delete.png',
 //						action: function(obj) {
-//							w.removeStructureTag(obj.attr('name'));
+//							w.tagger.removeStructureTag(obj.attr('name'));
 //						}
 //					},
 //					'delete_all': {
 //						label: 'Remove Tag and All Content',
 //						icon: 'img/tag_blue_delete.png',
 //						action: function(obj) {
-//							w.removeStructureTag(obj.attr('name'), true);
+//							w.tagger.removeStructureTag(obj.attr('name'), true);
 //						}
 //					}
 				};
@@ -223,7 +223,7 @@ function StructureTree(config) {
 					var node = this.get_selected();
 					var id = node.attr('name');
 					if (id) {
-						w.removeStructureTag(id);
+						w.tagger.removeStructureTag(id);
 					}
 				}
 			},
