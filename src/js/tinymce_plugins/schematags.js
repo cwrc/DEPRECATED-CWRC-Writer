@@ -285,7 +285,9 @@
 				}
 			});
 			
-			$('#schemaDialog ins').tooltip();
+			$('#schemaDialog ins').tooltip({
+				tooltipClass: 'cwrc-tooltip'
+			});
 			
 			$('#schemaDialog input, #schemaDialog select, #schemaDialog option').change(function(event) {
 				t.isDirty = true;

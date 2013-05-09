@@ -488,7 +488,7 @@ label {
 }
 
 #schemaDialog label {
-	display: block;
+	display: inline;
 }
 
 #schemaDialog input, #schemaDialog select {
@@ -545,6 +545,10 @@ label {
 
 .required {
 	color: red;
+}
+
+.cwrc-tooltip {
+	max-width: 250px;
 }
 
 #personName input {
