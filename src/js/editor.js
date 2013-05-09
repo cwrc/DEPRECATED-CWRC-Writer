@@ -702,7 +702,7 @@ function Writer(config) {
 					ed.addCommand('loadDocument', w.fm.loadDocument);
 					ed.addCommand('getChildrenForTag', w.u.getChildrenForTag);
 					ed.addCommand('getParentsForTag', w.u.getParentsForTag);
-					ed.addCommand('getDocumentationForTag', w.u.getDocumentationForTag);
+					ed.addCommand('getDocumentationForTag', w.delegator.getHelp);
 					
 					// used in conjunction with the paste plugin
 					// needs to be false in order for paste postprocessing to function properly
@@ -853,4 +853,4 @@ function Writer(config) {
 			}
 		});
 	};
-};
+}

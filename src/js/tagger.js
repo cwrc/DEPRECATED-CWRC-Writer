@@ -170,7 +170,7 @@ function Tagger(config) {
 	 * Looks for duplicate tags (from copy paste operations) and creates new entity/struct entries.
 	 */
 	tagger.findDuplicateTags = function() {
-		for (id in w.entities) {
+		for (var id in w.entities) {
 			var match = $('span[class~="start"][name="'+id+'"]', w.editor.getBody());
 			if (match.length > 1) {
 				match.each(function(index, el) {

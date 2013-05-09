@@ -95,6 +95,10 @@ function Delegator(config) {
 		});
 	};
 	
+	del.getHelp = function(tagName) {
+		return w.u.getDocumentationForTag(tagName);
+	};
+	
 	del.annoAdded = function(rdf) {
 		
 	};
