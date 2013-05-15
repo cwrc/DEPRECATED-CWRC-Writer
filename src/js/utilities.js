@@ -5,6 +5,30 @@ function Utilities(config) {
 	
 	var u = {};
 	
+	u.xmlToString = function(xmlData) {
+		var xmlString = '';
+		try {
+			if (window.ActiveXObject) {
+				xmlString = xmlData.xml;
+			} else {
+				xmlString = (new XMLSerializer()).serializeToString(xmlData);
+			}
+		} catch (e) {
+			alert(e);
+		}
+		return xmlString;
+	};
+	
+	u.stringToXML = function(string) {
+		if (window.ActiveXObject) {
+			var oXML = new ActiveXObject("Microsoft.XMLDOM");
+			oXML.loadXML(string);
+			return oXML;
+		} else {
+			return (new DOMParser()).parseFromString(string, "text/xml");
+		}
+	};
+	
 	/**
 	 * @memberOf u
 	 * @param content

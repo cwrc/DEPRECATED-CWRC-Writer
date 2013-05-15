@@ -129,17 +129,9 @@ function FileManager(config) {
 		autoOpen: false,
 		buttons: {
 			'Ok': function() {
-				// TODO can't get doc by setting string in iframe as it doesn't preserve xml properties
-//				var newDocString = $('textarea', edit).val();
-//				$('#editDocLoader').contents().find('html').html(newDocString);
-//				w.entities = {};
-//				w.structs = {};
-//				_loadDocumentHandler($('#editDocLoader').contents()[0]);
-				w.d.show('message', {
-					title: 'Edit Source',
-					msg: 'Edit Source does not currently modify the underlying document.',
-					type: 'info'
-				});
+				var newDocString = $('textarea', edit).val();
+				var xmlDoc = w.u.stringToXML(newDocString);
+				fm.loadDocumentFromXml(xmlDoc);
 				edit.dialog('close');
 			},
 			'Cancel': function() {
@@ -944,24 +936,17 @@ function FileManager(config) {
 	};
 	
 	fm.editSource = function() {
-		var docText = fm.getDocumentContent(true);
-		$('textarea', edit).val(docText);
-		edit.dialog('open');
-	};
-	
-
-	fm.xmlToString = function(xmlData) {
-		var xmlString = '';
-		try {
-			if (window.ActiveXObject) {
-				xmlString = xmlData.xml;
-			} else {
-				xmlString = (new XMLSerializer()).serializeToString(xmlData);
+		w.d.confirm({
+			title: 'Edit Source',
+			msg: 'Editing the source directly is only recommended for advanced users who know what they\'re doing.<br/><br/>Are you sure you wish to continue?',
+			callback: function(yes) {
+				if (yes) {
+					var docText = fm.getDocumentContent(true);
+					$('textarea', edit).val(docText);
+					edit.dialog('open');
+				}
 			}
-		} catch (e) {
-			alert(e);
-		}
-		return xmlString;
+		});
 	};
 	
 	/**
