@@ -305,7 +305,11 @@
 			});
 			
 			$('#schemaDialog').dialog('option', 'title', key);
-			if (pos) $('#schemaDialog').dialog('option', 'position', [pos.x, pos.y]);
+			if (pos) {
+				$('#schemaDialog').dialog('option', 'position', [pos.x, pos.y]);
+			} else {
+				$('#schemaDialog').dialog('option', 'position', 'center');
+			}
 			$('#schemaDialog').dialog('open');
 			
 			// focus on the ok button if there are no inputs

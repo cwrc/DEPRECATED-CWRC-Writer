@@ -186,9 +186,10 @@ function StructureTree(config) {
 						label: 'Edit Tag',
 						icon: 'img/tag_blue_edit.png',
 						action: function(obj) {
+							var offset = $('#vakata-contextmenu').offset();
 							var pos = {
-								x: parseInt($('#tree_popup').css('left')),
-								y: parseInt($('#tree_popup').css('top'))
+								x: offset.left,
+								y: offset.top
 							};
 							w.editor.execCommand('editTag', obj.attr('name'), pos);
 						}
