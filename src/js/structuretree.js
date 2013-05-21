@@ -120,9 +120,10 @@ function StructureTree(config) {
 							action: function(obj) {
 								var actionType = obj.parents('li.submenu').children('a').attr('rel');
 								var key = obj.text();
+								var offset = $('#vakata-contextmenu').offset();
 								var pos = {
-									x: parseInt($('#tree_popup').css('left')),
-									y: parseInt($('#tree_popup').css('top'))
+									x: offset.left,
+									y: offset.top
 								};
 								if (actionType == 'change') {
 									var id = $('#tree a.ui-state-active').closest('li').attr('name');
