@@ -158,7 +158,7 @@ function FileManager(config) {
 		saver.dialog('open');
 	};
 	
-	var _getDocuments = function(callback) {
+	function _getDocuments(callback) {
 		$.ajax({
 			url: w.baseUrl+'editor/documents',
 			type: 'GET',
@@ -182,7 +182,7 @@ function FileManager(config) {
 		});
 	};
 	
-	var _populateLoader = function() {
+	function _populateLoader() {
 		var formattedResults = '';
 		var last = '';
 		var d, i;
@@ -226,7 +226,7 @@ function FileManager(config) {
 		}
 	};
 	
-	var _isNameValid = function(name) {
+	function _isNameValid(name) {
 		return name.match(/[^A-Za-z]+/) == null;
 	};
 	
@@ -452,7 +452,7 @@ function FileManager(config) {
 		return xmlString;
 	};
 	
-	var _entitiesToUnicode = function(parentNode) {
+	function _entitiesToUnicode(parentNode) {
 		var contents = $(parentNode).contents();
 		contents.each(function(index, el) {
 			if (el.nodeType == Node.TEXT_NODE) {
@@ -466,7 +466,7 @@ function FileManager(config) {
 		});
 	};
 	
-	var _getNodeOffsetsFromRoot = function(root) {
+	function _getNodeOffsetsFromRoot(root) {
 		var currentOffset = 0;
 		var offsets = [];
 		function getOffsets(parent) {
@@ -498,7 +498,7 @@ function FileManager(config) {
 		return offsets;
 	};
 	
-	var _determineOffsetRelationships = function(offsets) {
+	function _determineOffsetRelationships(offsets) {
 		var relationships = {};
 		var entityOffsets = [];
 		for (var i = 0; i < offsets.length; i++) {
@@ -671,7 +671,7 @@ function FileManager(config) {
 		return editorString;
 	};
 	
-	var _loadDocumentHandler = function(doc) {
+	function _loadDocumentHandler(doc) {
 		var rootName;
 		var isEvents = doc.getElementsByTagName('EVENTS').length > 0;
 		if (isEvents) {
@@ -993,6 +993,7 @@ function FileManager(config) {
 	    
 		$.ajax({
 			url: schemaUrl,
+			dataType: 'xml',
 			success: function(data, status, xhr) {
 				w.schemaXML = data;
 			    
@@ -1045,6 +1046,7 @@ function FileManager(config) {
 					var href = include.attr('href');
 					$.ajax({
 						url: baseUrl + 'schema/'+href,
+						dataType: 'xml',
 						success: function(data, status, xhr) {
 							// handle redefinitions
 							include.children().each(function(index, el) {
@@ -1159,7 +1161,7 @@ function FileManager(config) {
 		}
 	};
 	
-	var _loadTemplate = function(url) {
+	function _loadTemplate(url) {
 		$.ajax({
 			url: url,
 			dataType: 'xml',
