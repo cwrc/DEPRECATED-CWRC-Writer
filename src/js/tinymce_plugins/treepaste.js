@@ -280,7 +280,7 @@
 							// if so, replace it with the copiedElement
 							if (h.search(id) != -1) {
 								h = ed.copiedElement.innerHTML;
-								console.log('match');
+//								console.log('match');
 							} else {
 								ed.copiedElement = null;
 							}
@@ -752,10 +752,10 @@
 			var tree = ed.writer.tree;
 			if (tree.selectionType != null) {
 				if (tree.selectionType == tree.CONTENTS_SELECTED) {
-					console.log('tree paste contents', h);
+//					console.log('tree paste contents', h);
 					$('#'+tree.currentlySelectedNode, ed.getBody()).html(h);
 				} else {
-					console.log('tree paste node', h);
+//					console.log('tree paste node', h);
 					$('#'+tree.currentlySelectedNode, ed.getBody()).replaceWith(h);
 				}
 			} else {

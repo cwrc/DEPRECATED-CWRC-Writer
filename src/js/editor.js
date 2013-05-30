@@ -414,7 +414,7 @@ function Writer(config) {
 	};
 	
 	function _onCopyHandler(ed, event) {
-		console.log('onCopy', w.tree.currentlySelectedNode, w.tree.selectionType, event);
+//		console.log('onCopy', w.tree.currentlySelectedNode, w.tree.selectionType, event);
 		if (ed.copiedElement != null) {
 			$(ed.copiedElement).remove();
 		}
@@ -426,7 +426,7 @@ function Writer(config) {
 				clone = $('#'+w.tree.currentlySelectedNode, ed.getBody()).clone();
 			}
 			ed.copiedElement = clone.wrapAll('<div />').parent()[0];
-			console.log(ed.copiedElement);
+//			console.log(ed.copiedElement);
 		} else {
 			ed.copiedElement = null;
 		}
