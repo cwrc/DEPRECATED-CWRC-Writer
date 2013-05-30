@@ -3,10 +3,155 @@ function StructureTree(config) {
 	var w = config.writer;
 	
 	var tree = {
-		currentlySelectedNode: null
+		currentlySelectedNode: null, // id of the currently selected node
+		selectionType: null, // is the node or the just the contents of the node selected?
+		NODE_SELECTED: 0,
+		CONTENTS_SELECTED: 1
 	};
 	
 	var ignoreSelect = false; // used when we want to highlight a node without selecting it's counterpart in the editor
+	
+	/**
+	 * @memberOf tree
+	 */
+	tree.update = function() {
+		var body = w.editor.dom.select('body');
+	//	$('#tree').jstree('_get_children').each(function(index, element) {
+	//		$('#tree').jstree('delete_node', $(this));
+	//	});
+		$('#tree').jstree('delete_node', '#root');
+		var root = $('#tree').jstree('create_node', $('#tree'), 'first', {
+			data: 'Tags',
+			attr: {id: 'root'},
+			state: 'open'
+		});
+		_doUpdate($(body).children(), root);
+	};
+	
+	tree.selectNode = function(id) {
+//		console.log('selectNode', id);
+		if (id) {
+			ignoreSelect = true;
+			var result = $('#tree').jstree('select_node', $('#tree [name="'+id+'"]'), true);
+			if (result.attr('id') == 'tree') ignoreSelect = false;
+		}
+	};
+	
+	function _doUpdate(children, nodeParent) {
+		children.each(function(index, el) {
+			var newChildren = $(this).children();
+			var newNodeParent = nodeParent;
+			if ($(this).attr('_tag') || $(this).is(w.root)) {
+				var id = $(this).attr('id');
+				var isLeaf = $(this).find('[_tag]').length > 0 ? 'open' : null;
+				if ($(this).attr('_tag') == w.header) isLeaf = false;
+				
+				// new struct check
+				if (id == '' || id == null) {
+					id = tinymce.DOM.uniqueId('struct_');
+					var tag = $(this).attr('_tag');
+					if (tag == null && $(this).is(w.root)) tag = w.root;
+					if (w.schema.elements.indexOf(tag) != -1) {
+						$(this).attr('id', id).attr('_tag', tag);
+						w.structs[id] = {
+							id: id,
+							_tag: tag
+						};
+					}
+				// redo/undo re-added a struct check
+				} else if (w.structs[id] == null) {
+					var deleted = w.deletedStructs[id];
+					if (deleted != null) {
+						w.structs[id] = deleted;
+						delete w.deletedStructs[id];
+					}
+				// duplicate struct check
+				} else {
+					var match = $('[id='+id+']', w.editor.getBody());
+					if (match.length > 1) {
+						match.each(function(index, el) {
+							if (index > 0) {
+								var newStruct = $(el);
+								var newId = tinymce.DOM.uniqueId('struct_');
+								newStruct.attr('id', newId);
+								w.structs[newId] = {};
+								for (var key in w.structs[id]) {
+									w.structs[newId][key] = w.structs[id][key];
+								}
+								w.structs[newId].id = newId;
+							}
+						});
+					}
+				}
+				
+				var info = w.structs[id];
+				if (info) {
+					var title = info._tag;
+					newNodeParent = $('#tree').jstree('create_node', nodeParent, 'last', {
+						data: title,
+						attr: {name: id, 'class': $(this).attr('class')},
+						state: isLeaf
+					});
+				}
+			}
+			if ($(this).attr('_tag') != w.header) {
+				_doUpdate(newChildren, newNodeParent);
+			}
+		});
+	};
+	
+	function _onNodeSelect(event, data) {
+		if (!ignoreSelect) {
+			var node = data.rslt.obj;
+			var id = node.attr('name');
+			var selectContents = node.children('a').hasClass('contentsSelected');
+			_removeCustomClasses();
+			if (id) {
+				// already selected node, toggle selection type
+				if (id == tree.currentlySelectedNode) {
+					selectContents = !selectContents;
+				}
+				
+				if (selectContents) {
+					node.children('a').addClass('contentsSelected');
+					node.children('a').removeClass('nodeSelected');
+				} else {
+					node.children('a').addClass('nodeSelected');
+					node.children('a').removeClass('contentsSelected');
+				}
+				
+				tree.currentlySelectedNode = id;
+				tree.selectionType = selectContents ? tree.CONTENTS_SELECTED : tree.NODE_SELECTED;
+				
+				if (w.structs[id]._tag == w.header) {
+					w.d.show('header');
+				} else {
+					w.selectStructureTag(id, selectContents);
+				}
+			}
+		}
+		
+		ignoreSelect = false;
+	};
+	
+	function _onNodeDeselect() {
+		_removeCustomClasses();
+		tree.currentlySelectedNode = null;
+		tree.selectionType = null;
+	};
+	
+	function _removeCustomClasses() {
+		var nodes = $('a[class*=Selected]', '#tree');
+		nodes.removeClass('nodeSelected contentsSelected');
+	};
+	
+	function _showPopup(content) {
+		$('#tree_popup').html(content).show();
+	};
+	
+	function _hidePopup() {
+		$('#tree_popup').hide();
+	};
 	
 	$(config.parentId).append('<div id="structure" class="tabWithLayout">'+
 			'<div id="tree" class="ui-layout-center"></div>'+
@@ -15,42 +160,6 @@ function StructureTree(config) {
 			'</div>'+
 	'</div>');
 	$(document.body).append('<div id="tree_popup"></div>');
-	
-	$('#structureTreeActions button:eq(0)').button().click(function() {
-		if (tree.currentlySelectedNode != null) {
-			w.editor.execCommand('editTag', tree.currentlySelectedNode);
-		} else {
-			w.d.show('message', {
-				title: 'No Tag Selected',
-				msg: 'You must first select a tag to edit.',
-				type: 'error'
-			});
-		}
-	});
-	$('#structureTreeActions button:eq(1)').button().click(function() {
-		if (tree.currentlySelectedNode != null) {
-			w.tagger.removeStructureTag(tree.currentlySelectedNode);
-			tree.currentlySelectedNode = null;
-		} else {
-			w.d.show('message', {
-				title: 'No Tag Selected',
-				msg: 'You must first select a tag to remove.',
-				type: 'error'
-			});
-		}
-	});
-	$('#structureTreeActions button:eq(2)').button().click(function() {
-		if (tree.currentlySelectedNode != null) {
-			w.tagger.removeStructureTag(tree.currentlySelectedNode, true);
-			tree.currentlySelectedNode = null;
-		} else {
-			w.d.show('message', {
-				title: 'No Tag Selected',
-				msg: 'You must first select a tag to remove.',
-				type: 'error'
-			});
-		}
-	});
 	
 	$('#tree').bind('loaded.jstree', function(event, data) {
 		tree.layout = $('#structure').layout({
@@ -236,24 +345,8 @@ function StructureTree(config) {
 	$('#tree').mousemove(function(e) {
 		$('#tree_popup').offset({left: e.pageX+15, top: e.pageY+5});
 	});
-	$('#tree').bind('select_node.jstree', function(event, data) {
-		if (!ignoreSelect) {
-			var node = data.rslt.obj;
-			var id = node.attr('name');
-			if (id) {
-				tree.currentlySelectedNode = id;
-				if (w.structs[id]._tag == w.header) {
-					w.d.show('header');
-				} else {
-					w.selectStructureTag(id);
-				}
-			}
-		}
-		ignoreSelect = false;
-	});
-	$('#tree').bind('deselect_node.jstree', function(event, data) {
-		tree.currentlySelectedNode = null;
-	});
+	$('#tree').bind('select_node.jstree', _onNodeSelect);
+	$('#tree').bind('deselect_node.jstree', _onNodeDeselect);
 	$('#tree').bind('hover_node.jstree', function(event, data) {
 		if ($('#vakata-contextmenu').css('visibility') == 'visible') return;
 		
@@ -279,101 +372,43 @@ function StructureTree(config) {
 		_hidePopup();
 	});
 	
-	/**
-	 * @memberOf tree
-	 */
-	tree.update = function() {
-		var body = w.editor.dom.select('body');
-	//	$('#tree').jstree('_get_children').each(function(index, element) {
-	//		$('#tree').jstree('delete_node', $(this));
-	//	});
-		$('#tree').jstree('delete_node', '#root');
-		var root = $('#tree').jstree('create_node', $('#tree'), 'first', {
-			data: 'Tags',
-			attr: {id: 'root'},
-			state: 'open'
-		});
-		_doUpdate($(body).children(), root);
-	};
-
-	var _doUpdate = function(children, nodeParent) {
-		children.each(function(index, el) {
-			var newChildren = $(this).children();
-			var newNodeParent = nodeParent;
-			if ($(this).attr('_tag') || $(this).is(w.root)) {
-				var id = $(this).attr('id');
-				var isLeaf = $(this).find('[_tag]').length > 0 ? 'open' : null;
-				if ($(this).attr('_tag') == w.header) isLeaf = false;
-				
-				// new struct check
-				if (id == '' || id == null) {
-					id = tinymce.DOM.uniqueId('struct_');
-					var tag = $(this).attr('_tag');
-					if (tag == null && $(this).is(w.root)) tag = w.root;
-					if (w.schema.elements.indexOf(tag) != -1) {
-						$(this).attr('id', id).attr('_tag', tag);
-						w.structs[id] = {
-							id: id,
-							_tag: tag
-						};
-					}
-				// redo/undo re-added a struct check
-				} else if (w.structs[id] == null) {
-					var deleted = w.deletedStructs[id];
-					if (deleted != null) {
-						w.structs[id] = deleted;
-						delete w.deletedStructs[id];
-					}
-				// duplicate struct check
-				} else {
-					var match = $('[id='+id+']', w.editor.getBody());
-					if (match.length > 1) {
-						match.each(function(index, el) {
-							if (index > 0) {
-								var newStruct = $(el);
-								var newId = tinymce.DOM.uniqueId('struct_');
-								newStruct.attr('id', newId);
-								w.structs[newId] = {};
-								for (var key in w.structs[id]) {
-									w.structs[newId][key] = w.structs[id][key];
-								}
-								w.structs[newId].id = newId;
-							}
-						});
-					}
-				}
-				
-				var info = w.structs[id];
-				if (info) {
-					var title = info._tag;
-					newNodeParent = $('#tree').jstree('create_node', nodeParent, 'last', {
-						data: title,
-						attr: {name: id, 'class': $(this).attr('class')},
-						state: isLeaf
-					});
-				}
-			}
-			if ($(this).attr('_tag') != w.header) {
-				_doUpdate(newChildren, newNodeParent);
-			}
-		});
-	};
-	
-	tree.selectNode = function(id) {
-		if (id) {
-			ignoreSelect = true;
-			var result = $('#tree').jstree('select_node', $('#tree [name="'+id+'"]'), true);
-			if (result.attr('id') == 'tree') ignoreSelect = false;
+	$('#structureTreeActions button:eq(0)').button().click(function() {
+		if (tree.currentlySelectedNode != null) {
+			w.editor.execCommand('editTag', tree.currentlySelectedNode);
+		} else {
+			w.d.show('message', {
+				title: 'No Tag Selected',
+				msg: 'You must first select a tag to edit.',
+				type: 'error'
+			});
 		}
-	};
-	
-	var _showPopup = function(content) {
-		$('#tree_popup').html(content).show();
-	};
-	
-	var _hidePopup = function() {
-		$('#tree_popup').hide();
-	};
+	});
+	$('#structureTreeActions button:eq(1)').button().click(function() {
+		if (tree.currentlySelectedNode != null) {
+			w.tagger.removeStructureTag(tree.currentlySelectedNode);
+			tree.currentlySelectedNode = null;
+			tree.selectionType = null;
+		} else {
+			w.d.show('message', {
+				title: 'No Tag Selected',
+				msg: 'You must first select a tag to remove.',
+				type: 'error'
+			});
+		}
+	});
+	$('#structureTreeActions button:eq(2)').button().click(function() {
+		if (tree.currentlySelectedNode != null) {
+			w.tagger.removeStructureTag(tree.currentlySelectedNode, true);
+			tree.currentlySelectedNode = null;
+			tree.selectionType = null;
+		} else {
+			w.d.show('message', {
+				title: 'No Tag Selected',
+				msg: 'You must first select a tag to remove.',
+				type: 'error'
+			});
+		}
+	});
 	
 	return tree;
 };

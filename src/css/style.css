@@ -975,6 +975,17 @@ div.mceDropDown {
 	background-color: #d3d3d3;
 }
 
+#tree.jstree a.ui-state-active.nodeSelected {
+	background-color: #d3d3d3;
+	font-weight: bold;
+}
+
+#tree.jstree a.ui-state-active.contentsSelected {
+	background-color: #d3d3d3;
+	font-weight: bold;
+	font-style: italic;
+}
+
 #tree.jstree ins {
 	float: left;
 	margin-top: 2px;

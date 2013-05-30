@@ -42,7 +42,6 @@ function Writer(config) {
 	w.NO_COMMON_PARENT = 1;
 	w.VALID = 2;
 	
-	w.fixEmptyTag = false; // whether to check for and remove a node inserted on empty struct add/select
 	w.emptyTagId = null; // stores the id of the entities tag to be added
 	
 	w.u = null; // utilities
@@ -203,46 +202,45 @@ function Writer(config) {
 		w.editor.currentEntity = null;
 	};
 	
-	w.selectStructureTag = function(id) {
+	/**
+	 * Selects a structure tag in the editor
+	 * @param id The id of the tag to select
+	 * @param selectContentsOnly Whether to select only the contents of the tag (defaults to false)
+	 */
+	w.selectStructureTag = function(id, selectContentsOnly) {
+		selectContentsOnly = selectContentsOnly == null ? false : selectContentsOnly;
 		w.editor.currentStruct = id;
 		var node = $('#'+id, w.editor.getBody());
-		w.fixEmptyTag = true;
-		node.append('<span class="empty_tag_remove_me"></span>');
-		
 		var nodeEl = node[0];
 		
-		var display = node.css('display');
-		// hack to fix selection of inline elements
-		if (display == 'inline') {
-			node.before('<span data-mce-bogus="1">\uFEFF</span>').after('<span data-mce-bogus="1">\uFEFF</span>');
-			
-			var rng = w.editor.dom.createRng();
-			rng.setStart(nodeEl.previousSibling, 0);
-			rng.setEnd(nodeEl.nextSibling, 0);
-			w.editor.selection.setRng(rng);
+		if (selectContentsOnly) {
+//			if (tinymce.isWebKit) {
+//				w.editor.getWin().getSelection().selectAllChildren(nodeEl);
+//			} else {
+				var rng = w.editor.dom.createRng();
+				rng.setStart(nodeEl.firstChild, 0);
+				rng.setEnd(nodeEl.lastChild, nodeEl.lastChild.length);
+				w.editor.selection.setRng(rng);
+//			}
+//			w.tree.currentlySelectedNode = id;
 		} else {
-			w.editor.selection.select(nodeEl);
+			node.append('\uFEFF');
+			
+			// hack to fix selection of inline elements
+			if (tinymce.isWebKit || node.css('display') == 'inline') {
+				$('[data-mce-bogus]', node.parent()).remove();
+				node.before('<span data-mce-bogus="1">\uFEFF</span>').after('<span data-mce-bogus="1">\uFEFF</span>');
+				
+				var rng = w.editor.dom.createRng();
+				rng.setStart(nodeEl.previousSibling, 0);
+				rng.setEnd(nodeEl.nextSibling, 0);
+				w.editor.selection.setRng(rng);
+			} else {
+				w.editor.selection.select(nodeEl);
+			}
 		}
 		
-		// select node contents only
-//		if (tinymce.isWebKit) {
-//			w.editor.getWin().getSelection().selectAllChildren(nodeEl);
-//		} else {
-//			var range = w.editor.selection.getRng(true);
-//			range.setStart(nodeEl.firstChild, 0);
-//			range.setEnd(nodeEl.lastChild, nodeEl.lastChild.length);
-//			w.editor.getWin().getSelection().addRange(range);
-//		}
-		
-		// fire the onNodeChange event
-		w.editor.parents = [];
-		w.editor.dom.getParent(nodeEl, function(n) {
-			if (n.nodeName == 'BODY')
-				return true;
-
-			w.editor.parents.push(n);
-		});
-		w.editor.onNodeChange.dispatch(w.editor, w.editor.controlManager, nodeEl, false, w.editor);
+		_fireNodeChange(nodeEl);
 		
 		w.editor.focus();
 	};
@@ -280,7 +278,19 @@ function Writer(config) {
 		return doc;
 	};	
 
-	var _onKeyDownHandler = function(ed, evt) {
+	function _fireNodeChange(nodeEl) {
+		// fire the onNodeChange event
+		w.editor.parents = [];
+		w.editor.dom.getParent(nodeEl, function(n) {
+			if (n.nodeName == 'BODY')
+				return true;
+
+			w.editor.parents.push(n);
+		});
+		w.editor.onNodeChange.dispatch(w.editor, w.editor.controlManager, nodeEl, false, w.editor);
+	};
+	
+	function _onKeyDownHandler(ed, evt) {
 		// redo/undo listener
 		if ((evt.which == 89 || evt.which == 90) && evt.ctrlKey) {
 			var doUpdate = w.tagger.findNewAndDeletedTags();
@@ -291,7 +301,7 @@ function Writer(config) {
 		}
 	};
 	
-	var _onKeyUpHandler = function(ed, evt) {	
+	function _onKeyUpHandler(ed, evt) {
 		// nav keys and backspace check
 		if (evt.which >= 33 || evt.which <= 40 || evt.which == 8) {
 			_doHighlightCheck(ed, evt);
@@ -304,11 +314,6 @@ function Writer(config) {
 			entity.content = content;
 			entity.title = w.u.getTitleFromContent(content);
 			$('#entities li[name="'+ed.currentEntity+'"] > span[class="entityTitle"]').html(entity.title);
-		}
-		
-		if (w.fixEmptyTag) {
-			w.fixEmptyTag = false;
-			$('[class="empty_tag_remove_me"]', ed.getBody()).remove();
 		}
 		
 		if (w.emptyTagId) {
@@ -364,7 +369,7 @@ function Writer(config) {
 		}
 	};
 	
-	var _onChangeHandler = function(ed, event) {
+	function _onChangeHandler(ed, event) {
 		if (ed.isDirty()) {
 			$('br', ed.getBody()).remove();
 			var doUpdate = w.tagger.findNewAndDeletedTags();
@@ -372,13 +377,29 @@ function Writer(config) {
 		}
 	};
 	
-	var _onNodeChangeHandler = function(ed, cm, e) {
+	function _onNodeChangeHandler(ed, cm, e) {
+//		console.log('nodechange', e);
 		if (e.nodeType != 1) {
 			ed.currentNode = ed.dom.select(w.root)[0];
 		} else {
 			if (e.getAttribute('_tag') == null && e.nodeName != w.root) {
-				e = e.parentNode;
-				_onNodeChangeHandler(ed, cm, e);
+				if (e.getAttribute('data-mce-bogus') != null) {
+					// artifact from selectStructureTag
+					var sibling = $(e).next('[_tag]')[0];
+					if (sibling != null) {
+						e = sibling;
+					} else {
+						e = e.parentNode;
+					}
+				} else {
+					e = e.parentNode;
+				}
+				
+//				_onNodeChangeHandler(ed, cm, e);
+				// use setTimeout to add to the end of the onNodeChange stack
+				window.setTimeout(function(){
+					_fireNodeChange(e);
+				}, 0);
 			} else {
 				ed.currentNode = e;
 			}
@@ -392,18 +413,27 @@ function Writer(config) {
 		}
 	};
 	
-	var _onCopyHandler = function(ed, event) {
+	function _onCopyHandler(ed, event) {
+		console.log('onCopy', w.tree.currentlySelectedNode, w.tree.selectionType, event);
 		if (ed.copiedElement != null) {
 			$(ed.copiedElement).remove();
 		}
-		if (ed.currentStruct != null) {
-			ed.copiedElement = $('#'+ed.currentStruct, ed.getBody()).clone()[0];
+		if (w.tree.currentlySelectedNode != null) {
+			var clone;
+			if (w.tree.selectionType == w.tree.CONTENTS_SELECTED) {
+				clone = $('#'+w.tree.currentlySelectedNode, ed.getBody()).contents().clone();
+			} else {
+				clone = $('#'+w.tree.currentlySelectedNode, ed.getBody()).clone();
+			}
+			ed.copiedElement = clone.wrapAll('<div />').parent()[0];
+			console.log(ed.copiedElement);
 		} else {
 			ed.copiedElement = null;
 		}
+		
 	};
 	
-	var _onPasteHandler = function(ed, event) {
+	function _onPasteHandler(ed, event) {
 		window.setTimeout(function() {
 			w.tagger.findDuplicateTags();
 			w.entitiesList.update();
@@ -411,7 +441,7 @@ function Writer(config) {
 		}, 0);
 	};
 	
-	var _hideContextMenus = function(evt) {
+	function _hideContextMenus(evt) {
 		var target = $(evt.target);
 		// hide structure tree menu
 		if ($.vakata.context.vis && target.parents('#vakata-contextmenu').length == 0) {
@@ -423,7 +453,7 @@ function Writer(config) {
 		}
 	};
 	
-	var _doHighlightCheck = function(ed, evt) {
+	function _doHighlightCheck(ed, evt) {
 		var range = ed.selection.getRng(true);
 		
 		// check if inside boundary tag
@@ -529,16 +559,12 @@ function Writer(config) {
 				activate: function(event, ui) {
 					$.layout.callbacks.resizeTabLayout(event, ui);
 				},
-				onopen_start: function(region, pane, state, options) {
-					var southTabs = $('#southTabs');
-					if (!southTabs.hasClass('ui-tabs')) {
-						southTabs.tabs({
-							create: function(event, ui) {
-								southTabs.parent().find('div.ui-corner-all, ul.ui-corner-all').removeClass('ui-corner-all');
-							}
-						});
-					}
-				},
+//				onopen_start: function(region, pane, state, options) {
+//					var southTabs = $('#southTabs');
+//					if (!southTabs.hasClass('ui-tabs')) {
+//						
+//					}
+//				},
 				onresize: function(region, pane, state, options) {
 					var tabsHeight = $('#southTabs > ul').outerHeight();
 					$('#southTabsContent').height(state.layoutHeight - tabsHeight);
@@ -565,6 +591,7 @@ function Writer(config) {
 		w.em = new EntitiesModel();
 		w.relations = new Relations({writer: w, parentId: '#westTabsContent'});
 		w.validation = new Validation({writer: w, parentId: '#southTabsContent'});
+		w.selection = new Selection({writer: w, parentId: '#southTabsContent'});
 		w.settings = new SettingsDialog(w, {
 			showEntityBrackets: true,
 			showStructBrackets: false
@@ -583,6 +610,15 @@ function Writer(config) {
 			},
 			create: function(event, ui) {
 				$('#westTabs').parent().find('.ui-corner-all').removeClass('ui-corner-all');
+			}
+		});
+		$('#southTabs').tabs({
+			active: 1,
+			activate: function(event, ui) {
+				$.layout.callbacks.resizeTabLayout(event, ui);
+			},
+			create: function(event, ui) {
+				$('#southTabs').parent().find('.ui-corner-all').removeClass('ui-corner-all');
 			}
 		});
 		
@@ -638,7 +674,7 @@ function Writer(config) {
 			
 			valid_elements: '*[*]', // allow everything
 			
-			plugins: 'paste,-entitycontextmenu,-schematags,-currenttag,-viewsource',
+			plugins: '-treepaste,-entitycontextmenu,-schematags,-currenttag,-viewsource',
 			theme_advanced_buttons1: 'schematags,|,addperson,addplace,adddate,addevent,addorg,addcitation,addnote,addtitle,addcorrection,addkeyword,addlink,|,editTag,removeTag,|,addtriple,|,viewsource,editsource,|,validate,savebutton',
 			theme_advanced_buttons2: 'currenttag',
 			theme_advanced_buttons3: '',
@@ -683,6 +719,8 @@ function Writer(config) {
 					var body = $(ed.getBody());
 					if (settings.showEntityBrackets) body.addClass('showEntityBrackets');
 					if (settings.showStructBrackets) body.addClass('showStructBrackets');
+					
+					w.selection.init();
 					
 					ed.addCommand('isSelectionValid', w.u.isSelectionValid);
 					ed.addCommand('showError', w.showError);
@@ -735,7 +773,7 @@ function Writer(config) {
 				});
 				
 				// add custom plugins and buttons
-				var plugins = ['schematags','currenttag','entitycontextmenu','viewsource','scrolling_dropmenu'];
+				var plugins = ['treepaste','schematags','currenttag','entitycontextmenu','viewsource','scrolling_dropmenu'];
 				
 				for (var i = 0; i < plugins.length; i++) {
 					var name = plugins[i];

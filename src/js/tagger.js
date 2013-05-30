@@ -333,7 +333,7 @@ function Tagger(config) {
 		open_tag += '>';
 		var close_tag = '</'+tag+'>';
 		
-		var selection = '<span class="empty_tag_remove_me"></span>';
+		var selection = '\uFEFF';
 		var content = open_tag + selection + close_tag;
 		if (action == 'before') {
 			$(node).before(content);
@@ -346,19 +346,13 @@ function Tagger(config) {
 		} else {
 			w.editor.selection.moveToBookmark(bookmark);
 			selection = w.editor.selection.getContent();
-			if (selection == '') selection = '<span class="empty_tag_remove_me"></span>';
+			if (selection == '') selection = '\uFEFF';
 
 			content = open_tag + selection + close_tag;
 			w.editor.execCommand('mceReplaceContent', false, content);
 		}
-		if (selection == '<span class="empty_tag_remove_me"></span>') {
-			// TODO inserting empty struct isn't working
-			w.fixEmptyTag = true;
-			var nodeEl = $('span[class="empty_tag_remove_me"]', w.editor.getBody()).parent()[0];
-			var range = w.editor.selection.getRng(true);
-			range.setStart(nodeEl.firstChild, 0);
-			range.setEnd(nodeEl.lastChild, nodeEl.lastChild.length);
-			w.editor.getDoc().getSelection().addRange(range);
+		if (selection == '\uFEFF') {
+			w.selectStructureTag(id, true);
 		}
 		
 		w.tree.update();
