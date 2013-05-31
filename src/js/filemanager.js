@@ -982,8 +982,7 @@ function FileManager(config) {
 	    	w.root = 'TEI';
 	    	w.header = 'teiHeader';
 	    	// FIXME temp fix for doc structure
-//	    	w.idName = 'xml:id';
-	    	w.idName = 'id';
+	    	w.idName = 'xml:id';
 		}
 		
 		w.validationSchema = schema;
