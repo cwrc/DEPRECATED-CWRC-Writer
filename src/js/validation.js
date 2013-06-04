@@ -103,6 +103,7 @@ function Validation(config) {
 		});
 		
 		w.layout.center.children.layout1.open('south');
+		$('#southTabs').tabs('option', 'active', 0);
 	};
 	
 	return validation;
