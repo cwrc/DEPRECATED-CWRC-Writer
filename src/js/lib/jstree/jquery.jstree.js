@@ -767,6 +767,7 @@
 					if(position === "after") { position = "last"; }
 				}
 				
+				// CHANGED manual indent
 				d.prepend("<ins class='jstree-icon'>&#160;</ins>");
 				var indent = (obj.parents().length - 8) * 10;
 				d.prepend("<span class='jstree-indent' style='width: "+indent+"px;'/>");
@@ -2410,7 +2411,10 @@
 							}
 							if(typeof this.data.dnd.off.top === "undefined") { this.data.dnd.off = $(e.target).offset(); }
 							this.data.dnd.w = (e.pageY - (this.data.dnd.off.top || 0)) % this.data.core.li_height;
-							if(this.data.dnd.w < 0) { this.data.dnd.w += this.data.core.li_height; }
+							if(this.data.dnd.w < 0) {
+								this.data.dnd.w += this.data.core.li_height;
+//								this.data.dnd.w = 0;
+							}
 							this.dnd_show();
 						}
 					}, this))
@@ -2537,7 +2541,7 @@
 		_fn : {
 			dnd_prepare : function () {
 				if(!r || !r.length) { return; }
-				this.data.dnd.off = r.offset();
+				this.data.dnd.off = r.find('ins.jstree-icon').first().offset(); // CHANGED
 				if(this._get_settings().core.rtl) {
 					this.data.dnd.off.right = this.data.dnd.off.left + r.width();
 				}
@@ -2566,7 +2570,7 @@
 			dnd_show : function () {
 				if(!this.data.dnd.prepared) { return; }
 				var o = ["before","inside","after"],
-					r = false,
+					cur_pos = false,
 					rtl = this._get_settings().core.rtl,
 					pos;
 				if(this.data.dnd.w < this.data.core.li_height/3) { o = ["before","inside","after"]; }
@@ -2577,24 +2581,25 @@
 				$.each(o, $.proxy(function (i, val) { 
 					if(this.data.dnd[val]) {
 						$.vakata.dnd.helper.children("ins").attr("class","jstree-ok");
-						r = val;
+						cur_pos = val;
 						return false;
 					}
 				}, this));
-				if(r === false) { $.vakata.dnd.helper.children("ins").attr("class","jstree-invalid"); }
+				if(cur_pos === false) { $.vakata.dnd.helper.children("ins").attr("class","jstree-invalid"); }
 				
 				pos = rtl ? (this.data.dnd.off.right - 18) : (this.data.dnd.off.left + 10);
-				switch(r) {
+				switch(cur_pos) {
 					case "before":
-						m.css({ "left" : pos + "px", "top" : (this.data.dnd.off.top - 6) + "px" }).show();
-						if(ml) { ml.css({ "left" : (pos + 8) + "px", "top" : (this.data.dnd.off.top - 1) + "px" }).show(); }
+						m.css({ "left" : pos + "px", "top" : (this.data.dnd.off.top - 10) + "px" }).show();
+						if(ml) { ml.css({ "left" : (pos + 12) + "px", "top" : (this.data.dnd.off.top - 3) + "px" }).show(); }
 						break;
 					case "after":
-						m.css({ "left" : pos + "px", "top" : (this.data.dnd.off.top + this.data.core.li_height - 6) + "px" }).show();
-						if(ml) { ml.css({ "left" : (pos + 8) + "px", "top" : (this.data.dnd.off.top + this.data.core.li_height - 1) + "px" }).show(); }
+						m.css({ "left" : pos + "px", "top" : (this.data.dnd.off.top + this.data.core.li_height - 10) + "px" }).show();
+						if(ml) { ml.css({ "left" : (pos + 12) + "px", "top" : (this.data.dnd.off.top + this.data.core.li_height - 3) + "px" }).show(); }
 						break;
 					case "inside":
-						m.css({ "left" : pos + ( rtl ? -4 : 4) + "px", "top" : (this.data.dnd.off.top + this.data.core.li_height/2 - 5) + "px" }).show();
+						var offset = r.hasClass('jstree-leaf') ? 8 : 24;
+						m.css({ "left" : pos - offset + "px", "top" : (this.data.dnd.off.top + this.data.core.li_height/2 - 10) + "px" }).show();
 						if(ml) { ml.hide(); }
 						break;
 					default:
@@ -2602,8 +2607,8 @@
 						if(ml) { ml.hide(); }
 						break;
 				}
-				last_pos = r;
-				return r;
+				last_pos = cur_pos;
+				return cur_pos;
 			},
 			dnd_open : function () {
 				this.data.dnd.to2 = false;
@@ -2619,6 +2624,16 @@
 					this.dnd_prepare();
 					this.move_node(o, r, last_pos, e[this._get_settings().dnd.copy_modifier + "Key"]);
 				}
+				
+				// CHANGED dnd_finish callback
+				var isCopy = e[this._get_settings().dnd.copy_modifier + "Key"];
+				this.__callback({ "obj" : {
+					dragNode: o,
+					dropNode: r,
+					isCopy: isCopy,
+					dropType: last_pos
+				}, "e" : e });
+				
 				o = false;
 				r = false;
 				m.hide();
@@ -2677,7 +2692,12 @@
 				var dt = o.length > 1 ? this._get_string("multiple_selection") : this.get_text(o),
 					cnt = this.get_container();
 				if(!this._get_settings().core.html_titles) { dt = dt.replace(/</ig,"&lt;").replace(/>/ig,"&gt;"); }
-				$.vakata.dnd.drag_start(e, { jstree : true, obj : o }, "<ins class='jstree-icon'></ins>" + dt );
+				var isCopy = e[this._get_settings().dnd.copy_modifier + "Key"];
+				var copyHtml = '';
+				if (isCopy) {
+					copyHtml = '<span class="jstree-copy"></span>';
+				}
+				$.vakata.dnd.drag_start(e, { jstree : true, obj : o }, copyHtml+"<ins class='jstree-icon'></ins>" + dt );
 				if(this.data.themes) { 
 					if(m) { m.attr("class", "jstree-" + this.data.themes.theme); }
 					if(ml) { ml.attr("class", "jstree-" + this.data.themes.theme); }

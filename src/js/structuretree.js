@@ -98,7 +98,7 @@ function StructureTree(config) {
 				_doUpdate(newChildren, newNodeParent);
 			}
 		});
-	};
+	}
 	
 	function _onNodeSelect(event, data) {
 		if (!ignoreSelect) {
@@ -132,26 +132,46 @@ function StructureTree(config) {
 		}
 		
 		ignoreSelect = false;
-	};
+	}
 	
 	function _onNodeDeselect() {
 		_removeCustomClasses();
 		tree.currentlySelectedNode = null;
 		tree.selectionType = null;
-	};
+	}
+	
+	function _onDragDrop(event, data) {
+		var params = data.rslt.obj;
+		var dropNode = $('#'+params.dropNode.attr('name'), w.editor.getBody());
+		var dragNode = $('#'+params.dragNode.attr('name'), w.editor.getBody());
+		if (params.isCopy) {
+			dragNode = dragNode.clone();
+		}
+		switch (params.dropType) {
+			case 'before':
+				dropNode.before(dragNode);
+				break;
+			case 'after':
+				dropNode.after(dragNode);
+				break;
+			case 'inside':
+				dropNode.append(dragNode);
+		}
+		tree.update();
+	}
 	
 	function _removeCustomClasses() {
 		var nodes = $('a[class*=Selected]', '#tree');
 		nodes.removeClass('nodeSelected contentsSelected');
-	};
+	}
 	
 	function _showPopup(content) {
 		$('#tree_popup').html(content).show();
-	};
+	}
 	
 	function _hidePopup() {
 		$('#tree_popup').hide();
-	};
+	}
 	
 	$(config.parentId).append('<div id="structure" class="tabWithLayout">'+
 			'<div id="tree" class="ui-layout-center"></div>'+
@@ -159,7 +179,7 @@ function StructureTree(config) {
 			'<button>Edit Tag</button><button>Remove Tag</button><button>Remove Tag and All Content</button>'+
 			'</div>'+
 	'</div>');
-	$(document.body).append('<div id="tree_popup"></div>');
+//	$(document.body).append('<div id="tree_popup"></div>');
 	
 	$('#tree').bind('loaded.jstree', function(event, data) {
 		tree.layout = $('#structure').layout({
@@ -175,6 +195,9 @@ function StructureTree(config) {
 		});
 	});
 	
+	$.vakata.dnd.helper_left = 15;
+	$.vakata.dnd.helper_top = 20;
+	
 	$('#tree').jstree({
 		core: {},
 		themeroller: {},
@@ -187,6 +210,9 @@ function StructureTree(config) {
 				attr: {id: 'root'},
 				state: 'open'
 			}
+		},
+		dnd: {
+			drag_target: false
 		},
 		contextmenu: {
 			select_node: true,
@@ -340,37 +366,35 @@ function StructureTree(config) {
 			},
 			f2: false
 		},
-		plugins: ['json_data', 'ui', 'themeroller', 'contextmenu', 'hotkeys']
-	});
-	$('#tree').mousemove(function(e) {
-		$('#tree_popup').offset({left: e.pageX+15, top: e.pageY+5});
+		plugins: ['json_data', 'ui', 'contextmenu', 'hotkeys', 'dnd', 'themeroller']
 	});
 	$('#tree').bind('select_node.jstree', _onNodeSelect);
 	$('#tree').bind('deselect_node.jstree', _onNodeDeselect);
-	$('#tree').bind('hover_node.jstree', function(event, data) {
-		if ($('#vakata-contextmenu').css('visibility') == 'visible') return;
-		
-		var node = data.rslt.obj;
-		
-		if (node.attr('id') == 'root') return;
-		
-		var id = node.attr('name');
-		var info = w.structs[id];
-		var content = '<ul>';
-		for (var key in info) {
-			if (key.indexOf('_') != 0) {
-				content += '<li>'+key+': '+info[key]+'</li>';
-			}
-		}
-		content += '</ul>';
-		_showPopup(content);
-	});
-	$('#tree').bind('dehover_node.jstree', function(event, data) {
-		_hidePopup();
-	});
-	$('#tree').bind('dehover_node.jstree', function(event, data) {
-		_hidePopup();
-	});
+	$('#tree').bind('dnd_finish.jstree', _onDragDrop);
+//	$('#tree').mousemove(function(e) {
+//		$('#tree_popup').offset({left: e.pageX+15, top: e.pageY+5});
+//	});
+//	$('#tree').bind('hover_node.jstree', function(event, data) {
+//		if ($('#vakata-contextmenu').css('visibility') == 'visible') return;
+//		
+//		var node = data.rslt.obj;
+//		
+//		if (node.attr('id') == 'root') return;
+//		
+//		var id = node.attr('name');
+//		var info = w.structs[id];
+//		var content = '<ul>';
+//		for (var key in info) {
+//			if (key.indexOf('_') != 0) {
+//				content += '<li>'+key+': '+info[key]+'</li>';
+//			}
+//		}
+//		content += '</ul>';
+//		_showPopup(content);
+//	});
+//	$('#tree').bind('dehover_node.jstree', function(event, data) {
+//		_hidePopup();
+//	});
 	
 	$('#structureTreeActions button:eq(0)').button().click(function() {
 		if (tree.currentlySelectedNode != null) {

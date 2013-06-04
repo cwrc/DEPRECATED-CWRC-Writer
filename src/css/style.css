@@ -884,6 +884,50 @@ div.mceDropDown {
 }
 
 /* jstree overrides */
+#vakata-dragged {
+	display: block;
+	overflow: hidden;
+	background-color: #fff;
+    border: 1px solid #D4D0C8;
+    border-radius: 4px;
+    padding: 4px !important;
+}
+
+#vakata-dragged ins {
+	background-image: url("../smoothness/images/ui-icons_ffffff_256x240.png") !important;
+	background-repeat: no-repeat !important;
+	position: relative !important;
+	display: inline-block !important;
+	margin-right: 4px !important;
+	top: 0 !important;
+	left: 0 !important;
+	vertical-align: bottom;
+}
+
+#vakata-dragged ins.jstree-ok {
+	background-position: -64px -144px;
+}
+
+#vakata-dragged ins.jstree-invalid {
+	background-position: -96px -128px;
+}
+
+#vakata-dragged span.jstree-copy {
+	background: url("../smoothness/images/ui-icons_222222_256x240.png") -16px -128px no-repeat !important;
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	margin-left: -2px;
+	vertical-align: bottom;
+}
+
+#jstree-marker {
+	background: url("../smoothness/images/ui-icons_222222_256x240.png") -32px -16px no-repeat !important;
+	width: 16px !important;
+	height: 16px !important;
+	text-indent: -100px;
+}
+
 #vakata-contextmenu, #vakata-contextmenu ul li ul {
 	border: 1px solid #D4D0C8 !important;
 	background-color: #fff !important;
@@ -955,6 +999,11 @@ div.mceDropDown {
 #tree.jstree li {
 	width: 100%;
 	margin-left: 0;
+}
+
+#tree.jstree a > ins.ui-icon {
+	background-position: -240px -96px !important; /* set to tag icon */
+	display: none;
 }
 
 #tree.jstree a {
