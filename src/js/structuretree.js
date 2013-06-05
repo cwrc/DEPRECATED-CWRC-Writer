@@ -158,6 +158,10 @@ function StructureTree(config) {
 				dropNode.append(dragNode);
 		}
 		tree.update();
+		if (params.isCopy) {
+			w.tagger.findDuplicateTags();
+			w.entitiesList.update();
+		}
 	}
 	
 	function _removeCustomClasses() {
