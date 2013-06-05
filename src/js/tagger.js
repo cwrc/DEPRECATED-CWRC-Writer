@@ -347,9 +347,12 @@ function Tagger(config) {
 			w.editor.selection.moveToBookmark(bookmark);
 			selection = w.editor.selection.getContent();
 			if (selection == '') selection = '\uFEFF';
-
 			content = open_tag + selection + close_tag;
-			w.editor.execCommand('mceReplaceContent', false, content);
+
+			var range = w.editor.selection.getRng(true);
+			var tempNode = $('<span data-mce-bogus="1">', w.editor.getDoc());
+			range.surroundContents(tempNode[0]);
+			tempNode.replaceWith(content);
 		}
 		if (selection == '\uFEFF') {
 			w.selectStructureTag(id, true);

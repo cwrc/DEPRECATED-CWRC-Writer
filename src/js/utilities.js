@@ -97,7 +97,7 @@ function Utilities(config) {
 	};
 	
 	/**
-	 * checks the user selection and potential entity markers
+	 * Checks the user selection for overlap issues and entity markers.
 	 * @param isStructTag Is the tag a structure tag
 	 * @param structAction How is the tag being inserted? (before/after/around/inside)
 	 * @returns
@@ -105,7 +105,6 @@ function Utilities(config) {
 	u.isSelectionValid = function(isStructTag, structAction) {
 		var sel = w.editor.selection;
 		
-		// check for numerous overlap possibilities
 		var range = sel.getRng(true);
 		// next line commented out as it messes up the selection in IE
 //		range.commonAncestorContainer.normalize(); // normalize/collapse separate text nodes
@@ -117,19 +116,22 @@ function Utilities(config) {
 			range.setEndAfter(root.lastChild);
 		}
 		
-		function findTextNode(currNode, direction, reps) {
-			if (reps > 20) return null; // prevent infinite recursion
-			else {
-				var newNode;
-				if (direction == 'back') {
-					newNode = currNode.lastChild || currNode.previousSibling || currNode.parentNode.previousSibling;
-				} else {
-					newNode = currNode.firstChild || currNode.nextSibling || currNode.parentNode.nextSibling;
+		function findTextNode(node, direction) {
+			function doFind(currNode, dir, reps) {
+				if (reps > 20) return null; // prevent infinite recursion
+				else {
+					var newNode;
+					if (dir == 'back') {
+						newNode = currNode.lastChild || currNode.previousSibling || currNode.parentNode.previousSibling;
+					} else {
+						newNode = currNode.firstChild || currNode.nextSibling || currNode.parentNode.nextSibling;
+					}
+					if (newNode == null) return null;
+					if (newNode.nodeType == Node.TEXT_NODE) return newNode;
+					return doFind(newNode, dir, reps++);
 				}
-				if (newNode == null) return null;
-				if (newNode.nodeType == Node.TEXT_NODE) return newNode;
-				return findTextNode(newNode, direction, reps++);
 			}
+			return doFind(node, direction, 0);
 		}
 		
 		// fix for when start and/or end containers are element nodes (should always be text nodes for entities)
@@ -137,7 +139,7 @@ function Utilities(config) {
 			if (range.startContainer.nodeType == Node.ELEMENT_NODE) {
 				var end = range.endContainer;
 				if (end.nodeType != Node.TEXT_NODE || range.endOffset == 0) {
-					end = findTextNode(range.endContainer, 'back', 0);
+					end = findTextNode(range.endContainer, 'back');
 					if (end == null) return w.NO_COMMON_PARENT;
 					range.setEnd(end, end.length);
 				}
@@ -172,7 +174,7 @@ function Utilities(config) {
 						count--;
 					}
 					if (range.startOffset == range.startContainer.length) {
-						var nextTextNode = findTextNode(range.startContainer, 'forward', 0);
+						var nextTextNode = findTextNode(range.startContainer, 'forward');
 						if (nextTextNode != null) {
 							range.setStart(nextTextNode, 0);
 						}
@@ -188,7 +190,7 @@ function Utilities(config) {
 						count--;
 					}
 					if (range.endOffset == 0) {
-						var prevTextNode = findTextNode(range.endContainer, 'back', 0);
+						var prevTextNode = findTextNode(range.endContainer, 'back');
 						if (prevTextNode != null) {
 							range.setEnd(prevTextNode, prevTextNode.length);
 						}
@@ -204,6 +206,29 @@ function Utilities(config) {
 		}
 		
 		if (!structAction) {
+			// check for and fix selections inside of entity boundary tags
+			var node = $(range.startContainer);
+			var entParent = node.parent('[_entity]');
+			if (entParent.length > 0) {
+				if (entParent.hasClass('start')) {
+					var textNode = findTextNode(node[0], 'forward');
+					if (textNode) {
+						range.setStart(textNode, 0);
+					}
+				}
+			}
+			node = $(range.endContainer);
+			entParent = node.parent('[_entity]');
+			if (entParent.length > 0) {
+				if (entParent.hasClass('end')) {
+					var textNode = findTextNode(node[0], 'back');
+					if (textNode) {
+						range.setEnd(textNode, textNode.length);
+					}
+				}
+			}
+			
+			// additional fixes
 			fixRange(range);
 		}
 		
@@ -224,7 +249,7 @@ function Utilities(config) {
 			while (currentNode != range.endContainer) {
 				currentNode = currentNode.nextSibling;
 				c = $(currentNode);
-				if (c.hasClass('entity')) {
+				if (c.attr('entity') != null) {
 					if (c.hasClass('start')) {
 						ents[c.attr('name')] = true;
 					} else {
