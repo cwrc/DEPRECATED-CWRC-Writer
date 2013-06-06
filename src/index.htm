@@ -53,31 +53,8 @@
 				var buttons = $('button').button();
 				buttons.each(function(index, el) {
 					var url = 'editor_dev.htm#';
-					switch (index) {
-						case 0:
-							url += 'load';
-							break;
-						case 1:
-							url += 'letter';
-							break;
-						case 2:
-							url += 'poem';
-							break;
-						case 3:
-							url += 'prose';
-							break;
-						case 4:
-							url += 'event';
-							break;
-						case 5:
-							url += 'sample_letter';
-							break;
-						case 6:
-							url += 'sample_poem';
-							break;
-					}
 					$(el).click(function() {
-						window.location = url;
+						window.location = url+$(this).data('url');
 					});
 				});
 			});
@@ -96,14 +73,18 @@
 					<button>Load an Existing Document</button>
 				</div>
 				<div class="column">
-					<button>Create a Letter</button>
-					<button>Create a Poem</button>
-					<button>Create Prose</button>
-					<button>Create an Event</button>
+					<button data-url="biography">Create an Orlando Biography</button>
+					<button data-url="writing">Create Orlando Writing</button>
+					<button data-url="letter">Create a Letter</button>
+					<button data-url="poem">Create a Poem</button>
+					<button data-url="prose">Create Prose</button>
+					<button data-url="event">Create an Event</button>
 				</div>
 				<div class="column">
-					<button>See a Sample Letter</button>
-					<button>See a Sample Poem</button>
+					<button data-url="sample_biography">See a Sample Orlando Biography</button>
+					<button data-url="sample_writing">See Sample Orlando Writing</button>
+					<button data-url="sample_letter">See a Sample Letter</button>
+					<button data-url="sample_poem">See a Sample Poem</button>
 				</div>
 				<div style="clear: both;"></div>
 			</div>

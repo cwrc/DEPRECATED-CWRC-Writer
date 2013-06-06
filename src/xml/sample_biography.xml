@@ -1,0 +1,1146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://cwrc.ca/schema/biography.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-stylesheet type="text/css" href="http://cwrc.ca/templates/css/orlando.css"?>
+
+<BIOGRAPHY SEX="FEMALE" PERSON="WRITER">
+    <ORLANDOHEADER TYPE="text">
+        <FILEDESC>
+            <TITLESTMT>
+                <DOCTITLE>Pauline Johnson: biography</DOCTITLE>
+            </TITLESTMT>
+            <PUBLICATIONSTMT>
+                <AUTHORITY>Orlando Project</AUTHORITY>
+            </PUBLICATIONSTMT>
+            <SOURCEDESC>Created from original research by members of the Orlando
+                Project</SOURCEDESC>
+        </FILEDESC>
+        <REVISIONDESC>
+            <RESPONSIBILITY RESP="JSC" WORKSTATUS="RWT" WORKVALUE="I">
+                <DATE>8 January 1998</DATE>
+                <ITEM>Initial document given to tagger.</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="JSC" WORKSTATUS="RWT" WORKVALUE="I">
+                <DATE>9 January 1998</DATE>
+                <ITEM>Template for v2 Biography </ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="JSC" WORKSTATUS="RWT" WORKVALUE="I">
+                <DATE>12 January 1998</DATE>
+                <ITEM>Template for v2 Biography </ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="JSC" WORKSTATUS="RWT" WORKVALUE="I">
+                <DATE>14 January 1998</DATE>
+                <ITEM>Template for v2 Biography </ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="JSC" WORKSTATUS="RWT" WORKVALUE="I">
+                <DATE>15 January 1998</DATE>
+                <ITEM>Template for v2 Biography </ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SIB" WORKSTATUS="RWT" WORKVALUE="C">
+                <DATE>6 October 1998</DATE>
+                <ITEM>Updated for Sept 1998 Audit</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SYS" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>21 December 1999</DATE>
+                <ITEM>BATCH CHANGE: primarily orgName and bibCit cleanup</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="DRG" WORKSTATUS="REV" WORKVALUE="C">
+                <DATE>1 February 2001</DATE>
+                <ITEM>converted textual apostrophes and quotation marks to entity references</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="KDC" WORKSTATUS="RWT" WORKVALUE="I">
+                <DATE>12 May 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="KDC" WORKSTATUS="RWT" WORKVALUE="I">
+                <DATE>28 May 2001</DATE>
+                <ITEM>first draft complete</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="KDC" WORKSTATUS="RWT" WORKVALUE="I">
+                <DATE>12 June 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SIB" WORKSTATUS="REV" WORKVALUE="C">
+                <DATE>25 June 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="KDC" WORKSTATUS="RWT" WORKVALUE="C">
+                <DATE>14 August 2001</DATE>
+                <ITEM>finished writing</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="RWT" WORKVALUE="C">
+                <DATE>17 August 2001</DATE>
+                <ITEM>removed title tag(s) from workscited</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="I">
+                <DATE>20 September 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="I">
+                <DATE>21 September 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="I">
+                <DATE>24 September 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="I">
+                <DATE>26 September 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="I">
+                <DATE>27 September 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="I">
+                <DATE>1 October 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="I">
+                <DATE>1 October 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="I">
+                <DATE>2 October 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="I">
+                <DATE>10 October 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="I">
+                <DATE>11 October 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="C">
+                <DATE>15 October 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="C">
+                <DATE>17 October 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SIB" WORKSTATUS="REV" WORKVALUE="P">
+                <DATE>12 December 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="KDC" WORKSTATUS="REV" WORKVALUE="P">
+                <DATE>17 December 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="I">
+                <DATE>18 December 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="C">
+                <DATE>19 December 2001</DATE>
+                <ITEM>responded to research notes, edited</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SIB" WORKSTATUS="RBV" WORKVALUE="C">
+                <DATE>6 January 2002</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="KDC" WORKSTATUS="REV" WORKVALUE="C">
+                <DATE>7 January 2002</DATE>
+                <ITEM>revised</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="RSC" WORKSTATUS="PUB" WORKVALUE="I">
+                <DATE>8 January 2002</DATE>
+                <ITEM>question re George Johnston/Johnson still needs resolution; otherwise
+                    ready</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="RSC" WORKSTATUS="PUB" WORKVALUE="I">
+                <DATE>9 January 2002</DATE>
+                <ITEM>changed Johnston to Johnson throughout</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>24 January 2002</DATE>
+                <ITEM>fixed socalled</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>28 January 2002</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>4 February 2002</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>5 February 2002</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>6 February 2002</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>20 February 2002</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="REV" WORKVALUE="C">
+                <DATE>25 February 2002</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFT" WORKVALUE="I">
+                <DATE>22 March 2002</DATE>
+                <ITEM>fixed doctitle</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="JAH" WORKSTATUS="CFB" WORKVALUE="C">
+                <DATE>21 August 2002</DATE>
+                <ITEM>cfb done</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="JAH" WORKSTATUS="CFB" WORKVALUE="C">
+                <DATE>22 August 2002</DATE>
+                <ITEM>fixed bibcits</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="JAH" WORKSTATUS="CFB" WORKVALUE="C">
+                <DATE>29 August 2002</DATE>
+                <ITEM>fixed bibcits</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="JAH" WORKSTATUS="CFB" WORKVALUE="C">
+                <DATE>30 August 2002</DATE>
+                <ITEM>fixed bibcits</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFB" WORKVALUE="C">
+                <DATE>26 September 2002</DATE>
+                <ITEM>fixed name</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>10 December 2002</DATE>
+                <ITEM> fixed NAME</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SYS" WORKSTATUS="CFT" WORKVALUE="I">
+                <DATE>14 April 2003</DATE>
+                <ITEM>BATCH CHANGE: primarily PLACE cleanup</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="PUB" WORKVALUE="C">
+                <DATE>23 April 2003</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>5 May 2003</DATE>
+                <ITEM> fixed PLACE</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SYS" WORKSTATUS="CFT" WORKVALUE="I">
+                <DATE>16 June 2003</DATE>
+                <ITEM>BATCH CHANGE: primarily TGENRENAME cleanup, BIBCIT following P moved before P,
+                    BIBCITS TAG added</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>20 June 2003</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>22 March 2004</DATE>
+                <ITEM>changed position to birth position</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="IMG" WORKSTATUS="REV" WORKVALUE="C">
+                <DATE>7 January 2005</DATE>
+                <ITEM>revised chroncolumn</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SYS" WORKSTATUS="CFT" WORKVALUE="I">
+                <DATE>08 April 2005</DATE>
+                <ITEM>BATCH CHANGE: March 2005 Specifications. Mainly tag/attribute name
+                    changes</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="IMG" WORKSTATUS="REV" WORKVALUE="C">
+                <DATE>10 April 2006</DATE>
+                <ITEM>final readthrough</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>30 January 2007</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="MKD" WORKSTATUS="REV" WORKVALUE="C">
+                <DATE>15 May 2012</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="MDG" WORKSTATUS="REV" WORKVALUE="C">
+                <DATE>11 July 2012</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY WORKSTATUS="REV" RESP="LSW" WORKVALUE="C">
+                <DATE>11 September 2012</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+        </REVISIONDESC>
+    </ORLANDOHEADER>
+    <DIV0>
+        <HEADING>Biography</HEADING>
+        <STANDARD>Johnson, Pauline</STANDARD>
+        <RESEARCHNOTE>kdc; Keller has another book, from 1999, called Pauline Johnson: first
+            aboriginal voice of Canada. Could add to this from that.</RESEARCHNOTE>
+        <DIV1>
+            <PERSONNAME>
+                <DIV2>
+                    <DATASTRUCT>
+                        <DATAITEM>
+                            <BIRTHNAME WROTEORPUBLISHEDAS="WROTEPUBLISHEDASYES">
+                                <GIVEN>Emily </GIVEN>
+                                <GIVEN>Pauline</GIVEN>
+                                <SURNAME>Johnson</SURNAME>
+                            </BIRTHNAME>
+                        </DATAITEM>
+                        <DATAITEM>
+                            <SELFCONSTRUCTED WROTEORPUBLISHEDAS="WROTEPUBLISHEDASYES">Tekahionwake</SELFCONSTRUCTED>
+                        </DATAITEM>
+                    </DATASTRUCT>
+                    <SHORTPROSE>
+                        <P>PJ adopted her Mohawk name from her great-grandfather, and it means
+                                <QUOTE DIRECT="Y">double wampum</QUOTE> or <QUOTE DIRECT="Y">double
+                                life</QUOTE>.<BIBCITS><BIBCIT PLACEHOLDER="McMaster, native" DBREF="9746"/><BIBCIT PLACEHOLDER="Keller 7" DBREF="9598">7</BIBCIT></BIBCITS> She explained that her surname was a
+                            baptismal name first taken by that great-grandfather, Jacob Johnson,
+                            whose real name was <NAME>Tekahionwake</NAME>. The
+                                <SOCALLED>T</SOCALLED> is pronounced as <SOCALLED>D</SOCALLED>, and
+                                <SOCALLED>K</SOCALLED> as a hard
+                                    <SOCALLED>G</SOCALLED>.<SCHOLARNOTE><P>One of PJ's
+                                    biographies wrongly gives the meaning as <QUOTE DIRECT="Y">smoke
+                                        from many campfires.</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Keller 7" DBREF="9598">7</BIBCIT><BIBCIT PLACEHOLDER="University Women's Club 42" DBREF="9610">42</BIBCIT><BIBCIT PLACEHOLDER="McMaster, home, native" DBREF="9746"/><BIBCIT PLACEHOLDER="Whitlow" DBREF="9749"/></BIBCITS></P></SCHOLARNOTE></P>
+                    </SHORTPROSE>
+                    <DATASTRUCT>
+                        <DATAITEM>
+                            <PSEUDONYM WROTEORPUBLISHEDAS="WROTEPUBLISHEDASYES">Margaret
+                                Rox</PSEUDONYM>
+                            <BIBCITS>
+                                <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 219" DBREF="9599">219</BIBCIT>
+                            </BIBCITS>
+                        </DATAITEM>
+                        <DATAITEM>
+                            <PSEUDONYM WROTEORPUBLISHEDAS="WROTEPUBLISHEDASYES">Rollstone</PSEUDONYM>
+                            <SCHOLARNOTE>
+                                <P>PJ's pseudonym adopts the surname of her great-grandmother,
+                                        <NAME STANDARD="Rollston, Catherine">Catherine
+                                        Rollston</NAME>, and was used for prose
+                                            writing.<BIBCITS><BIBCIT PLACEHOLDER="Keller 8" DBREF="9598">8</BIBCIT><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 116" DBREF="9599">116</BIBCIT><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 221" DBREF="9599">221</BIBCIT></BIBCITS></P>
+                            </SCHOLARNOTE>
+                        </DATAITEM>
+                    </DATASTRUCT>
+                </DIV2>
+            </PERSONNAME>
+        </DIV1>
+        <DIV1>
+            <HEADING>Birth and Circumstances</HEADING>
+            <BIRTH>
+                <DIV2>
+                    <CHRONSTRUCT RELEVANCE="SELECTIVE" CHRONCOLUMN="WRITINGCLIMATE" RESP="JSC">
+                        <DATE>10 March 1861</DATE>
+                        <CHRONPROSE>PJ was born at the family home,
+                                    <PLACE><PLACENAME>Chiefswood</PLACENAME>, on the
+                                    <REGION/><REGION REG="Ontario">Six Nations Reserve</REGION><GEOG REG="Canada"/></PLACE> near
+                                    <PLACE><SETTLEMENT>Brantford</SETTLEMENT>,
+                                    <REGION>Ontario</REGION><GEOG REG="Canada"/></PLACE>.</CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="DLB 99: 162" DBREF="8894">162</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P>
+                            <BIRTHPOSITION POSITION="YOUNGEST">She was the youngest child and the
+                                second daughter.</BIRTHPOSITION>
+                            <BIBCITS>
+                                <BIBCIT PLACEHOLDER="University Women's Club 42" DBREF="9610">42</BIBCIT>
+                            </BIBCITS>
+                        </P>
+                    </SHORTPROSE>
+                </DIV2>
+            </BIRTH>
+        </DIV1>
+        <DIV1>
+            <CULTURALFORMATION>
+                <DIV2>
+                    <SHORTPROSE>
+                        <P><CLASS SOCIALRANK="GENTRY">PJ grew up with servants</CLASS>, usually
+                            three: a nurse, a cook, and a man to oversee the stables. Her home had
+                            the accoutrements of a <CLASS>middle-class</CLASS> life including a
+                                <QUOTE DIRECT="Y">piano, silver tea service, books . . .
+                                    .</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 49" DBREF="9599">49</BIBCIT></BIBCITS> Chiefswood was visited by nobility on two
+                            occasions. Biographers <NAME>Carole Gerson</NAME> and <NAME>Veronica
+                                Strong-Boag</NAME> describe the Six Nations Reserve at that time as
+                            a <QUOTE DIRECT="Y">centre of Native resistance</QUOTE> and an <QUOTE DIRECT="Y">extraordinary community</QUOTE>.<BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 32, 49" DBREF="9599">32,
+                                    49</BIBCIT></BIBCITS>
+                            <NATIONALHERITAGE REG="Iroquois">The <NATIONALITY SELF-DEFINED="SELFYES">Iroquois</NATIONALITY> people of the reserve were noted for
+                                being vigorously intellectual and respectful of matrilineal
+                                traditions.</NATIONALHERITAGE><BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 33, 50" DBREF="9599">33,
+                                    50</BIBCIT><BIBCIT PLACEHOLDER="Keller 23, 28" DBREF="9598">23,
+                                    28</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </DIV2>
+                <RACEANDETHNICITY>
+                    <DIV2>
+                        <SHORTPROSE>
+                            <P>As the daughter of an <NATIONALHERITAGE FOREBEAR="MOTHER">English</NATIONALHERITAGE> mother and a <NATIONALHERITAGE FOREBEAR="FATHER" SELF-DEFINED="SELFYES">Mohawk</NATIONALHERITAGE> father, PJ was attentive to issues of
+                                her dual heritage; by Canadian law she was deemed
+                                    <RACECOLOUR>Indian</RACECOLOUR>. She identified herself as
+                                    <NATIONALITY SELF-DEFINED="SELFYES" REG="Mohawk">Mohawk</NATIONALITY>.<BIBCITS><BIBCIT PLACEHOLDER="Keller 5" DBREF="9598">5</BIBCIT></BIBCITS></P>
+                            <SCHOLARNOTE>
+                                <P>There is no discrepancy in simultaneously identifying as Mohawk
+                                    and Iroquois. The Iroquois Confederacy is an umbrella term for
+                                    five First Nations: the Cayuga, Mohawk, Oneida, Onondaga, and
+                                    Seneca. (The Tuscarora joined later to form the Six Nations.)
+                                    Among the Six Nations, the Mohawk were regarded as <QUOTE DIRECT="Y">risk-takers and
+                                            innovators.</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 33" DBREF="9599">33</BIBCIT></BIBCITS> The Confederacy was founded in
+                                    the seventeenth century by <NAME>Hiawatha</NAME> (immortalized
+                                    for readers of English in a popular poem by <NAME STANDARD="Longfellow, Henry Wadsworth">Longfellow</NAME>,
+                                        <DATE VALUE="1855-11-10">1855</DATE>, which was in turn
+                                    parodied by <NAME>Mary Cowden Clarke</NAME> in
+                                            1856).<BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 33" DBREF="9599">33</BIBCIT></BIBCITS></P>
+                            </SCHOLARNOTE>
+                            <P>In her stage performances, PJ appeared in a buckskin dress of her own
+                                design and manufacture for the first half of the show, and then
+                                after a brief intermission, reappeared in a ball-gown (the costume
+                                of a <RACECOLOUR FOREBEAR="MOTHER">white</RACECOLOUR> Victorian
+                                woman) for the second half. Critic <NAME>Mary Elizabeth
+                                    Leighton</NAME> argues that she was enacting assimilation: the
+                                Native disappearing into civilized late-Victorian culture. The
+                                aboriginal outfit was, in a way, inauthentic: PJ collected artefacts
+                                from several different First Nations, so it did not truly represent
+                                Mohawk dress, for example. Among the accoutrements for this outfit
+                                was a necklace made from the claws of a bear which may have been a
+                                present from author and friend <NAME>Ernest Thompson Seton</NAME>.
+                                PJ did affirm that Seton gave her a bracelet of elks' teeth and
+                                mountain lion claws.<BIBCITS><BIBCIT PLACEHOLDER="Leighton 148-9" DBREF="9748">148-9</BIBCIT><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 110" DBREF="9599">110</BIBCIT><BIBCIT PLACEHOLDER="Keller 162, 272" DBREF="9598">162, 272</BIBCIT><BIBCIT PLACEHOLDER="McMaster, career" DBREF="9746"/></BIBCITS> She
+                                had a wampum belt and bracelets made of white and purple shells, her
+                                father's knife at her belt, and a scarlet blanket. Her buckskin
+                                dress was adorned with silver brooches, fringes, ermine tails,
+                                rabbit pelts, her grandfather's Huron scalp, and another scalp
+                                bought in the United States. PJ knew that audiences came, in part,
+                                to see an Indian, and sometimes found herself described in
+                                promotional material or in reviews as <SOCALLED>The Mohawk
+                                    Princess</SOCALLED> or <SOCALLED>Indian
+                                        Poetess</SOCALLED>.<BIBCITS><BIBCIT PLACEHOLDER="Leighton 148, 151" DBREF="9748">148,
+                                        151</BIBCIT><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 258-9" DBREF="9599">258-9</BIBCIT><BIBCIT PLACEHOLDER="McMaster, career" DBREF="9746"/><BIBCIT PLACEHOLDER="University Women's Club 43-4" DBREF="9610">43-4</BIBCIT></BIBCITS></P>
+                        </SHORTPROSE>
+                    </DIV2>
+                </RACEANDETHNICITY>
+                <NATIONALITYISSUE>
+                    <DIV2>
+                        <SHORTPROSE>
+                            <P>Although she identified as <NATIONALITY>Mohawk</NATIONALITY>, PJ was
+                                also keen to identify herself as <NATIONALITY SELF-DEFINED="SELFYES">Canadian</NATIONALITY>, provocatively stating in one poem
+                                    (<TITLE TITLETYPE="ANALYTIC">Canadian Born</TITLE>) that only
+                                those born in Canada could claim this identity. Despite this, US
+                                literary critics have sometimes adopted her as one of their own. On
+                                the back of one review that had mistaken her place of residence, she
+                                wrote, <QUOTE DIRECT="Y">God forgive the slanderers. Why, oh why am
+                                    I called a Bostonian?</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Keller 102" DBREF="9598" QTDIN="QTDINYES">102</BIBCIT></BIBCITS></P>
+                        </SHORTPROSE>
+                    </DIV2>
+                </NATIONALITYISSUE>
+            </CULTURALFORMATION>
+        </DIV1>
+        <DIV1>
+            <HEADING>Family</HEADING>
+            <FAMILY>
+                <MEMBER RELATION="GRANDFATHER">
+                    <DIV2>
+                        <HEADING>Grandfather</HEADING>
+                        <SHORTPROSE>
+                            <P>PJ's grandfather, <NAME STANDARD="Sakayengwaraton">John Smoke
+                                    Johnson</NAME> (or <NAME>Sakayengwaraton</NAME>, which means
+                                    <QUOTE DIRECT="Y">the haze that rises from the ground on an
+                                    autumn morning and vanishes as the day
+                                        advances,</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Keller 10" DBREF="9598">10</BIBCIT></BIBCITS> anglicised and shortened
+                                to Smoke), fought in the War of 1812 with the great Mohawk leader
+                                    <NAME>Joseph Brant</NAME>; he was regarded as a <JOB REG="soldier">hero</JOB> and a <SIGNIFICANTACTIVITY>renowned
+                                    orator</SIGNIFICANTACTIVITY> in Iroquois
+                                        councils.<BIBCITS><BIBCIT PLACEHOLDER="Keller 9, 47" DBREF="9598">9</BIBCIT><BIBCIT PLACEHOLDER="McMaster, life" DBREF="9746"/><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 16" DBREF="9599">16</BIBCIT><BIBCIT PLACEHOLDER="Ruoff, Native Women Authors 94" DBREF="9526">94</BIBCIT></BIBCITS></P>
+                        </SHORTPROSE>
+                        <CHRONSTRUCT RELEVANCE="COMPREHENSIVE" CHRONCOLUMN="WRITINGCLIMATE" RESP="KDC" CHRONCOLUMN1="SOCIALCLIMATE1" RELEVANCE1="COMPREHENSIVE1">
+                            <DATE>26 August 1886</DATE>
+                            <CHRONPROSE>PJ's revered <NAME STANDARD="Sakayengwaraton">grandfather</NAME> died, two weeks after making a public
+                                address recalling his old commander <NAME>Joseph
+                                Brant</NAME>.</CHRONPROSE>
+                            <BIBCITS>
+                                <BIBCIT PLACEHOLDER="Keller 47" DBREF="9598">47</BIBCIT>
+                            </BIBCITS>
+                        </CHRONSTRUCT>
+                    </DIV2>
+                </MEMBER>
+                <DIV2>
+                    <HEADING>Her Parents' Wedding</HEADING>
+                    <SHORTPROSE>
+                        <P>Her parents' wedding in 1853 attracted attention because an English
+                            woman was marrying a Mohawk man. A minister who was the brother-in-law
+                            of the bride refused to marry the couple and the wedding was held
+                            outside of Brantford in a futile attempt to keep away the curious. To
+                            calm some of the outraged Howells relatives, PJ's father wore an
+                            outfit appropriate for a stylish British man: black silk hat and satin
+                            waistcoat. PJ's Mohawk grandmother was also opposed to the marriage
+                            because she did not want a non-Native person entering the prestigious
+                            Johnson clan and because any children produced by the union would not
+                            be, under traditional law, Mohawk.<BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 15, 47" DBREF="9599">15,
+                                    47</BIBCIT><BIBCIT PLACEHOLDER="McMaster, family" DBREF="9746"/></BIBCITS></P>
+                    </SHORTPROSE>
+                </DIV2>
+                <MEMBER RELATION="FOREBEAR">
+                    <DIV2>
+                        <SHORTPROSE>
+                            <P>This was not, however, the first such marriage in the family. PJ also
+                                had a great-great-grandmother, a Dutch-American captive taken in by
+                                the tribe, who had married a Mohawk man.<BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 31, 46" DBREF="9599">31,
+                                        46</BIBCIT></BIBCITS></P>
+                            <SCHOLARNOTE>
+                                <P>Critics Gerson and Strong-Boag name this great-grandmother <NAME STANDARD="Rollston, Catherine">Catherine Rollston
+                                        Martin</NAME> but then later give her middle name as
+                                            Rollstone.<BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 46, 116" DBREF="9599">46, 116</BIBCIT></BIBCITS></P>
+                            </SCHOLARNOTE>
+                        </SHORTPROSE>
+                    </DIV2>
+                </MEMBER>
+                <MEMBER RELATION="MOTHER">
+                    <DIV2>
+                        <HEADING>Her British Mother</HEADING>
+                        <SHORTPROSE>
+                            <P>PJ's mother, <NAME STANDARD="Johnson, Emily Susanna">Emily
+                                    Susanna Howells</NAME>, was a Quaker born in Bristol, England.
+                                She had come to Canada from Ohio to visit a sister and to escape an
+                                over-strict father. She was a cousin to American author
+                                    <NAME>William Dean Howells</NAME>. When she died in the <DATE VALUE="1898-02-">winter of 1898</DATE>, a great number of people
+                                attended her funeral, and Toronto papers balanced the scandal of her
+                                wedding against the long-lasting happiness of the
+                                        union.<BIBCITS><BIBCIT PLACEHOLDER="Keller 11, 137" DBREF="9598">11, 137</BIBCIT><BIBCIT PLACEHOLDER="University Women's Club 42" DBREF="9610">42</BIBCIT><BIBCIT PLACEHOLDER="Ruoff, Native Women Authors 94" DBREF="9526">94</BIBCIT><BIBCIT PLACEHOLDER="McMaster, family" DBREF="9746"/><BIBCIT PLACEHOLDER="McMaster, life" DBREF="9746"/></BIBCITS></P>
+                        </SHORTPROSE>
+                    </DIV2>
+                </MEMBER>
+                <MEMBER RELATION="FATHER">
+                    <DIV2>
+                        <HEADING>Her Adored Father</HEADING>
+                        <SHORTPROSE>
+                            <P>PJ's father was <NAME STANDARD="Onwanonsyshon">George Henry
+                                    Martin Johnson</NAME>, Onwanonsyshon, a Mohawk chief. He was at
+                                one time an <JOB>interpreter</JOB> for the Anglican church. He had a
+                                life-long interest in <NAME STANDARD="Napoleon I,, Emperor of France">Napoleon</NAME> and
+                                decided to name his children after Napoleon's circle of friends
+                                and family. (Pauline was named after Napoleon's sister, for
+                                example.) In one family photo, George wears the outfit appropriate
+                                to a Mohawk chief while affecting a Napoleonic pose.<BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 11, 14, 19" DBREF="9599">11, 14, 19</BIBCIT><BIBCIT PLACEHOLDER="McMaster, family" DBREF="9746"/><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 46" DBREF="9599">46</BIBCIT></BIBCITS></P>
+                            <P><NAME STANDARD="Onwanonsyshon">George Johnson</NAME> was present at
+                                the first telephone calls from the home of <NAME>Alexander Graham
+                                    Bell</NAME> in Brantford, Ontario. When offered a chance to try
+                                the telephone, he deliberately confused the listener at the other
+                                end by speaking Mohawk.<BIBCITS><BIBCIT PLACEHOLDER="Whitlow" DBREF="9749"/></BIBCITS></P>
+                            <P><NAME STANDARD="Onwanonsyshon">George Johnson</NAME> was severely
+                                beaten twice and shot once while trying to stop illegal activities
+                                on the Reserve. He was beaten with a lead ball on <DATE>21 January
+                                    1865</DATE> (sustaining a broken jaw and concussion) while
+                                trying to stop timber buyers from trading whisky with natives for
+                                timber, and again in <DATE>October 1873</DATE> when trying to halt
+                                the sale of liquor. On both occasions his attackers were white
+                                        men.<BIBCITS><BIBCIT PLACEHOLDER="Whitlow" DBREF="9749"/><BIBCIT PLACEHOLDER="Keller 29, 31" DBREF="9598">29,
+                                        31</BIBCIT><BIBCIT PLACEHOLDER="Ruoff, Native Women Authors 95" DBREF="9526">95</BIBCIT></BIBCITS> On <DATE>24 April 1878</DATE> he was
+                                attacked by a native man and beaten a third time.<BIBCITS><BIBCIT PLACEHOLDER="Keller 39" DBREF="9598">39</BIBCIT></BIBCITS>
+                                He died partly from the long-term results of these
+                                        attacks.<BIBCITS><BIBCIT PLACEHOLDER="Keller 31" DBREF="9598">31</BIBCIT></BIBCITS></P>
+                        </SHORTPROSE>
+                        <CHRONSTRUCT RELEVANCE="COMPREHENSIVE" CHRONCOLUMN="WRITINGCLIMATE" RESP="KDC">
+                            <DATE>19 February 1884</DATE>
+                            <CHRONPROSE>PJ's father, <NAME STANDARD="Onwanonsyshon">George
+                                    Johnson</NAME>, died; his funeral procession was attended by
+                                community leaders from on and off the reserve.</CHRONPROSE>
+                            <BIBCITS>
+                                <BIBCIT PLACEHOLDER="Keller 40" DBREF="9598">40</BIBCIT>
+                            </BIBCITS>
+                        </CHRONSTRUCT>
+                    </DIV2>
+                </MEMBER>
+                <DIV2>
+                    <HEADING>Siblings</HEADING>
+                    <SHORTPROSE>
+                        <P>PJ's siblings were <NAME STANDARD="Johnson, Henry Beverly">Henry
+                                Beverly</NAME>, born in 1854, <NAME STANDARD="Johnson, Eliza Helen Charlotte">Eliza Helen
+                                Charlotte</NAME> (known as Evelyn or Eva), born in 1856, and <NAME STANDARD="Johnson, Allen Wawanosh">Allen Wawanosh</NAME>, born in
+                                    1858.<BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 15-16, 50" DBREF="9599">15-16, 50</BIBCIT><BIBCIT PLACEHOLDER="McMaster, life" DBREF="9746"/></BIBCITS></P>
+                    </SHORTPROSE>
+                </DIV2>
+                <MEMBER RELATION="SISTER">
+                    <DIV2>
+                        <SHORTPROSE>
+                            <P>Although PJ was not very close to her brothers, she and sister Eva
+                                had a closer but difficult relationship, damaged primarily by
+                                Eva's resentment, which began young. She was angered by the
+                                attention that her parents gave to Pauline as a sickly infant and
+                                later felt herself so unattractive as compared to Pauline that she
+                                cut her own face out of family photos. She was also angered by
+                                Pauline's inability to manage money.<BIBCITS><BIBCIT PLACEHOLDER="Keller 98-9" DBREF="9598">98-9</BIBCIT></BIBCITS></P>
+                            <P>Eva was a <JOB REG="historian">key figure in the <ORGNAME>Brant
+                                        Historical Society</ORGNAME></JOB> and wrote for the
+                                    <ORGNAME>Ontario Historical Society</ORGNAME>'s
+                                        journal.<BIBCITS><BIBCIT PLACEHOLDER="Keller 100" DBREF="9598">100</BIBCIT></BIBCITS></P>
+                        </SHORTPROSE>
+                    </DIV2>
+                </MEMBER>
+            </FAMILY>
+        </DIV1>
+        <DIV1>
+            <HEADING>Early Life and Brantford</HEADING>
+            <EDUCATION MODE="DOMESTIC">
+                <DIV2>
+                    <SHORTPROSE>
+                        <P>PJ was educated at home first by her <INSTRUCTOR><NAME STANDARD="Johnson, Emily Susanna">mother</NAME></INSTRUCTOR>,
+                            who introduced her to the English Romantics. She was also taught by a
+                            governess in her early years. Chiefswood was full of books, and she read
+                                    <TEXT><NAME STANDARD="Milton, John">Milton</NAME></TEXT>,
+                                    <TEXT><NAME STANDARD="Shakespeare, William">Shakespeare</NAME></TEXT>, <TEXT><NAME STANDARD="Byron, George Gordon,,, sixth Baron">Byron</NAME></TEXT>, <TEXT><NAME STANDARD="Tennyson, Alfred">Tennyson</NAME></TEXT>, <TEXT><NAME STANDARD="Longfellow, Henry Wadsworth">Longfellow</NAME></TEXT>,
+                            and <TEXT><NAME STANDARD="Scott, Sir Walter">Scott</NAME></TEXT>.<BIBCITS><BIBCIT PLACEHOLDER="Ruoff, Native Women Authors 94" DBREF="9526">94</BIBCIT><BIBCIT PLACEHOLDER="University Women's Club 43" DBREF="9610">43</BIBCIT><BIBCIT PLACEHOLDER="McMaster, life" DBREF="9647"/></BIBCITS> PJ once claimed that she had <QUOTE DIRECT="Y">read
+                                every line that Scott and Longfellow had written by the time she was
+                                twelve.</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Keller 30" DBREF="9598">30</BIBCIT></BIBCITS></P>
+                        <P>Also important in her early education were the <SUBJECT>oral
+                                histories</SUBJECT> she heard from grandfather <INSTRUCTOR><NAME STANDARD="Sakayengwaraton">Smoke Johnson</NAME></INSTRUCTOR>; he
+                            regaled her with <TEXT>war stories</TEXT> and <TEXT>Native
+                                legends</TEXT>. On the <PLACE><REGION>Grand River</REGION><GEOG REG="Canada"/></PLACE><PLACE><REGION REG="Ontario"/><GEOG REG="Canada"/></PLACE>, she learned outdoor skills such as
+                                <SUBJECT>canoeing</SUBJECT> and
+                                    <SUBJECT>camping</SUBJECT>.<BIBCITS><BIBCIT PLACEHOLDER="McMaster, life" DBREF="9647"/></BIBCITS></P>
+                    </SHORTPROSE>
+                </DIV2>
+            </EDUCATION>
+            <EDUCATION MODE="INSTITUTIONAL">
+                <CHRONSTRUCT RELEVANCE="COMPREHENSIVE" CHRONCOLUMN="WRITINGCLIMATE" RESP="KDC">
+                    <DATERANGE CERTAINTY="C" FROM="1875--" TO="1877-06-" EXACT="TO">1875-June
+                        1877</DATERANGE>
+                    <CHRONPROSE>After attending a reservation school for three years, PJ left home
+                        to attend the <ORGNAME>Brantford Collegiate
+                        Institute</ORGNAME>.</CHRONPROSE>
+                    <BIBCITS>
+                        <BIBCIT PLACEHOLDER="Keller 32, 35" DBREF="9598">32, 35</BIBCIT>
+                        <BIBCIT PLACEHOLDER="University Women's Club 43" DBREF="9610">43</BIBCIT>
+                        <BIBCIT PLACEHOLDER="Ruoff, Native Women Authors 95" DBREF="9526">95</BIBCIT>
+                        <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 16" DBREF="9599">16</BIBCIT>
+                    </BIBCITS>
+                </CHRONSTRUCT>
+            </EDUCATION>
+        </DIV1>
+        <DIV1>
+            <LOCATION RELATIONTO="MOVED">
+                <DIV2>
+                    <CHRONSTRUCT RELEVANCE="COMPREHENSIVE" CHRONCOLUMN="WRITINGCLIMATE" RESP="KDC">
+                        <DATE>1885</DATE>
+                        <CHRONPROSE>After the death of her father, PJ, her mother, and her sister
+                            rented out <PLACE><PLACENAME>Chiefswood</PLACENAME><SETTLEMENT REG="Six Nations Reserve"/><REGION REG="Ontario"/><GEOG REG="Canada"/></PLACE> and moved into the city of
+                                    <PLACE><SETTLEMENT>Brantford</SETTLEMENT>, <REGION REG="Ontario">Ontario</REGION><GEOG REG="Canada"/></PLACE>.</CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Keller 44" DBREF="9598">44</BIBCIT>
+                            <BIBCIT PLACEHOLDER="Ruoff, Native Women Authors 95" DBREF="9526">95</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                </DIV2>
+                <DIV2>
+                    <SHORTPROSE>
+                        <P>They lived at <PLACE><ADDRESS CURRENT="Dufferin Avenue"><ADDRLINE>7
+                                        Napoleon Street </ADDRLINE></ADDRESS><SETTLEMENT REG="Brantford"/><REGION REG="Ontario"/> (now 7 Dufferin
+                                    Avenue)<GEOG REG="Canada"/></PLACE>. The Brantford home passed
+                            out of the family when PJ's mother died in 1898.<BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 16" DBREF="9599">16</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </DIV2>
+            </LOCATION>
+        </DIV1>
+        <DIV1>
+            <FRIENDSASSOCIATES>
+                <DIV2>
+                    <CHRONSTRUCT RELEVANCE="COMPREHENSIVE" CHRONCOLUMN="WRITINGCLIMATE" RESP="KDC">
+                        <DATE>November 1885</DATE>
+                        <CHRONPROSE>PJ was introduced in <PLACE><SETTLEMENT>Hamilton</SETTLEMENT>,
+                                    <REGION REG="Ontario">Ontario</REGION><GEOG REG="Canada"/></PLACE>, to actress <NAME STANDARD="Rhea, Hortense">Mademoiselle
+                                Rhea</NAME>, who persuaded her to get involved with the
+                                <ORGNAME>Hamilton Dramatic Society</ORGNAME>.</CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Keller 45" DBREF="9598">45</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                </DIV2>
+            </FRIENDSASSOCIATES>
+        </DIV1>
+        <DIV1>
+            <HEADING>Touring</HEADING>
+            <OCCUPATION>
+                <DIV2>
+                    <SHORTPROSE>
+                        <P>PJ's literary career, which was highly performative, was likely
+                            launched by a reading in <PLACE><SETTLEMENT>Toronto</SETTLEMENT><REGION REG="Ontario"/><GEOG REG="Canada"/></PLACE> in early 1892 of
+                                <TITLE TITLETYPE="ANALYTIC">A Cry from an Indian Wife</TITLE>.</P>
+                    </SHORTPROSE>
+                </DIV2>
+                <DIV2>
+                    <HEADING>Ontario</HEADING>
+                    <CHRONSTRUCT RELEVANCE="COMPREHENSIVE" CHRONCOLUMN="WRITINGCLIMATE" RESP="KDC">
+                        <DATERANGE FROM="1892-10-" TO="1893-05-" EXACT="BOTH">October 1892-May
+                            1893</DATERANGE>
+                        <CHRONPROSE>PJ toured <PLACE><REGION>Ontario</REGION><GEOG REG="Canada"/></PLACE>, <JOB REG="recitalist">reciting poetry</JOB> in fifty
+                            different locations.</CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Keller 65" DBREF="9598">65</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                </DIV2>
+            </OCCUPATION>
+        </DIV1>
+        <DIV1>
+            <FRIENDSASSOCIATES>
+                <DIV2>
+                    <SHORTPROSE>
+                        <P>For some of these performances, PJ was matched with Englishman <NAME>Owen
+                                Alexander Smily</NAME>, an elocutionist, ventriloquist, and
+                            impersonator. Biographer <NAME>Betty Keller</NAME> likens the
+                            relationship to a marriage simply because they were together so much and
+                            travelling in isolation from their home communities. From him PJ
+                            garnered some of the techniques of elocution. Their partnership ended in
+                                    1897.<BIBCITS><BIBCIT PLACEHOLDER="Keller 66-8, 123" DBREF="9598">66-8, 123</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </DIV2>
+            </FRIENDSASSOCIATES>
+        </DIV1>
+        <DIV1>
+            <LOCATION RELATIONTO="TRAVELLED">
+                <DIV2>
+                    <SHORTPROSE>
+                        <P>PJ covered many miles in the next years of performing. She crisscrossed
+                                    <PLACE><GEOG>Canada</GEOG></PLACE> and the <PLACE><GEOG REG="USA">United States</GEOG></PLACE>, often appearing on the
+                            same bill as a musician or a stand-up comedian.<BIBCITS><BIBCIT PLACEHOLDER="Ruoff, Native Women Authors 95" DBREF="9526">95</BIBCIT><BIBCIT PLACEHOLDER="University Women's Club 45" DBREF="9610">45</BIBCIT><BIBCIT PLACEHOLDER="McMaster, life" DBREF="9746"/></BIBCITS></P>
+                    </SHORTPROSE>
+                </DIV2>
+            </LOCATION>
+        </DIV1>
+        <DIV1>
+            <OCCUPATION>
+                <DIV2>
+                    <SHORTPROSE>
+                        <P>She became one of the best known <JOB>performer</JOB>s of her day,
+                                <REMUNERATION>and her stagecraft remained her main source of income
+                                throughout her life.</REMUNERATION><BIBCITS><BIBCIT PLACEHOLDER="Ruoff, Native Women Authors 95" DBREF="9526">95</BIBCIT><BIBCIT PLACEHOLDER="University Women's Club 45" DBREF="9610">45</BIBCIT><BIBCIT PLACEHOLDER="McMaster, life" DBREF="9746"/></BIBCITS></P>
+                    </SHORTPROSE>
+                </DIV2>
+            </OCCUPATION>
+        </DIV1>
+        <DIV1>
+            <LOCATION RELATIONTO="TRAVELLED">
+                <DIV2>
+                    <HEADING>London, England</HEADING>
+                    <CHRONSTRUCT RELEVANCE="COMPREHENSIVE" CHRONCOLUMN="WRITINGCLIMATE" RESP="KDC">
+                        <DATERANGE FROM="1894-04-" TO="1894-07-" EXACT="BOTH">April-July
+                            1894</DATERANGE>
+                        <CHRONPROSE>PJ made her first trip to
+                                    <PLACE><SETTLEMENT>London</SETTLEMENT><REGION REG="Middlesex"/>,
+                                    <GEOG REG="England">England</GEOG></PLACE>, where she visited
+                            publishing houses and salons.</CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 16" DBREF="9599">16</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                </DIV2>
+            </LOCATION>
+        </DIV1>
+        <DIV1>
+            <FRIENDSASSOCIATES>
+                <DIV2>
+                    <SHORTPROSE>
+                        <P>In London, PJ visited and recited poetry before <NAME STANDARD="Burne-Jones, Sir Edward Coley">Edward Burne-Jones</NAME>,
+                                <NAME>George Frederic Watts</NAME>, <NAME STANDARD="Leighton, Frederic,,, Baron">Frederic Leighton</NAME>,
+                                <NAME STANDARD="Alma-Tadema, Laurence">Lawrence Alma-Tadema</NAME>,
+                            and <NAME>Jerome K. Jerome</NAME>, among others.<BIBCITS><BIBCIT PLACEHOLDER="Keller 80" DBREF="9598">80</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </DIV2>
+            </FRIENDSASSOCIATES>
+        </DIV1>
+        <DIV1>
+            <FRIENDSASSOCIATES>
+                <DIV2>
+                    <HEADING>Friends across Canada</HEADING>
+                    <SHORTPROSE>
+                        <P>During her Canadian tours PJ met Canadian writers and poets. <NAME>Ernest
+                                Thompson Seton</NAME> affectionately called her <QUOTE DIRECT="Y">my
+                                well-beloved cousin</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Keller 142" DBREF="9598" QTDIN="QTDINYES">142</BIBCIT></BIBCITS> in
+                            correspondence, and <NAME>Charles Mair</NAME>, a sixty-year-old when he
+                            met PJ, responded quickly to her request for bears' teeth and claws
+                            from his home in northern British Columbia.<BIBCITS><BIBCIT PLACEHOLDER="Keller 162-3" DBREF="9598">162-3</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                    <CHRONSTRUCT RELEVANCE="DECADE" CHRONCOLUMN="WRITINGCLIMATE" RESP="KDC">
+                        <DATE VALUE="1894-09-04" CERTAINTY="BY">Early September 1894</DATE>
+                        <CHRONPROSE>During a tour of <PLACE><REGION>Manitoba</REGION><GEOG REG="Canada"/></PLACE>, PJ met Canadian suffragist <NAME>Nellie
+                                McClung</NAME>, and they became close friends.</CHRONPROSE>
+                        <KEYWORDCLASS KEYWORDTYPE="suffrage">Politics</KEYWORDCLASS>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 16, 66" DBREF="9599">16,
+                                66</BIBCIT>
+                            <BIBCIT PLACEHOLDER="Keller 90" DBREF="9598">90</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P>In response to the support McClung had provided PJ while she was ill, she
+                            mentioned their friendship in her will.</P>
+                    </SHORTPROSE>
+                </DIV2>
+            </FRIENDSASSOCIATES>
+        </DIV1>
+        <DIV1>
+            <HEALTH ISSUE="PHYSICAL">
+                <DIV2>
+                    <CHRONSTRUCT RELEVANCE="COMPREHENSIVE" CHRONCOLUMN="WRITINGCLIMATE" RESP="KDC">
+                        <DATE VALUE="1901-12-25">Christmas 1901</DATE>
+                        <CHRONPROSE>Extensive touring took a toll on PJ's health; she was
+                            struck with severe erysipelas—a type of streptococcal infection
+                            she had endured before—and lost all of her hair.</CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Keller 138-9, 175-6" DBREF="9598">138-9,
+                                175-6</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                </DIV2>
+            </HEALTH>
+        </DIV1>
+        <DIV1>
+            <FRIENDSASSOCIATES>
+                <DIV2>
+                    <CHRONSTRUCT RELEVANCE="COMPREHENSIVE" CHRONCOLUMN="WRITINGCLIMATE" RESP="KDC">
+                        <DATE>27 May 1902</DATE>
+                        <CHRONPROSE>PJ and her partner <NAME>Walter McRaye</NAME> visited the
+                                    <PLACE><SETTLEMENT>Copper Cliff</SETTLEMENT>,
+                                    <REGION>Ontario</REGION><GEOG REG="Canada"/></PLACE>, home of
+                            noted journalist <NAME>Kit Coleman</NAME>.</CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Keller 177" DBREF="9598">177</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P>Kit Coleman was the first president of the <ORGNAME>Canadian Women's
+                                Press Club</ORGNAME>, of whose Vancouver branch later PJ was later a
+                                    member.<BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 65" DBREF="9599">65</BIBCIT></BIBCITS></P>
+                        <P>Much later, in 1913, PJ met Canadian poet <NAME>Isabel Ecclestone
+                                MacKay</NAME>, who interviewed her for the <TITLE TITLETYPE="JOURNAL">Canadian Magazine</TITLE>.<BIBCITS><BIBCIT PLACEHOLDER="Keller 195n294" DBREF="9598">195n35</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </DIV2>
+            </FRIENDSASSOCIATES>
+        </DIV1>
+        <DIV1>
+            <LOCATION RELATIONTO="TRAVELLED">
+                <CHRONSTRUCT RELEVANCE="COMPREHENSIVE" CHRONCOLUMN="WRITINGCLIMATE" RESP="KDC">
+                    <DATE VALUE="1904-07-25" CERTAINTY="AFTER">From late July 1904</DATE>
+                    <CHRONPROSE> PJ fulfilled a long-standing wish by travelling 400 miles up the
+                                <PLACE><PLACENAME>Cariboo Road</PLACENAME> to
+                                <SETTLEMENT>Barkerville</SETTLEMENT>, <REGION>British
+                                Columbia</REGION><GEOG REG="Canada"/></PLACE>, where she first
+                        performed for an appreciative audience of over two hundred.</CHRONPROSE>
+                    <BIBCITS>
+                        <BIBCIT PLACEHOLDER="Keller 201-2" DBREF="9598">201-2</BIBCIT>
+                    </BIBCITS>
+                </CHRONSTRUCT>
+                <DIV2>
+                    <SHORTPROSE>
+                        <P>The second evening, her audience numbered seventy-five.</P>
+                    </SHORTPROSE>
+                </DIV2>
+            </LOCATION>
+        </DIV1>
+        <DIV1>
+            <HEADING>Winnipeg</HEADING>
+            <INTIMATERELATIONSHIPS EROTIC="EROTICYES">
+                <DIV2>
+                    <CHRONSTRUCT RELEVANCE="COMPREHENSIVE" CHRONCOLUMN="WRITINGCLIMATE" RESP="KDC">
+                        <DATE>25 January 1898</DATE>
+                        <CHRONPROSE>PJ became engaged to <NAME STANDARD="Drayton, Charles Robert Lumbley">Charles Drayton</NAME>,
+                            whom she had met in <PLACE><SETTLEMENT>Winnipeg</SETTLEMENT><REGION REG="Manitoba"/><GEOG REG="Canada"/></PLACE>.</CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Keller 131" DBREF="9598">131</BIBCIT>
+                            <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 16" DBREF="9599">16</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P>The drama critic for the <TITLE TITLETYPE="JOURNAL">Globe and
+                                Mail</TITLE> announced the engagement and the proposed September
+                            wedding date in the 26 January issue, alongside a report of PJ's
+                            declining health.<BIBCITS><BIBCIT PLACEHOLDER="Keller 131-2" DBREF="9598">131-2</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                    <CHRONSTRUCT RELEVANCE="COMPREHENSIVE" CHRONCOLUMN="WRITINGCLIMATE" RESP="KDC">
+                        <DATE CERTAINTY="BY">1900</DATE>
+                        <CHRONPROSE>PJ's engagement to <NAME STANDARD="Drayton, Charles Robert Lumbley">Charles Drayton</NAME>
+                            ended when his family opposed his union with a woman who was older, not
+                            entirely white, and a stage performer.</CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Ruoff, Native Women Authors 95" DBREF="9526">95</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P>After the end of this relationship she may or may not have become
+                            romantically involved with her manager, <NAME>Charles Wuerz</NAME>,
+                            during 1900 and early 1901.<BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 68 " DBREF="9599">68</BIBCIT><BIBCIT PLACEHOLDER="Ruoff, Native Women Authors 95" DBREF="9526">95</BIBCIT><BIBCIT PLACEHOLDER="Keller 157-8" DBREF="9598">157-8</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </DIV2>
+            </INTIMATERELATIONSHIPS>
+        </DIV1>
+        <DIV1>
+            <LOCATION RELATIONTO="MOVED">
+                <CHRONSTRUCT RELEVANCE="COMPREHENSIVE" CHRONCOLUMN="WRITINGCLIMATE" RESP="KDC">
+                    <DATE>1898</DATE>
+                    <CHRONPROSE>After the death of her mother, PJ relocated to
+                                <PLACE><SETTLEMENT>Winnipeg</SETTLEMENT>, <REGION REG="Manitoba">Manitoba</REGION><GEOG REG="Canada"/></PLACE>.</CHRONPROSE>
+                    <BIBCITS>
+                        <BIBCIT PLACEHOLDER="Ruoff, Native Women Authors 95" DBREF="9526">95</BIBCIT>
+                    </BIBCITS>
+                </CHRONSTRUCT>
+            </LOCATION>
+        </DIV1>
+        <DIV1>
+            <HEADING>Returning to London, England</HEADING>
+            <LOCATION RELATIONTO="VISITED">
+                <DIV2>
+                    <SHORTPROSE>
+                        <P>PJ and her partner Walter McRaye returned to England in <DATE>April
+                                1906</DATE>, staying at <PLACE><ADDRESS><ADDRLINE>53 St James's
+                                        Square</ADDRLINE></ADDRESS>, <SETTLEMENT REG="London">London</SETTLEMENT><REGION REG="Middlesex"/><GEOG REG="England"/></PLACE>. On this trip she was introduced to <NAME>Arthur
+                                Pearson</NAME>, who invited her to write for his newspapers, which
+                            included the <TITLE TITLETYPE="JOURNAL">Daily
+                                    Express</TITLE>.<BIBCITS><BIBCIT PLACEHOLDER="Keller 207-8, 216" DBREF="9598">207-8, 216</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </DIV2>
+            </LOCATION>
+        </DIV1>
+        <DIV1>
+            <FRIENDSASSOCIATES>
+                <DIV2>
+                    <SHORTPROSE>
+                        <P>During this visit she was invited to the home of <NAME>Theodore
+                                Watts-Dunton</NAME>, where she met <NAME STANDARD="Swinburne, Algernon Charles">Algernon Swinburne</NAME>.
+                            When <NAME>Charles G. D. Roberts</NAME> met Swinburne two years later,
+                            the latter confirmed that PJ and her poetry had made a strong and
+                            favourable impression on him.<BIBCITS><BIBCIT PLACEHOLDER="Keller 218-19" DBREF="9598">218-19</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                    <CHRONSTRUCT RELEVANCE="COMPREHENSIVE" CHRONCOLUMN="WRITINGCLIMATE" RESP="KDC">
+                        <DATE>5 August 1906</DATE>
+                        <CHRONPROSE><NAME STANDARD="Su-à-pu-luck">Chief Joe Capilano</NAME>
+                                (<NAME STANDARD="Su-à-pu-luck">Su-à-pu-luck</NAME>) of
+                            the Squamish nation arrived in
+                                    <PLACE><SETTLEMENT>London</SETTLEMENT>,<REGION REG="Middlesex"/>
+                                <GEOG>England</GEOG></PLACE>, where he met PJ; after this meeting
+                            they formed a lasting friendship.</CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Keller 219, 223" DBREF="9598">219, 223</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P><NAME STANDARD="Su-à-pu-luck">Chief Joe</NAME> was in London with
+                            two colleagues petitioning the British crown on behalf of British
+                            Columbia's First Nations.</P>
+                    </SHORTPROSE>
+                </DIV2>
+            </FRIENDSASSOCIATES>
+        </DIV1>
+        <DIV1>
+            <LOCATION RELATIONTO="TRAVELLED">
+                <DIV2>
+                    <CHRONSTRUCT RELEVANCE="COMPREHENSIVE" CHRONCOLUMN="WRITINGCLIMATE" RESP="KDC">
+                        <DATE>27 April 1907</DATE>
+                        <CHRONPROSE>After returning briefly to <PLACE><GEOG>Canada</GEOG></PLACE>,
+                            PJ sailed back to London, staying again at <PLACE><ADDRESS><ADDRLINE>53
+                                        St James's Square</ADDRLINE></ADDRESS><SETTLEMENT REG="London"/><REGION REG="Middlesex"/><GEOG REG="England"/></PLACE>.</CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Keller 228" DBREF="9598">228</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P>By early summer, however, she was back in Canada.</P>
+                    </SHORTPROSE>
+                </DIV2>
+            </LOCATION>
+        </DIV1>
+        <DIV1>
+            <HEADING>Final Tours</HEADING>
+            <LOCATION RELATIONTO="TRAVELLED">
+                <DIV2>
+                    <SHORTPROSE>
+                        <P>PJ and <NAME>Walter McRaye</NAME> undertook one of their last tours,
+                            beginning in <DATE>July 1907</DATE>, travelling through
+                                    <PLACE><REGION>Indiana</REGION><GEOG REG="USA"/></PLACE>,
+                                    <PLACE><REGION>Michigan</REGION><GEOG REG="USA"/></PLACE>,
+                                    <PLACE><REGION>Iowa</REGION><GEOG REG="USA"/></PLACE>,
+                                    <PLACE><REGION>Nebraska</REGION><GEOG REG="USA"/></PLACE>,
+                                    <PLACE><REGION>Colorado</REGION><GEOG REG="USA"/></PLACE>,
+                                    <PLACE><REGION>Kansas</REGION><GEOG REG="USA"/></PLACE>,
+                                    <PLACE><REGION>Missouri</REGION><GEOG REG="USA"/></PLACE>, and
+                                    <PLACE><REGION>Illinois</REGION><GEOG REG="USA"/></PLACE>, as
+                            part of a Chautauqua series.<BIBCITS><BIBCIT PLACEHOLDER="Keller 231-3" DBREF="9598">231-3</BIBCIT></BIBCITS><SCHOLARNOTE><P>Chautauqua
+                                    was the name given to groups of educators and entertainers who
+                                    toured with tents through the American midwest and southern
+                                    parts of Canada in the late 1800s and early 1900s, bringing
+                                    their talents primarily to rural areas. The Chautauqua mission
+                                    was related to that of the lyceum movement with its emphasis on
+                                    self improvement.</P></SCHOLARNOTE></P>
+                        <P> On a tour of the west, PJ stopped in
+                                    <PLACE><SETTLEMENT>Edmonton</SETTLEMENT>, <REGION REG="Alberta">Alberta</REGION><GEOG REG="Canada"/></PLACE>, to visit
+                                <NAME>Ernest Thompson Seton</NAME> on <DATE>4 November
+                                    1907</DATE>.<BIBCITS><BIBCIT PLACEHOLDER="Keller 236" DBREF="9598">236</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </DIV2>
+            </LOCATION>
+        </DIV1>
+        <DIV1>
+            <HEADING>Vancouver</HEADING>
+            <LOCATION RELATIONTO="MOVED">
+                <DIV2>
+                    <SHORTPROSE>
+                        <P>On <DATE>29 June 1908</DATE> PJ hinted to a reporter that her rest stop
+                            in <PLACE><SETTLEMENT>Vancouver</SETTLEMENT><REGION REG="British Columbia"/><GEOG REG="Canada"/></PLACE> might be
+                            extended. She left the city in August, but soon retired from touring and
+                            settled in Vancouver, which became her final home.<BIBCITS><BIBCIT PLACEHOLDER="Ruoff, Native Women Authors 95" DBREF="9526">95</BIBCIT><BIBCIT PLACEHOLDER="Keller 238-9" DBREF="9598">238-9</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                    <CHRONSTRUCT RELEVANCE="COMPREHENSIVE" CHRONCOLUMN="WRITINGCLIMATE" RESP="KDC">
+                        <DATE>6 May 1909</DATE>
+                        <CHRONPROSE>PJ announced to a crowd in
+                                    <PLACE><SETTLEMENT>Vancouver</SETTLEMENT>'s
+                                    <PLACENAME>Pender Auditorium</PLACENAME><REGION REG="British Columbia"/><GEOG REG="Canada"/></PLACE> that she
+                            intended to settle in their city.</CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Keller 240" DBREF="9598">240</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                </DIV2>
+            </LOCATION>
+        </DIV1>
+        <DIV1>
+            <WEALTH>
+                <DIV2>
+                    <SHORTPROSE>
+                        <P>Financial concerns were always a factor in PJ's living arrangements.
+                            She once claimed, <QUOTE DIRECT="Y">Do you know what I would do if I had
+                                only two dollars in the world and I knew it would be my last?
+                                I'd spend half on my body and half on my soul. With one dollar
+                                I would buy a whacking good meal, and with the other a dozen cut
+                                carnations.</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Keller 99" DBREF="9598">99</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </DIV2>
+            </WEALTH>
+        </DIV1>
+        <DIV1>
+            <FRIENDSASSOCIATES>
+                <DIV2>
+                    <SHORTPROSE>
+                        <P>In Vancouver, she lived in a small apartment and paddled around the bays
+                            of the city. She resumed her friendship with <NAME STANDARD="Su-à-pu-luck">Chief Joe Capilano</NAME>, whom she
+                            had met in 1906.<BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 17, 65" DBREF="9599">17,
+                                    65</BIBCIT><BIBCIT PLACEHOLDER="McMaster, life" DBREF="9746"/></BIBCITS>
+                        </P>
+                    </SHORTPROSE>
+                    <CHRONSTRUCT RELEVANCE="COMPREHENSIVE" CHRONCOLUMN="WRITINGCLIMATE" RESP="KDC">
+                        <DATESTRUCT CERTAINTY="C" VALUE="1909-10-">
+                            <SEASON>Autumn</SEASON>
+                            <YEAR>1909</YEAR>
+                        </DATESTRUCT>
+                        <CHRONPROSE><NAME STANDARD="Su-à-pu-luck">Chief Joe Capilano</NAME>
+                            began telling PJ the legends of the Squamish people.</CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Keller 246" DBREF="9598">246</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <CHRONSTRUCT RELEVANCE="COMPREHENSIVE" CHRONCOLUMN="WRITINGCLIMATE" RESP="KDC">
+                        <DATE>10 March 1910</DATE>
+                        <CHRONPROSE>PJ's friend <NAME STANDARD="Su-à-pu-luck">Chief Joe
+                                Capilano</NAME> died in <PLACE><SETTLEMENT>Vancouver</SETTLEMENT>,
+                                    <REGION REG="British Columbia">British Columbia</REGION><GEOG REG="Canada"/></PLACE>, on her birthday.</CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Keller 250" DBREF="9598">250</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                </DIV2>
+                <DIV2>
+                    <SHORTPROSE>
+                        <P>In 1910 PJ was introduced to <NAME>Isabel McLean</NAME>, a journalist who
+                            published under the name <SOCALLED>Alexandra</SOCALLED> in the <TITLE TITLETYPE="JOURNAL">Vancouver Province</TITLE>. Through her, PJ
+                            became more involved with the <ORGNAME>Canadian Women's Press
+                                Club</ORGNAME>, though she was already familiar with the group
+                            because of her association with <NAME>Kit
+                                    Coleman</NAME>.<BIBCITS><BIBCIT PLACEHOLDER="Keller 252" DBREF="9598">252</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </DIV2>
+            </FRIENDSASSOCIATES>
+        </DIV1>
+        <DIV1>
+            <HEADING>Final days</HEADING>
+            <HEALTH ISSUE="FEMALEBODY">
+                <DIV2>
+                    <SHORTPROSE>
+                        <P>A friend persuaded PJ to see a doctor about the lump in her right breast.
+                            PJ found a young doctor, <NAME>Thomas Ransom Biggar Nelles</NAME>, who
+                            was not only highly qualified but had moved to Vancouver from Brantford.
+                            He had the unhappy job of telling PJ that her cancer was beyond remedy:
+                            all the help he could give her would be to manage pain.<BIBCITS><BIBCIT PLACEHOLDER="Keller 246-8" DBREF="9598">246-8</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </DIV2>
+            </HEALTH>
+        </DIV1>
+        <DIV1>
+            <FRIENDSASSOCIATES>
+                <DIV2>
+                    <SHORTPROSE>
+                        <P>During her final days, PJ had a chance meeting on the streets of
+                            Vancouver with the novelist <NAME>Ethel Wilson</NAME>, who recognized
+                            her from having seen her at the age of eleven, when Johnson was giving a
+                            recital. Among the last visitors to her hospital bed was poet
+                                <NAME>Charles Mair</NAME>.<BIBCITS><BIBCIT PLACEHOLDER="Keller 259, 264" DBREF="9598">259,
+                                264</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </DIV2>
+            </FRIENDSASSOCIATES>
+        </DIV1>
+        <DIV1>
+            <DEATH>
+                <DIV2>
+                    <CHRONSTRUCT RELEVANCE="SELECTIVE" CHRONCOLUMN="WRITINGCLIMATE" RESP="JSC">
+                        <DATE>7 March 1913</DATE>
+                        <CHRONPROSE>PJ died of <CAUSE>breast cancer</CAUSE> in
+                                    <PLACE><SETTLEMENT>Vancouver</SETTLEMENT>, <REGION>British
+                                    Columbia</REGION><GEOG REG="Canada"/></PLACE>. She was three
+                            days short of her fifty-second birthday.</CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Ruoff, Native Women Authors 96" DBREF="9526">96</BIBCIT>
+                            <BIBCIT PLACEHOLDER="DLB 99: 163" DBREF="8894">163</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SCHOLARNOTE>
+                        <P>Gerson and Strong-Boag in <TITLE TITLETYPE="MONOGRAPHIC" REG="Paddling Her Own Canoe: The Times and Texts of E. Pauline Johnson (Tekahionwake)">Paddling Her Own Canoe</TITLE> cite the date of death as 8 March
+                            1913, but this goes against all other sources.</P>
+                    </SCHOLARNOTE>
+                    <SHORTPROSE>
+                        <P>Despite their troubled relationship, PJ's sister <NAME STANDARD="Johnson, Eliza Helen Charlotte">Eva</NAME> was at her
+                            bedside, as was her former performing partner <NAME>Walter
+                                    McRaye</NAME>.<BIBCITS><BIBCIT PLACEHOLDER="McMaster, family" DBREF="9746"/></BIBCITS></P>
+                    </SHORTPROSE>
+                    <CHRONSTRUCT RELEVANCE="COMPREHENSIVE" CHRONCOLUMN="WRITINGCLIMATE" RESP="KDC">
+                        <DATE>9 March 1913</DATE>
+                        <CHRONPROSE>A memorial service for PJ was held at the
+                                    <PLACE><PLACENAME>Mohawk Chapel</PLACENAME> on the <REGION>Six
+                                    Nations Reserve</REGION><REGION REG="Ontario"/><GEOG REG="Canada"/></PLACE> near
+                                    <PLACE><SETTLEMENT>Brantford</SETTLEMENT>,
+                                    <REGION>Ontario</REGION><GEOG REG="Canada"/></PLACE>.</CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Keller 269" DBREF="9598">269</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P>On the day of her funeral in Vancouver, flags in the city flew at
+                            half-mast, and her civic memorial on March 10, arranged to a great
+                            extent by the <ORGNAME>Women's Canadian Club</ORGNAME>, was
+                            attended by leading figures from Vancouver.<BIBCITS><BIBCIT PLACEHOLDER="McMaster, life" DBREF="9746"/><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 17, 66" DBREF="9599">17,
+                                    66</BIBCIT></BIBCITS></P>
+                        <P>PJ is the only person buried in <PLACE><PLACENAME>Stanley
+                                    Park</PLACENAME>, <SETTLEMENT>Vancouver</SETTLEMENT><REGION REG="British Columbia"/><GEOG REG="Canada"/></PLACE>. Although
+                            she had requested an unmarked grave, the site is marked by a stone,
+                            erected by the <ORGNAME>Women's Canadian Club</ORGNAME> in 1922, on
+                            which is carved her profile, the prow of a canoe, a feather, a
+                            flint-tipped arrow, and the word PAULINE. Another memorial stone for her
+                            is located at the <PLACE><PLACENAME>Mohawk Chapel</PLACENAME> in
+                                    <REGION>Six Nations Reserve</REGION> near Brantford,
+                                    <REGION>Ontario</REGION><GEOG REG="Canada"/></PLACE>.<BIBCITS><BIBCIT PLACEHOLDER="McMaster, life" DBREF="9746"/><BIBCIT PLACEHOLDER="University Women's Club 45" DBREF="9610">45</BIBCIT><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 17" DBREF="9599">17</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </DIV2>
+            </DEATH>
+        </DIV1>
+        <WORKSCITED>
+            <SOURCE>Unless otherwise noted, all information is from the FC</SOURCE>
+            <SOURCE>New, W.H. (ed.) DLB Canadian Writers 1890-1920. vol. 92. Detroit: Gale Research
+                Inc., 1990.</SOURCE>
+            <SOURCE>Keller, Betty. Pauline: A Biography of Pauline Johnson. Vancouver: Douglas and
+                McIntyre, 1981</SOURCE>
+            <SOURCE>Gerson and Strong-Boag, Paddling her Own Canoe: The Times and Texts of E.
+                Pauline Johnson. Toronto: UTP, 2000</SOURCE>
+            <SOURCE>Ruoff, Lavonne Brown, Native Women Authors in Karen Kilcup, ed. </SOURCE>
+        </WORKSCITED>
+    </DIV0>
+</BIOGRAPHY>
+
+

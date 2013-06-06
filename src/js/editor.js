@@ -240,7 +240,7 @@ function Writer(config) {
 			}
 		}
 		
-		_fireNodeChange(nodeEl);
+		w._fireNodeChange(nodeEl);
 		
 		w.editor.focus();
 	};
@@ -276,9 +276,9 @@ function Writer(config) {
 			});
 		}
 		return doc;
-	};	
-
-	function _fireNodeChange(nodeEl) {
+	};
+	
+	w._fireNodeChange = function(nodeEl) {
 		// fire the onNodeChange event
 		w.editor.parents = [];
 		w.editor.dom.getParent(nodeEl, function(n) {
@@ -398,7 +398,7 @@ function Writer(config) {
 //				_onNodeChangeHandler(ed, cm, e);
 				// use setTimeout to add to the end of the onNodeChange stack
 				window.setTimeout(function(){
-					_fireNodeChange(e);
+					w._fireNodeChange(e);
 				}, 0);
 			} else {
 				ed.currentNode = e;

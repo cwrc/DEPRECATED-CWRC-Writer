@@ -672,25 +672,33 @@ function FileManager(config) {
 	};
 	
 	function _loadDocumentHandler(doc) {
-		var rootName;
-		var isEvents = doc.getElementsByTagName('EVENTS').length > 0;
-		if (isEvents) {
-			rootName = 'events';
-			w.idName = 'ID';
+		if (doc.firstChild.nodeName == 'xml-model') {
+			var xmlModelData = doc.firstChild.data;
+			var schemaUrl = xmlModelData.match(/href="([^"]*)"/)[1];
+			var urlParts = schemaUrl.match(/^(.*):\/\/([a-z\-.]+)(?=:[0-9]+)?\/(.*)/);
+			var fileName = urlParts[3];
+			fm.loadSchema(fileName, false, processDocument);
 		} else {
-			rootName = 'tei';
-			// FIXME temp fix for doc structure
-//			w.idName = 'xml:id';
-			w.idName = 'id';
-		}
-		if (rootName != w.root.toLowerCase()) {
-			if (rootName == 'events') {
-				fm.loadSchema('events', false, processDocument);
+			var rootName;
+			var isEvents = doc.getElementsByTagName('EVENTS').length > 0;
+			if (isEvents) {
+				rootName = 'events';
+				w.idName = 'ID';
 			} else {
-				fm.loadSchema('cwrcbasic', false, processDocument);
+				rootName = 'tei';
+				// FIXME temp fix for doc structure
+	//			w.idName = 'xml:id';
+				w.idName = 'id';
 			}
-		} else {
-			processDocument();
+			if (rootName != w.root.toLowerCase()) {
+				if (rootName == 'events') {
+					fm.loadSchema('schema/events.rng', false, processDocument);
+				} else {
+					fm.loadSchema('schema/CWRC-TEIBasic.rng', false, processDocument);
+				}
+			} else {
+				processDocument();
+			}
 		}
 		
 		function processDocument() {
@@ -932,7 +940,17 @@ function FileManager(config) {
 			w.entitiesList.update();
 			w.tree.update(true);
 			w.relations.update();
-		}
+			
+			// try putting the cursor in the body
+			window.setTimeout(function() {
+				var bodyTag = $('[_tag='+w.header+']', w.editor.getBody()).next()[0];
+				if (bodyTag != null) {
+					w.editor.selection.select(bodyTag);
+					w.editor.selection.collapse(true);
+					w._fireNodeChange(bodyTag);
+				}
+			}, 50);
+		} // end processDocument
 	};
 	
 	fm.editSource = function() {
@@ -951,51 +969,50 @@ function FileManager(config) {
 	
 	/**
 	 * Load a new schema.
-	 * @param {String} schema The schema to load (events, or cwrcbasic)
+	 * @param {String} schemaFile The schema file to load
 	 * @param {Boolean} startText Whether to include the default starting text
 	 * @param {Function} callback Callback for when the load is complete
 	 */
-	fm.loadSchema = function(schema, startText, callback) {
-		var schemaUrl = '';
+	fm.loadSchema = function(schemaFile, startText, callback) {
 		var baseUrl = ''; //w.project == null ? '' : w.baseUrl; // handling difference between local and server urls
-		var cssUrl;
-		var blockElements = w.editor.schema.getBlockElements();
-		
-		if (schema == 'events') {
-			schemaUrl = baseUrl + 'schema/events.rng';
-			cssUrl = 'css/orlando_converted.css';
-			
-			blockElements['L'] = {};
-			blockElements['P'] = {};
-			
-			w.root = 'EVENTS';
-			w.header = 'ORLANDOHEADER';
-			w.idName = 'ID';
-		} else {
-			schemaUrl = baseUrl + 'schema/CWRC-TEIBasic.rng';
-			cssUrl = 'css/tei_converted.css';
-			
-			blockElements['l'] = {};
-	    	blockElements['p'] = {};
-	    	blockElements['sp'] = {};
-	    	
-	    	w.root = 'TEI';
-	    	w.header = 'teiHeader';
-	    	// FIXME temp fix for doc structure
-	    	w.idName = 'xml:id';
-		}
-		
-		w.validationSchema = schema;
-		w.editor.settings.forced_root_block = w.root;
-		w.editor.schema.addCustomElements(w.root);
-	    w.editor.schema.addCustomElements(w.root.toLowerCase());
+		w.validationSchema = schemaFile;
 	    
 		$.ajax({
-			url: schemaUrl,
+			url: baseUrl + schemaFile,
 			dataType: 'xml',
 			success: function(data, status, xhr) {
 				w.schemaXML = data;
 			    
+				// get root element
+				var startName = $('start ref:first', w.schemaXML).attr('name');
+				var startEl = $('define[name="'+startName+'"] element', w.schemaXML).attr('name');
+				w.root = startEl;
+				w.editor.settings.forced_root_block = w.root;
+				w.editor.schema.addCustomElements(w.root);
+			    w.editor.schema.addCustomElements(w.root.toLowerCase());
+				
+			    var cssUrl;
+				var blockElements = w.editor.schema.getBlockElements();
+			    if (w.root == 'TEI') {
+			    	cssUrl = 'css/tei_converted.css';
+					
+					blockElements['l'] = {};
+			    	blockElements['p'] = {};
+			    	blockElements['sp'] = {};
+			    	
+			    	w.header = 'teiHeader';
+			    	// FIXME temp fix for doc structure
+			    	w.idName = 'xml:id';
+			    } else {
+			    	cssUrl = 'css/orlando_converted.css';
+					
+					blockElements['L'] = {};
+					blockElements['P'] = {};
+					
+					w.header = 'ORLANDOHEADER';
+					w.idName = 'ID';
+			    }
+				
 				function processSchema() {
 					// remove old schema elements
 				    $('#schemaTags', w.editor.dom.doc).remove();
@@ -1039,7 +1056,8 @@ function FileManager(config) {
 					
 					if (callback) callback();
 				}
-				
+			    
+				// handle includes
 				var include = $('include:first', w.schemaXML); // TODO add handling for multiple includes
 				if (include.length == 1) {
 					var href = include.attr('href');
@@ -1074,7 +1092,7 @@ function FileManager(config) {
 				
 			},
 			error: function(xhr, status, error) {
-				w.d.show('message', {title: 'Error', msg: 'Error loading schema: '+error, type: 'error'});
+				w.d.show('message', {title: 'Error', msg: 'Error loading schema: '+status, type: 'error'});
 			}
 		});
 	};
@@ -1146,17 +1164,14 @@ function FileManager(config) {
 			_loadTemplate('xml/sample_letter.xml');
 		} else if (start.match('sample_poem')) {
 			_loadTemplate('xml/sample_poem.xml');
-		} else if (start.match('event')) {
-			_loadTemplate('xml/event_template.xml');
-		} else if (start.match('letter')) {
-			_loadTemplate('xml/letter_template.xml');
-		} else if (start.match('poem')) {
-			_loadTemplate('xml/poem_template.xml');
-		} else if (start.match('prose')) {
-			_loadTemplate('xml/prose_template.xml');
+		} else if (start.match('sample_biography')) {
+			_loadTemplate('xml/sample_biography.xml');
+		} else if (start.match('sample_writing')) {
+			_loadTemplate('xml/sample_writing.xml');
+		} else if (start != '') {
+			_loadTemplate('xml/template_'+start.substr(1)+'.xml');
 		} else {
 			w.fm.loadEMICDocument();
-//			fm.loadSchema('cwrcbasic', true);
 		}
 	};
 	
@@ -1174,6 +1189,9 @@ function FileManager(config) {
 				}
 				$(root).prepend(rdf);
 				_loadDocumentHandler(data);
+			},
+			error: function(xhr, status, error) {
+				console.log(status);
 			}
 		});
 	};
