@@ -214,14 +214,14 @@ function Writer(config) {
 		var nodeEl = node[0];
 		
 		if (selectContentsOnly) {
-//			if (tinymce.isWebKit) {
-//				w.editor.getWin().getSelection().selectAllChildren(nodeEl);
-//			} else {
-				var rng = w.editor.dom.createRng();
-				rng.setStart(nodeEl.firstChild, 0);
-				rng.setEnd(nodeEl.lastChild, nodeEl.lastChild.length);
-				w.editor.selection.setRng(rng);
-//			}
+			if (tinymce.isWebKit) {
+				$('[data-mce-bogus]', node).remove();
+				node.prepend('<span data-mce-bogus="1">\uFEFF</span>').append('<span data-mce-bogus="1">\uFEFF</span>');
+			}
+			var rng = w.editor.dom.createRng();
+			rng.setStart(nodeEl.firstChild, 0);
+			rng.setEnd(nodeEl.lastChild, nodeEl.lastChild.length);
+			w.editor.selection.setRng(rng);
 //			w.tree.currentlySelectedNode = id;
 		} else {
 			node.append('\uFEFF');
@@ -232,8 +232,8 @@ function Writer(config) {
 				node.before('<span data-mce-bogus="1">\uFEFF</span>').after('<span data-mce-bogus="1">\uFEFF</span>');
 				
 				var rng = w.editor.dom.createRng();
-				rng.setStart(nodeEl.previousSibling, 0);
-				rng.setEnd(nodeEl.nextSibling, 0);
+				rng.setStart(nodeEl.previousSibling.firstChild, 0);
+				rng.setEnd(nodeEl.nextSibling.firstChild, 0);
 				w.editor.selection.setRng(rng);
 			} else {
 				w.editor.selection.select(nodeEl);
