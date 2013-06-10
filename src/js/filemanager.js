@@ -1046,9 +1046,11 @@ function FileManager(config) {
 				    
 					w.schema.elements = elements;
 					
-					var text = '';
-					if (startText) text = 'Paste or type your text here.';
-					w.editor.setContent('<'+w.root+' _tag="'+w.root+'">'+text+'</'+w.root+'>');
+					if (callback == null) {
+						var text = '';
+						if (startText) text = 'Paste or type your text here.';
+						w.editor.setContent('<'+w.root+' _tag="'+w.root+'">'+text+'</'+w.root+'>');
+					}
 					
 					w.entitiesList.update();
 					w.tree.update(true);
