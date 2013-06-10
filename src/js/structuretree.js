@@ -22,9 +22,7 @@ function StructureTree(config) {
 		var openNodes = [];
 		$('#tree #root').find('li.jstree-open').each(function () {
 			var id = $(this).attr('name');
-			if (w.deletedStructs[id] != null) {
-				openNodes.push(id);
-			}
+			openNodes.push(id);
 		});
 		
 		$tree.jstree('delete_node', '#root');
