@@ -11,60 +11,93 @@ function StructureTree(config) {
 	
 	var ignoreSelect = false; // used when we want to highlight a node without selecting it's counterpart in the editor
 	
+	var $tree; // tree reference
+	
 	/**
 	 * @memberOf tree
 	 */
 	tree.update = function() {
-		var body = w.editor.dom.select('body');
-	//	$('#tree').jstree('_get_children').each(function(index, element) {
-	//		$('#tree').jstree('delete_node', $(this));
-	//	});
-		$('#tree').jstree('delete_node', '#root');
-		var root = $('#tree').jstree('create_node', $('#tree'), 'first', {
+		var treeRef = $.jstree._reference('#tree');
+		
+		var openNodes = [];
+		$('#tree #root').find('li.jstree-open').each(function () {
+			var id = $(this).attr('name');
+			if (w.deletedStructs[id] != null) {
+				openNodes.push(id);
+			}
+		});
+		
+		$tree.jstree('delete_node', '#root');
+		
+		var root = {
 			data: 'Tags',
 			attr: {id: 'root'},
-			state: 'open'
+			state: 'open',
+			children: []
+		};
+		_doUpdate($(w.editor.getBody()).children(), root, 0);
+		
+		var settings = treeRef._get_settings();
+		settings.json_data.data = root;
+		treeRef._set_settings(settings);
+		treeRef.load_node_json(-1, false, false);
+		treeRef._themeroller();
+		_onNodeLoad($('#tree #root li').first());
+		
+		$.each(openNodes, function (i, val) {
+			treeRef.open_node($('li[name='+val+']', $tree), false, true); 
 		});
-		_doUpdate($(body).children(), root);
 	};
 	
-	tree.selectNode = function(id) {
-//		console.log('selectNode', id);
+	tree.selectNode = function(node) {
+		var id = node.id;
 		if (id) {
 			ignoreSelect = true;
-			var result = $('#tree').jstree('select_node', $('#tree [name="'+id+'"]'), true);
+			var treeNode = $('#tree [name="'+id+'"]');
+			if (treeNode.length == 0) {
+				var parents = [];
+				$(node).parentsUntil('#tinymce').each(function(index, el) {
+					parents.push(el.id);
+				});
+				parents.reverse();
+				for (var i = 0; i < parents.length; i++) {
+					var parentId = parents[i];
+					var parentNode = $('#tree [name="'+parentId+'"]');
+					var isOpen = $tree.jstree('is_open', parentNode);
+					if (!isOpen) {
+						$tree.jstree('open_node', parentNode, false, true);
+					}
+				}
+			}
+			var result = $tree.jstree('select_node', treeNode, true);
 			if (result.attr('id') == 'tree') ignoreSelect = false;
 		}
 	};
 	
-	function _doUpdate(children, nodeParent) {
+	
+	
+	function _doUpdate(children, nodeParent, level) {
 		children.each(function(index, el) {
-			var newChildren = $(this).children();
+			var node = $(this);
 			var newNodeParent = nodeParent;
-			if ($(this).attr('_tag') || $(this).is(w.root)) {
-				var id = $(this).attr('id');
-				var isLeaf = $(this).find('[_tag]').length > 0 ? 'open' : null;
-				if ($(this).attr('_tag') == w.header) isLeaf = false;
+			if (node.attr('_tag')) {
+				var id = node.attr('id');
+				var tag = node.attr('_tag');
+
+//				var isLeaf = node.find('[_tag]').length > 0 ? 'open' : null;
+//				if (tag == w.header) isLeaf = false;
 				
 				// new struct check
 				if (id == '' || id == null) {
 					id = tinymce.DOM.uniqueId('struct_');
-					var tag = $(this).attr('_tag');
-					if (tag == null && $(this).is(w.root)) tag = w.root;
+					if (tag == null && node.is(w.root)) tag = w.root;
 					if (w.schema.elements.indexOf(tag) != -1) {
-						$(this).attr('id', id).attr('_tag', tag);
+						node.attr('id', id).attr('_tag', tag);
 						w.structs[id] = {
 							id: id,
 							_tag: tag
 						};
-					}
-				// redo/undo re-added a struct check
-				} else if (w.structs[id] == null) {
-					var deleted = w.deletedStructs[id];
-					if (deleted != null) {
-						w.structs[id] = deleted;
-						delete w.deletedStructs[id];
-					}
+					}					
 				// duplicate struct check
 				} else {
 					var match = $('[id='+id+']', w.editor.getBody());
@@ -86,17 +119,37 @@ function StructureTree(config) {
 				
 				var info = w.structs[id];
 				if (info) {
-					var title = info._tag;
-					newNodeParent = $('#tree').jstree('create_node', nodeParent, 'last', {
-						data: title,
-						attr: {name: id, 'class': $(this).attr('class')},
-						state: isLeaf
+					if (nodeParent.children == null) {
+						nodeParent.children = [];
+					}
+					nodeParent.children.push({
+						data: info._tag,
+						attr: {name: id, 'class': node.attr('class')}
+						,state: level < 2 ? 'open' : null
 					});
+					
+					newNodeParent = nodeParent.children[nodeParent.children.length-1];
+					
+				// redo/undo re-added a struct check
+				} else {
+					var deleted = w.deletedStructs[id];
+					if (deleted != null) {
+						w.structs[id] = deleted;
+						delete w.deletedStructs[id];
+					}
 				}
 			}
-			if ($(this).attr('_tag') != w.header) {
-				_doUpdate(newChildren, newNodeParent);
+			if (node.attr('_tag') != w.header) {
+				_doUpdate(node.children(), newNodeParent, level+1);
 			}
+		});
+	}
+	
+	function _onNodeLoad(context) {
+		$('li', context).each(function(index, el) {
+			var li = $(this);
+			var indent = (li.parents('ul').length - 2) * 10;
+			li.prepend("<span class='jstree-indent' style='width: "+indent+"px;'/>");
 		});
 	}
 	
@@ -106,7 +159,7 @@ function StructureTree(config) {
 			var id = node.attr('name');
 			var selectContents = node.children('a').hasClass('contentsSelected');
 			_removeCustomClasses();
-			if (id) {
+			if (id && w.structs[id]) {
 				// already selected node, toggle selection type
 				if (id == tree.currentlySelectedNode) {
 					selectContents = !selectContents;
@@ -185,7 +238,9 @@ function StructureTree(config) {
 	'</div>');
 //	$(document.body).append('<div id="tree_popup"></div>');
 	
-	$('#tree').bind('loaded.jstree', function(event, data) {
+	$tree = $('#tree');
+	
+	$tree.bind('loaded.jstree', function(event, data) {
 		tree.layout = $('#structure').layout({
 			defaults: {
 				resizable: false,
@@ -202,7 +257,7 @@ function StructureTree(config) {
 	$.vakata.dnd.helper_left = 15;
 	$.vakata.dnd.helper_top = 20;
 	
-	$('#tree').jstree({
+	$tree.jstree({
 		core: {},
 		themeroller: {},
 		ui: {
@@ -213,7 +268,8 @@ function StructureTree(config) {
 				data: 'Tags',
 				attr: {id: 'root'},
 				state: 'open'
-			}
+			},
+			progressive_render: true
 		},
 		dnd: {
 			drag_target: false
@@ -372,13 +428,16 @@ function StructureTree(config) {
 		},
 		plugins: ['json_data', 'ui', 'contextmenu', 'hotkeys', 'dnd', 'themeroller']
 	});
-	$('#tree').bind('select_node.jstree', _onNodeSelect);
-	$('#tree').bind('deselect_node.jstree', _onNodeDeselect);
-	$('#tree').bind('dnd_finish.jstree', _onDragDrop);
-//	$('#tree').mousemove(function(e) {
+	$tree.bind('select_node.jstree', _onNodeSelect);
+	$tree.bind('deselect_node.jstree', _onNodeDeselect);
+	$tree.bind('dnd_finish.jstree', _onDragDrop);
+	$tree.bind('load_node.jstree', function(event, data) {
+		_onNodeLoad(data.rslt.obj);
+	});
+//	$tree.mousemove(function(e) {
 //		$('#tree_popup').offset({left: e.pageX+15, top: e.pageY+5});
 //	});
-//	$('#tree').bind('hover_node.jstree', function(event, data) {
+//	$tree.bind('hover_node.jstree', function(event, data) {
 //		if ($('#vakata-contextmenu').css('visibility') == 'visible') return;
 //		
 //		var node = data.rslt.obj;
@@ -396,7 +455,7 @@ function StructureTree(config) {
 //		content += '</ul>';
 //		_showPopup(content);
 //	});
-//	$('#tree').bind('dehover_node.jstree', function(event, data) {
+//	$tree.bind('dehover_node.jstree', function(event, data) {
 //		_hidePopup();
 //	});
 	

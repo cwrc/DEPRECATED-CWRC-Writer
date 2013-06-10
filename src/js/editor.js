@@ -240,6 +240,9 @@ function Writer(config) {
 			}
 		}
 		
+		// scroll node into view
+		$(w.editor.getBody()).scrollTop(node.position().top - $(w.editor.getContentAreaContainer()).height()*0.25);
+		
 		w._fireNodeChange(nodeEl);
 		
 		w.editor.focus();
@@ -405,7 +408,7 @@ function Writer(config) {
 			}
 		}
 		if (ed.currentNode) {
-			w.tree.selectNode(ed.currentNode.id);
+			w.tree.selectNode(ed.currentNode);
 		}
 		if (w.emptyTagId) {
 			delete w.entities[w.emptyTagId];
