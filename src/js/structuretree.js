@@ -66,6 +66,7 @@ function StructureTree(config) {
 						$tree.jstree('open_node', parentNode, false, true);
 					}
 				}
+				treeNode = $('#tree [name="'+id+'"]');
 			}
 			var result = $tree.jstree('select_node', treeNode, true);
 			if (result.attr('id') == 'tree') ignoreSelect = false;
@@ -146,7 +147,7 @@ function StructureTree(config) {
 	function _onNodeLoad(context) {
 		$('li', context).each(function(index, el) {
 			var li = $(this);
-			var indent = (li.parents('ul').length - 2) * 10;
+			var indent = (li.parents('ul').length - 2) * 16;
 			li.prepend("<span class='jstree-indent' style='width: "+indent+"px;'/>");
 		});
 	}

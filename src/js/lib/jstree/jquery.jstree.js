@@ -188,7 +188,7 @@
 			this.get_index		= function () { return index; };
 			this.get_container	= function () { return container; };
 			this.get_container_ul = function () { return container.children("ul:eq(0)"); };
-			this._set_settings	= function (s) { 
+			this._set_settings	= function (s) {
 				settings = $.extend(true, {}, settings, s);
 			};
 		},
@@ -769,7 +769,7 @@
 				
 				// CHANGED manual indent
 				d.prepend("<ins class='jstree-icon'>&#160;</ins>");
-				var indent = (obj.parents().length - 8) * 10;
+				var indent = (obj.parents().length - 8) * 16;
 				d.prepend("<span class='jstree-indent' style='width: "+indent+"px;'/>");
 				
 				
@@ -1830,6 +1830,7 @@
 						d.append(tmp);
 					});
 					d.prepend("<ins class='jstree-icon'>&#160;</ins>");
+					
 					if(js.children) { 
 						if(s.progressive_render && js.state !== "open") {
 							d.addClass("jstree-closed").data("jstree_children", js.children);
