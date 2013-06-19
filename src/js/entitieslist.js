@@ -169,9 +169,13 @@ var EntitiesList = function(config) {
 				border: 'none'
 			}
 		});
+		
+		if (w.editor.currentEntity) {
+			$('#entities > ul > li[name="'+w.editor.currentEntity+'"]').addClass('selected').find('div[class="info"]').show();
+		}
 	};
 	
-	var _buildEntity = function(entity) {
+	function _buildEntity(entity) {
 		var infoString = '<ul>';
 		var buildString = function(infoObject) {
 			for (var infoKey in infoObject) {

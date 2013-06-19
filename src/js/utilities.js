@@ -271,6 +271,14 @@ function Utilities(config) {
 		return w.VALID;
 	};
 
+	u.isTagBlockLevel = function(tagName) {
+		return w.editor.schema.getBlockElements()[tagName] != null;
+	};
+	
+	u.getTagForEditor = function(tagName) {
+		return u.isTagBlockLevel(tagName) ? 'div' : 'span';
+	};
+	
 	u.getDocumentationForTag = function(tag) {
 		var element = $('element[name="'+tag+'"]', w.schemaXML);
 		var doc = $('a\\:documentation, documentation', element).first().text();

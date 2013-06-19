@@ -195,7 +195,7 @@
 
 					// Remove container
 					dom.remove(n);
-
+					
 					// Check if the contents was changed, if it wasn't then clipboard extraction failed probably due
 					// to IE security settings so we pass the junk though better than nothing right
 					if (n.innerHTML === '\uFEFF\uFEFF') {
@@ -243,7 +243,7 @@
 						// Paste divs duplicated in paste divs seems to happen when you paste plain text so lets first look for that broken behavior in WebKit
 						if (!dom.select('div.mcePaste > div.mcePaste').length) {
 							nl = dom.select('div.mcePaste');
-
+							
 							// WebKit will split the div into multiple ones so this will loop through then all and join them to get the whole HTML string
 							each(nl, function(n) {
 								var child = n.firstChild;
@@ -274,15 +274,25 @@
 						}
 						
 						// CHANGED use our custom element if available
-						if (ed.copiedElement) {
-							var id = 'id="'+dom.select('span', ed.copiedElement)[0].getAttribute('id')+'"';
+						if (ed.copiedElement.element != null) {
+							var idEl = $('[id]', ed.copiedElement.element);
+							var id = idEl.attr('id');
+							var idString = 'id="'+id+'"';
 							// see if the copiedElement id is in the content to be pasted
 							// if so, replace it with the copiedElement
-							if (h.search(id) != -1) {
-								h = ed.copiedElement.innerHTML;
-//								console.log('match');
+							if (h.search(idString) != -1) {
+								if (ed.copiedElement.selectionType == 0) {
+									// node selected
+									h = ed.copiedElement.element.innerHTML;
+								} else {
+									// contents selected
+									var span = $(ed.writer.tagName, ed.copiedElement.element).first()[0];
+									if (span) {
+										h = span.innerHTML;
+									}
+								}
 							} else {
-								ed.copiedElement = null;
+								ed.copiedElement.element = null;
 							}
 						}
 						

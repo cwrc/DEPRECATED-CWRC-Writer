@@ -224,20 +224,19 @@ function Writer(config) {
 			w.editor.selection.setRng(rng);
 //			w.tree.currentlySelectedNode = id;
 		} else {
-			node.append('\uFEFF');
+			$('[data-mce-bogus]', node.parent()).remove();
 			
-			// hack to fix selection of inline elements
-			if (tinymce.isWebKit || node.css('display') == 'inline') {
-				$('[data-mce-bogus]', node.parent()).remove();
-				node.before('<span data-mce-bogus="1">\uFEFF</span>').after('<span data-mce-bogus="1">\uFEFF</span>');
-				
-				var rng = w.editor.dom.createRng();
-				rng.setStart(nodeEl.previousSibling.firstChild, 0);
-				rng.setEnd(nodeEl.nextSibling.firstChild, 0);
-				w.editor.selection.setRng(rng);
-			} else {
-				w.editor.selection.select(nodeEl);
+			// if no nextElementSibling then only the contents will be copied in webkit
+			if (tinymce.isWebKit && nodeEl.nextElementSibling == null) {
+				// sibling needs to be visible otherwise it doesn't count
+				node.after('<span data-mce-bogus="1" style="display: inline;">\uFEFF</span>');
 			}
+			node.before('<span data-mce-bogus="1">\uFEFF</span>').after('<span data-mce-bogus="1">\uFEFF</span>');
+			
+			var rng = w.editor.dom.createRng();
+			rng.setStart(nodeEl.previousSibling, 0);
+			rng.setEnd(nodeEl.nextSibling, 0);
+			w.editor.selection.setRng(rng);
 		}
 		
 		// scroll node into view
@@ -314,9 +313,9 @@ function Writer(config) {
 		if (ed.currentEntity) {
 			var content = $('#entityHighlight', ed.getBody()).text();
 			var entity = w.entities[ed.currentEntity];
-			entity.content = content;
-			entity.title = w.u.getTitleFromContent(content);
-			$('#entities li[name="'+ed.currentEntity+'"] > span[class="entityTitle"]').html(entity.title);
+			entity.props.content = content;
+			entity.props.title = w.u.getTitleFromContent(content);
+			w.entitiesList.update();
 		}
 		
 		if (w.emptyTagId) {
@@ -360,7 +359,8 @@ function Writer(config) {
 			if (evt.shiftKey && evt.which == 13) {
 				var node = ed.currentNode;
 				if ($(node).attr('_tag') == 'lb') node = node.parentNode;
-				$(node).find('br').replaceWith('<span _tag="lb"></span>');
+				var tagName = w.u.getTagForEditor('lb');
+				$(node).find('br').replaceWith('<'+tagName+' _tag="lb"></'+tagName+'>');
 			}
 		}
 		
@@ -381,7 +381,8 @@ function Writer(config) {
 	};
 	
 	function _onNodeChangeHandler(ed, cm, e) {
-//		console.log('nodechange', e);
+//		console.log('onNodeChangeHandler');
+//		console.time('nodechange');
 		if (e.nodeType != 1) {
 			ed.currentNode = ed.dom.select(w.root)[0];
 		} else {
@@ -414,26 +415,20 @@ function Writer(config) {
 			delete w.entities[w.emptyTagId];
 			w.emptyTagId = null;
 		}
+//		console.timeEnd('nodechange');
 	};
 	
 	function _onCopyHandler(ed, event) {
-//		console.log('onCopy', w.tree.currentlySelectedNode, w.tree.selectionType, event);
-		if (ed.copiedElement != null) {
-			$(ed.copiedElement).remove();
+		if (ed.copiedElement.element != null) {
+			$(ed.copiedElement.element).remove();
 		}
 		if (w.tree.currentlySelectedNode != null) {
-			var clone;
-			if (w.tree.selectionType == w.tree.CONTENTS_SELECTED) {
-				clone = $('#'+w.tree.currentlySelectedNode, ed.getBody()).contents().clone();
-			} else {
-				clone = $('#'+w.tree.currentlySelectedNode, ed.getBody()).clone();
-			}
-			ed.copiedElement = clone.wrapAll('<div />').parent()[0];
-//			console.log(ed.copiedElement);
+			var clone = $('#'+w.tree.currentlySelectedNode, ed.getBody()).clone();
+			ed.copiedElement.element = clone.wrapAll('<div />').parent()[0];
+			ed.copiedElement.selectionType = w.tree.selectionType;
 		} else {
-			ed.copiedElement = null;
+			ed.copiedElement.element = null;
 		}
-		
 	};
 	
 	function _onPasteHandler(ed, event) {
@@ -625,6 +620,13 @@ function Writer(config) {
 			}
 		});
 		
+		// TODO not getting fired
+		window.addEventListener('unload', function(e) {
+			alert('unload');
+			// clear the editor first (large docs can cause the browser to freeze)
+			$(w.root, w.editor.getBody()).remove();
+		});
+		
 		/**
 		 * Init tinymce
 		 */
@@ -644,7 +646,7 @@ function Writer(config) {
 			doctype: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
 			element_format: 'xhtml',
 			
-			forced_root_block: w.root,
+			forced_root_block: false, //w.root,
 			keep_styles: false, // false, otherwise tinymce interprets our spans as style elements
 			
 			paste_auto_cleanup_on_paste: true, // true, otherwise paste_postprocess isn't called
@@ -665,9 +667,11 @@ function Writer(config) {
 				
 				function replaceTags(index, node) {
 					if (node.nodeName.toLowerCase() == 'p') {
-						$(node).contents().unwrap().wrapAll('<span _tag="p"></span>').not(':text').each(replaceTags);
+						var tagName = w.u.getTagForEditor('p');
+						$(node).contents().unwrap().wrapAll('<'+tagName+' _tag="p"></'+tagName+'>').not(':text').each(replaceTags);
 					} else if (node.nodeName.toLowerCase() == 'br') {
-						$(node).replaceWith('<span _tag="lb"></span>');
+						var tagName = w.u.getTagForEditor('br');
+						$(node).replaceWith('<'+tagName+' _tag="lb"></'+tagName+'>');
 					}
 				}
 				
@@ -698,7 +702,7 @@ function Writer(config) {
 				ed.currentNode = null; // the node that the cursor is currently in
 				ed.entityCopy = null; // store a copy of an entity for pasting
 				ed.contextMenuPos = null; // the position of the context menu (used to position related dialog box)
-				ed.copiedElement = null; // the element that was copied (when first selected through the structure tree)
+				ed.copiedElement = {selectionType: null, element: null}; // the element that was copied (when first selected through the structure tree)
 				
 				ed.onInit.add(function(ed) {
 					// modify isBlock method to check _tag attributes

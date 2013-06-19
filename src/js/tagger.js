@@ -134,12 +134,12 @@ function Tagger(config) {
 		var updateRequired = false;
 		
 		// new tags
-		var newTags = w.editor.dom.select('span[_tag]:not([id])');
+		var newTags = w.editor.dom.select('[_tag]:not([id])');
 		if (newTags.length > 0) updateRequired = true;
 		
 		// deleted tags
 		for (var id in w.entities) {
-			var nodes = w.editor.dom.select('span[name="'+id+'"]');
+			var nodes = w.editor.dom.select('[name="'+id+'"]');
 			switch (nodes.length) {
 				case 0:
 					updateRequired = true;
@@ -323,15 +323,15 @@ function Tagger(config) {
 			}
 		}
 		
-		var tag = 'span';
-		var open_tag = '<'+tag;
+		var tagName = w.u.getTagForEditor(attributes._tag);
+		var open_tag = '<'+tagName;
 		for (var key in attributes) {
 			if (key == 'id' || key.match(/^_/) != null) {
 				open_tag += ' '+key+'="'+attributes[key]+'"';
 			}
 		}
 		open_tag += '>';
-		var close_tag = '</'+tag+'>';
+		var close_tag = '</'+tagName+'>';
 		
 		var selection = '\uFEFF';
 		var content = open_tag + selection + close_tag;

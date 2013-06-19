@@ -618,12 +618,10 @@ function FileManager(config) {
 		
 		function doBuild(currentNode) {
 			var tag = currentNode.nodeName;
-			if (tag == w.root) {
-				editorString += '<'+tag.toLowerCase();
-			} else {
-				editorString += '<span';
-			}
-			editorString += ' _tag="'+tag+'"';
+			
+			var tagName = w.u.isTagBlockLevel(tag) ? 'div' : 'span';
+			
+			editorString += '<'+tagName+' _tag="'+tag+'"';
 			
 			// create structs entries while we build the string
 			var id = $(currentNode).attr(w.idName);
@@ -660,11 +658,7 @@ function FileManager(config) {
 				}
 			});
 			
-			if (tag == w.root) {
-				editorString += '</'+tag.toLowerCase()+'>';
-			} else {
-				editorString += '</span>';
-			}
+			editorString += '</'+tagName+'>';
 		}
 		
 		doBuild(node);
@@ -687,8 +681,8 @@ function FileManager(config) {
 			} else {
 				rootName = 'tei';
 				// FIXME temp fix for doc structure
-	//			w.idName = 'xml:id';
-				w.idName = 'id';
+				w.idName = 'xml:id';
+//				w.idName = 'id';
 			}
 			if (rootName != w.root.toLowerCase()) {
 				if (rootName == 'events') {
@@ -992,13 +986,11 @@ function FileManager(config) {
 			    w.editor.schema.addCustomElements(w.root.toLowerCase());
 				
 			    var cssUrl;
-				var blockElements = w.editor.schema.getBlockElements();
+				var additionalBlockElements;
 			    if (w.root == 'TEI') {
 			    	cssUrl = 'css/tei_converted.css';
 					
-					blockElements['l'] = {};
-			    	blockElements['p'] = {};
-			    	blockElements['sp'] = {};
+			    	additionalBlockElements = ['argument', 'back', 'bibl', 'biblFull', 'biblScope', 'body', 'byline', 'category', 'change', 'cit', 'classCode', 'elementSpec', 'macroSpec', 'classSpec', 'closer', 'creation', 'date', 'distributor', 'div', 'div1', 'div2', 'div3', 'div4', 'div5', 'div6', 'div7', 'docAuthor', 'edition', 'editionStmt', 'editor', 'eg', 'epigraph', 'extent', 'figure', 'front', 'funder', 'group', 'head', 'dateline', 'idno', 'item', 'keywords', 'l', 'label', 'langUsage', 'lb', 'lg', 'list', 'listBibl', 'note', 'noteStmt', 'opener', 'p', 'principal', 'publicationStmt', 'publisher', 'pubPlace', 'q', 'rendition', 'resp', 'respStmt', 'salute', 'samplingDecl', 'seriesStmt', 'signed', 'sp', 'sponsor', 'tagUsage', 'taxonomy', 'textClass', 'titlePage', 'titlePart', 'trailer', 'TEI', 'teiHeader', 'authority', 'availability', 'fileDesc', 'sourceDesc', 'revisionDesc', 'catDesc', 'encodingDesc', 'profileDesc', 'projectDesc', 'docDate', 'docEdition', 'docImprint', 'docTitle'];
 			    	
 			    	w.header = 'teiHeader';
 			    	// FIXME temp fix for doc structure
@@ -1006,12 +998,15 @@ function FileManager(config) {
 			    } else {
 			    	cssUrl = 'css/orlando_converted.css';
 					
-					blockElements['L'] = {};
-					blockElements['P'] = {};
+			    	additionalBlockElements = ['ORLANDOHEADER', 'DOCAUTHOR', 'DOCEDITOR', 'DOCEXTENT', 'PUBLICATIONSTMT', 'TITLESTMT', 'PUBPLACE', 'L', 'P', 'HEADING', 'CHRONEVENT', 'CHRONSTRUCT'];
 					
 					w.header = 'ORLANDOHEADER';
 					w.idName = 'ID';
 			    }
+			    var blockElements = w.editor.schema.getBlockElements();
+			    for (var i = 0; i < additionalBlockElements.length; i++) {
+		    		blockElements[additionalBlockElements[i]] = {};
+		    	}
 				
 				function processSchema() {
 					// remove old schema elements
@@ -1033,14 +1028,16 @@ function FileManager(config) {
 						var tag = $(el).attr('name');
 						if (tag != null && elements.indexOf(tag) == -1) {
 							elements.push(tag);
-							schemaTags += '.showStructBrackets span[_tag='+tag+']:before { color: #aaa; font-weight: normal; font-style: normal; font-family: monospace; content: "<'+tag+'>"; }';
-							schemaTags += '.showStructBrackets span[_tag='+tag+']:after { color: #aaa; font-weight: normal; font-style: normal; font-family: monospace; content: "</'+tag+'>"; }';
+							var tagName = w.u.getTagForEditor(tag);
+							schemaTags += '.showStructBrackets '+tagName+'[_tag='+tag+']:before { color: #aaa; font-weight: normal; font-style: normal; font-family: monospace; content: "<'+tag+'>"; }';
+							schemaTags += '.showStructBrackets '+tagName+'[_tag='+tag+']:after { color: #aaa; font-weight: normal; font-style: normal; font-family: monospace; content: "</'+tag+'>"; }';
 						}
 					});
 					elements.sort();
 					
 					// hide the header
-					schemaTags += 'span[_tag='+w.header+'] { display: none !important; }';
+					var tagName = w.u.getTagForEditor(w.header);
+					schemaTags += tagName+'[_tag='+w.header+'] { display: none !important; }';
 					
 					$('#schemaTags', w.editor.dom.doc).text(schemaTags);
 				    
@@ -1130,7 +1127,8 @@ function FileManager(config) {
 						// chrome won't get proper selector, see: https://code.google.com/p/chromium/issues/detail?id=67782
 						var selector = rules[i].selectorText;
 						var newSelector = selector.replace(/(^|,|\s)(\w+)/g, function(str, p1, p2, offset, s) {
-							return p1+'span[_tag="'+p2+'"]';
+							var tagName = w.u.getTagForEditor(p2);
+							return p1+tagName+'[_tag="'+p2+'"]';
 						});
 						var css = rules[i].cssText;
 						var newCss = css.replace(selector, newSelector);

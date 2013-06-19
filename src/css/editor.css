@@ -121,6 +121,7 @@ span[data-mce-bogus] {
 	width: 0px;
 	line-height: 0px;
 	font-size: 0px;
+	display: none;
 }
 
 .titleTagQuotes:before, .quoteTagShort:before {
