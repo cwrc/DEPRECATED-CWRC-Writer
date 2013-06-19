@@ -6,7 +6,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
       <title>DHSI CWRICWriter</title>
       
-		<script type="text/javascript" src="js/lib/jquery/jquery-1.8.2.js"></script>
+		<script type="text/javascript" src="js/lib/jquery/jquery-1.8.3.js"></script>
 		<script type="text/javascript" src="js/lib/jquery/jquery-ui-1.9.0.custom.js"></script>
 		<script type="text/javascript" src="js/lib/jquery/jquery.layout-latest.min.js"></script>
 		<script type="text/javascript" src="js/lib/jquery/jquery.layout.resizeTabLayout-1.3.js"></script>
@@ -87,13 +87,15 @@
       <link type="text/css" rel="stylesheet" href="impl/css/jquery.miniColors.css" />
 
       <script type="text/javascript">
-        window.onbeforeunload = function() {
-          if (this.tinymce.get('editor').isDirty()) {
-            return 'You have unsaved changes.';
-          }
-        }
-
-      </script>
+			window.addEventListener('beforeunload', function(e) {
+				if (this.tinymce.get('editor').isDirty()) {
+					var msg = 'You have unsaved changes.';
+					(e || window.event).returnValue = msg;
+					return msg;
+				}
+			});
+		</script>
+		
       <!-- Canvas css -->
       <link rel="stylesheet" href="impl/css/sc.css" type="text/css" />
       <link rel="stylesheet" href="impl/css/emic_canvas.css" type="text/css" />
