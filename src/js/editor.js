@@ -293,6 +293,7 @@ function Writer(config) {
 	};
 	
 	function _onKeyDownHandler(ed, evt) {
+		// TODO move to keyup
 		// redo/undo listener
 		if ((evt.which == 89 || evt.which == 90) && evt.ctrlKey) {
 			var doUpdate = w.tagger.findNewAndDeletedTags();
@@ -369,6 +370,19 @@ function Writer(config) {
 		if (evt.which == 8 || evt.which == 46) {
 			var doUpdate = w.tagger.findNewAndDeletedTags();
 			if (doUpdate) w.tree.update();
+		}
+		
+		// enter key
+		if (evt.which == 13) {
+			// TODO not successful for multiple contiguous enter key presses
+			// look for empty tag inserted by enter
+			var currNode = $(ed.currentNode);
+			if (currNode.length == 1 && currNode.text() == '') {
+				currNode.text('\uFEFF'); // insert zero-width non-breaking space so empty tag takes up space (if block element)
+				if (!w.u.isTagBlockLevel(currNode.attr('_tag'))) {
+					w.selectStructureTag(currNode.attr('id'), true);
+				}
+			}
 		}
 	};
 	
