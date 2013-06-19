@@ -64,7 +64,7 @@ var NoteDialog = function(config) {
 		}
 	});
 	
-	var noteResult = function(cancelled) {
+	function noteResult(cancelled) {
 		var data = null;
 		if (!cancelled) {
 			var content = w.u.escapeHTMLString(noteEditor.getContent());
