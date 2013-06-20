@@ -292,6 +292,19 @@ function Writer(config) {
 		w.editor.onNodeChange.dispatch(w.editor, w.editor.controlManager, nodeEl, false, w.editor);
 	};
 	
+	// webkit has trouble deleting divs, so use the tree and jquery as a workaround
+	function _webKitOnKeyDownDeleteHandler(ed, evt) {
+		if (evt.which == 8 || evt.which == 46) {
+			if (w.tree.currentlySelectedNode != null) {
+				if (w.tree.selectionType == w.tree.NODE_SELECTED) {
+					$('#'+w.tree.currentlySelectedNode, ed.getBody()).remove();
+				} else {
+					$('#'+w.tree.currentlySelectedNode, ed.getBody()).contents().remove();
+				}
+			}
+		}
+	}
+	
 	function _onKeyDownHandler(ed, evt) {
 		// TODO move to keyup
 		// redo/undo listener
@@ -774,6 +787,9 @@ function Writer(config) {
 					});
 					
 					ed.onKeyDown.add(_onKeyDownHandler);
+					if (tinymce.isWebKit) {
+						ed.onKeyDown.addToTop(_webKitOnKeyDownDeleteHandler);
+					}
 					ed.onKeyUp.add(_onKeyUpHandler);
 					
 					setTimeout(function() {
