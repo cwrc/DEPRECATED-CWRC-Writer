@@ -428,7 +428,7 @@ function FileManager(config) {
 		
 		convertEntitiesToTags();
 		
-		var root = body.children(w.root);
+		var root = body.children('[_tag='+w.root+']');
 		// make sure TEI has the right namespace for validation purposes
 		if (w.root == 'TEI') {
 			root.attr('xmlns','http://www.tei-c.org/ns/1.0');
@@ -474,7 +474,7 @@ function FileManager(config) {
 				var el = $(this);
 				if (this.nodeType == Node.TEXT_NODE && this.data != ' ') {
 					currentOffset += this.length;
-				} else if (el.is(w.root) || el.attr('_tag')) {
+				} else if (el.attr('_tag')) {
 					var id = el.attr('id');
 					offsets.push({
 						id: id,
@@ -674,17 +674,15 @@ function FileManager(config) {
 			fm.loadSchema(fileName, false, processDocument);
 		} else {
 			var rootName;
-			var isEvents = doc.getElementsByTagName('EVENTS').length > 0;
-			if (isEvents) {
+			if ($('[_tag='+w.root+']', doc.body).attr('_tag') == 'EVENTS') {
 				rootName = 'events';
 				w.idName = 'ID';
 			} else {
 				rootName = 'tei';
-				// FIXME temp fix for doc structure
 				w.idName = 'xml:id';
-//				w.idName = 'id';
 			}
 			if (rootName != w.root.toLowerCase()) {
+				// roots don't match so load the appropriate schema
 				if (rootName == 'events') {
 					fm.loadSchema('schema/events.rng', false, processDocument);
 				} else {
@@ -833,9 +831,9 @@ function FileManager(config) {
 				}
 				processEntities($(doc.firstChild), offsets);
 			}
-			
+
 			// FIXME temp fix until document format is correct
-			var root = doc.getElementsByTagName(w.root)[0] || doc.getElementsByTagName(w.root.toLowerCase())[0];
+			var root = $(w.root+', '+w.root.toLowerCase(), doc)[0];
 			
 			var editorString = fm.buildEditorString(root);
 			w.editor.setContent(editorString);
@@ -981,9 +979,9 @@ function FileManager(config) {
 				var startName = $('start ref:first', w.schemaXML).attr('name');
 				var startEl = $('define[name="'+startName+'"] element', w.schemaXML).attr('name');
 				w.root = startEl;
-				w.editor.settings.forced_root_block = w.root;
-				w.editor.schema.addCustomElements(w.root);
-			    w.editor.schema.addCustomElements(w.root.toLowerCase());
+//				w.editor.settings.forced_root_block = w.root;
+//				w.editor.schema.addCustomElements(w.root);
+//			    w.editor.schema.addCustomElements(w.root.toLowerCase());
 				
 			    var cssUrl;
 				var additionalBlockElements;
@@ -998,7 +996,7 @@ function FileManager(config) {
 			    } else {
 			    	cssUrl = 'css/orlando_converted.css';
 					
-			    	additionalBlockElements = ['ORLANDOHEADER', 'DOCAUTHOR', 'DOCEDITOR', 'DOCEXTENT', 'PUBLICATIONSTMT', 'TITLESTMT', 'PUBPLACE', 'L', 'P', 'HEADING', 'CHRONEVENT', 'CHRONSTRUCT'];
+			    	additionalBlockElements = ['EVENTS', 'ORLANDOHEADER', 'DOCAUTHOR', 'DOCEDITOR', 'DOCEXTENT', 'PUBLICATIONSTMT', 'TITLESTMT', 'PUBPLACE', 'L', 'P', 'HEADING', 'CHRONEVENT', 'CHRONSTRUCT'];
 					
 					w.header = 'ORLANDOHEADER';
 					w.idName = 'ID';
@@ -1016,13 +1014,9 @@ function FileManager(config) {
 				    fm.loadSchemaCSS(cssUrl);
 				    
 				    // create css to display schema tags
-					$('head', w.editor.dom.doc).append('<style id="schemaTags" type="text/css" />');
-					var tag = w.root;
-					// xhtml only allows lower case elements
-					var schemaTags = w.root.toLowerCase()+' { display: block; }';
-					schemaTags += '.showStructBrackets '+w.root.toLowerCase()+':before { color: #aaa; font-weight: normal; font-style: normal; font-family: monospace; content: "<'+tag+'>"; }';
-					schemaTags += '.showStructBrackets '+w.root.toLowerCase()+':after { color: #aaa; font-weight: normal; font-style: normal; font-family: monospace; content: "</'+tag+'>"; }';
+					$('head', w.editor.getDoc()).append('<style id="schemaTags" type="text/css" />');
 					
+					var schemaTags = '';
 					var elements = [];
 					$('element', w.schemaXML).each(function(index, el) {
 						var tag = $(el).attr('name');
@@ -1039,14 +1033,15 @@ function FileManager(config) {
 					var tagName = w.u.getTagForEditor(w.header);
 					schemaTags += tagName+'[_tag='+w.header+'] { display: none !important; }';
 					
-					$('#schemaTags', w.editor.dom.doc).text(schemaTags);
+					$('#schemaTags', w.editor.getDoc()).text(schemaTags);
 				    
 					w.schema.elements = elements;
 					
 					if (callback == null) {
 						var text = '';
 						if (startText) text = 'Paste or type your text here.';
-						w.editor.setContent('<'+w.root+' _tag="'+w.root+'">'+text+'</'+w.root+'>');
+						var tag = w.u.getTagForEditor(w.root);
+						w.editor.setContent('<'+tag+' _tag="'+w.root+'">'+text+'</'+tag+'>');
 					}
 					
 					w.entitiesList.update();

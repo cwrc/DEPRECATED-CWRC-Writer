@@ -272,11 +272,16 @@ function Utilities(config) {
 	};
 
 	u.isTagBlockLevel = function(tagName) {
+		if (tagName == w.root) return true;
 		return w.editor.schema.getBlockElements()[tagName] != null;
 	};
 	
 	u.getTagForEditor = function(tagName) {
 		return u.isTagBlockLevel(tagName) ? 'div' : 'span';
+	};
+	
+	u.getRootTag = function() {
+		return $('[_tag='+w.root+']', w.editor.getBody());
 	};
 	
 	u.getDocumentationForTag = function(tag) {

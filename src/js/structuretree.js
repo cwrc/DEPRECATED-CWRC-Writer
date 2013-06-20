@@ -89,7 +89,6 @@ function StructureTree(config) {
 				// new struct check
 				if (id == '' || id == null) {
 					id = tinymce.DOM.uniqueId('struct_');
-					if (tag == null && node.is(w.root)) tag = w.root;
 					if (w.schema.elements.indexOf(tag) != -1) {
 						node.attr('id', id).attr('_tag', tag);
 						w.structs[id] = {
@@ -404,12 +403,7 @@ function StructureTree(config) {
 //						}
 //					}
 				};
-				if (info._tag == w.root) {
-					delete items['delete'];
-					delete items['before'];
-					delete items['after'];
-					delete items['around'];
-				}
+
 				return items;
 			}
 		},

@@ -398,9 +398,9 @@ function Writer(config) {
 //		console.log('onNodeChangeHandler');
 //		console.time('nodechange');
 		if (e.nodeType != 1) {
-			ed.currentNode = ed.dom.select(w.root)[0];
+			ed.currentNode = w.u.getRootTag()[0];
 		} else {
-			if (e.getAttribute('_tag') == null && e.nodeName != w.root) {
+			if (e.getAttribute('_tag') == null) {
 				if (e.getAttribute('data-mce-bogus') != null) {
 					// artifact from selectStructureTag
 					var sibling = $(e).next('[_tag]')[0];
@@ -638,7 +638,7 @@ function Writer(config) {
 		window.addEventListener('unload', function(e) {
 			alert('unload');
 			// clear the editor first (large docs can cause the browser to freeze)
-			$(w.root, w.editor.getBody()).remove();
+			w.u.getRootTag().remove();
 		});
 		
 		/**
@@ -660,7 +660,7 @@ function Writer(config) {
 			doctype: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
 			element_format: 'xhtml',
 			
-			forced_root_block: false, //w.root,
+			forced_root_block: false,
 			keep_styles: false, // false, otherwise tinymce interprets our spans as style elements
 			
 			paste_auto_cleanup_on_paste: true, // true, otherwise paste_postprocess isn't called
