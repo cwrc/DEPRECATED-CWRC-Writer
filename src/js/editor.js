@@ -14,6 +14,7 @@ function Writer(config) {
 	w.deletedStructs = {};
 
 	w.schemaXML = null; // a cached copy of the loaded schema
+	w.schemaJSON = null; // a json version of the schema
 	w.schema = {elements: []}; // stores a list of all the elements of the loaded schema
 	
 	w.project = config.project; // the current project (cwrc or russell)
@@ -240,7 +241,7 @@ function Writer(config) {
 		}
 		
 		// scroll node into view
-		$(w.editor.getBody()).scrollTop(node.position().top - $(w.editor.getContentAreaContainer()).height()*0.25);
+		$(w.editor.getDoc()).scrollTop(node.position().top - $(w.editor.getContentAreaContainer()).height()*0.25);
 		
 		w._fireNodeChange(nodeEl);
 		
@@ -598,7 +599,7 @@ function Writer(config) {
 		});
 		
 		$('#header h1').click(function() {
-			window.location = 'index.htm';
+			window.location = 'http://www.cwrc.ca';
 		});
 		
 		if (w.mode != null && w.mode == 'xml') {
