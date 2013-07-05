@@ -43,11 +43,16 @@ label {
 	background-color: #455372;
 	border-bottom: 1px solid #ccc;
 	overflow: hidden;
+	background-image: url(../img/cwrc_logo_small.png);
+	background-repeat: no-repeat;
+	background-position: left center;
 }
 
 #header h1 {
 	float: left;
 	cursor: pointer;
+	margin-top: 10px;
+	margin-left: 55px;
 }
 
 #headerButtons > div {
@@ -122,6 +127,10 @@ label {
 .tabs .ui-tabs-panel {
 	padding: 5px 0 0 0 !important;
 	overflow: auto;
+}
+
+#structureTreeActions {
+	overflow: hidden;
 }
 
 .entitiesList, .relationsList, .validationList {
