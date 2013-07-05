@@ -674,7 +674,7 @@ function Writer(config) {
 			doctype: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
 			element_format: 'xhtml',
 			
-			forced_root_block: false,
+			forced_root_block: w.u.BLOCK_TAG,
 			keep_styles: false, // false, otherwise tinymce interprets our spans as style elements
 			
 			paste_auto_cleanup_on_paste: true, // true, otherwise paste_postprocess isn't called
@@ -773,7 +773,6 @@ function Writer(config) {
 					ed.addCommand('removeHighlights', w.removeHighlights);
 					ed.addCommand('exportDocument', w.fm.exportDocument);
 					ed.addCommand('loadDocument', w.fm.loadDocument);
-					ed.addCommand('getChildrenForTag', w.u.getChildrenForTag);
 					ed.addCommand('getParentsForTag', w.u.getParentsForTag);
 					ed.addCommand('getDocumentationForTag', w.delegator.getHelp);
 					

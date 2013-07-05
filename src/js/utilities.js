@@ -1,7 +1,10 @@
 function Utilities(config) {
 	var w = config.writer;
 	
-	var useLocalStorage = supportsLocalStorage();
+	var useLocalStorage = false;//supportsLocalStorage();
+	
+	var BLOCK_TAG = 'div';
+	var INLINE_TAG = 'span';
 	
 	var u = {};
 	
@@ -27,6 +30,16 @@ function Utilities(config) {
 		} else {
 			return (new DOMParser()).parseFromString(string, "text/xml");
 		}
+	};
+	
+	u.xmlToJSON = function(xml) {
+		if ($.type(xml) == 'string') {
+			xml = u.stringToXML(xml);
+		}
+		var xotree = new XML.ObjTree();
+		xotree.attr_prefix = '@';
+		var json = xotree.parseDOM(xml);
+		return json;
 	};
 	
 	/**
@@ -277,7 +290,7 @@ function Utilities(config) {
 	};
 	
 	u.getTagForEditor = function(tagName) {
-		return u.isTagBlockLevel(tagName) ? 'div' : 'span';
+		return u.isTagBlockLevel(tagName) ? BLOCK_TAG : INLINE_TAG;
 	};
 	
 	u.getRootTag = function() {
@@ -297,7 +310,72 @@ function Utilities(config) {
 			return false;
 		}
 	}
+	
+	function _queryUp(context, matchingFunc) {
+		var continueQuery = true;
+		while (continueQuery && context != null) {
+			continueQuery = matchingFunc.call(this, context);
+			if (continueQuery == undefined) continueQuery = true;
+			context = context['$parent'];
+		}
+	}
 
+	function _queryDown(context, matchingFunc) {
+		var continueQuery = true;
+		
+		function doQuery(c) {
+			if (continueQuery) {
+				continueQuery = matchingFunc.call(this, c);
+				if (continueQuery == undefined) continueQuery = true;
+				for (var key in c) {
+					// filter out attributes
+					if (key != '$parent' && key.search('@') != 0) {
+						var prop = c[key];
+						if (isArray(prop)) {
+							for (var i = 0; i < prop.length; i++) {
+								doQuery(prop[i]);
+							}
+						} else if (isObject(prop)) {
+							doQuery(prop);
+						}
+					}
+				}
+			} else {
+				return;
+			}
+		}
+		
+		doQuery(context);
+	}
+
+	function _getDefinition(name) {
+		var defs = w.schemaJSON.grammar.define;
+		for (var i = 0, len = defs.length; i < len; i++) {
+			var d = defs[i];
+			if (d['@name'] == name) return d;
+		}
+		return null;
+	}
+
+	function _getElement(name) {
+		var defs = w.schemaJSON.grammar.define;
+		for (var i = 0, len = defs.length; i < len; i++) {
+			var d = defs[i];
+			if (d.element != null) {
+				if (d.element['@name'] == name) return d.element;
+			}
+		}
+		return null;
+	}
+
+	function isArray(obj) {
+		return toString.apply(obj) === '[object Array]';
+	}
+
+	function isObject(obj){
+	    return !!obj && Object.prototype.toString.call(obj) === '[object Object]';
+	}
+	
 	/**
 	 * @param currEl The element that's currently being processed
 	 * @param defHits A list of define tags that have already been processed
@@ -319,6 +397,7 @@ function Utilities(config) {
 			};
 			if (type == 'attribute') {
 				childObj.required = child.parent('optional').length == 0;
+				// TODO confirm defaultValue is being retrieved, seems like it's only in attributes
 				childObj.defaultValue = $('a\\:defaultValue, defaultValue', child).first().text();
 				var choice = $('choice', child).first();
 				if (choice.length == 1) {
@@ -346,26 +425,147 @@ function Utilities(config) {
 	};
 	
 	/**
-	 * @param tag The element name to get children of
-	 * @param type The type of children to get: "element" or "attribute"
-	 * @param returnType Either: "array", "object", "names" (which is an array of just the element names)
+	 * @param currEl The element that's currently being processed
+	 * @param defHits A list of define tags that have already been processed
+	 * @param level The level of recursion
+	 * @param type The type of child to search for (element or attribute)
+	 * @param children The children to return
 	 */
-	u.getChildrenForTag = function(config) {
-		var type = config.type || 'element';
-		var tag = config.tag;
+	function _getChildrenJSON(currEl, defHits, level, type, children) {
+		// first get the direct types
+		var hits = [];
+		_queryDown(currEl, function(item) {
+			if (item[type] != null) {
+				hits.push(item);
+			}
+		});
+		for (var i = 0; i < hits.length; i++) {
+			var child = hits[i];
+			if (level > 0) {
+				var match = false;
+				_queryUp(child['$parent'], function(item) {
+					if (item.element) {
+						match = true;
+						return false;
+					}
+				});
+				if (match) return; // don't get elements/attributes from other elements
+			}
+			
+			var docs = null;
+			_queryDown(child, function(item) {
+				if (item['a:documentation']) {
+					docs = item['a:documentation'];
+					return false;
+				}
+			});
+			if (docs != null) docs = docs['#text'];
+			
+			var childObj = {
+				name: child[type]['@name'],
+				level: level+0,
+				documentation: docs
+			};
+			
+			if (type == 'attribute') {
+				childObj.required = true;
+				_queryUp(child['$parent'], function(item) {
+					if (item.optional) {
+						childObj.required = false;
+						return false;
+					}
+				});
+				
+				var defaultVal = null;
+				_queryDown(child, function(item) {
+					if (item['@a:defaultValue']) {
+						defaultVal = item['@a:defaultValue'];
+						return false;
+					}
+				});
+				childObj.defaultValue = defaultVal || '';
+				
+				var choice = null;
+				_queryDown(child, function(item) {
+					if (item.choice) {
+						choice = item.choice;
+						return false;
+					}
+				});
+				if (choice != null) {
+					var choices = [];
+					var values = [];
+					_queryDown(choice, function(item) {
+						if (item.value) {
+							values = item.value;
+						}
+					});
+					for (var j = 0; j < values.length; j++) {
+						choices.push(values[j]);
+					}
+					childObj.choices = choices;
+				}
+			}
+			children.push(childObj);
+		}
+		
+		// now process the references
+		hits = [];
+		_queryDown(currEl, function(item) {
+			if (item.ref) {
+				if (isArray(item.ref)) {
+					hits = hits.concat(item.ref);
+				} else {
+					hits.push(item.ref);
+				}
+			}
+		});
+		for (var i = 0; i < hits.length; i++) {
+			var ref = hits[i];
+			var name = ref['@name'];
+			if (level > 0) {
+				var match = false;
+				_queryUp(ref, function(item) {
+					if (item.element) {
+						match = true;
+						return false;
+					}
+				});
+				if (match) return; // don't get attributes from other elements
+			}
+
+			if (!defHits[name]) {
+				defHits[name] = true;
+				var def = _getDefinition(name);
+				_getChildrenJSON(def, defHits, level+1, type, children);
+			}
+		}
+	}
+	
+	/**
+	 * Gets a list from the schema of valid children for a particular tag
+	 * @param config The config object
+	 * @param config.tag The element name to get children of
+	 * @param config.type The type of children to get: "element" or "attribute"
+	 * @param config.returnType Either: "array", "object", "names" (which is an array of just the element names)
+	 * @param callback The function to call with the results
+	 */
+	u.getChildrenForTag = function(config, callback) {
+		config.type = config.type || 'element';
 		var children = [];
 		
 		if (useLocalStorage) {
-			var localData = localStorage['cwrc.'+tag+'.'+type+'.children'];
+			var localData = localStorage['cwrc.'+config.tag+'.'+config.type+'.children'];
 			if (localData) {
 				children = JSON.parse(localData);
 			}
 		}
+		
 		if (children.length == 0) {
-			var element = $('element[name="'+tag+'"]', writer.schemaXML);
+			var element = _getElement(config.tag);
 			var defHits = {};
 			var level = 0;
-			_getChildren(element, defHits, level, type, children);
+			_getChildrenJSON(element, defHits, level, config.type, children);
 			children.sort(function(a, b) {
 				if (a.name > b.name) return 1;
 				if (a.name < b.name) return -1;
@@ -373,7 +573,7 @@ function Utilities(config) {
 			});
 			
 			if (useLocalStorage) {
-				localStorage['cwrc.'+tag+'.'+type+'.children'] = JSON.stringify(children);
+				localStorage['cwrc.'+config.tag+'.'+config.type+'.children'] = JSON.stringify(children);
 			}
 		}
 		

@@ -228,6 +228,51 @@ function StructureTree(config) {
 		$('#tree_popup').hide();
 	}
 	
+	function _getSubmenu(tags, info) {
+		var tagInfo = info;
+		var inserts = {};
+		var inserted = false;
+		var i, tag, key;
+		for (i = 0; i < tags.length; i++) {
+			tag = tags[i];
+			key = tag.name;
+			inserted = true;
+			var doc = tag.documentation;
+			if (doc == '') {
+				doc = key;
+			}
+			inserts[key] = {
+				label: '<span title="'+doc+'">'+key+'</span>',
+				icon: 'img/tag_blue.png',
+				action: function(obj) {
+					var actionType = obj.parents('li.submenu').children('a').attr('rel');
+					var key = obj.text();
+					var offset = $('#vakata-contextmenu').offset();
+					var pos = {
+						x: offset.left,
+						y: offset.top
+					};
+					if (actionType == 'change') {
+						var id = $('#tree a.ui-state-active').closest('li').attr('name');
+						w.editor.execCommand('changeTag', {key: key, pos: pos, id: id});
+					} else {
+						w.editor.currentBookmark = w.editor.selection.getBookmark(1);
+						w.editor.currentBookmark.tagId = tagInfo.id;
+						w.editor.execCommand('addSchemaTag', {key: key, pos: pos, action: actionType});
+					}
+				}
+			};
+		}
+		if (!inserted) {
+			inserts['no_tags'] = {
+				label: 'No tags available.',
+				icon: 'img/cross.png',
+				action: function(obj) {}
+			};
+		}
+		return inserts;
+	}
+	
 	$(config.parentId).append('<div id="structure" class="tabWithLayout">'+
 			'<div id="tree" class="ui-layout-center"></div>'+
 			'<div id="structureTreeActions" class="ui-layout-south tabButtons">'+
@@ -287,61 +332,16 @@ function StructureTree(config) {
 				
 				var parentInfo = w.structs[parentNode.attr('name')];
 				
-				var validKeys = w.editor.execCommand('getChildrenForTag', {tag: info._tag, type: 'element', returnType: 'array'});
-				var parentKeys = w.editor.execCommand('getParentsForTag', {tag: info._tag, returnType: 'array'});
+				var validKeys = w.u.getChildrenForTag({tag: info._tag, type: 'element', returnType: 'array'});
+//				var parentKeys = w.u.getParentsForTag({tag: info._tag, returnType: 'array'});
 				var siblingKeys = {};
 				if (parentInfo) {
-					siblingKeys = w.editor.execCommand('getChildrenForTag', {tag: parentInfo._tag, type: 'element', returnType: 'array'});
+					siblingKeys = w.u.getChildrenForTag({tag: parentInfo._tag, type: 'element', returnType: 'array'});
 				}
 				
-				function getSubmenu(tags, info) {
-					var tagInfo = info;
-					var inserts = {};
-					var inserted = false;
-					var i, tag, key;
-					for (i = 0; i < tags.length; i++) {
-						tag = tags[i];
-						key = tag.name;
-						inserted = true;
-						var doc = tag.documentation;
-						if (doc == '') {
-							doc = key;
-						}
-						inserts[key] = {
-							label: '<span title="'+doc+'">'+key+'</span>',
-							icon: 'img/tag_blue.png',
-							action: function(obj) {
-								var actionType = obj.parents('li.submenu').children('a').attr('rel');
-								var key = obj.text();
-								var offset = $('#vakata-contextmenu').offset();
-								var pos = {
-									x: offset.left,
-									y: offset.top
-								};
-								if (actionType == 'change') {
-									var id = $('#tree a.ui-state-active').closest('li').attr('name');
-									w.editor.execCommand('changeTag', {key: key, pos: pos, id: id});
-								} else {
-									w.editor.currentBookmark = w.editor.selection.getBookmark(1);
-									w.editor.currentBookmark.tagId = tagInfo.id;
-									w.editor.execCommand('addSchemaTag', {key: key, pos: pos, action: actionType});
-								}
-							}
-						};
-					}
-					if (!inserted) {
-						inserts['no_tags'] = {
-							label: 'No tags available.',
-							icon: 'img/cross.png',
-							action: function(obj) {}
-						};
-					}
-					return inserts;
-				}
-				
-				var submenu = getSubmenu(validKeys, info);
-				var parentSubmenu = getSubmenu(parentKeys, info);
-				var siblingSubmenu = getSubmenu(siblingKeys, info);
+				var submenu = _getSubmenu(validKeys, info);
+//				var parentSubmenu = _getSubmenu(parentKeys, info);
+				var siblingSubmenu = _getSubmenu(siblingKeys, info);
 				
 
 				var items = {
@@ -357,12 +357,12 @@ function StructureTree(config) {
 						_class: 'submenu',
 						submenu: siblingSubmenu
 					},
-					'around': {
-						label: 'Insert Tag Around',
-						icon: 'img/tag_blue_add.png',
-						_class: 'submenu',
-						submenu: parentSubmenu
-					},
+//					'around': {
+//						label: 'Insert Tag Around',
+//						icon: 'img/tag_blue_add.png',
+//						_class: 'submenu',
+//						submenu: parentSubmenu
+//					},
 					'inside': {
 						label: 'Insert Tag Inside',
 						icon: 'img/tag_blue_add.png',

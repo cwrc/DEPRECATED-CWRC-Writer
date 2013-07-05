@@ -41,7 +41,7 @@
 					
 					var validKeys = [];
 					if (filterKey != t.editor.writer.header) {
-						validKeys = t.editor.execCommand('getChildrenForTag', {tag: filterKey, returnType: 'names'});
+						validKeys = t.editor.writer.u.getChildrenForTag({tag: filterKey, returnType: 'names'});
 					}
 					var item;
 					var count = 0, disCount = 0;
@@ -204,7 +204,7 @@
 			
 			$('#schemaDialog div.content').empty();
 			
-			var atts = t.editor.execCommand('getChildrenForTag', {tag: key, type: 'attribute', returnType: 'array'});
+			var atts = t.editor.writer.u.getChildrenForTag({tag: key, type: 'attribute', returnType: 'array'});
 			
 			// build atts
 			var level1Atts = '<div id="level1Atts">';
