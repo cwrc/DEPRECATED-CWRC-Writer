@@ -62,7 +62,7 @@ function Delegator(config) {
 			type: 'POST',
 			dataType: 'XML',
 			data: {
-				sch: 'http://cwrc.ca/schema/'+w.validationSchema,
+				sch: 'http://cwrc.ca/'+w.validationSchema,
 				type: 'RNG_XML',
 				content: docText
 			},
