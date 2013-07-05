@@ -968,13 +968,13 @@ function FileManager(config) {
 	fm.loadSchema = function(schemaFile, startText, callback) {
 		var baseUrl = ''; //w.project == null ? '' : w.baseUrl; // handling difference between local and server urls
 		w.validationSchema = schemaFile;
-	    
+		
 		$.ajax({
 			url: baseUrl + schemaFile,
 			dataType: 'xml',
 			success: function(data, status, xhr) {
 				w.schemaXML = data;
-			    
+				
 				// get root element
 				var startName = $('start ref:first', w.schemaXML).attr('name');
 				var startEl = $('define[name="'+startName+'"] element', w.schemaXML).attr('name');
@@ -996,7 +996,7 @@ function FileManager(config) {
 			    } else {
 			    	cssUrl = 'css/orlando_converted.css';
 					
-			    	additionalBlockElements = ['EVENTS', 'ORLANDOHEADER', 'DOCAUTHOR', 'DOCEDITOR', 'DOCEXTENT', 'PUBLICATIONSTMT', 'TITLESTMT', 'PUBPLACE', 'L', 'P', 'HEADING', 'CHRONEVENT', 'CHRONSTRUCT'];
+			    	additionalBlockElements = ['DIV0', 'DIV1', 'EVENTS', 'ORLANDOHEADER', 'DOCAUTHOR', 'DOCEDITOR', 'DOCEXTENT', 'PUBLICATIONSTMT', 'TITLESTMT', 'PUBPLACE', 'L', 'P', 'HEADING', 'CHRONEVENT', 'CHRONSTRUCT'];
 					
 					w.header = 'ORLANDOHEADER';
 					w.idName = 'ID';
@@ -1083,7 +1083,7 @@ function FileManager(config) {
 					processSchema();
 				}
 				
-				
+				w.schemaJSON = w.u.xmlToJSON(data.firstChild);
 			},
 			error: function(xhr, status, error) {
 				w.d.show('message', {title: 'Error', msg: 'Error loading schema: '+status, type: 'error'});
