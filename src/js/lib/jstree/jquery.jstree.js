@@ -3598,7 +3598,7 @@
 						var filter = $(this).children('div.filterParent');
 						filter.css({
 							left: x+'px',
-							top: (y-24)+'px',
+							top: (y-22)+'px',
 							width: ul.innerWidth()+'px'
 						});
 						
