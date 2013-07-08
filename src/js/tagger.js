@@ -381,7 +381,12 @@ function Tagger(config) {
 	tagger.removeStructureTag = function(id, removeContents) {
 		id = id || w.editor.currentStruct;
 		
-		delete w.structs[id];
+		if (removeContents == undefined) {
+			if (w.tree.currentlySelectedNode != null && w.tree.selectionType != null) {
+				removeContents = true;
+			}
+		}
+		
 		var node = $('#'+id, w.editor.getBody());
 		if (removeContents) {
 			node.remove();
@@ -395,6 +400,8 @@ function Tagger(config) {
 			}
 			parent.normalize();
 		}
+		
+		delete w.structs[id];
 		w.tree.update();
 		w.editor.currentStruct = null;
 	};

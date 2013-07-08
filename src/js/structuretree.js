@@ -116,6 +116,14 @@ function StructureTree(config) {
 				}
 				
 				var info = w.structs[id];
+				if (info == undefined) {
+					// redo/undo re-added a struct check
+					info = w.deletedStructs[id];
+					if (info != undefined) {
+						w.structs[id] = info;
+						delete w.deletedStructs[id];
+					}
+				}
 				if (info) {
 					if (nodeParent.children == null) {
 						nodeParent.children = [];
@@ -127,14 +135,6 @@ function StructureTree(config) {
 					});
 					
 					newNodeParent = nodeParent.children[nodeParent.children.length-1];
-					
-				// redo/undo re-added a struct check
-				} else {
-					var deleted = w.deletedStructs[id];
-					if (deleted != null) {
-						w.structs[id] = deleted;
-						delete w.deletedStructs[id];
-					}
 				}
 			}
 			if (node.attr('_tag') != w.header) {
@@ -465,7 +465,7 @@ function StructureTree(config) {
 	});
 	$('#structureTreeActions button:eq(1)').button().click(function() {
 		if (tree.currentlySelectedNode != null) {
-			w.tagger.removeStructureTag(tree.currentlySelectedNode);
+			w.tagger.removeStructureTag(tree.currentlySelectedNode, false);
 			tree.currentlySelectedNode = null;
 			tree.selectionType = null;
 		} else {

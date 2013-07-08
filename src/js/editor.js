@@ -310,11 +310,8 @@ function Writer(config) {
 		// TODO move to keyup
 		// redo/undo listener
 		if ((evt.which == 89 || evt.which == 90) && evt.ctrlKey) {
-			var doUpdate = w.tagger.findNewAndDeletedTags();
-			if (doUpdate) {
-				w.entitiesList.update();
-				w.tree.update();
-			}
+			w.entitiesList.update();
+			w.tree.update();
 		}
 	};
 	
