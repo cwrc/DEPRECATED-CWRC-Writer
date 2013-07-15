@@ -55,13 +55,10 @@ function FileManager(config) {
 			function doSave() {
 				var docText = fm.getDocumentContent(true);
 				$.ajax({
-					url : cwrc_params.BASE_PATH + '/cwrc/save/',
-			        type: 'POST',
-			        dataType: 'text',
-			        data: {
-			          text: docText,
-			          file_pid: PID
-			        },
+					url : w.baseUrl+'editor/documents/'+w.currentDocId,
+					type: 'PUT',
+					dataType: 'json',
+					data: docText,
 					success: function(data, status, xhr) {
 						w.editor.isNotDirty = 1; // force clean state
 						w.dialogs.show('message', {
