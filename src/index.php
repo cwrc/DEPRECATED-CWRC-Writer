@@ -23,6 +23,7 @@
 		<script type="text/javascript" src="js/lib/jstree/jquery.jstree.js"></script>
 		<script type="text/javascript" src="js/lib/snippet/jquery.snippet.min.js"></script>
 		<script type="text/javascript" src="js/lib/moment/moment.min.js"></script>
+		<script type="text/javascript" src="js/lib/objtree/ObjTree.js"></script>
 		
 		<script type="text/javascript" src="js/dialogs/dialog_addevent.js"></script>
 		<script type="text/javascript" src="js/dialogs/dialog_addorg.js"></script>
@@ -40,6 +41,7 @@
 		<script type="text/javascript" src="js/dialogs/dialog_settings.js"></script>
 		<script type="text/javascript" src="js/dialogs/dialog_title.js"></script>
 		<script type="text/javascript" src="js/dialogs/dialog_triple.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_filemanager.js"></script>
 		<script type="text/javascript" src="js/editor.js"></script>
 		<script type="text/javascript" src="js/tagger.js"></script>
 		<script type="text/javascript" src="js/dialog.js"></script>

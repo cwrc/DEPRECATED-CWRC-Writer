@@ -139,7 +139,7 @@ var SettingsDialog = function(writer, config) {
 				var overlaps = _doEntitiesOverlap();
 				if (overlaps) {
 					doModeChange = false;
-					w.d.show('message', {
+					w.dialogs.show('message', {
 						title: 'Error',
 						msg: 'You have overlapping entities and are trying to change to XML mode (which doesn\'t permit overlaps).  Please remove the overlapping entities and try again.',
 						type: 'error'

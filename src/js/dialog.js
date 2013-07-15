@@ -18,7 +18,8 @@ function DialogManager(config) {
 		addevent: new AddEventDialog(config),
 		addorg: new AddOrganizationDialog(config),
 		triple: new TripleDialog(config),
-		header: new HeaderDialog(config)
+		header: new HeaderDialog(config),
+		filemanager: new FileManagerDialogs(config)
 	};
 	
 	dialogs.person = dialogs.search;
@@ -49,6 +50,8 @@ function DialogManager(config) {
 			}
 		}
 	};
+	
+	$.extend(pm, dialogs);
 	
 	return pm;
 };

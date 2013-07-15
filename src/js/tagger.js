@@ -226,7 +226,7 @@ function Tagger(config) {
 			}
 		} else if (tag.entity) {
 			var type = tag.entity.props.type;
-			w.d.show(type, {type: type, title: w.em.getTitle(type), pos: pos, entry: tag.entity});
+			w.dialogs.show(type, {type: type, title: w.em.getTitle(type), pos: pos, entry: tag.entity});
 		}
 	};
 	

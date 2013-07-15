@@ -21,6 +21,8 @@ function Writer(config) {
 	
 	w.baseUrl = window.location.protocol+'//'+window.location.host+'/';
 	
+	w.currentDocId = null;
+	
 	// editor mode
 	w.mode = config.mode;
 	
@@ -51,7 +53,7 @@ function Writer(config) {
 	w.entitiesList = null; // entities list
 	w.tree = null; // structure tree
 	w.relations = null; // relations list
-	w.d = null; // dialog
+	w.dialogs = null; // dialogs manager
 	w.settings = null; // settings dialog
 	w.delegator = null;	
 	
@@ -102,14 +104,14 @@ function Writer(config) {
 	w.showError = function(errorType) {
 		switch(errorType) {
 		case w.NO_SELECTION:
-			w.d.show('message', {
+			w.dialogs.show('message', {
 				title: 'Error',
 				msg: 'Please select some text before adding an entity or tag.',
 				type: 'error'
 			});
 			break;
 		case w.NO_COMMON_PARENT:
-			w.d.show('message', {
+			w.dialogs.show('message', {
 				title: 'Error',
 				msg: 'Please ensure that the beginning and end of your selection have a common parent.<br/>For example, your selection cannot begin in one paragraph and end in another, or begin in bolded text and end outside of that text.',
 				type: 'error'
@@ -121,7 +123,7 @@ function Writer(config) {
 		var result = w.u.isSelectionValid();
 		if (result == w.VALID) {
 			w.editor.currentBookmark = w.editor.selection.getBookmark(1);
-			w.d.show(type, {type: type, title: w.em.getTitle(type), pos: w.editor.contextMenuPos});
+			w.dialogs.show(type, {type: type, title: w.em.getTitle(type), pos: w.editor.contextMenuPos});
 		} else {
 			w.showError(result);
 		}
@@ -154,7 +156,7 @@ function Writer(config) {
 		if (tag.entity) {
 			w.editor.entityCopy = tag.entity;
 		} else {
-			w.d.show('message', {
+			w.dialogs.show('message', {
 				title: 'Error',
 				msg: 'Cannot copy structural tags.',
 				type: 'error'
@@ -164,7 +166,7 @@ function Writer(config) {
 	
 	w.pasteEntity = function(pos) {
 		if (w.editor.entityCopy == null) {
-			w.d.show('message', {
+			w.dialogs.show('message', {
 				title: 'Error',
 				msg: 'No entity to copy!',
 				type: 'error'
@@ -272,7 +274,7 @@ function Writer(config) {
 			var parser = new DOMParser();
 			doc = parser.parseFromString(docString, 'application/xml');
 		} catch(e) {
-			w.d.show('message', {
+			w.dialogs.show('message', {
 				title: 'Error',
 				msg: 'There was an error getting the document:'+e,
 				type: 'error'
@@ -355,7 +357,7 @@ function Writer(config) {
 		if (ed.currentNode) {
 			// check if text is allowed in this node
 			if (ed.currentNode.getAttribute('_textallowed') == 'false') {
-				w.d.show('message', {
+				w.dialogs.show('message', {
 					title: 'No Text Allowed',
 					msg: 'Text is not allowed in the current tag: '+ed.currentNode.getAttribute('_tag')+'.',
 					type: 'error'
@@ -605,7 +607,7 @@ function Writer(config) {
 			w.mode = w.XMLRDF;
 		}
 		
-		w.d = new DialogManager({writer: w});
+		w.dialogs = new DialogManager({writer: w});
 		w.u = new Utilities({writer: w});
 		w.tagger = new Tagger({writer: w});
 		w.fm = new FileManager({writer: w});
@@ -707,7 +709,7 @@ function Writer(config) {
 			valid_elements: '*[*]', // allow everything
 			
 			plugins: '-treepaste,-entitycontextmenu,-schematags,-currenttag,-viewsource',
-			theme_advanced_buttons1: 'schematags,|,addperson,addplace,adddate,addevent,addorg,addcitation,addnote,addtitle,addcorrection,addkeyword,addlink,|,editTag,removeTag,|,addtriple,|,viewsource,editsource,|,validate,savebutton',
+			theme_advanced_buttons1: 'schematags,|,addperson,addplace,adddate,addevent,addorg,addcitation,addnote,addtitle,addcorrection,addkeyword,addlink,|,editTag,removeTag,|,addtriple,|,viewsource,editsource,|,validate,savebutton,loadbutton',
 			theme_advanced_buttons2: 'currenttag',
 			theme_advanced_buttons3: '',
 			theme_advanced_toolbar_location: 'top',
@@ -891,12 +893,12 @@ function Writer(config) {
 				});
 				ed.addButton('saveasbutton', {title: 'Save As', image: 'img/save_as.png',
 					onclick: function() {
-						w.fm.openSaver();
+						w.dialogs.filemanager.showSaver();
 					}
 				});
 				ed.addButton('loadbutton', {title: 'Load', image: 'img/folder_page.png', 'class': 'entityButton',
 					onclick: function() {
-						w.fm.openLoader();
+						w.dialogs.filemanager.showLoader();
 					}
 				});
 				ed.addButton('editsource', {title: 'Edit Source', image: 'img/editsource.gif', 'class': 'wideButton',
@@ -912,7 +914,7 @@ function Writer(config) {
 				ed.addButton('addtriple', {title: 'Add Relation', image: 'img/chart_org.png', 'class': 'entityButton',
 					onclick: function() {
 						$('#westTabs').tabs('select', 2);
-						w.d.show('triple');
+						w.dialogs.show('triple');
 					}
 				});
 				

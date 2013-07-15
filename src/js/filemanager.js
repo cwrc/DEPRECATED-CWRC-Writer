@@ -5,118 +5,13 @@ function FileManager(config) {
 	
 	var w = config.writer;
 	
-	var currentDoc = null;
-	
-	var docNames = [];
-	
 	$(document.body).append(''+
-		'<div id="loader">'+
-			'<div id="files"><ul class="searchResults"></ul></div>'+
-		'</div>'+
-		'<div id="saver">'+
-			'<label for="filename">Name</label>'+
-			'<input type="text" name="filename"/>'+
-			'<p>Please enter letters only.</p>'+
-		'</div>'+
-		'<div id="unsaved">'+
-			'<p>You have unsaved changes.  Would you like to save?</p>'+
-		'</div>'+
 		'<div id="entitiesConverter"></div>'+
 		'<div id="editSourceDialog">'+
 			'<textarea style="width: 100%; height: 98%;"></textarea>'+
 		'</div>'
 		//'<iframe id="editDocLoader" style="display: none;"></iframe>'
 	);
-	
-	var loader = $('#loader');
-	loader.dialog({
-		title: 'Load Document',
-		modal: true,
-		height: 450,
-		width: 300,
-		autoOpen: false,
-		buttons: {
-			'Load': function() {
-				var data = $('#files ul li.selected').data();
-				if (data) {
-					fm.loadDocument(data.name);
-					loader.dialog('close');
-				} else {
-					$('#files').css({borderColor: 'red'});
-				}
-			},
-			'Cancel': function() {
-				loader.dialog('close');
-			}
-		}
-	});
-	
-	var saver = $('#saver');
-	saver.dialog({
-		title: 'Save Document As',
-		modal: true,
-		resizable: false,
-		height: 150,
-		width: 300,
-		autoOpen: false,
-		buttons: {
-			'Save': function() {
-				var name = $('#saver input').val();
-				
-				if (!_isNameValid(name)) {
-					w.d.show('message', {
-						title: 'Invalid Name',
-						msg: 'You may only enter upper or lowercase letters; no numbers, spaces, or punctuation.',
-						type: 'error'
-					});
-					return;
-				} else if (name == 'info') {
-					w.d.show('message', {
-						title: 'Invalid Name',
-						msg: 'This name is reserved, please choose a different one.',
-						type: 'error'
-					});
-					return;
-				}
-				
-				if ($.inArray(name, docNames) != -1) {
-					// TODO add overwrite confirmation
-					w.d.show('message', {
-						title: 'Invalid Name',
-						msg: 'This name already exists, please choose a different one.',
-						type: 'error'
-					});
-					return;
-				} else {
-					currentDoc = name;
-					fm.saveDocument();
-					saver.dialog('close');
-				}
-			},
-			'Cancel': function() {
-				saver.dialog('close');
-			}
-		}
-	});
-	
-	var unsaved = $('#unsaved');
-	unsaved.dialog({
-		title: 'Unsaved Changes',
-		modal: true,
-		resizable: false,
-		height: 150,
-		width: 300,
-		autoOpen: false,
-		buttons: {
-			'Save': function() {
-				unsaved.dialog('close');
-				fm.saveDocument();
-			},
-			'New Document': function() {
-				window.location = 'index.htm';
-			}
-		}
-	});
 	
 	var edit = $('#editSourceDialog');
 	edit.dialog({
@@ -145,94 +40,17 @@ function FileManager(config) {
 	/**
 	 * @memberOf fm
 	 */
-	fm.openLoader = function() {
-		$('#files').css({borderColor: '#fff'});
-		_getDocuments(function() {
-			_populateLoader();
-			loader.dialog('open');
-		});
-	};
-	
-	fm.openSaver = function() {
-		_getDocuments();
-		saver.dialog('open');
-	};
-	
-	function _getDocuments(callback) {
-		$.ajax({
-			url: w.baseUrl+'editor/documents',
-			type: 'GET',
-			dataType: 'json',
-			success: [function(data, status, xhr) {
-				docNames = data;
-			}, callback],
-			error: function() {
-				w.d.show('message', {
-					title: 'Error',
-					msg: 'Error getting documents.',
-					type: 'error'
-				});
-//				$.ajax({
-//					url: 'xml/test.xml',
-//					success: function(data, status, xhr) {
-//						_loadDocumentHandler(data);
-//					}
-//				});
-			}
-		});
-	};
-	
-	function _populateLoader() {
-		var formattedResults = '';
-		var last = '';
-		var d, i;
-		for (i = 0; i < docNames.length; i++) {
-			d = docNames[i]; 
-			
-			if (i == docNames.length - 1) last = 'last';
-			else last = '';
-			
-			formattedResults += '<li class="unselectable '+last+'">';
-			formattedResults += '<span>'+d+'</span>';
-			formattedResults += '</li>';
-		}
-		
-		$('#files ul').first().html(formattedResults);
-		
-		$('#files ul li').each(function(index) {
-			$(this).data({name: docNames[index]});
-		});
-		
-		$('#files ul li').click(function(event) {
-			$('#files').css({borderColor: '#fff'});
-			var remove = $(this).hasClass('selected');
-			$('#files ul li').removeClass('selected');
-			if (!remove) $(this).addClass('selected');
-		});
-		
-		$('#files ul li').dblclick(function(event) {
-			$('#files ul li').removeClass('selected');
-			$(this).addClass('selected');
-			fm.loadDocument($(this).data('name'));
-			loader.dialog('close');
-		});
-	};
-	
 	fm.newDocument = function() {
 		if (w.editor.isDirty()) {
-			unsaved.dialog('open');
+			w.dialogs.filemanager.showUnsaved();
 		} else {
 			window.location = 'index.htm';
 		}
 	};
 	
-	function _isNameValid(name) {
-		return name.match(/[^A-Za-z]+/) == null;
-	};
-	
 	fm.saveDocument = function() {
-		if (currentDoc == null) {
-			fm.openSaver();
+		if (w.currentDocId == null) {
+			w.dialogs.filemanager.showSaver();
 		} else {
 			function doSave() {
 				var docText = fm.getDocumentContent(true);
@@ -246,15 +64,15 @@ function FileManager(config) {
 			        },
 					success: function(data, status, xhr) {
 						w.editor.isNotDirty = 1; // force clean state
-						w.d.show('message', {
+						w.dialogs.show('message', {
 							title: 'Document Saved',
-							msg: currentDoc+' was saved successfully.'
+							msg: w.currentDocId+' was saved successfully.'
 						});
 					},
 					error: function() {
-						w.d.show('message', {
+						w.dialogs.show('message', {
 							title: 'Error',
-							msg: 'An error occurred and '+currentDoc+' was not saved.',
+							msg: 'An error occurred and '+w.currentDocId+' was not saved.',
 							type: 'error'
 						});
 					}
@@ -265,9 +83,9 @@ function FileManager(config) {
 				if (valid) {
 					doSave();
 				} else {
-					var doc = currentDoc;
+					var doc = w.currentDocId;
 					if (doc == null) doc = 'The current document';
-					w.d.confirm({
+					w.dialogs.confirm({
 						title: 'Document Invalid',
 						msg: doc+' is not valid. <b>Save anyways?</b>',
 						callback: function(yes) {
@@ -380,7 +198,7 @@ function FileManager(config) {
 			rdfString = '\n<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:w="http://cwrctc.artsrn.ualberta.ca/#">';
 			
 			// xml mode
-			var uri = w.baseUrl+'editor/documents/'+currentDoc;
+			var uri = w.baseUrl+'editor/documents/'+w.currentDocId;
 			rdfString += '\n<rdf:Description rdf:about="'+uri+'">\n\t<w:mode>'+w.mode+'</w:mode>\n</rdf:Description>';
 			
 			var offsets = _getNodeOffsetsFromRoot(body);
@@ -536,7 +354,7 @@ function FileManager(config) {
 	};
 	
 	fm.loadDocumentFromUrl = function(docUrl) {
-		currentDoc = docUrl;
+		w.currentDocId = docUrl;
 		
 		w.entities = {};
 		w.structs = {};
@@ -547,8 +365,8 @@ function FileManager(config) {
 			type: 'GET',
 			success: _loadDocumentHandler,
 			error: function(xhr, status, error) {
-				currentDoc = null;
-				w.d.show('message', {
+				w.currentDocId = null;
+				w.dialogs.show('message', {
 					title: 'Error',
 					msg: 'An error ('+status+') occurred and '+docUrl+' was not loaded.',
 					type: 'error'
@@ -563,7 +381,7 @@ function FileManager(config) {
 	};
 	
 	fm.loadDocument = function(docName) {
-		currentDoc = docName;
+		w.currentDocId = docName;
 		
 		w.entities = {};
 		w.structs = {};
@@ -574,8 +392,8 @@ function FileManager(config) {
 			type: 'GET',
 			success: _loadDocumentHandler,
 			error: function(xhr, status, error) {
-				currentDoc = null;
-				w.d.show('message', {
+				w.currentDocId = null;
+				w.dialogs.show('message', {
 					title: 'Error',
 					msg: 'An error ('+status+') occurred and '+docName+' was not loaded.',
 					type: 'error'
@@ -587,7 +405,7 @@ function FileManager(config) {
 	
 
 	fm.loadEMICDocument = function() {
-		currentDoc = PID;
+		w.currentDocId = PID;
 		
 		w.entities = {};
 		w.structs = {};
@@ -709,7 +527,7 @@ function FileManager(config) {
 			if (w.mode != docMode) {
 				var editorModeStr = w.mode == w.XML ? 'XML only' : 'XML & RDF';
 				var docModeStr = docMode == w.XML ? 'XML only' : 'XML & RDF';
-				w.d.show('message', {
+				w.dialogs.show('message', {
 					title: 'Editor Mode changed',
 					msg: 'The Editor Mode ('+editorModeStr+') has been changed to match the Document Mode ('+docModeStr+').',
 					type: 'info'
@@ -946,7 +764,7 @@ function FileManager(config) {
 	};
 	
 	fm.editSource = function() {
-		w.d.confirm({
+		w.dialogs.confirm({
 			title: 'Edit Source',
 			msg: 'Editing the source directly is only recommended for advanced users who know what they\'re doing.<br/><br/>Are you sure you wish to continue?',
 			callback: function(yes) {
@@ -1048,6 +866,14 @@ function FileManager(config) {
 					w.tree.update(true);
 					w.relations.update();
 					
+					w.schemaJSON = w.u.xmlToJSON($('grammar', w.schemaXML)[0]);
+					
+					// update the schema for schematags.js
+					var stb = w.editor.controlManager.controls.editor_schemaTagsButton;
+					if (stb.menu) {
+						stb.parentControl.buildMenu(stb.menu, null, {disabled: false, mode: 'add'});
+					}
+					
 					if (callback) callback();
 				}
 			    
@@ -1082,11 +908,9 @@ function FileManager(config) {
 				} else {
 					processSchema();
 				}
-				
-				w.schemaJSON = w.u.xmlToJSON(data.firstChild);
 			},
 			error: function(xhr, status, error) {
-				w.d.show('message', {title: 'Error', msg: 'Error loading schema: '+status, type: 'error'});
+				w.dialogs.show('message', {title: 'Error', msg: 'Error loading schema: '+status, type: 'error'});
 			}
 		});
 	};
@@ -1154,7 +978,7 @@ function FileManager(config) {
 	
 	fm.loadInitialDocument = function(start) {
 		if (start.match('load')) {
-			fm.openLoader();
+			w.dialogs.filemanager.showLoader();
 		} else if (start.match('sample_letter')) {
 			_loadTemplate('xml/sample_letter.xml');
 		} else if (start.match('sample_poem')) {

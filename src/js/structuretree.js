@@ -175,7 +175,7 @@ function StructureTree(config) {
 				tree.selectionType = selectContents ? tree.CONTENTS_SELECTED : tree.NODE_SELECTED;
 				
 				if (w.structs[id]._tag == w.header) {
-					w.d.show('header');
+					w.dialogs.show('header');
 				} else {
 					w.selectStructureTag(id, selectContents);
 				}
@@ -456,7 +456,7 @@ function StructureTree(config) {
 		if (tree.currentlySelectedNode != null) {
 			w.editor.execCommand('editTag', tree.currentlySelectedNode);
 		} else {
-			w.d.show('message', {
+			w.dialogs.show('message', {
 				title: 'No Tag Selected',
 				msg: 'You must first select a tag to edit.',
 				type: 'error'
@@ -469,7 +469,7 @@ function StructureTree(config) {
 			tree.currentlySelectedNode = null;
 			tree.selectionType = null;
 		} else {
-			w.d.show('message', {
+			w.dialogs.show('message', {
 				title: 'No Tag Selected',
 				msg: 'You must first select a tag to remove.',
 				type: 'error'
@@ -482,7 +482,7 @@ function StructureTree(config) {
 			tree.currentlySelectedNode = null;
 			tree.selectionType = null;
 		} else {
-			w.d.show('message', {
+			w.dialogs.show('message', {
 				title: 'No Tag Selected',
 				msg: 'You must first select a tag to remove.',
 				type: 'error'

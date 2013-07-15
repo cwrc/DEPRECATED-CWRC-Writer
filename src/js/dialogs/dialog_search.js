@@ -80,7 +80,7 @@ var SearchDialog = function(config) {
 		} else if (type == 'uri') {
 			msg = 'Enter a resolvable URI that identifies this person, e.g. their VIAF URI, LOC URI, etc.';
 		}
-		w.d.show('message', {
+		w.dialogs.show('message', {
 			title: 'Help',
 			msg: msg,
 			modal: false
@@ -200,7 +200,7 @@ var SearchDialog = function(config) {
 	};
 	
 	var createNew = function() {
-		w.d.show('add'+currentType, {});
+		w.dialogs.show('add'+currentType, {});
 	};
 	
 	return {

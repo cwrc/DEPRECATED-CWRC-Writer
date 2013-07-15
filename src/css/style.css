@@ -365,13 +365,19 @@ label {
 	width: 200px;
 }
 
-#files {
-	margin: 10px 0;
-	border: 1px solid #fff;
+#files .column {
+	position: absolute;
+	width: 48%;
+	top: 5px;
+	bottom: 5px;
 }
 
-.searchResultsParent, #files {
-	margin: 0;
+#files .searchResults {
+	position: absolute;
+	top: 35px;
+	width: 95%;
+	bottom: 10px;
+	overflow: auto;
 	border: 1px solid #fff;
 }
 
@@ -405,6 +411,11 @@ label {
 	display: inline-block;
 	vertical-align: bottom;
 	margin-left: -5px;
+}
+
+.searchResultsParent {
+	margin: 0;
+	border: 1px solid #fff;
 }
 
 .searchResults {

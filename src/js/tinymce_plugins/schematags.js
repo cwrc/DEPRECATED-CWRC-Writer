@@ -4,6 +4,7 @@
 		init: function(ed, url) {
 			var t = this;
 			t.url = url;
+			t.imageUrl = t.url+'/../../img/';
 			t.editor = ed;
 			t.currentKey = null;
 			t.action = null;
@@ -17,7 +18,6 @@
 			t.tag = null;
 			
 			t.editor.addCommand('createSchemaTagsControl', function(config) {
-				var url = t.url+'/../../img/';
 				var menu = config.menu;
 				var mode = config.mode || 'add';
 				var node;
@@ -62,31 +62,7 @@
 					}
 				});
 				
-				var schema = t.editor.execCommand('getSchema');
-				for (var i = 0; i < schema.elements.length; i++) {
-					var key = schema.elements[i];
-					var menuitem = menu.add({
-						title: key,
-						key: key,
-						initialFilterState: null,
-						icon_src: url + 'tag_blue.png',
-						onclick : function() {
-							if (mode == 'change') {
-								t.editor.execCommand('changeTag', {key: this.key, pos: config.pos, id: $(node).attr('id')});
-							} else {
-								t.editor.execCommand('addSchemaTag', {key: this.key, pos: config.pos});
-							}
-						}
-					});
-					menuitem.setDisabled(config.disabled);
-				}
-				var menuitem = menu.add({
-					title: 'No tags available for current parent tag.',
-					id: 'no_tags_'+menu.id,
-					icon_src: url + 'cross.png',
-					onclick : function() {}
-				});
-				menuitem.setDisabled(true);
+				t.buildMenu(menu, node, config);
 				
 				return menu;
 			});
@@ -189,6 +165,48 @@
 				width: 300
 			});
 		},
+		
+		buildMenu: function(menu, node, config) {
+			var t = this;
+			var disabled = config.disabled;
+			var pos = config.pos;
+			var mode = config.mode;
+			
+			// remove old menu items
+			for (var key in menu.items) {
+				var item = menu.items[key];
+				item.destroy();
+				$('#'+item.id).remove();
+				delete menu.items[key];
+			}
+			
+			var schema = t.editor.execCommand('getSchema');
+			for (var i = 0; i < schema.elements.length; i++) {
+				var key = schema.elements[i];
+				var menuitem = menu.add({
+					title: key,
+					key: key,
+					initialFilterState: null,
+					icon_src: t.imageUrl + 'tag_blue.png',
+					onclick : function() {
+						if (mode == 'change') {
+							t.editor.execCommand('changeTag', {key: this.key, pos: pos, id: $(node).attr('id')});
+						} else {
+							t.editor.execCommand('addSchemaTag', {key: this.key, pos: pos});
+						}
+					}
+				});
+				menuitem.setDisabled(disabled);
+			}
+			var menuitem = menu.add({
+				title: 'No tags available for current parent tag.',
+				id: 'no_tags_'+menu.id,
+				icon_src: t.imageUrl + 'cross.png',
+				onclick : function() {}
+			});
+			menuitem.setDisabled(true);
+		},
+		
 		showDialog: function(key, pos) {
 			var t = this;
 			var w = t.editor.writer;
@@ -316,6 +334,7 @@
 			$('#schemaOkButton').focus();
 			$('#schemaDialog input, #schemaDialog select').first().focus();
 		},
+		
 		showHelpDialog: function(key, helpText) {
 			$('#schemaHelpDialog').empty();
 			key = key || this.currentKey;
@@ -341,6 +360,7 @@
 				$('#schemaHelpDialog').dialog('open');
 			}
 		},
+		
 		result: function() {
 			var t = this;
 			var attributes = {};
@@ -379,6 +399,7 @@
 			$('#schemaDialog ins').tooltip('destroy');
 			$('#schemaDialog').dialog('close');
 		},
+		
 		cancel: function() {
 			var t = this;
 			t.editor.selection.moveToBookmark(t.editor.currentBookmark);
@@ -387,6 +408,7 @@
 			$('#schemaDialog').dialog('close');
 			$('#schemaHelpDialog').dialog('close');
 		},
+		
 		createControl: function(n, cm) {
 			if (n == 'schematags') {
 				var t = this;
@@ -402,7 +424,14 @@
 				});
 				t.menuButton.onRenderMenu.add(function(c, m) {
 					t.editor.execCommand('createSchemaTagsControl', {menu: m, disabled: false});
+					// link menu to the button
+					t.menuButton.menu = m;
 				});
+				
+				// link schemaTags to the button
+				t.menuButton.parentControl = t;
+				
+				// FIXME both the above links are made so that filemanager can remotely call buildMenu with the appropriate params
 				
 				return t.menuButton;
 			}

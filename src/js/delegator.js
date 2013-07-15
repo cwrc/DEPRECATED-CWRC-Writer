@@ -86,7 +86,7 @@ function Delegator(config) {
 //						}
 //					}
 //				}); 
-				w.d.show('message', {
+				w.dialogs.show('message', {
 					title: 'Error',
 					msg: 'An error occurred while trying to validate the document.',
 					type: 'error'

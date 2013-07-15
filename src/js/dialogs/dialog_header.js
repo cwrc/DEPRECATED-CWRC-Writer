@@ -25,7 +25,7 @@ var HeaderDialog = function(config) {
 				try {
 					xml = $.parseXML(editorString);
 				} catch(e) {
-					w.d.show('message', {
+					w.dialogs.show('message', {
 						title: 'Invalid XML',
 						msg: 'There was an error parsing the XML.',
 						type: 'error'
