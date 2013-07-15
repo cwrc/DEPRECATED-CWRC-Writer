@@ -431,15 +431,23 @@ function FileManager(config) {
 	fm.buildEditorString = function(node) {
 		var editorString = '';
 		
-		function doBuild(currentNode) {
+		function doBuild(currentNode, forceInline) {
 			var tag = currentNode.nodeName;
+			var jQNode = $(currentNode);
 			
-			var tagName = w.u.getTagForEditor(tag);
+			// TODO ensure that block level elements aren't inside inline level elements, the inline parent will be removed by the browser
+			// temp fix: force inline level for children if parent is inline
+			var tagName;
+			if (forceInline) {
+				tagName = 'span';
+			} else {
+				tagName = w.u.getTagForEditor(tag);
+			}
 			
 			editorString += '<'+tagName+' _tag="'+tag+'"';
 			
 			// create structs entries while we build the string
-			var id = $(currentNode).attr(w.idName);
+			var id = jQNode.attr(w.idName);
 			if (id == null) {
 				id = tinymce.DOM.uniqueId('struct_');
 				editorString += ' id="'+id+'"';
@@ -465,9 +473,11 @@ function FileManager(config) {
 			});
 			editorString += '>';
 			
-			$(currentNode).contents().each(function(index, el) {
+			var isInline = forceInline || !w.u.isTagBlockLevel(tag);
+			
+			jQNode.contents().each(function(index, el) {
 				if (el.nodeType == 1) {
-					doBuild(el);
+					doBuild(el, isInline);
 				} else if (el.nodeType == 3) {
 					editorString += el.data;
 				}
@@ -476,7 +486,7 @@ function FileManager(config) {
 			editorString += '</'+tagName+'>';
 		}
 		
-		doBuild(node);
+		doBuild(node, false);
 		return editorString;
 	};
 	
