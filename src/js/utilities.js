@@ -430,20 +430,21 @@ function Utilities(config) {
 	 * @param level The level of recursion
 	 * @param type The type of child to search for (element or attribute)
 	 * @param children The children to return
+	 * @param refParentProps For storing properties of a ref's parent (e.g. optional), if we're processing the ref's definition
 	 */
-	function _getChildrenJSON(currEl, defHits, level, type, children) {
+	function _getChildrenJSON(currEl, defHits, level, type, children, refParentProps) {
 		// first get the direct types
 		var hits = [];
 		_queryDown(currEl, function(item) {
 			if (item[type] != null) {
-				hits.push(item);
+				hits = hits.concat(item[type]); // use concat incase item[type] is an array
 			}
 		});
 		for (var i = 0; i < hits.length; i++) {
 			var child = hits[i];
 			if (level > 0) {
 				var match = false;
-				_queryUp(child['$parent'], function(item) {
+				_queryUp(child['$parent']['$parent'], function(item) {
 					if (item.element) {
 						match = true;
 						return false;
@@ -459,22 +460,30 @@ function Utilities(config) {
 					return false;
 				}
 			});
-			if (docs != null) docs = docs['#text'];
+			if (docs != null) {
+				docs = docs['#text'];
+			} else {
+				docs = 'No documentation available.';
+			}
 			
 			var childObj = {
-				name: child[type]['@name'],
+				name: child['@name'],
 				level: level+0,
 				documentation: docs
 			};
 			
 			if (type == 'attribute') {
-				childObj.required = true;
-				_queryUp(child['$parent'], function(item) {
-					if (item.optional) {
-						childObj.required = false;
-						return false;
-					}
-				});
+				if (refParentProps && refParentProps.optional != null) {
+					childObj.required = !refParentProps.optional;
+				} else {
+					childObj.required = true;
+					_queryUp(child['$parent'], function(item) {
+						if (item.optional) {
+							childObj.required = false;
+							return false;
+						}
+					});
+				}
 				
 				var defaultVal = null;
 				_queryDown(child, function(item) {
@@ -520,6 +529,7 @@ function Utilities(config) {
 				}
 			}
 		});
+		
 		for (var i = 0; i < hits.length; i++) {
 			var ref = hits[i];
 			var name = ref['@name'];
@@ -534,10 +544,19 @@ function Utilities(config) {
 				if (match) return; // don't get attributes from other elements
 			}
 
+			// store optional value
+			var optional = null;
+			_queryUp(ref, function(item) {
+				if (item.optional) {
+					optional = true;
+					return false;
+				}
+			});
+			
 			if (!defHits[name]) {
 				defHits[name] = true;
 				var def = _getDefinition(name);
-				_getChildrenJSON(def, defHits, level+1, type, children);
+				_getChildrenJSON(def, defHits, level+1, type, children, {optional: optional});
 			}
 		}
 	}
