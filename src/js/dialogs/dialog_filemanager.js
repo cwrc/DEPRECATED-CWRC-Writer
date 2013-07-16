@@ -9,10 +9,10 @@ var FileManagerDialogs = function(config) {
 	'<div id="loaderDialog">'+
 		'<div id="files">'+
 		'<div class="column" style="left: 10px;">'+
-		'<h3>Documents</h3><ul class="searchResults"></ul>'+
+		'<h2>Documents</h2><ul class="searchResults"></ul>'+
 		'</div>'+
 		'<div class="column" style="right: 10px;">'+
-		'<h3>Templates</h3><ul class="searchResults">'+
+		'<h2>Templates</h2><ul class="searchResults">'+
 		'<li class="unselectable" class="unselectable" data-name="#biography"><span>Orlando Biography</span></li><li class="unselectable" data-name="#writing"><span>Orlando Writing</span></li><li class="unselectable" data-name="#letter"><span>Letter</span></li><li class="unselectable" data-name="#poem"><span>Poem</span></li><li class="unselectable" data-name="#prose"><span>Prose</span></li><li class="unselectable" data-name="#event"><span>Event</span></li>'+
 		'<li class="unselectable" data-name="#sample_biography"><span>Sample Orlando Biography</span></li><li class="unselectable" data-name="#sample_writing"><span>Sample Orlando Writing</span></li><li class="unselectable" data-name="#sample_letter"><span>Sample Letter</span></li><li class="unselectable last" data-name="#sample_poem"><span>Sample Poem</span></li>'+
 		'</ul>'+

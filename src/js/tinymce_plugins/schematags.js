@@ -120,8 +120,14 @@
 			});
 			
 			$(document.body).append(''+
-				'<div id="schemaDialog"><div class="content"></div></div>'+
-				'<div id="schemaHelpDialog"></div>'
+				'<div id="schemaDialog">'+
+					'<div id="attributeSelector"><h2>Attributes</h2><ul></ul></div>'+
+					'<div id="attsContainer">'+
+						'<div id="level1Atts"></div>'+
+						'<div id="highLevelAtts"></div>'+
+						'<div id="schemaHelp"></div>'+
+					'</div>'+
+				'</div>'
 			);
 			
 			$('#schemaDialog').dialog({
@@ -133,36 +139,20 @@
 					$('#schemaDialog').parent().find('.ui-dialog-titlebar-close').hide();
 				},
 				height: 460,
-				width: 500,
+				width: 550,
 				autoOpen: false,
-				buttons: [
-					{
-						text: 'Help',
-						'class': 'left',
-						click: function() {
-							t.showHelpDialog();
-						}
-					},{
-						id: 'schemaOkButton',
-						text: 'Ok',
-						click: function() {
-							t.result();
-						}
-					},{
-						text: 'Cancel',
-						click: function() {
-							t.cancel();
-						}
+				buttons: [{
+					text: 'Cancel',
+					click: function() {
+						t.cancel();
 					}
-				]
-			});
-			
-			$('#schemaHelpDialog').dialog({
-				modal: false,
-				resizable: false,
-				autoOpen: false,
-				height: 300,
-				width: 300
+				},{
+					id: 'schemaOkButton',
+					text: 'Ok',
+					click: function() {
+						t.result();
+					}
+				}]
 			});
 		},
 		
@@ -220,14 +210,19 @@
 			
 			t.isDirty = false;
 			
-			$('#schemaDialog div.content').empty();
+			$('#attributeSelector ul, #level1Atts, #highLevelAtts, #schemaHelp').empty();
+			
+			var helpText = this.editor.execCommand('getDocumentationForTag', key);
+			if (helpText != '') {
+				$('#schemaHelp').html('<h3>'+key+' Documentation</h3><p>'+helpText+'</p>');
+			}
 			
 			var atts = t.editor.writer.u.getChildrenForTag({tag: key, type: 'attribute', returnType: 'array'});
 			
 			// build atts
-			var level1Atts = '<div id="level1Atts">';
-			var highLevelAtts = '<div id="highLevelAtts">';
-			var attributeSelector = '<div id="attributeSelector"><h2>Attributes</h2><ul>';
+			var level1Atts = '';
+			var highLevelAtts = '';
+			var attributeSelector = '';
 			var att, currAttString;
 			var isLevel1 = false;
 			for (var i = 0; i < atts.length; i++) {
@@ -284,11 +279,9 @@
 				}
 			}
 			
-			level1Atts += '</div>';
-			highLevelAtts += '</div>';
-			attributeSelector += '</ul></div>';
-			
-			$('#schemaDialog div.content').append(attributeSelector + '<div id="attsContainer">'+level1Atts + highLevelAtts+'</div>');
+			$('#attributeSelector ul').html(attributeSelector);
+			$('#level1Atts').html(level1Atts);
+			$('#highLevelAtts').html(highLevelAtts);
 			
 			$('#attributeSelector li').click(function() {
 				if ($(this).hasClass('required')) return;
@@ -333,32 +326,6 @@
 			// focus on the ok button if there are no inputs
 			$('#schemaOkButton').focus();
 			$('#schemaDialog input, #schemaDialog select').first().focus();
-		},
-		
-		showHelpDialog: function(key, helpText) {
-			$('#schemaHelpDialog').empty();
-			key = key || this.currentKey;
-			if (!helpText) helpText = this.editor.execCommand('getDocumentationForTag', key);
-			if (helpText != '') {
-				$('#schemaHelpDialog').dialog('option', 'title', key+' Help');
-				
-				$('#schemaHelpDialog').append(helpText);
-				
-				var dialogOffset = $('#schemaDialog').offset();
-				var x = dialogOffset.left + $('#schemaDialog').width() + 30;
-				if (x > $(document).width()) {
-					x = dialogOffset.left - 315;
-				}
-				var pos = [];
-				pos[0] = x;
-				pos[1] = dialogOffset.top - 31;
-				$('#schemaHelpDialog').dialog('option', 'position', pos);
-				$('#schemaHelpDialog').dialog('open');
-			} else {
-				$('#schemaHelpDialog').dialog('option', 'title', 'Help Error');
-				$('#schemaHelpDialog').append('<p>There\'s no help available for '+key+'.</p>');
-				$('#schemaHelpDialog').dialog('open');
-			}
 		},
 		
 		result: function() {
@@ -406,7 +373,6 @@
 			t.editor.currentBookmark = null;
 			$('#schemaDialog ins').tooltip('destroy');
 			$('#schemaDialog').dialog('close');
-			$('#schemaHelpDialog').dialog('close');
 		},
 		
 		createControl: function(n, cm) {

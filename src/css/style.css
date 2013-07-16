@@ -19,7 +19,7 @@ h3 {
 	font-size: 11px;
 }
 
-h1, h2 {
+h1, h2, h3 {
 	margin: 0;
 }
 
@@ -374,7 +374,7 @@ label {
 
 #files .searchResults {
 	position: absolute;
-	top: 35px;
+	top: 20px;
 	width: 95%;
 	bottom: 10px;
 	overflow: auto;
@@ -495,7 +495,7 @@ label {
 	height: 300px;
 }
 
-#schemaDialog div, #titleDialog div, #correctionDialog div {
+#titleDialog div, #correctionDialog div {
 	margin-bottom: 10px;
 }
 
@@ -553,14 +553,23 @@ label {
 #attsContainer {
 	position: absolute;
 	top: 5px;
-	right: 0;
+	right: 5px;
 	left: 147px;
 	bottom: 0;
 	overflow: auto;
 }
 
+#level1Atts, #highLevelAtts {
+	float: left;
+}
+
 #attsContainer label {
 	width: 135px;
+}
+
+#schemaHelp {
+	float: right;
+	width: 185px;
 }
 
 .required {
