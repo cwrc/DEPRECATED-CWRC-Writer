@@ -74,12 +74,12 @@ var FileManagerDialogs = function(config) {
 		title: 'Save Document As',
 		modal: true,
 		resizable: false,
-		height: 150,
+		height: 160,
 		width: 300,
 		autoOpen: false,
 		buttons: {
 			'Save': function() {
-				var name = $('#saver input').val();
+				var name = $('input', saver).val();
 				
 				if (!_isNameValid(name)) {
 					w.dialogs.show('message', {
