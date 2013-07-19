@@ -730,7 +730,7 @@ function FileManager(config) {
 									endNode = this;
 									endOffset = startOffset + o.length;
 								}
-							} else {//if ($(this).is(w.root) || $(this).attr('_tag')) {
+							} else if ($(this).attr('_tag')) {
 								getNodes($(this));
 							}
 							if (startNode != null && endNode != null) {
