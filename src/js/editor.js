@@ -56,7 +56,7 @@ function Writer(config) {
 	w.dialogs = null; // dialogs manager
 	w.settings = null; // settings dialog
 	w.delegator = null;	
-	
+
 	w.highlightEntity = function(id, bm, doScroll) {
 		w.editor.currentEntity = null;
 		
@@ -96,6 +96,8 @@ function Writer(config) {
 				var val = $(start).offset().top;
 				$(w.editor.dom.doc.body).scrollTop(val);
 			}
+			
+//			w.tree.selectNode($('#entityHighlight', w.editor.getBody())[0]);
 			
 			$('#entities > ul > li[name="'+id+'"]').addClass('selected').find('div[class="info"]').show();
 		}
@@ -299,6 +301,8 @@ function Writer(config) {
 	function _webKitOnKeyDownDeleteHandler(ed, evt) {
 		if (evt.which == 8 || evt.which == 46) {
 			if (w.tree.currentlySelectedNode != null) {
+				// cancel keyboard delete
+				tinymce.dom.Event.cancel(evt);
 				if (w.tree.selectionType == w.tree.NODE_SELECTED) {
 					$('#'+w.tree.currentlySelectedNode, ed.getBody()).remove();
 				} else {
@@ -307,6 +311,11 @@ function Writer(config) {
 			}
 		}
 	}
+	
+	function _onMouseUpHandler(ed, evt) {
+		_hideContextMenus(evt);
+		_doHighlightCheck(ed, evt);
+	};
 	
 	function _onKeyDownHandler(ed, evt) {
 		// TODO move to keyup
@@ -410,37 +419,40 @@ function Writer(config) {
 	function _onNodeChangeHandler(ed, cm, e) {
 //		console.log('onNodeChangeHandler');
 //		console.time('nodechange');
-		if (e.nodeType != 1) {
-			ed.currentNode = w.u.getRootTag()[0];
-		} else {
-			if (e.getAttribute('_tag') == null) {
-				if (e.getAttribute('data-mce-bogus') != null) {
-					// artifact from selectStructureTag
-					var sibling = $(e).next('[_tag]')[0];
-					if (sibling != null) {
-						e = sibling;
+		if (e != null) {
+			if (e.nodeType != 1) {
+				ed.currentNode = w.u.getRootTag()[0];
+			} else {
+				if (e.getAttribute('_tag') == null) {
+					if (e.getAttribute('data-mce-bogus') != null) {
+						// artifact from selectStructureTag
+						var sibling = $(e).next('[_tag]')[0];
+						if (sibling != null) {
+							e = sibling;
+						} else {
+							e = e.parentNode;
+						}
 					} else {
 						e = e.parentNode;
 					}
+					
+	//				_onNodeChangeHandler(ed, cm, e);
+					// use setTimeout to add to the end of the onNodeChange stack
+					window.setTimeout(function(){
+//						console.log('fireNodeChange');
+						w._fireNodeChange(e);
+					}, 0);
 				} else {
-					e = e.parentNode;
+					ed.currentNode = e;
 				}
-				
-//				_onNodeChangeHandler(ed, cm, e);
-				// use setTimeout to add to the end of the onNodeChange stack
-				window.setTimeout(function(){
-					w._fireNodeChange(e);
-				}, 0);
-			} else {
-				ed.currentNode = e;
 			}
-		}
-		if (ed.currentNode) {
-			w.tree.selectNode(ed.currentNode);
-		}
-		if (w.emptyTagId) {
-			delete w.entities[w.emptyTagId];
-			w.emptyTagId = null;
+			if (ed.currentNode) {
+				w.tree.selectNode(ed.currentNode);
+			}
+			if (w.emptyTagId) {
+				delete w.entities[w.emptyTagId];
+				w.emptyTagId = null;
+			}
 		}
 //		console.timeEnd('nodechange');
 	};
@@ -479,6 +491,7 @@ function Writer(config) {
 	};
 	
 	function _doHighlightCheck(ed, evt) {
+//		console.log('_doHighlightCheck');
 		var range = ed.selection.getRng(true);
 		
 		// check if inside boundary tag
@@ -780,10 +793,7 @@ function Writer(config) {
 					ed.pasteAsPlainText = false;
 					
 					// highlight tracking
-					ed.onMouseUp.add(function(ed, evt) {
-						_hideContextMenus(evt);
-						_doHighlightCheck(ed, evt);
-					});
+					ed.onMouseUp.add(_onMouseUpHandler);
 					
 					ed.onKeyDown.add(_onKeyDownHandler);
 					if (tinymce.isWebKit) {
