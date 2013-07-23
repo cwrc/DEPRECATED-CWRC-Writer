@@ -141,6 +141,7 @@ var FileManagerDialogs = function(config) {
 	 */
 	dfm.showLoader = function() {
 		$('#files').css({borderColor: '#fff'});
+		$('#files li').removeClass('selected');
 		_getDocuments(function() {
 			_populateLoader();
 			loader.dialog('open');
