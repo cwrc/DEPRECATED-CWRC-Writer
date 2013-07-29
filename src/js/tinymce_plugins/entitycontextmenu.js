@@ -71,7 +71,7 @@
 				// the selection we need to store it away
 				if (e && e.button == 2) {
 					realCtrlKey = e.ctrlKey;
-					return;
+//					return; // don't return: if the user right clicks somewhere else, we want this menu to close
 				}
 
 				if (t._menu) {
@@ -174,7 +174,8 @@
 			var tagMenu = m.addMenu({
 				id: 'structTagsContextMenu',
 				title: 'Structural Tags',
-				icon_src: url+'tag.png'
+				icon_src: url+'tag.png',
+				menuType: 'filterMenu'
 			});
 			tagMenu.beforeShowMenu.add(function(m) {
 				m.element.addClass('defaultSkin');
@@ -188,7 +189,8 @@
 			var changeTagMenu = m.addMenu({
 				id: 'changeTagContextMenu',
 				title: 'Change Tag',
-				icon_src: url+'tag_blue_edit.png'
+				icon_src: url+'tag_blue_edit.png',
+				menuType: 'filterMenu'
 			});
 			changeTagMenu.beforeShowMenu.add(function(m) {
 				m.element.addClass('defaultSkin');

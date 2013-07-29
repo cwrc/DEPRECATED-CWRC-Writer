@@ -94,7 +94,7 @@
 .defaultSkin .mceMenu span.mceText, .defaultSkin .mceMenu .mcePreview {font-size:11px}
 .defaultSkin .mceMenu pre.mceText {font-family:Monospace}
 .defaultSkin .mceMenu .mceIcon {position:absolute; top:0; left:0; width:22px;}
-.defaultSkin .mceMenu .mceMenuItemEnabled a:hover, .defaultSkin .mceMenu .mceMenuItemActive {background-color:#dbecf3}
+.defaultSkin .mceMenu .mceMenuItemEnabled a:hover, .defaultSkin .mceMenu .mceMenuItemEnabled a:focus, .defaultSkin .mceMenu .mceMenuItemActive {background-color:#dbecf3}
 .defaultSkin td.mceMenuItemSeparator {background:#DDD; height:1px}
 .defaultSkin .mceMenuItemTitle a {border:0; background:#EEE; border-bottom:1px solid #DDD}
 .defaultSkin .mceMenuItemTitle span.mceText {color:#000; font-weight:bold; padding-left:4px}

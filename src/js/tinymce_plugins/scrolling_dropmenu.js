@@ -50,7 +50,8 @@
 			m = t.settings.control_manager.createDropMenu(t.id + '_menu', {
 				menu_line : 1,
 				'class' : this.classPrefix + 'Menu',
-				icons : t.settings.icons
+				icons : t.settings.icons,
+				menuType : t.settings.menuType
 			}, tinymce.ui.ScrollingDropMenu);
 
 			m.onHideMenu.add(function() {
@@ -166,7 +167,9 @@
 			DOM.show(co);
 			t.update();
 
-			t.textInput.value = '';
+			if (s.menuType && s.menuType == 'filterMenu') {
+				t.textInput.value = '';
+			}
 			
 			x += s.offset_x || 0;
 			y += s.offset_y || 0;
@@ -248,9 +251,10 @@
 
 			t.onShowMenu.dispatch(t);
 
-			if (s.keyboard_focus) { 
+//			if (s.keyboard_focus) { 
 				t._setupKeyboardNav(); 
-			}
+//			}
+			$(t.textInput).focus();
 		},
 		
 		addMenu : function(o) {
@@ -269,6 +273,7 @@
 			s.parent = t;
 			s.constrain = s.constrain || cs.constrain;
 			s['class'] = s['class'] || cs['class'];
+			console.log(s['class']);
 			s.vp_offset_x = s.vp_offset_x || cs.vp_offset_x;
 			s.vp_offset_y = s.vp_offset_y || cs.vp_offset_y;
 			s.keyboard_focus = cs.keyboard_focus;
@@ -287,14 +292,18 @@
 				DOM.setAttrib(w, 'aria-parent', 'menu_' + t.settings.parent.id);
 			}
 			
-			// add input box
-			var inputDiv = DOM.add(w, 'div', {id : 'menu_' + t.id + '_inputParent', 'class' : t.classPrefix + (s['class'] ? ' ' + s['class'] : '')}, '<span>Filter</span>');
-			t.textInput = DOM.add(inputDiv, 'input', {id : 'menu_' + t.id + '_input', type: 'text', 'class' : t.classPrefix + (s['class'] ? ' ' + s['class'] : '')});
+			var containerClass = '';
+			if (s.menuType && s.menuType == 'filterMenu') {
+				containerClass = 'scrollingMenuContainer ';
+				
+				// add input box
+				var inputDiv = DOM.add(w, 'div', {id : 'menu_' + t.id + '_inputParent', 'class' : 'inputParent '+t.classPrefix + (s['class'] ? ' ' + s['class'] : '')}, '<span>Filter</span>');
+				t.textInput = DOM.add(inputDiv, 'input', {id : 'menu_' + t.id + '_input', type: 'text', 'class' : t.classPrefix + (s['class'] ? ' ' + s['class'] : '')});
 			
-			Event.add(t.textInput, 'keyup', t.filterMenuItems, t);
+				Event.add(t.textInput, 'keyup', t.filterMenuItems, t);
+			}
 			
-			
-			co = DOM.add(w, 'div', {role: 'presentation', id : 'menu_' + t.id + '_co', 'class' : t.classPrefix + (s['class'] ? ' ' + s['class'] : '')});
+			co = DOM.add(w, 'div', {role: 'presentation', id : 'menu_' + t.id + '_co', 'class' : containerClass + t.classPrefix + (s['class'] ? ' ' + s['class'] : '')});
 			t.element = new Element('menu_' + t.id, {blocker : 1, container : s.container});
 
 			if (s.menu_line)
@@ -313,10 +322,41 @@
 			return w;
 		},
 		
+		_setupKeyboardNav : function(){
+			var contextMenu, menuItems, t=this; 
+			contextMenu = DOM.get('menu_' + t.id);
+			menuItems = DOM.select('a[role=option]', 'menu_' + t.id);
+			menuItems.splice(0,0,contextMenu);
+			t.keyboardNav = new tinymce.ui.FilterMenuKeyboardNav({
+				root: 'menu_' + t.id,
+				items: menuItems,
+				onCancel: function() {
+					t.hideMenu();
+				},
+				onAction: function(id) {
+					id = id.replace('_aria', '');
+					var item = t.items[id];
+					if (item) {
+						var dm = t;
+						while (dm) {
+							if (dm.hideMenu) dm.hideMenu();
+							dm = dm.settings.parent;
+						}
+						item.settings.onclick.call(item.settings);
+					}
+				},
+				// when the user pushes up at the top of the menu
+				onMenuTop: function() {
+					t.textInput.focus();
+				},
+				enableUpDown: true
+			});
+//			contextMenu.focus();
+		},
+		
 		filterMenuItems: function(e) {
-			if (e.which == e.DOM_VK_DOWN) {
-				// TODO add keyboard navigation
-//				var item = $('#menu_' + this.id + '_co tr[class*=mceMenuItemEnabled]').filter(':first');
+			if (e.which == 40) { // down key
+				this.keyboardNav.resetFocus();
 			} else {
 				var query = $(this.textInput).val();
 				var item;
@@ -332,6 +372,208 @@
 				}
 				this.update();
 			}
+		}
+	});
+})(tinymce);
+
+(function(tinymce) {
+	var Event = tinymce.dom.Event, each = tinymce.each;
+
+	tinymce.create('tinymce.ui.FilterMenuKeyboardNav:tinymce.ui.KeyboardNavigation', {
+		FilterMenuKeyboardNav : function(settings, dom) {
+			var t = this, root = settings.root, items = settings.items,
+			enableUpDown = settings.enableUpDown, enableLeftRight = settings.enableLeftRight || !settings.enableUpDown,
+			excludeFromTabOrder = settings.excludeFromTabOrder,
+			itemFocussed, itemBlurred, rootKeydown, rootFocussed, focussedId;
+			
+			dom = dom || tinymce.DOM;
+		
+			itemFocussed = function(evt) {
+				focussedId = evt.target.id;
+			};
+			
+			itemBlurred = function(evt) {
+				dom.setAttrib(evt.target.id, 'tabindex', '-1');
+			};
+			
+			rootFocussed = function(evt) {
+				var item = dom.get(focussedId);
+				dom.setAttrib(item, 'tabindex', '0');
+				item.focus();
+			};
+			
+			t.focus = function() {
+				dom.get(focussedId).focus();
+			};
+		
+			t.destroy = function() {
+				each(items, function(item) {
+					var elm = dom.get(item.id);
+		
+					dom.unbind(elm, 'focus', itemFocussed);
+					dom.unbind(elm, 'blur', itemBlurred);
+				});
+		
+				var rootElm = dom.get(root);
+				var tableElm = dom.select('#'+root+' table');
+				dom.unbind(rootElm, 'focus', rootFocussed);
+				dom.unbind(tableElm, 'keydown', rootKeydown);
+		
+				// FIXME destroying items here makes them unavailable in moveFocus, next time
+				
+//				items = dom = root = t.focus = itemFocussed = itemBlurred = rootKeydown = rootFocussed = null;
+//				t.destroy = function() {};
+			};
+			
+			t.resetFocus = function() {
+				// find first enabled item
+				for (var i = 0; i < items.length; i++) {
+					var item = items[i];
+					if ($(item).parents('tr').hasClass('mceMenuItemEnabled')) {
+						focussedId = items[i].id;
+						break;
+					}
+				}
+				rootFocussed();
+			};
+			
+			t.moveFocus = function(dir, evt) {
+				var idx = -1, controls = t.controls, newFocus;
+		
+				if (!focussedId)
+					return;
+		
+				each(items, function(item, index) {
+					if (item.id === focussedId) {
+						idx = index;
+						return false;
+					}
+				});
+				
+				idx += dir;
+				if (dir === 1) {
+					idx = findNextItem(idx);
+				} else {
+					idx = findPreviousItem(idx);
+				}
+				
+				if (idx == undefined) {
+					if (dir === 1) {
+						return;
+					} else {
+						if (settings.onMenuTop) {
+							settings.onMenuTop();
+							return;
+						} else {
+							idx = findNextItem(0);
+						}
+					}
+					
+				}
+				
+				newFocus = items[idx];
+				
+				doFocus(newFocus.id, focussedId);
+		
+				if (evt)
+					Event.cancel(evt);
+			};
+			
+			findPreviousItem = function(idx) {
+				for (idx; idx >= 0; idx--) {
+					var item = items[idx];
+					if ($(item).parents('tr').hasClass('mceMenuItemEnabled')) {
+						return idx;
+					}
+				}
+			};
+			
+			findNextItem = function(idx) {
+				for (idx; idx < items.length; idx++) {
+					var item = items[idx];
+					if ($(item).parents('tr').hasClass('mceMenuItemEnabled')) {
+						return idx;
+					}
+				}
+			};
+			
+			doFocus = function(newId, oldId) {
+				dom.setAttrib(oldId, 'tabindex', '-1');
+				dom.setAttrib(newId, 'tabindex', '0');
+				dom.get(newId).focus();
+			};
+			
+			rootKeydown = function(evt) {
+				var DOM_VK_LEFT = 37, DOM_VK_RIGHT = 39, DOM_VK_UP = 38, DOM_VK_DOWN = 40, DOM_VK_ESCAPE = 27, DOM_VK_ENTER = 14, DOM_VK_RETURN = 13, DOM_VK_SPACE = 32;
+				
+				switch (evt.keyCode) {
+					case DOM_VK_LEFT:
+						if (enableLeftRight) t.moveFocus(-1);
+						break;
+		
+					case DOM_VK_RIGHT:
+						if (enableLeftRight) t.moveFocus(1);
+						break;
+		
+					case DOM_VK_UP:
+						if (enableUpDown) t.moveFocus(-1);
+						break;
+		
+					case DOM_VK_DOWN:
+						if (enableUpDown) t.moveFocus(1);
+						break;
+		
+					case DOM_VK_ESCAPE:
+						if (settings.onCancel) {
+							settings.onCancel();
+							Event.cancel(evt);
+						}
+						break;
+		
+					case DOM_VK_ENTER:
+					case DOM_VK_RETURN:
+					case DOM_VK_SPACE:
+						if (settings.onAction) {
+							settings.onAction(focussedId);
+							Event.cancel(evt);
+						}
+						break;
+				}
+			};
+		
+			// Set up state and listeners for each item.
+			each(items, function(item, idx) {
+				var tabindex, elm;
+		
+				if (!item.id) {
+					item.id = dom.uniqueId('_mce_item_');
+				}
+		
+				elm = dom.get(item.id);
+		
+				if (excludeFromTabOrder) {
+					dom.bind(elm, 'blur', itemBlurred);
+					tabindex = '-1';
+				} else {
+					tabindex = (idx === 0 ? '0' : '-1');
+				}
+		
+				elm.setAttribute('tabindex', tabindex);
+				dom.bind(elm, 'focus', itemFocussed);
+			});
+			
+			// Setup initial state for root element.
+			if (items[0]){
+				focussedId = items[0].id;
+			}
+		
+			dom.setAttrib(root, 'tabindex', '-1');
+		
+			// Setup listeners for root element.
+			var rootElm = dom.get(root);
+			var tableElm = dom.select('#'+root+' table'); // use table instead of root so keydown not triggered on filter input
+			dom.bind(rootElm, 'focus', rootFocussed);
+			dom.bind(tableElm, 'keydown', rootKeydown);
 		}
 	});
 })(tinymce);

@@ -787,50 +787,46 @@ label {
 }
 
 /* used by schematags plugin */
-#menu_editor_editor_schemaTagsButton_menu, #menu_structTagsContextMenu, #menu_changeTagContextMenu {
-	height: auto !important;
+.scrollingMenuContainer {
+    border: 1px solid #D4D0C8 !important;
+    direction: ltr !important;
+    left: 0 !important;
+    position: absolute !important;
+    top: 26px !important;
+    z-index: 1000 !important;
 }
 
-#menu_editor_editor_schemaTagsButton_menu_co {
-    border: 1px solid #D4D0C8;
-    direction: ltr;
-    left: 0;
-    position: absolute;
-    top: 26px;
-    z-index: 1000;
+.scrollingMenuContainer .mceMenuItemDisabled {
+	visibility: collapse !important;
 }
 
-#menu_editor_editor_schemaTagsButton_menu_co .mceMenuItemDisabled, #menu_structTagsContextMenu_co .mceMenuItemDisabled, #menu_changeTagContextMenu_co .mceMenuItemDisabled {
-	visibility: collapse;
+.scrollingMenuContainer .mceMenuItemDisabled * {
+	height: 0 !important;
+	margin: 0 !important;
+	padding: 0 !important;
 }
 
-#menu_editor_editor_schemaTagsButton_menu_co .mceMenuItemDisabled *, #menu_structTagsContextMenu_co .mceMenuItemDisabled *, #menu_changeTagContextMenu_co .mceMenuItemDisabled * {
-	height: 0;
-	margin: 0;
-	padding: 0;
+.inputParent {
+	background-color: #ffffff !important;
+	border: 1px solid #D4D0C8 !important;
+	position: absolute !important;
+	top: 0 !important;
+	left: 0 !important;
+	z-index: 1000 !important;
+	width: 100% !important;
+	font-size: 11px !important;
 }
 
-#menu_editor_editor_schemaTagsButton_menu_inputParent {
-	background-color: #ffffff;
-	border: 1px solid #D4D0C8;
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index: 1000;
-	width: 100%;
-	font-size: 11px;
+.inputParent span {
+	margin: 4px 0 4px 3px !important;
+	display: inline-block !important;
 }
 
-#menu_editor_editor_schemaTagsButton_menu_inputParent span {
-	margin: 4px 0 4px 3px;
-	display: inline-block;
-}
-
-#menu_editor_editor_schemaTagsButton_menu_inputParent input {
-	margin: 4px 3px;
-	position: relative;
-	display: inline-block;
-	cursor: text;
+.inputParent input {
+	margin: 4px 3px !important;
+	position: relative !important;
+	display: inline-block !important;
+	cursor: text !important;
 }
 
 /* used by the entity plugin */
@@ -976,6 +972,7 @@ div.mceDropDown {
     display: block;
     float: right;
     width: 20px;
+    height: 20px;
 }
 
 #vakata-contextmenu .submenu .filterParent {
@@ -1028,6 +1025,40 @@ div.mceDropDown {
 #tree.jstree li {
 	width: 100%;
 	margin-left: 0;
+}
+
+#tree.jstree li.person {
+	background-color: #FFCCCC;
+}
+#tree.jstree li.place {
+	background-color: #A9D6D6;
+}
+#tree.jstree li.date {
+	background-color: #FFD5B3;
+}
+#tree.jstree li.event {
+	background-color: #9FDF9F;
+}
+#tree.jstree li.org {
+	background-color: #BDB4D5;
+}
+#tree.jstree li.citation {
+	background-color: #E6B3CF;
+}
+#tree.jstree li.note {
+	background-color: #9CAFC4;
+}
+#tree.jstree li.title {
+	background-color: #F6E78D;
+}
+#tree.jstree li.correction {
+	background-color: #FFC2B3;
+}
+#tree.jstree li.keyword {
+	background-color: #8EECBD;
+}
+#tree.jstree li.link {
+	background-color: #94AFFF;
 }
 
 #tree.jstree a > ins.ui-icon {

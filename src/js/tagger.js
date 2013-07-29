@@ -297,6 +297,8 @@ function Tagger(config) {
 			w.emptyTagId = id;
 		}
 		
+		w.tree.update();
+		
 		return id;
 	};
 	

@@ -15,6 +15,9 @@
 			
 			t.isDirty = false;
 			
+			t.schemaDialog = null;
+			t.dialogOpenTimestamp = null; // tracks when the dialog was opened
+			
 			t.tag = null;
 			
 			t.editor.addCommand('createSchemaTagsControl', function(config) {
@@ -23,6 +26,8 @@
 				var node;
 				
 				menu.beforeShowMenu.add(function(m) {
+					t.editor.writer.tree.disableHotkeys();
+					
 					var filterKey;
 					// get the node from currentBookmark if available, otherwise use currentNode
 					if (t.editor.currentBookmark != null) {
@@ -33,6 +38,10 @@
 					} else {
 						node = t.editor.currentNode;
 					}
+					if (node.nodeType == 9) {
+						node = $('body > [_tag]', node)[0]; // we're at the document level so select the root instead
+					}
+					
 					filterKey = node.getAttribute('_tag');
 					
 					if (mode == 'change') {
@@ -60,6 +69,10 @@
 					if (count == disCount) {
 						m.items['no_tags_'+m.id].setDisabled(false);
 					}
+				});
+				
+				menu.onHideMenu.add(function(m) {
+					t.editor.writer.tree.enableHotkeys();
 				});
 				
 				t.buildMenu(menu, node, config);
@@ -130,17 +143,26 @@
 				'</div>'
 			);
 			
-			$('#schemaDialog').dialog({
+			t.schemaDialog = $('#schemaDialog').dialog({
 				modal: true,
 				resizable: true,
 				dialogClass: 'splitButtons',
 				closeOnEscape: false,
 				open: function(event, ui) {
-					$('#schemaDialog').parent().find('.ui-dialog-titlebar-close').hide();
+					t.schemaDialog.parent().find('.ui-dialog-titlebar-close').hide();
 				},
 				height: 460,
 				width: 550,
 				autoOpen: false,
+				open: function(event, ui) {
+					t.dialogOpenTimestamp = event.timeStamp;
+				},
+				beforeClose: function(event, ui) {
+					if (event.timeStamp - t.dialogOpenTimestamp < 150) {
+						// if the dialog was opened then closed immediately it was unintentional
+						return false;
+					}
+				},
 				buttons: [{
 					text: 'Cancel',
 					click: function() {
@@ -200,6 +222,9 @@
 		showDialog: function(key, pos) {
 			var t = this;
 			var w = t.editor.writer;
+			
+			t.editor.getBody().blur(); // lose keyboard focus in editor
+			w.tree.disableHotkeys();
 			
 			var structsEntry = null;
 			if (t.mode == t.EDIT) {
@@ -315,56 +340,61 @@
 				}
 			});
 			
-			$('#schemaDialog').dialog('option', 'title', key);
+			t.schemaDialog.dialog('option', 'title', key);
 			if (pos) {
-				$('#schemaDialog').dialog('option', 'position', [pos.x, pos.y]);
+				t.schemaDialog.dialog('option', 'position', [pos.x, pos.y]);
 			} else {
-				$('#schemaDialog').dialog('option', 'position', 'center');
+				t.schemaDialog.dialog('option', 'position', 'center');
 			}
-			$('#schemaDialog').dialog('open');
+			t.schemaDialog.dialog('open');
 			
-			// focus on the ok button if there are no inputs
 			$('#schemaOkButton').focus();
 			$('#schemaDialog input, #schemaDialog select').first().focus();
 		},
 		
 		result: function() {
 			var t = this;
-			var attributes = {};
-			$('#attsContainer > div > div:visible').children('input[type!="hidden"], select').each(function(index, el) {
-				attributes[$(this).attr('name')] = $(this).val();
-			});
 			
-			// validation
-			var invalid = [];
-			$('#attsContainer span.required').parent().children('label').each(function(index, el) {
-				if (attributes[$(this).text()] == '') {
-					invalid.push($(this).text());
+			t.schemaDialog.dialog('close');
+			// check if beforeClose cancelled or not
+			if (t.schemaDialog.is(':hidden')) {
+				$('#schemaDialog ins').tooltip('destroy');
+				
+				t.editor.writer.tree.enableHotkeys();
+				
+				var attributes = {};
+				$('#attsContainer > div > div:visible').children('input[type!="hidden"], select').each(function(index, el) {
+					attributes[$(this).attr('name')] = $(this).val();
+				});
+				
+				// validation
+				var invalid = [];
+				$('#attsContainer span.required').parent().children('label').each(function(index, el) {
+					if (attributes[$(this).text()] == '') {
+						invalid.push($(this).text());
+					}
+				});
+				if (invalid.length > 0) {
+					for (var i = 0; i < invalid.length; i++) {
+						var name = invalid[i];
+						$('#attsContainer *[name="'+name+'"]').css({borderColor: 'red'}).keyup(function(event) {
+							$(this).css({borderColor: '#ccc'});
+						});
+					}
+					return;
 				}
-			});
-			if (invalid.length > 0) {
-				for (var i = 0; i < invalid.length; i++) {
-					var name = invalid[i];
-					$('#attsContainer *[name="'+name+'"]').css({borderColor: 'red'}).keyup(function(event) {
-						$(this).css({borderColor: '#ccc'});
-					});
+				
+				attributes._tag = t.currentKey;
+				
+				switch (t.mode) {
+					case t.ADD:
+						t.editor.execCommand('addStructureTag', {bookmark: t.editor.currentBookmark, attributes: attributes, action: t.action});
+						break;
+					case t.EDIT:
+						t.editor.execCommand('editStructureTag', t.tag, attributes);
+						t.tag = null;
 				}
-				return;
 			}
-			
-			attributes._tag = t.currentKey;
-			
-			switch (t.mode) {
-				case t.ADD:
-					t.editor.execCommand('addStructureTag', {bookmark: t.editor.currentBookmark, attributes: attributes, action: t.action});
-					break;
-				case t.EDIT:
-					t.editor.execCommand('editStructureTag', t.tag, attributes);
-					t.tag = null;
-			}
-			
-			$('#schemaDialog ins').tooltip('destroy');
-			$('#schemaDialog').dialog('close');
 		},
 		
 		cancel: function() {
@@ -372,7 +402,7 @@
 			t.editor.selection.moveToBookmark(t.editor.currentBookmark);
 			t.editor.currentBookmark = null;
 			$('#schemaDialog ins').tooltip('destroy');
-			$('#schemaDialog').dialog('close');
+			t.schemaDialog.dialog('close');
 		},
 		
 		createControl: function(n, cm) {
@@ -383,7 +413,8 @@
 				t.menuButton = cm.createMenuButton('schemaTagsButton', {
 					title: 'Tags',
 					image: url+'tag_text.png',
-					'class': 'wideButton'
+					'class': 'wideButton',
+					menuType: 'filterMenu'
 				}, tinymce.ui.ScrollingMenuButton);
 				t.menuButton.beforeShowMenu.add(function(c) {
 					t.editor.currentBookmark = t.editor.selection.getBookmark(1);

@@ -97,7 +97,7 @@ function Writer(config) {
 				$(w.editor.dom.doc.body).scrollTop(val);
 			}
 			
-//			w.tree.selectNode($('#entityHighlight', w.editor.getBody())[0]);
+			w.tree.selectNode($('#entityHighlight', w.editor.getBody())[0]);
 			
 			$('#entities > ul > li[name="'+id+'"]').addClass('selected').find('div[class="info"]').show();
 		}
@@ -218,16 +218,14 @@ function Writer(config) {
 		var node = $('#'+id, w.editor.getBody());
 		var nodeEl = node[0];
 		
+		var rng = w.editor.dom.createRng();
 		if (selectContentsOnly) {
 			if (tinymce.isWebKit) {
 				$('[data-mce-bogus]', node).remove();
 				node.prepend('<span data-mce-bogus="1">\uFEFF</span>').append('<span data-mce-bogus="1">\uFEFF</span>');
 			}
-			var rng = w.editor.dom.createRng();
 			rng.setStart(nodeEl.firstChild, 0);
 			rng.setEnd(nodeEl.lastChild, nodeEl.lastChild.length);
-			w.editor.selection.setRng(rng);
-//			w.tree.currentlySelectedNode = id;
 		} else {
 			$('[data-mce-bogus]', node.parent()).remove();
 			
@@ -238,11 +236,10 @@ function Writer(config) {
 			}
 			node.before('<span data-mce-bogus="1">\uFEFF</span>').after('<span data-mce-bogus="1">\uFEFF</span>');
 			
-			var rng = w.editor.dom.createRng();
 			rng.setStart(nodeEl.previousSibling, 0);
 			rng.setEnd(nodeEl.nextSibling, 0);
-			w.editor.selection.setRng(rng);
 		}
+		w.editor.selection.setRng(rng);
 		
 		// scroll node into view
 		$(w.editor.getDoc()).scrollTop(node.position().top - $(w.editor.getContentAreaContainer()).height()*0.25);
@@ -436,7 +433,6 @@ function Writer(config) {
 						e = e.parentNode;
 					}
 					
-	//				_onNodeChangeHandler(ed, cm, e);
 					// use setTimeout to add to the end of the onNodeChange stack
 					window.setTimeout(function(){
 //						console.log('fireNodeChange');
@@ -485,7 +481,7 @@ function Writer(config) {
 			$.vakata.context.hide();
 		}
 		// hide editor menu
-		if ($('#menu_editor_contextmenu:visible').length > 0 && target.parents('#menu_editor_contextmenu').length == 0) {
+		if ($('#menu_editor_contextmenu:visible').length > 0 && target.parents('#menu_editor_contextmenu, #menu_structTagsContextMenu, #menu_changeTagContextMenu').length == 0) {
 			w.editor.execCommand('hideContextMenu', w.editor, evt);
 		}
 	};
@@ -640,7 +636,9 @@ function Writer(config) {
 			alert('Error: you must specify a delegator in the Writer config for full functionality!');
 		}
 		
-		$(document.body).click(_hideContextMenus);
+		$(document.body).mousedown(function(e) {
+			_hideContextMenus(e);
+		});
 		$('#westTabs').tabs({
 			active: 1,
 			activate: function(event, ui) {

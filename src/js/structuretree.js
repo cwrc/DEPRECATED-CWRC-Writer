@@ -9,7 +9,9 @@ function StructureTree(config) {
 		CONTENTS_SELECTED: 1
 	};
 	
-	var ignoreSelect = false; // used when we want to highlight a node without selecting it's counterpart in the editor
+	// 2 uses, 1) we want to highlight a node in the tree without selecting it's counterpart in the editor
+	// 2) a tree node has been clicked and we want to avoid re-running the selectNode function triggered by the editor's onNodeChange handler
+	var ignoreSelect = false;
 	
 	var $tree; // tree reference
 	
@@ -25,7 +27,7 @@ function StructureTree(config) {
 			openNodes.push(id);
 		});
 		
-		$tree.jstree('delete_node', '#root');
+		treeRef.delete_node('#root');
 		
 		var root = {
 			data: 'Tags',
@@ -49,10 +51,13 @@ function StructureTree(config) {
 	
 	tree.selectNode = function(node) {
 		var id = node.id;
-		if (id) {
+		if (id && !ignoreSelect) {
 			ignoreSelect = true;
+			if (id == 'entityHighlight') {
+				id = $(node).find('[_entity]').first().attr('name');
+			}
 			var treeNode = $('#tree [name="'+id+'"]');
-			if (treeNode.length == 0) {
+			if (treeNode.length === 0) {
 				var parents = [];
 				$(node).parentsUntil('#tinymce').each(function(index, el) {
 					parents.push(el.id);
@@ -68,11 +73,19 @@ function StructureTree(config) {
 				}
 				treeNode = $('#tree [name="'+id+'"]');
 			}
+			_onNodeDeselect(); // manually trigger deselect behaviour, primarily to clear currentlySelectedNode
 			var result = $tree.jstree('select_node', treeNode, true);
 			if (result.attr('id') == 'tree') ignoreSelect = false;
 		}
 	};
 	
+	tree.enableHotkeys = function() {
+		$.jstree._reference('#tree').enable_hotkeys();
+	};
+	
+	tree.disableHotkeys = function() {
+		$.jstree._reference('#tree').disable_hotkeys();
+	};
 	
 	
 	function _doUpdate(children, nodeParent, level) {
@@ -130,12 +143,23 @@ function StructureTree(config) {
 					}
 					nodeParent.children.push({
 						data: info._tag,
-						attr: {name: id, 'class': node.attr('class')}
+						attr: {name: id}
 						,state: level < 2 ? 'open' : null
 					});
 					
 					newNodeParent = nodeParent.children[nodeParent.children.length-1];
 				}
+			} else if (node.attr('_entity') && node.hasClass('start')) {
+				var id = node.attr('name');
+				var type = node.attr('_type');
+				if (nodeParent.children == null) {
+					nodeParent.children = [];
+				}
+				nodeParent.children.push({
+					data: type,
+					attr: {name: id}//, 'class': type}
+					,state: level < 2 ? 'open' : null
+				});
 			}
 			if (node.attr('_tag') != w.header) {
 				_doUpdate(node.children(), newNodeParent, level+1);
@@ -155,33 +179,39 @@ function StructureTree(config) {
 		if (!ignoreSelect) {
 			var node = data.rslt.obj;
 			var id = node.attr('name');
-			var selectContents = node.children('a').hasClass('contentsSelected');
+			var aChildren = node.children('a');
+			var selectContents = aChildren.hasClass('contentsSelected');
 			_removeCustomClasses();
-			if (id && w.structs[id]) {
+			if (id) {
 				// already selected node, toggle selection type
 				if (id == tree.currentlySelectedNode) {
 					selectContents = !selectContents;
 				}
 				
 				if (selectContents) {
-					node.children('a').addClass('contentsSelected');
-					node.children('a').removeClass('nodeSelected');
+					aChildren.addClass('contentsSelected').removeClass('nodeSelected');
 				} else {
-					node.children('a').addClass('nodeSelected');
-					node.children('a').removeClass('contentsSelected');
+					aChildren.addClass('nodeSelected').removeClass('contentsSelected');
 				}
 				
 				tree.currentlySelectedNode = id;
 				tree.selectionType = selectContents ? tree.CONTENTS_SELECTED : tree.NODE_SELECTED;
 				
-				if (w.structs[id]._tag == w.header) {
-					w.dialogs.show('header');
-				} else {
-					w.selectStructureTag(id, selectContents);
+				if (w.structs[id] != null) {
+					if (w.structs[id]._tag == w.header) {
+						w.dialogs.show('header');
+					} else {
+						ignoreSelect = true; // set to true so tree.selectNode code isn't run by editor's onNodeChange handler 
+						w.selectStructureTag(id, selectContents);
+					}
+				} else if (w.entities[id] != null) {
+					tree.currentlySelectedNode = null;
+					tree.selectionType = null;
+					aChildren.addClass('nodeSelected').removeClass('contentsSelected');
+					w.highlightEntity(id, null, true);
 				}
 			}
 		}
-		
 		ignoreSelect = false;
 	}
 	
@@ -318,7 +348,7 @@ function StructureTree(config) {
 			drag_target: false
 		},
 		contextmenu: {
-			select_node: true,
+			select_node: false,
 			show_at_node: false,
 			items: function(node) {
 				_hidePopup();
@@ -328,83 +358,88 @@ function StructureTree(config) {
 				
 				var info = w.structs[node.attr('name')];
 
-				if (info._tag == w.root || info._tag == w.header) return {};
-				
-				var parentInfo = w.structs[parentNode.attr('name')];
-				
-				var validKeys = w.u.getChildrenForTag({tag: info._tag, type: 'element', returnType: 'array'});
-//				var parentKeys = w.u.getParentsForTag({tag: info._tag, returnType: 'array'});
-				var siblingKeys = {};
-				if (parentInfo) {
-					siblingKeys = w.u.getChildrenForTag({tag: parentInfo._tag, type: 'element', returnType: 'array'});
-				}
-				
-				var submenu = _getSubmenu(validKeys, info);
-//				var parentSubmenu = _getSubmenu(parentKeys, info);
-				var siblingSubmenu = _getSubmenu(siblingKeys, info);
-				
-
-				var items = {
-					'before': {
-						label: 'Insert Tag Before',
-						icon: 'img/tag_blue_add.png',
-						_class: 'submenu',
-						submenu: siblingSubmenu
-					},
-					'after': {
-						label: 'Insert Tag After',
-						icon: 'img/tag_blue_add.png',
-						_class: 'submenu',
-						submenu: siblingSubmenu
-					},
-//					'around': {
-//						label: 'Insert Tag Around',
-//						icon: 'img/tag_blue_add.png',
-//						_class: 'submenu',
-//						submenu: parentSubmenu
-//					},
-					'inside': {
-						label: 'Insert Tag Inside',
-						icon: 'img/tag_blue_add.png',
-						_class: 'submenu',
-						separator_after: true,
-						submenu: submenu
-					},
-					'change': {
-						label: 'Change Tag',
-						icon: 'img/tag_blue_edit.png',
-						_class: 'submenu',
-						submenu: siblingSubmenu
-					},
-					'edit': {
-						label: 'Edit Tag',
-						icon: 'img/tag_blue_edit.png',
-						action: function(obj) {
-							var offset = $('#vakata-contextmenu').offset();
-							var pos = {
-								x: offset.left,
-								y: offset.top
-							};
-							w.editor.execCommand('editTag', obj.attr('name'), pos);
-						}
+				// structure tag
+				if (info) {
+					if (info._tag == w.root || info._tag == w.header) return {};
+					
+					var parentInfo = w.structs[parentNode.attr('name')];
+					
+					var validKeys = w.u.getChildrenForTag({tag: info._tag, type: 'element', returnType: 'array'});
+	//				var parentKeys = w.u.getParentsForTag({tag: info._tag, returnType: 'array'});
+					var siblingKeys = {};
+					if (parentInfo) {
+						siblingKeys = w.u.getChildrenForTag({tag: parentInfo._tag, type: 'element', returnType: 'array'});
 					}
-//					'delete': {
-//						label: 'Remove Tag Only',
-//						icon: 'img/tag_blue_delete.png',
-//						action: function(obj) {
-//							w.tagger.removeStructureTag(obj.attr('name'));
-//						}
-//					},
-//					'delete_all': {
-//						label: 'Remove Tag and All Content',
-//						icon: 'img/tag_blue_delete.png',
-//						action: function(obj) {
-//							w.tagger.removeStructureTag(obj.attr('name'), true);
-//						}
-//					}
-				};
-
-				return items;
+					
+					var submenu = _getSubmenu(validKeys, info);
+	//				var parentSubmenu = _getSubmenu(parentKeys, info);
+					var siblingSubmenu = _getSubmenu(siblingKeys, info);
+					
+	
+					var items = {
+						'before': {
+							label: 'Insert Tag Before',
+							icon: 'img/tag_blue_add.png',
+							_class: 'submenu',
+							submenu: siblingSubmenu
+						},
+						'after': {
+							label: 'Insert Tag After',
+							icon: 'img/tag_blue_add.png',
+							_class: 'submenu',
+							submenu: siblingSubmenu
+						},
+	//					'around': {
+	//						label: 'Insert Tag Around',
+	//						icon: 'img/tag_blue_add.png',
+	//						_class: 'submenu',
+	//						submenu: parentSubmenu
+	//					},
+						'inside': {
+							label: 'Insert Tag Inside',
+							icon: 'img/tag_blue_add.png',
+							_class: 'submenu',
+							separator_after: true,
+							submenu: submenu
+						},
+						'change': {
+							label: 'Change Tag',
+							icon: 'img/tag_blue_edit.png',
+							_class: 'submenu',
+							submenu: siblingSubmenu
+						},
+						'edit': {
+							label: 'Edit Tag',
+							icon: 'img/tag_blue_edit.png',
+							action: function(obj) {
+								var offset = $('#vakata-contextmenu').offset();
+								var pos = {
+									x: offset.left,
+									y: offset.top
+								};
+								w.editor.execCommand('editTag', obj.attr('name'), pos);
+							}
+						}
+	//					'delete': {
+	//						label: 'Remove Tag Only',
+	//						icon: 'img/tag_blue_delete.png',
+	//						action: function(obj) {
+	//							w.tagger.removeStructureTag(obj.attr('name'));
+	//						}
+	//					},
+	//					'delete_all': {
+	//						label: 'Remove Tag and All Content',
+	//						icon: 'img/tag_blue_delete.png',
+	//						action: function(obj) {
+	//							w.tagger.removeStructureTag(obj.attr('name'), true);
+	//						}
+	//					}
+					};
+	
+					return items;
+				} else {
+					// entity tag
+				}
 			}
 		},
 		hotkeys: {
