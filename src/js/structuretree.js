@@ -4,6 +4,7 @@ function StructureTree(config) {
 	
 	var tree = {
 		currentlySelectedNode: null, // id of the currently selected node
+		currentlySelectedEntity: null, // id of the currently selected entity (as opposed to node, ie. struct tag)
 		selectionType: null, // is the node or the just the contents of the node selected?
 		NODE_SELECTED: 0,
 		CONTENTS_SELECTED: 1
@@ -198,6 +199,7 @@ function StructureTree(config) {
 				tree.selectionType = selectContents ? tree.CONTENTS_SELECTED : tree.NODE_SELECTED;
 				
 				if (w.structs[id] != null) {
+					tree.currentlySelectedEntity = null;
 					if (w.structs[id]._tag == w.header) {
 						w.dialogs.show('header');
 					} else {
@@ -205,9 +207,11 @@ function StructureTree(config) {
 						w.selectStructureTag(id, selectContents);
 					}
 				} else if (w.entities[id] != null) {
+					tree.currentlySelectedEntity = id;
 					tree.currentlySelectedNode = null;
 					tree.selectionType = null;
 					aChildren.addClass('nodeSelected').removeClass('contentsSelected');
+					ignoreSelect = true;
 					w.highlightEntity(id, null, true);
 				}
 			}
@@ -218,6 +222,7 @@ function StructureTree(config) {
 	function _onNodeDeselect() {
 		_removeCustomClasses();
 		tree.currentlySelectedNode = null;
+		tree.currentlySelectedEntity = null;
 		tree.selectionType = null;
 	}
 	
@@ -439,6 +444,27 @@ function StructureTree(config) {
 					return items;
 				} else {
 					// entity tag
+					return {
+						'editEntity': {
+							label: 'Edit Entity',
+							icon: 'img/tag_blue_edit.png',
+							action: function(obj) {
+								var offset = $('#vakata-contextmenu').offset();
+								var pos = {
+									x: offset.left,
+									y: offset.top
+								};
+								w.editor.execCommand('editTag', obj.attr('name'), pos);
+							}
+						},
+						'copyEntity': {
+							label: 'Copy Entity',
+							icon: 'img/tag_blue_copy.png',
+							action: function(obj) {
+								w.copyEntity(obj.attr('name'));
+							}
+						}
+					};
 				}
 			}
 		},
@@ -488,8 +514,8 @@ function StructureTree(config) {
 //	});
 	
 	$('#structureTreeActions button:eq(0)').button().click(function() {
-		if (tree.currentlySelectedNode != null) {
-			w.editor.execCommand('editTag', tree.currentlySelectedNode);
+		if (tree.currentlySelectedNode != null || tree.currentlySelectedEntity != null) {
+			w.editor.execCommand('editTag', tree.currentlySelectedNode || tree.currentlySelectedEntity);
 		} else {
 			w.dialogs.show('message', {
 				title: 'No Tag Selected',
@@ -501,8 +527,10 @@ function StructureTree(config) {
 	$('#structureTreeActions button:eq(1)').button().click(function() {
 		if (tree.currentlySelectedNode != null) {
 			w.tagger.removeStructureTag(tree.currentlySelectedNode, false);
-			tree.currentlySelectedNode = null;
-			tree.selectionType = null;
+			_onNodeDeselect();
+		} else if (tree.currentlySelectedEntity != null) {
+			w.removeEntity(tree.currentlySelectedEntity);
+			_onNodeDeselect();
 		} else {
 			w.dialogs.show('message', {
 				title: 'No Tag Selected',
@@ -514,8 +542,10 @@ function StructureTree(config) {
 	$('#structureTreeActions button:eq(2)').button().click(function() {
 		if (tree.currentlySelectedNode != null) {
 			w.tagger.removeStructureTag(tree.currentlySelectedNode, true);
-			tree.currentlySelectedNode = null;
-			tree.selectionType = null;
+			_onNodeDeselect();
+		} else if (tree.currentlySelectedEntity != null) {
+			w.removeEntity(tree.currentlySelectedEntity);
+			_onNodeDeselect();
 		} else {
 			w.dialogs.show('message', {
 				title: 'No Tag Selected',

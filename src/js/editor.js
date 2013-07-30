@@ -141,6 +141,7 @@ function Writer(config) {
 			var id = w.tagger.addEntityTag(type);
 			w.entities[id].info = info;
 			w.entitiesList.update();
+			w.tree.update();
 			w.highlightEntity(id);
 		}
 		w.editor.currentBookmark = null;
@@ -190,6 +191,7 @@ function Writer(config) {
 			
 			w.entities[newEntity.props.id] = newEntity;
 			w.entitiesList.update();
+			w.tree.update();
 			w.highlightEntity(newEntity.props.id);
 		}
 	};
@@ -204,6 +206,7 @@ function Writer(config) {
 		parent.normalize();
 		w.highlightEntity();
 		w.entitiesList.remove(id);
+		w.tree.update();
 		w.editor.currentEntity = null;
 	};
 	

@@ -2,6 +2,7 @@ var SearchDialog = function(config) {
 	var w = config.writer;
 	
 	var currentType = null;
+	var currentId = null;
 	
 	var mode = null;
 	var ADD = 0;
@@ -191,12 +192,13 @@ var SearchDialog = function(config) {
 			if (data) data.certainty = $('#certainty input:checked').val();
 		}
 		if (mode == EDIT && data != null) {
-			w.editEntity(w.editor.currentEntity, data);
+			w.editEntity(currentId, data);
 		} else {
 			w.finalizeEntity(currentType, data);
 		}
 		search.dialog('close');
 		currentType = null;
+		currentId = null;
 	};
 	
 	var createNew = function() {
@@ -211,7 +213,8 @@ var SearchDialog = function(config) {
 			var query;
 			if (mode == EDIT) {
 				prefix = 'Edit ';
-				query = w.entities[w.editor.currentEntity].props.content;
+				currentId = config.entry.props.id;
+				query = config.entry.props.content;
 			} else {
 				query = w.editor.currentBookmark.rng.toString();
 			}

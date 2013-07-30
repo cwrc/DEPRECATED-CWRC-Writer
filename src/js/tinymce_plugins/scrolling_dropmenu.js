@@ -273,7 +273,6 @@
 			s.parent = t;
 			s.constrain = s.constrain || cs.constrain;
 			s['class'] = s['class'] || cs['class'];
-			console.log(s['class']);
 			s.vp_offset_x = s.vp_offset_x || cs.vp_offset_x;
 			s.vp_offset_y = s.vp_offset_y || cs.vp_offset_y;
 			s.keyboard_focus = cs.keyboard_focus;
