@@ -133,12 +133,12 @@
 			});
 			
 			$(document.body).append(''+
-				'<div id="schemaDialog">'+
-					'<div id="attributeSelector"><h2>Attributes</h2><ul></ul></div>'+
-					'<div id="attsContainer">'+
-						'<div id="level1Atts"></div>'+
-						'<div id="highLevelAtts"></div>'+
-						'<div id="schemaHelp"></div>'+
+				'<div id="schemaDialog" class="attributeWidget">'+
+					'<div class="attributeSelector"><h2>Attributes</h2><ul></ul></div>'+
+					'<div class="attsContainer">'+
+						'<div class="level1Atts"></div>'+
+						'<div class="highLevelAtts"></div>'+
+						'<div class="schemaHelp"></div>'+
 					'</div>'+
 				'</div>'
 			);
@@ -235,11 +235,13 @@
 			
 			t.isDirty = false;
 			
-			$('#attributeSelector ul, #level1Atts, #highLevelAtts, #schemaHelp').empty();
+			var parent = $('#schemaDialog');
+			
+			$('.attributeSelector ul, .level1Atts, .highLevelAtts, .schemaHelp', parent).empty();
 			
 			var helpText = this.editor.execCommand('getDocumentationForTag', key);
 			if (helpText != '') {
-				$('#schemaHelp').html('<h3>'+key+' Documentation</h3><p>'+helpText+'</p>');
+				$('.schemaHelp', parent).html('<h3>'+key+' Documentation</h3><p>'+helpText+'</p>');
 			}
 			
 			var atts = t.editor.writer.u.getChildrenForTag({tag: key, type: 'attribute', returnType: 'array'});
@@ -304,11 +306,11 @@
 				}
 			}
 			
-			$('#attributeSelector ul').html(attributeSelector);
-			$('#level1Atts').html(level1Atts);
-			$('#highLevelAtts').html(highLevelAtts);
+			$('.attributeSelector ul', parent).html(attributeSelector);
+			$('.level1Atts', parent).html(level1Atts);
+			$('.highLevelAtts', parent).html(highLevelAtts);
 			
-			$('#attributeSelector li').click(function() {
+			$('.attributeSelector li', parent).click(function() {
 				if ($(this).hasClass('required')) return;
 				
 				var name = $(this).attr('id').split('select_')[1].replace(/:/g, '\\:');
@@ -321,23 +323,22 @@
 				}
 			});
 			
-			$('#schemaDialog ins').tooltip({
+			$('ins', parent).tooltip({
 				tooltipClass: 'cwrc-tooltip'
 			});
 			
-			$('#schemaDialog input, #schemaDialog select, #schemaDialog option').change(function(event) {
+			$('input, select, option', parent).change(function(event) {
 				t.isDirty = true;
-			});
-			$('#schemaDialog select, #schemaDialog option').click(function(event) {
-				t.isDirty = true;
-			});
-			
-			$('#schemaDialog input, #schemaDialog select, #schemaDialog option').keyup(function(event) {
+			}).keyup(function(event) {
 				if (event.keyCode == '13') {
 					event.preventDefault();
 					if (t.isDirty) t.result();
 					else t.cancel(); 
 				}
+			});
+			
+			$('select, option', parent).click(function(event) {
+				t.isDirty = true;
 			});
 			
 			t.schemaDialog.dialog('option', 'title', key);
@@ -349,42 +350,43 @@
 			t.schemaDialog.dialog('open');
 			
 			$('#schemaOkButton').focus();
-			$('#schemaDialog input, #schemaDialog select').first().focus();
+			$('input, select', parent).first().focus();
 		},
 		
 		result: function() {
 			var t = this;
+			var parent = $('#schemaDialog');
+			
+			// collect values then close dialog
+			var attributes = {};
+			$('.attsContainer > div > div:visible', parent).children('input[type!="hidden"], select').each(function(index, el) {
+				attributes[$(this).attr('name')] = $(this).val();
+			});
+			
+			// validation
+			var invalid = [];
+			$('.attsContainer span.required', parent).parent().children('label').each(function(index, el) {
+				if (attributes[$(this).text()] == '') {
+					invalid.push($(this).text());
+				}
+			});
+			if (invalid.length > 0) {
+				for (var i = 0; i < invalid.length; i++) {
+					var name = invalid[i];
+					$('.attsContainer *[name="'+name+'"]', parent).css({borderColor: 'red'}).keyup(function(event) {
+						$(this).css({borderColor: '#ccc'});
+					});
+				}
+				return;
+			}
+			
+			attributes._tag = t.currentKey;
 			
 			t.schemaDialog.dialog('close');
 			// check if beforeClose cancelled or not
 			if (t.schemaDialog.is(':hidden')) {
-				$('#schemaDialog ins').tooltip('destroy');
-				
+				$('ins', parent).tooltip('destroy');
 				t.editor.writer.tree.enableHotkeys();
-				
-				var attributes = {};
-				$('#attsContainer > div > div:visible').children('input[type!="hidden"], select').each(function(index, el) {
-					attributes[$(this).attr('name')] = $(this).val();
-				});
-				
-				// validation
-				var invalid = [];
-				$('#attsContainer span.required').parent().children('label').each(function(index, el) {
-					if (attributes[$(this).text()] == '') {
-						invalid.push($(this).text());
-					}
-				});
-				if (invalid.length > 0) {
-					for (var i = 0; i < invalid.length; i++) {
-						var name = invalid[i];
-						$('#attsContainer *[name="'+name+'"]').css({borderColor: 'red'}).keyup(function(event) {
-							$(this).css({borderColor: '#ccc'});
-						});
-					}
-					return;
-				}
-				
-				attributes._tag = t.currentKey;
 				
 				switch (t.mode) {
 					case t.ADD:

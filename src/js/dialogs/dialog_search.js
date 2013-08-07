@@ -9,7 +9,7 @@ var SearchDialog = function(config) {
 	var EDIT = 1;
 	
 	$(document.body).append(''+
-	'<div id="searchDialog">'+
+	'<div id="searchDialog" class="annotationDialog">'+
 		// need absolute positioning so accordion height is calculated properly
 	    '<div style="position: absolute; top: 10px; left: 10px; right: 10px; height: 31px;">'+
 		    '<label for="search_query">Search</label>'+

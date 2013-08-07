@@ -495,6 +495,14 @@ label {
 	height: 300px;
 }
 
+.annotationDialog p {
+	margin: 5px 0px;
+}
+
+.annotationDialog > div {
+	margin-bottom: 15px;
+}
+
 #titleDialog div, #correctionDialog div {
 	margin-bottom: 10px;
 }
@@ -507,16 +515,16 @@ label {
 	margin-bottom: 0;
 }
 
-#schemaDialog label {
+.attributeWidget label {
 	display: inline;
 }
 
-#schemaDialog input, #schemaDialog select {
+.attributeWidget input, .attributeWidget select {
 	width: 150px;
 	border: 1px solid #ccc;
 }
 
-#attributeSelector {
+.attributeWidget .attributeSelector {
 	border: 1px solid #999;
 	top: 5px;
 	bottom: 0;
@@ -524,7 +532,7 @@ label {
 	position: absolute;
 }
 
-#attributeSelector ul {
+.attributeWidget .attributeSelector ul {
 	list-style: none;
 	margin: 0;
 	padding: 0;
@@ -536,21 +544,21 @@ label {
 	bottom: 0;
 }
 
-#attributeSelector li {
+.attributeWidget .attributeSelector li {
 	padding: 3px;
 	background-color: #fff;
 }
 
-#attributeSelector li:hover {
+.attributeWidget .attributeSelector li:hover {
 	background-color: #ddd;
 	cursor: pointer;
 }
 
-#attributeSelector li.selected {
+.attributeWidget .attributeSelector li.selected {
 	background-color: #ccc;
 }
 
-#attsContainer {
+.attributeWidget .attsContainer {
 	position: absolute;
 	top: 5px;
 	right: 5px;
@@ -559,15 +567,15 @@ label {
 	overflow: auto;
 }
 
-#level1Atts, #highLevelAtts {
+.attributeWidget .level1Atts, .attributeWidget .highLevelAtts {
 	float: left;
 }
 
-#attsContainer label {
+.attributeWidget .attsContainer label {
 	width: 135px;
 }
 
-#schemaHelp {
+.attributeWidget .schemaHelp {
 	float: right;
 	width: 185px;
 }
@@ -638,7 +646,7 @@ label {
 	left: 67%;
 }
 
-#tripleDialog h2, #attributeSelector h2 {
+#tripleDialog h2, .attributeSelector h2 {
 	padding: 3px;
 	background-color: #ccc;
 	height: 16px;
