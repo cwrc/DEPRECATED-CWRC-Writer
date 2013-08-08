@@ -188,13 +188,13 @@ var SettingsDialog = function(writer, config) {
 		w.highlightEntity();
 		
 		for (var id in w.entities) {
-			var markers = w.editor.dom.select('entity[name="'+id+'"]');
+			var markers = w.editor.dom.select('[name="' + id + '"]');
 			var start = markers[0];
 			var end = markers[1];
 			var currentNode = start;
 			while (currentNode != end  && currentNode != null) {
 				currentNode = currentNode.nextSibling;
-				if (currentNode.nodeName.toLowerCase() == 'entity' && currentNode != end) {
+				if (currentNode.nodeType == 1 && currentNode.hasAttribute('_entity') && currentNode != end) {
 					return true;
 				}
 			}
