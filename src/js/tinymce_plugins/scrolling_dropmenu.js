@@ -357,13 +357,13 @@
 			if (e.which == 40) { // down key
 				this.keyboardNav.resetFocus();
 			} else {
-				var query = $(this.textInput).val();
+				var query = $(this.textInput).val().toLowerCase();
 				var item;
 				for (var itemId in this.items) {
 					item = this.items[itemId];
 					if (query == '') {
 						item.setDisabled(item.settings.initialFilterState);
-					} else if (!item.settings.initialFilterState && item.settings.key.indexOf(query) != -1) {
+					} else if (!item.settings.initialFilterState && item.settings.key.toLowerCase().indexOf(query) != -1) {
 						item.setDisabled(false);
 					} else {
 						item.setDisabled(true);

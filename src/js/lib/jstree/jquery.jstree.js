@@ -3634,9 +3634,9 @@
 							o.addClass("vakata-hover");
 							$(this).blur();
 						} else {
-							var query = $(this).val();
+							var query = $(this).val().toLowerCase();
 							$(this).parent().next('ul').children('li').each(function(index, el) {
-								if (query == '' || $('a', el).attr('rel').indexOf(query) != -1) {
+								if (query == '' || $('a', el).attr('rel').toLowerCase().indexOf(query) != -1) {
 									$(el).show();
 								} else {
 									$(el).hide();
