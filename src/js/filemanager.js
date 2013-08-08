@@ -491,21 +491,15 @@ function FileManager(config) {
 	};
 	
 	function _loadDocumentHandler(doc) {
-		if (doc.firstChild.nodeName == 'xml-model') {
+		var rootName = doc.firstChild.nodeName;
+		if (rootName == 'xml-model') {
 			var xmlModelData = doc.firstChild.data;
 			var schemaUrl = xmlModelData.match(/href="([^"]*)"/)[1];
 			var urlParts = schemaUrl.match(/^(.*):\/\/([a-z\-.]+)(?=:[0-9]+)?\/(.*)/);
 			var fileName = urlParts[3];
 			fm.loadSchema(fileName, false, processDocument);
 		} else {
-			var rootName;
-			if ($('[_tag='+w.root+']', doc.body).attr('_tag') == 'EVENTS') {
-				rootName = 'events';
-				w.idName = 'ID';
-			} else {
-				rootName = 'tei';
-				w.idName = 'xml:id';
-			}
+			rootName = rootName.toLowerCase();
 			if (rootName != w.root.toLowerCase()) {
 				// roots don't match so load the appropriate schema
 				if (rootName == 'events') {
