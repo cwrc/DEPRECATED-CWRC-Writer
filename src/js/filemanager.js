@@ -658,6 +658,8 @@ function FileManager(config) {
 							});
 							
 							ent.contents().unwrap();
+							
+							currentOffset += content.length;
 						} else {
 							processEntities($(this), offsets);
 						}
