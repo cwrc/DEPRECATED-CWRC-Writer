@@ -3,6 +3,11 @@ function Delegator(config) {
 	
 	var del = {};
 	
+	/**
+	 * @memberOf del
+	 * @param params
+	 * @param callback
+	 */
 	del.lookupEntity = function(params, callback) {
 		var type = params.type;
 		var query = params.query;

@@ -143,7 +143,8 @@ function FileManager(config) {
 				nodes.push(currentNode);
 			}
 			
-			w.editor.$(nodes).wrapAll('<entity id="'+id+'" _type="'+w.entities[id].props.type+'" />');			
+			var entString = '<entity id="'+id+'" _type="'+w.entities[id].props.type+'" />';
+			w.editor.$(nodes).wrapAll(entString);			
 			w.editor.$(markers).remove();
 		}
 	}
@@ -191,7 +192,7 @@ function FileManager(config) {
 		
 		// rdf
 		var rdfString = '';
-		if (includeRDF) {
+		if (w.mode == w.XMLRDF && includeRDF) {
 			rdfString = '\n<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:w="http://cwrctc.artsrn.ualberta.ca/#">';
 			
 			// xml mode
@@ -202,30 +203,33 @@ function FileManager(config) {
 			var relationships = _determineOffsetRelationships(offsets);
 			
 			// entity and struct listings
+			var includeStructRDF = false;
 			for (var i = 0; i < offsets.length; i++) {
 				var o = offsets[i];
-				rdfString += '\n<rdf:Description rdf:ID="'+o.id+'">';
-				var key;
-				for (key in o) {
-					rdfString += '\n\t<w:'+key+' type="offset">'+o[key]+'</w:'+key+'>';
+				if (includeStructRDF || o.entity) {
+					rdfString += '\n<rdf:Description rdf:ID="'+o.id+'">';
+					var key;
+					for (key in o) {
+						rdfString += '\n\t<w:'+key+' type="offset">'+o[key]+'</w:'+key+'>';
+					}
+					if (o.entity) {
+						var entry = w.entities[o.id];
+						rdfString += '\n\t<w:type type="props">'+entry.props.type+'</w:type>';
+						rdfString += '\n\t<w:content type="props">'+entry.props.content+'</w:content>';
+						for (key in entry.info) {
+							rdfString += '\n\t<w:'+key+' type="info">'+entry.info[key]+'</w:'+key+'>';
+						}
+						
+						var r = relationships[o.id];
+						for (var j = 0; j < r.contains.length; j++) {
+							rdfString += '\n\t<w:contains>'+r.contains[j]+'</w:contains>';
+						}
+						for (var j = 0; j < r.overlaps.length; j++) {
+							rdfString += '\n\t<w:overlaps>'+r.overlaps[j]+'</w:overlaps>';
+						}
+					}
+					rdfString += '\n</rdf:Description>';
 				}
-				if (o.entity) {
-					var entry = w.entities[o.id];
-					rdfString += '\n\t<w:type type="props">'+entry.props.type+'</w:type>';
-					rdfString += '\n\t<w:content type="props">'+entry.props.content+'</w:content>';
-					for (key in entry.info) {
-						rdfString += '\n\t<w:'+key+' type="info">'+entry.info[key]+'</w:'+key+'>';
-					}
-					
-					var r = relationships[o.id];
-					for (var j = 0; j < r.contains.length; j++) {
-						rdfString += '\n\t<w:contains>'+r.contains[j]+'</w:contains>';
-					}
-					for (var j = 0; j < r.overlaps.length; j++) {
-						rdfString += '\n\t<w:overlaps>'+r.overlaps[j]+'</w:overlaps>';
-					}
-				}
-				rdfString += '\n</rdf:Description>';
 			}
 			
 			// triples
@@ -241,7 +245,12 @@ function FileManager(config) {
 			rdfString += '\n</rdf:RDF>\n';
 		}
 		
-		convertEntitiesToTags();
+		if (w.mode == w.XMLRDF) {
+			// remove the entity tags since they'll be in the rdf
+			body.find('[_entity]').remove();
+		} else {
+			convertEntitiesToTags();
+		}
 		
 		var root = body.children('[_tag='+w.root+']');
 		// make sure TEI has the right namespace for validation purposes
@@ -251,15 +260,16 @@ function FileManager(config) {
 		var tags = _nodeToStringArray(root);
 		xmlString += tags[0];
 		
-		xmlString += rdfString;
-		
+		var bodyString = '';
 		root.contents().each(function(index, el) {
 			if (el.nodeType == 1) {
-				xmlString += fm.buildXMLString($(el));
+				bodyString += fm.buildXMLString($(el));
 			} else if (el.nodeType == 3) {
-				xmlString += el.data;
+				bodyString += el.data;
 			}
 		});
+		
+		xmlString += rdfString + bodyString;
 		
 		xmlString += tags[1];
 		
@@ -515,14 +525,18 @@ function FileManager(config) {
 		function processDocument() {
 			var offsets = [];
 			
+			var docMode;
 			var rdfs = $(doc).find('rdf\\:RDF, RDF');
 			
-			var docMode;
-			var mode = parseInt(rdfs.find('w\\:mode, mode').first().text());
-			if (mode == w.XML) {
-				docMode = w.XML;
+			if (rdfs.length) {
+				var mode = parseInt(rdfs.find('w\\:mode, mode').first().text());
+				if (mode == w.XML) {
+					docMode = w.XML;
+				} else {
+					docMode = w.XMLRDF;
+				}
 			} else {
-				docMode = w.XMLRDF;
+				docMode = w.XML;
 			}
 			
 			if (w.mode != docMode) {
@@ -587,25 +601,26 @@ function FileManager(config) {
 						var object = rdf.find('rdf\\:Description, Description');
 						var objectUri = object.attr('rdf:about');
 						
-						var triple = {
-							subject: {
-								uri: subjectUri,
-								text: subject.attr('w:external') == 'false' ? w.entities[subjectUri].props.title : subjectUri,
-								external: subject.attr('w:external, external')
-							},
-							predicate: {
-								text: predicate.attr('w:text'),
-								name: predicate[0].nodeName.split(':')[1].toLowerCase(),
-								external: predicate.attr('w:external')
-							},
-							object: {
-								uri: objectUri,
-								text: object.attr('w:external') == 'false' ? w.entities[objectUri].props.title : objectUri,
-								external: object.attr('w:external')
-							}
-						};
-						
-						w.triples.push(triple);
+						if (w.entities[subjectUri] != null && w.entities[objectUri] != null) {
+							var triple = {
+								subject: {
+									uri: subjectUri,
+									text: subject.attr('w:external') == 'false' ? w.entities[subjectUri].props.title : subjectUri,
+									external: subject.attr('w:external, external')
+								},
+								predicate: {
+									text: predicate.attr('w:text'),
+									name: predicate[0].nodeName.split(':')[1].toLowerCase(),
+									external: predicate.attr('w:external')
+								},
+								object: {
+									uri: objectUri,
+									text: object.attr('w:external') == 'false' ? w.entities[objectUri].props.title : objectUri,
+									external: object.attr('w:external')
+								}
+							};
+							w.triples.push(triple);
+						}
 					}
 				});
 				$(doc).find('rdf\\:RDF, RDF').remove();

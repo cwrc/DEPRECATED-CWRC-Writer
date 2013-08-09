@@ -164,7 +164,8 @@ var SettingsDialog = function(writer, config) {
 		}
 		settings.showStructBrackets = $('#showstructbrackets').prop('checked');
 		
-		w.validationSchema = $('select[name="schema"]', $('#settingsDialog')).val();
+		// TODO validationSchema is currently a filename
+//		w.validationSchema = $('select[name="schema"]', $('#settingsDialog')).val();
 		
 		var styles = {
 			fontSize: settings.fontSize,

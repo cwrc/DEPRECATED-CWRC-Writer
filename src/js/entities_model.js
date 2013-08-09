@@ -5,14 +5,14 @@ var EntitiesModel = function() {
 		person: {
 			title: 'Person',
 			mapping: {
-				cwrcbasic: '<person cert="${info.certainty}">[[[editorText]]]</person>',
+				tei: '<person cert="${info.certainty}">[[[editorText]]]</person>',
 				events: '<NAME>[[[editorText]]]</NAME>'
 			}
 		},
 		date: {
 			title: 'Date',
 			mapping: {
-				cwrcbasic: ''+
+				tei: ''+
 				'<date '+
 				'{{if info.date}}'+
 					'when="${info.date}"'+
@@ -31,46 +31,46 @@ var EntitiesModel = function() {
 		place: {
 			title: 'Place',
 			mapping: {
-				cwrcbasic: '<place cert="${info.certainty}">[[[editorText]]]</place>',
+				tei: '<place cert="${info.certainty}">[[[editorText]]]</place>',
 				events: '<PLACE>[[[editorText]]]</PLACE>'
 			}
 		},
 		event: {
 			title: 'Event',
 			mapping: {
-				cwrcbasic: '<event cert="${info.certainty}">[[[editorText]]]</event>'
+				tei: '<event cert="${info.certainty}">[[[editorText]]]</event>'
 			}
 		},
 		org: {
 			title: 'Organization',
 			mapping: {
-				cwrcbasic: '<org cert="${info.certainty}">[[[editorText]]]</org>',
+				tei: '<org cert="${info.certainty}">[[[editorText]]]</org>',
 				events: '<ORGNAME>[[[editorText]]]</ORGNAME>'
 			}
 		},
 		citation: {
 			title: 'Citation',
 			mapping: {
-				cwrcbasic: '<cit><quote>[[[editorText]]]</quote><ref>${info.citation}</ref></cit>'
+				tei: '<cit><quote>[[[editorText]]]</quote><ref>${info.citation}</ref></cit>'
 			}
 		},
 		note: {
 			title: 'Note',
 			mapping: {
-				cwrcbasic: '<note type="${info.type}" ana="${info.content}">[[[editorText]]]</note>'
+				tei: '<note type="${info.type}" ana="${info.content}">[[[editorText]]]</note>'
 			}
 		},
 		correction: {
 			title: 'Correction',
 			mapping: {
-				cwrcbasic: '<sic><corr cert="${info.certainty}" type="${info.type}" ana="${info.content}">[[[editorText]]]</corr></sic>',
+				tei: '<sic><corr cert="${info.certainty}" type="${info.type}" ana="${info.content}">[[[editorText]]]</corr></sic>',
 				events: '<SIC CORR="${info.content}">[[[editorText]]]</SIC>'
 			}
 		},
 		keyword: {
 			title: 'Keyword',
 			mapping: {
-				cwrcbasic: ''+
+				tei: ''+
 				'<keywords scheme="http://classificationweb.net">'+
 					'<term '+
 					'{{if info.id}}'+
@@ -86,14 +86,14 @@ var EntitiesModel = function() {
 		link: {
 			title: 'Link',
 			mapping: {
-				cwrcbasic: '<ref target="${info.url}">[[[editorText]]]</ref>',
+				tei: '<ref target="${info.url}">[[[editorText]]]</ref>',
 				events: '<XREF URL="${info.url}">[[[editorText]]]</XREF>'
 			}
 		},
 		title: {
 			title: 'Text/Title',
 			mapping: {
-				cwrcbasic: '<title level="${info.level}">[[[editorText]]]</title>',
+				tei: '<title level="${info.level}">[[[editorText]]]</title>',
 				events: '<TITLE TITLETYPE="${info.level}">[[[editorText]]]</TITLE>'
 			}
 		}
@@ -112,7 +112,7 @@ var EntitiesModel = function() {
 	 * @returns {Boolean}
 	 */
 	pm.isEntity = function(type) {
-		return entities[type] == null;
+		return entities[type] != null;
 	};
 	pm.getTitle = function(type) {
 		var e = entities[type];
@@ -135,6 +135,12 @@ var EntitiesModel = function() {
 	pm.getMappingTags = function(entity, schema) {
 		var e = entities[entity.props.type];
 		if (e) {
+			if (schema.indexOf('events') != -1) {
+				schema = 'events';
+			} else {
+				schema = 'tei';
+			}
+			
 			if (e.mapping && e.mapping[schema]) {
 				var result = doMapping(entity, e.mapping[schema]);
 				return result.split('[[[editorText]]]');

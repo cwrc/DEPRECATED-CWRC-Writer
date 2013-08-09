@@ -27,7 +27,8 @@ function Writer(config) {
 	w.mode = config.mode;
 	
 	// schema for validation (http://www.arts.ualberta.ca/~cwrc/schema/)
-	w.validationSchema = 'cwrcbasic';
+	// file name and path, relative to the server
+	w.validationSchema = null;
 	
 	// root block element, should come from schema
 	w.root = '';
