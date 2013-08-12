@@ -370,7 +370,10 @@ function FileManager(config) {
 		$.ajax({
 			url: docUrl,
 			type: 'GET',
-			success: _loadDocumentHandler,
+			success: function(doc, status, xhr) {
+				window.location.hash = '';
+				_loadDocumentHandler(doc);
+			},
 			error: function(xhr, status, error) {
 				w.currentDocId = null;
 				w.dialogs.show('message', {
@@ -384,6 +387,7 @@ function FileManager(config) {
 	};
 	
 	fm.loadDocumentFromXml = function(docXml) {
+		window.location.hash = '';
 		_loadDocumentHandler(docXml);
 	};
 	
@@ -397,7 +401,10 @@ function FileManager(config) {
 		$.ajax({
 			url: w.baseUrl+'editor/documents/'+docName,
 			type: 'GET',
-			success: _loadDocumentHandler,
+			success: function(doc, status, xhr) {
+				window.location.hash = '#'+docName;
+				_loadDocumentHandler(doc);
+			},
 			error: function(xhr, status, error) {
 				w.currentDocId = null;
 				w.dialogs.show('message', {
@@ -997,26 +1004,24 @@ function FileManager(config) {
 	fm.loadInitialDocument = function(start) {
 		if (start.match('load')) {
 			w.dialogs.filemanager.showLoader();
-		} else if (start.match('sample_letter')) {
-			_loadTemplate('xml/sample_letter.xml');
-		} else if (start.match('sample_poem')) {
-			_loadTemplate('xml/sample_poem.xml');
-		} else if (start.match('sample_biography')) {
-			_loadTemplate('xml/sample_biography.xml');
-		} else if (start.match('sample_writing')) {
-			_loadTemplate('xml/sample_writing.xml');
+		} else if (start.match('sample_') || start.match('template_')) {
+			var name = start.substr(1);
+			_loadTemplate('xml/'+name+'.xml', name);
 		} else if (start != '') {
-			_loadTemplate('xml/template_'+start.substr(1)+'.xml');
-		} else {
+			w.fm.loadDocument(start.substr(1));
+		} else if (PID != null){
 			w.fm.loadEMICDocument();
 		}
 	};
 	
-	function _loadTemplate(url) {
+	function _loadTemplate(url, hashName) {
 		$.ajax({
 			url: url,
 			dataType: 'xml',
 			success: function(data, status, xhr) {
+				if (hashName) {
+					window.location.hash = '#'+hashName;
+				}
 				var rdf = data.createElement('rdf:RDF');
 				var root;
 				if (data.childNodes) {

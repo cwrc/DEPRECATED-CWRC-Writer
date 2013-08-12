@@ -13,8 +13,16 @@ var FileManagerDialogs = function(config) {
 		'</div>'+
 		'<div class="column" style="right: 10px;">'+
 		'<h2>Templates</h2><ul class="searchResults">'+
-		'<li class="unselectable" class="unselectable" data-name="#biography"><span>Orlando Biography</span></li><li class="unselectable" data-name="#writing"><span>Orlando Writing</span></li><li class="unselectable" data-name="#letter"><span>Letter</span></li><li class="unselectable" data-name="#poem"><span>Poem</span></li><li class="unselectable" data-name="#prose"><span>Prose</span></li><li class="unselectable" data-name="#event"><span>Event</span></li>'+
-		'<li class="unselectable" data-name="#sample_biography"><span>Sample Orlando Biography</span></li><li class="unselectable" data-name="#sample_writing"><span>Sample Orlando Writing</span></li><li class="unselectable" data-name="#sample_letter"><span>Sample Letter</span></li><li class="unselectable last" data-name="#sample_poem"><span>Sample Poem</span></li>'+
+		'<li class="unselectable" data-name="#template_biography"><span>Orlando Biography</span></li>'+
+		'<li class="unselectable" data-name="#template_writing"><span>Orlando Writing</span></li>'+
+		'<li class="unselectable" data-name="#template_letter"><span>Letter</span></li>'+
+		'<li class="unselectable" data-name="#template_poem"><span>Poem</span></li>'+
+		'<li class="unselectable" data-name="#template_prose"><span>Prose</span></li>'+
+		'<li class="unselectable" data-name="#template_event"><span>Event</span></li>'+
+		'<li class="unselectable" data-name="#sample_biography"><span>Sample Orlando Biography</span></li>'+
+		'<li class="unselectable" data-name="#sample_writing"><span>Sample Orlando Writing</span></li>'+
+		'<li class="unselectable" data-name="#sample_letter"><span>Sample Letter</span></li>'+
+		'<li class="unselectable last" data-name="#sample_poem"><span>Sample Poem</span></li>'+
 		'</ul>'+
 		'</div>'+
 		'</div>'+
