@@ -530,6 +530,13 @@ function FileManager(config) {
 		}
 		
 		function processDocument() {
+			// reset the stores
+			w.entities = {};
+			w.structs = {};
+			w.triples = [];
+			w.deletedEntities = {};
+			w.deletedStructs = {};
+			
 			var offsets = [];
 			
 			var docMode;
@@ -684,6 +691,7 @@ function FileManager(config) {
 			// editor needs focus in order for entities to be properly inserted
 			w.editor.focus();
 			
+			// insert entities
 			var id, o, parent, contents, lengthCount, match, startOffset, endOffset, startNode, endNode;
 			for (var i = 0; i < offsets.length; i++) {
 				startNode = null;
