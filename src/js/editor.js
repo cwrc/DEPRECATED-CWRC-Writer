@@ -397,15 +397,15 @@ function Writer(config) {
 		
 		// enter key
 		if (evt.which == 13) {
-			// TODO not successful for multiple contiguous enter key presses
-			// look for empty tag inserted by enter
-			var currNode = $(ed.currentNode);
-			if (currNode.length == 1 && currNode.text() == '') {
-				currNode.text('\uFEFF'); // insert zero-width non-breaking space so empty tag takes up space (if block element)
-				if (!w.u.isTagBlockLevel(currNode.attr('_tag'))) {
-					w.selectStructureTag(currNode.attr('id'), true);
-				}
+			// find the element inserted by tinymce
+			var idCounter = tinymce.DOM.counter-1;
+			var newTag = $('#struct_'+idCounter, ed.getBody());
+			if (newTag.text() == '') {
+				newTag.text('\uFEFF'); // insert zero-width non-breaking space so empty tag takes up space
 			}
+//			if (!w.u.isTagBlockLevel(newTag.attr('_tag'))) {
+//				w.selectStructureTag(newTag.attr('id'), true);
+//			}
 		}
 	};
 	
