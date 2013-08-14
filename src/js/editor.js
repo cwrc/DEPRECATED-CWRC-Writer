@@ -662,9 +662,15 @@ function Writer(config) {
 			}
 		});
 		
-		// TODO not getting fired
-		window.addEventListener('unload', function(e) {
-			alert('unload');
+		window.addEventListener('beforeunload', function(e) {
+			if (tinymce.get('editor').isDirty()) {
+				var msg = 'You have unsaved changes.';
+				(e || window.event).returnValue = msg;
+				return msg;
+			}
+		});
+		
+		$(window).unload(function(e) {
 			// clear the editor first (large docs can cause the browser to freeze)
 			w.u.getRootTag().remove();
 		});
