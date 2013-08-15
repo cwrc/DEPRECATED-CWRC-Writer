@@ -801,7 +801,7 @@ function Writer(config) {
 					ed.pasteAsPlainText = false;
 					
 					// highlight tracking
-					ed.onMouseUp.add(_onMouseUpHandler);
+					ed.onMouseUp.addToTop(_onMouseUpHandler);
 					
 					ed.onKeyDown.add(_onKeyDownHandler);
 					if (tinymce.isWebKit) {

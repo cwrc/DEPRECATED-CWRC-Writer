@@ -21,6 +21,7 @@
 			t.url = url;
 			t.editor = ed;
 			t.curPos = {};
+			t.showContextMenu = false; // whether to trigger the context menu (needed on mac)
 
 			contextmenuNeverUseNative = ed.settings.contextmenu_never_use_native;
 
@@ -39,7 +40,28 @@
 					return;
 
 				Event.cancel(e);
+				
+				if (tinymce.isMac) {
+					t.showContextMenu = true;
+				} else {
+					show(ed, e);
+				}
+			});
 
+			ed.onRemove.add(function() {
+				if (t._menu) {
+					t._menu.removeAll();
+				}
+			});
+			
+			ed.onMouseUp.add(function(ed, e) {
+				if (tinymce.isMac && t.showContextMenu) {
+					t.showContextMenu = false;
+					show(ed, e);
+				}
+			});
+			
+			function show(ed, e) {
 				// Select the image if it's clicked. WebKit would other wise expand the selection
 				if (e.target.nodeName == 'IMG') ed.selection.select(e.target);
 				
@@ -57,12 +79,7 @@
 				});
 
 				ed.nodeChanged();
-			});
-
-			ed.onRemove.add(function() {
-				if (t._menu)
-					t._menu.removeAll();
-			});
+			};
 
 			function hide(ed, e) {
 				realCtrlKey = 0;
@@ -73,7 +90,7 @@
 					realCtrlKey = e.ctrlKey;
 //					return; // don't return: if the user right clicks somewhere else, we want this menu to close
 				}
-
+				
 				if (t._menu) {
 					t._menu.removeAll();
 					t._menu.destroy();
