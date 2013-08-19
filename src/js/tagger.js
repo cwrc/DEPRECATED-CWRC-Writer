@@ -391,6 +391,10 @@ function Tagger(config) {
 		
 		var node = $('#'+id, w.editor.getBody());
 		if (removeContents) {
+			node.find('[_tag]').each(function(index, el) {
+				var childId = $(el).attr('id');
+				delete w.structs[childId];
+			});
 			node.remove();
 		} else {
 			var parent = node.parent()[0];
