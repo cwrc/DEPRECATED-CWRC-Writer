@@ -559,10 +559,10 @@ function Writer(config) {
 				spacing_open: 0,
 				spacing_closed: 0
 			},
-			east: {
-				size: 'auto',
-				minSize: 300
-			},
+//			east: {
+//				size: 'auto',
+//				minSize: 300
+//			},
 			south: {
 				size: 34,
 				resizable: false,
@@ -571,7 +571,7 @@ function Writer(config) {
 			},
 			west: {
 				size: 'auto',
-				minSize: 375,
+				minSize: 325,
 				onresize: function(region, pane, state, options) {
 					var tabsHeight = $('#westTabs > ul').outerHeight();
 					$('#westTabsContent').height(state.layoutHeight - tabsHeight);
