@@ -363,10 +363,6 @@ function FileManager(config) {
 	fm.loadDocumentFromUrl = function(docUrl) {
 		w.currentDocId = docUrl;
 		
-		w.entities = {};
-		w.structs = {};
-		w.triples = [];
-		
 		$.ajax({
 			url: docUrl,
 			type: 'GET',
@@ -394,10 +390,6 @@ function FileManager(config) {
 	fm.loadDocument = function(docName) {
 		w.currentDocId = docName;
 		
-		w.entities = {};
-		w.structs = {};
-		w.triples = [];
-		
 		$.ajax({
 			url: w.baseUrl+'editor/documents/'+docName,
 			type: 'GET',
@@ -420,10 +412,6 @@ function FileManager(config) {
 
 	fm.loadEMICDocument = function() {
 		w.currentDocId = PID;
-		
-		w.entities = {};
-		w.structs = {};
-		w.triples = [];
 		
 		$.ajax({
 			url: cwrc_params.BASE_PATH + '/cwrc/getCWRC/' + PID,
@@ -1023,6 +1011,8 @@ function FileManager(config) {
 	};
 	
 	function _loadTemplate(url, hashName) {
+		w.currentDocId = null;
+		
 		$.ajax({
 			url: url,
 			dataType: 'xml',
