@@ -17,7 +17,7 @@
 		 * @param {string} url Absolute URL to where the plugin is located.
 		 */
 		init : function(ed, url) {
-			var t = this, showMenu, contextmenuNeverUseNative, realCtrlKey;
+			var t = this, showMenu, hideMenu, contextmenuNeverUseNative, realCtrlKey;
 			t.url = url;
 			t.editor = ed;
 			t.curPos = {};
@@ -34,6 +34,10 @@
 			 */
 			t.onContextMenu = new tinymce.util.Dispatcher(this);
 
+			hideMenu = function(e) {
+				hide(ed, e);
+			};
+			
 			showMenu = ed.onContextMenu.add(function(ed, e) {
 				// Block TinyMCE menu on ctrlKey and work around Safari issue
 				if ((realCtrlKey !== 0 ? realCtrlKey : e.ctrlKey) && !contextmenuNeverUseNative)
@@ -54,13 +58,6 @@
 				}
 			});
 			
-			ed.onMouseUp.add(function(ed, e) {
-				if (tinymce.isMac && t.showContextMenu) {
-					t.showContextMenu = false;
-					show(ed, e);
-				}
-			});
-			
 			function show(ed, e) {
 				// Select the image if it's clicked. WebKit would other wise expand the selection
 				if (e.target.nodeName == 'IMG') ed.selection.select(e.target);
@@ -74,9 +71,7 @@
 				ed.currentBookmark = ed.selection.getBookmark(1);
 				
 				t._getMenu(ed).showMenu(x, y);
-				Event.add(ed.getDoc(), 'click', function(e) {
-					hide(ed, e);
-				});
+//				Event.add(ed.getDoc(), 'click', hideMenu);
 
 				ed.nodeChanged();
 			};
@@ -94,11 +89,21 @@
 				if (t._menu) {
 					t._menu.removeAll();
 					t._menu.destroy();
-					Event.remove(ed.getDoc(), 'click', hide);
+//					Event.remove(ed.getDoc(), 'click', hideMenu);
+					t._menu = null;
 				}
 			};
-			ed.addCommand('hideContextMenu', hide);
+			ed.addCommand('hideContextMenu', function(ed, e) {
+				hideMenu(e);
+			});
 
+			ed.onMouseUp.add(function(ed, e) {
+				if (tinymce.isMac && t.showContextMenu) {
+					t.showContextMenu = false;
+					t.hideDebug = true;
+					show(ed, e);
+				}
+			});
 			ed.onMouseDown.add(hide);
 			ed.onKeyDown.add(hide);
 			ed.onKeyDown.add(function(ed, e) {
