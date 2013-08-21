@@ -277,14 +277,20 @@ function FileManager(config) {
 		return xmlString;
 	};
 	
+	/**
+	 * Converts entities to unicode, while preserving those that must be escaped as entities.
+	 */
 	function _entitiesToUnicode(parentNode) {
 		var contents = $(parentNode).contents();
 		contents.each(function(index, el) {
 			if (el.nodeType == Node.TEXT_NODE) {
+				var nodeValue = el.nodeValue;
 				if (el.nodeValue.match(/&.+?;/gim)) {
 					$('#entitiesConverter')[0].innerHTML = el.nodeValue;
-					el.nodeValue = $('#entitiesConverter')[0].innerText || $('#entitiesConverter')[0].firstChild.nodeValue;
+					nodeValue = $('#entitiesConverter')[0].innerText || $('#entitiesConverter')[0].firstChild.nodeValue;
 				}
+				// the following characters must be escaped
+				el.nodeValue = nodeValue.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 			} else if (el.nodeType == Node.ELEMENT_NODE) {
 				_entitiesToUnicode(el);
 			}
