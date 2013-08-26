@@ -310,9 +310,9 @@ function StructureTree(config) {
 	
 	$(config.parentId).append('<div id="structure" class="tabWithLayout">'+
 			'<div id="tree" class="ui-layout-center"></div>'+
-			'<div id="structureTreeActions" class="ui-layout-south tabButtons">'+
-			'<button>Edit Tag</button><button>Remove Tag</button><button>Remove Tag and All Content</button>'+
-			'</div>'+
+//			'<div id="structureTreeActions" class="ui-layout-south tabButtons">'+
+//			'<button>Edit Tag</button><button>Remove Tag</button><button>Remove Tag and All Content</button>'+
+//			'</div>'+
 	'</div>');
 //	$(document.body).append('<div id="tree_popup"></div>');
 	
@@ -416,6 +416,7 @@ function StructureTree(config) {
 						'edit': {
 							label: 'Edit Tag',
 							icon: 'img/tag_blue_edit.png',
+							separator_after: true,
 							action: function(obj) {
 								var offset = $('#vakata-contextmenu').offset();
 								var pos = {
@@ -424,21 +425,21 @@ function StructureTree(config) {
 								};
 								w.editor.execCommand('editTag', obj.attr('name'), pos);
 							}
+						},
+						'delete': {
+							label: 'Remove Tag Only',
+							icon: 'img/tag_blue_delete.png',
+							action: function(obj) {
+								w.tagger.removeStructureTag(obj.attr('name'));
+							}
+						},
+						'delete_all': {
+							label: 'Remove Tag and All Content',
+							icon: 'img/tag_blue_delete.png',
+							action: function(obj) {
+								w.tagger.removeStructureTag(obj.attr('name'), true);
+							}
 						}
-	//					'delete': {
-	//						label: 'Remove Tag Only',
-	//						icon: 'img/tag_blue_delete.png',
-	//						action: function(obj) {
-	//							w.tagger.removeStructureTag(obj.attr('name'));
-	//						}
-	//					},
-	//					'delete_all': {
-	//						label: 'Remove Tag and All Content',
-	//						icon: 'img/tag_blue_delete.png',
-	//						action: function(obj) {
-	//							w.tagger.removeStructureTag(obj.attr('name'), true);
-	//						}
-	//					}
 					};
 	
 					return items;
@@ -513,47 +514,47 @@ function StructureTree(config) {
 //		_hidePopup();
 //	});
 	
-	$('#structureTreeActions button:eq(0)').button().click(function() {
-		if (tree.currentlySelectedNode != null || tree.currentlySelectedEntity != null) {
-			w.editor.execCommand('editTag', tree.currentlySelectedNode || tree.currentlySelectedEntity);
-		} else {
-			w.dialogs.show('message', {
-				title: 'No Tag Selected',
-				msg: 'You must first select a tag to edit.',
-				type: 'error'
-			});
-		}
-	});
-	$('#structureTreeActions button:eq(1)').button().click(function() {
-		if (tree.currentlySelectedNode != null) {
-			w.tagger.removeStructureTag(tree.currentlySelectedNode, false);
-			_onNodeDeselect();
-		} else if (tree.currentlySelectedEntity != null) {
-			w.removeEntity(tree.currentlySelectedEntity);
-			_onNodeDeselect();
-		} else {
-			w.dialogs.show('message', {
-				title: 'No Tag Selected',
-				msg: 'You must first select a tag to remove.',
-				type: 'error'
-			});
-		}
-	});
-	$('#structureTreeActions button:eq(2)').button().click(function() {
-		if (tree.currentlySelectedNode != null) {
-			w.tagger.removeStructureTag(tree.currentlySelectedNode, true);
-			_onNodeDeselect();
-		} else if (tree.currentlySelectedEntity != null) {
-			w.removeEntity(tree.currentlySelectedEntity);
-			_onNodeDeselect();
-		} else {
-			w.dialogs.show('message', {
-				title: 'No Tag Selected',
-				msg: 'You must first select a tag to remove.',
-				type: 'error'
-			});
-		}
-	});
+//	$('#structureTreeActions button:eq(0)').button().click(function() {
+//		if (tree.currentlySelectedNode != null || tree.currentlySelectedEntity != null) {
+//			w.editor.execCommand('editTag', tree.currentlySelectedNode || tree.currentlySelectedEntity);
+//		} else {
+//			w.dialogs.show('message', {
+//				title: 'No Tag Selected',
+//				msg: 'You must first select a tag to edit.',
+//				type: 'error'
+//			});
+//		}
+//	});
+//	$('#structureTreeActions button:eq(1)').button().click(function() {
+//		if (tree.currentlySelectedNode != null) {
+//			w.tagger.removeStructureTag(tree.currentlySelectedNode, false);
+//			_onNodeDeselect();
+//		} else if (tree.currentlySelectedEntity != null) {
+//			w.removeEntity(tree.currentlySelectedEntity);
+//			_onNodeDeselect();
+//		} else {
+//			w.dialogs.show('message', {
+//				title: 'No Tag Selected',
+//				msg: 'You must first select a tag to remove.',
+//				type: 'error'
+//			});
+//		}
+//	});
+//	$('#structureTreeActions button:eq(2)').button().click(function() {
+//		if (tree.currentlySelectedNode != null) {
+//			w.tagger.removeStructureTag(tree.currentlySelectedNode, true);
+//			_onNodeDeselect();
+//		} else if (tree.currentlySelectedEntity != null) {
+//			w.removeEntity(tree.currentlySelectedEntity);
+//			_onNodeDeselect();
+//		} else {
+//			w.dialogs.show('message', {
+//				title: 'No Tag Selected',
+//				msg: 'You must first select a tag to remove.',
+//				type: 'error'
+//			});
+//		}
+//	});
 	
 	return tree;
 };
