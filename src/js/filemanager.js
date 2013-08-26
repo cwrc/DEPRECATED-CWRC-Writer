@@ -52,33 +52,9 @@ function FileManager(config) {
 		if (w.currentDocId == null) {
 			w.dialogs.filemanager.showSaver();
 		} else {
-			function doSave() {
-				var docText = fm.getDocumentContent(true);
-				$.ajax({
-					url : w.baseUrl+'editor/documents/'+w.currentDocId,
-					type: 'PUT',
-					dataType: 'json',
-					data: docText,
-					success: function(data, status, xhr) {
-						w.editor.isNotDirty = 1; // force clean state
-						w.dialogs.show('message', {
-							title: 'Document Saved',
-							msg: w.currentDocId+' was saved successfully.'
-						});
-					},
-					error: function() {
-						w.dialogs.show('message', {
-							title: 'Error',
-							msg: 'An error occurred and '+w.currentDocId+' was not saved.',
-							type: 'error'
-						});
-					}
-				});
-			}
-			
-			function validationHandler(valid) {
+			w.delegator.validate(function (valid) {
 				if (valid) {
-					doSave();
+					w.delegator.saveDocument();
 				} else {
 					var doc = w.currentDocId;
 					if (doc == null) doc = 'The current document';
@@ -87,14 +63,12 @@ function FileManager(config) {
 						msg: doc+' is not valid. <b>Save anyways?</b>',
 						callback: function(yes) {
 							if (yes) {
-								doSave();
+								w.delegator.saveDocument();
 							}
 						}
 					});
 				}
-			}
-			
-			w.delegator.validate(validationHandler);
+			});
 		}
 	};
 	

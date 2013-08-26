@@ -74,7 +74,7 @@ function Delegator(config) {
 			success: function(data, status, xhr) {
 				if (callback) {
 					var valid = $('status', data).text() == 'pass';
-					callback(valid);
+					callback.call(w, valid);
 				} else {
 					w.validation.showValidationResult(data, docText);
 				}
@@ -96,6 +96,40 @@ function Delegator(config) {
 					msg: 'An error occurred while trying to validate the document.',
 					type: 'error'
 				});
+			}
+		});
+	};
+	
+	/**
+	 * Performs the server call to save the document.
+	 * @param callback Called with one boolean parameter: true for successful save, false otherwise
+	 */
+	del.saveDocument = function(callback) {
+		var docText = w.fm.getDocumentContent(true);
+		$.ajax({
+			url : w.baseUrl+'editor/documents/'+w.currentDocId,
+			type: 'PUT',
+			dataType: 'json',
+			data: docText,
+			success: function(data, status, xhr) {
+				w.editor.isNotDirty = 1; // force clean state
+				w.dialogs.show('message', {
+					title: 'Document Saved',
+					msg: w.currentDocId+' was saved successfully.'
+				});
+				if (callback) {
+					callback.call(w, true);
+				}
+			},
+			error: function() {
+				w.dialogs.show('message', {
+					title: 'Error',
+					msg: 'An error occurred and '+w.currentDocId+' was not saved.',
+					type: 'error'
+				});
+				if (callback) {
+					callback.call(w, false);
+				}
 			}
 		});
 	};

@@ -180,7 +180,9 @@ var FileManagerDialogs = function(config) {
 //					type: 'error'
 //				});
 				docNames = [];
-				callback.call();
+				if (callback) {
+					callback.call();
+				}
 			}
 		});
 	};
