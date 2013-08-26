@@ -117,6 +117,7 @@ function Delegator(config) {
 					title: 'Document Saved',
 					msg: w.currentDocId+' was saved successfully.'
 				});
+				window.location.hash = '#'+w.currentDocId;
 				if (callback) {
 					callback.call(w, true);
 				}
