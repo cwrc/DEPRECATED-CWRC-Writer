@@ -360,7 +360,10 @@
 			// collect values then close dialog
 			var attributes = {};
 			$('.attsContainer > div > div:visible', parent).children('input[type!="hidden"], select').each(function(index, el) {
-				attributes[$(this).attr('name')] = $(this).val();
+				var val = $(this).val();
+				if (val != '') { // ignore blank values
+					attributes[$(this).attr('name')] = val;
+				}
 			});
 			
 			// validation
