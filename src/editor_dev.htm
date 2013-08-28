@@ -58,6 +58,10 @@
 
 		<link type="text/css" rel="stylesheet" href="css/style.css" />
 		<link type="text/css" rel="stylesheet" href="css/islandora_style.css" />
+		
+		<link type="text/css" rel="stylesheet" href="smoothness/jquery-ui-1.9.0.custom.css" />
+		<link type="text/css" rel="stylesheet" href="css/layout-default-latest.css" />
+		<link type="text/css" rel="stylesheet" href="js/lib/snippet/jquery.snippet.css" />
 
 		<script type="text/javascript">
 			$(function() {
@@ -77,7 +81,8 @@
 					},
 					error: function() {
 						writer = new Writer({
-							delegator: Delegator
+							delegator: Delegator,
+							cwrcRootUrl: window.location.protocol+'//'+window.location.host+'/editor/test/'
 						});
 						writer.init();
 						writer.layout.close('east');

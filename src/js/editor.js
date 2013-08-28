@@ -19,7 +19,11 @@ function Writer(config) {
 	
 	w.project = config.project; // the current project (cwrc or russell)
 	
-	w.baseUrl = window.location.protocol+'//'+window.location.host+'/';
+	w.baseUrl = window.location.protocol+'//'+window.location.host+'/'; // the url for referencing various external services
+	w.cwrcRootUrl = config.cwrcRootUrl; // the url which points to the root of the cwrcwriter location
+	if (w.cwrcRootUrl == null) {
+		alert('Error: you must specify the cwrcRootUrl in the CWRCWriter config!');
+	}
 	
 	w.currentDocId = null;
 	
@@ -536,17 +540,6 @@ function Writer(config) {
 	 * Begin init functions
 	 */
 	w.init = function() {
-		var cssFiles = ['smoothness/jquery-ui-1.9.0.custom.css', 'css/layout-default-latest.css', 'js/lib/snippet/jquery.snippet.css'];
-		for (var i = 0; i < cssFiles.length; i++) {
-			var css = $('<link />');
-			css.attr({
-				rel: 'stylesheet',
-				type: 'text/css',
-				href: cssFiles[i]
-			});
-			$(document.head).append(css);
-		}
-		
 		w.layout = $(document.body).layout({
 			defaults: {
 				maskIframesOnResize: true,
@@ -637,7 +630,7 @@ function Writer(config) {
 		if (config.delegator != null) {
 			w.delegator = new config.delegator({writer: w});
 		} else {
-			alert('Error: you must specify a delegator in the Writer config for full functionality!');
+			alert('Error: you must specify a delegator in the CWRCWriter config for full functionality!');
 		}
 		
 		$(document.body).mousedown(function(e) {
@@ -831,105 +824,105 @@ function Writer(config) {
 				
 				for (var i = 0; i < plugins.length; i++) {
 					var name = plugins[i];
-					tinymce.PluginManager.load(name, '../../tinymce_plugins/'+name+'.js');
+					tinymce.PluginManager.load(name, w.cwrcRootUrl+'js/tinymce_plugins/'+name+'.js');
 				}
 				
-				ed.addButton('addperson', {title: 'Tag Person', image: 'img/user.png', 'class': 'entityButton person',
+				ed.addButton('addperson', {title: 'Tag Person', image: w.cwrcRootUrl+'img/user.png', 'class': 'entityButton person',
 					onclick : function() {
 						ed.execCommand('addEntity', 'person');
 					}
 				});
-				ed.addButton('addplace', {title: 'Tag Place', image: 'img/world.png', 'class': 'entityButton place',
+				ed.addButton('addplace', {title: 'Tag Place', image: w.cwrcRootUrl+'img/world.png', 'class': 'entityButton place',
 					onclick : function() {
 						ed.execCommand('addEntity', 'place');
 					}
 				});
-				ed.addButton('adddate', {title: 'Tag Date', image: 'img/calendar.png', 'class': 'entityButton date',
+				ed.addButton('adddate', {title: 'Tag Date', image: w.cwrcRootUrl+'img/calendar.png', 'class': 'entityButton date',
 					onclick : function() {
 						ed.execCommand('addEntity', 'date');
 					}
 				});
-				ed.addButton('addevent', {title: 'Tag Event', image: 'img/cake.png', 'class': 'entityButton event',
+				ed.addButton('addevent', {title: 'Tag Event', image: w.cwrcRootUrl+'img/cake.png', 'class': 'entityButton event',
 					onclick : function() {
 						ed.execCommand('addEntity', 'event');
 					}
 				});
-				ed.addButton('addorg', {title: 'Tag Organization', image: 'img/group.png', 'class': 'entityButton org',
+				ed.addButton('addorg', {title: 'Tag Organization', image: w.cwrcRootUrl+'img/group.png', 'class': 'entityButton org',
 					onclick : function() {
 						ed.execCommand('addEntity', 'org');
 					}
 				});
-				ed.addButton('addcitation', {title: 'Tag Citation', image: 'img/vcard.png', 'class': 'entityButton citation',
+				ed.addButton('addcitation', {title: 'Tag Citation', image: w.cwrcRootUrl+'img/vcard.png', 'class': 'entityButton citation',
 					onclick : function() {
 						ed.execCommand('addEntity', 'citation');
 					}
 				});
-				ed.addButton('addnote', {title: 'Tag Note', image: 'img/note.png', 'class': 'entityButton note',
+				ed.addButton('addnote', {title: 'Tag Note', image: w.cwrcRootUrl+'img/note.png', 'class': 'entityButton note',
 					onclick : function() {
 						ed.execCommand('addEntity', 'note');
 					}
 				});
-				ed.addButton('addcorrection', {title: 'Tag Correction', image: 'img/error.png', 'class': 'entityButton correction',
+				ed.addButton('addcorrection', {title: 'Tag Correction', image: w.cwrcRootUrl+'img/error.png', 'class': 'entityButton correction',
 					onclick : function() {
 						ed.execCommand('addEntity', 'correction');
 					}
 				});
-				ed.addButton('addkeyword', {title: 'Tag Keyword', image: 'img/page_key.png', 'class': 'entityButton keyword',
+				ed.addButton('addkeyword', {title: 'Tag Keyword', image: w.cwrcRootUrl+'img/page_key.png', 'class': 'entityButton keyword',
 					onclick : function() {
 						ed.execCommand('addEntity', 'keyword');
 					}
 				});
-				ed.addButton('addlink', {title: 'Tag Link', image: 'img/link.png', 'class': 'entityButton link',
+				ed.addButton('addlink', {title: 'Tag Link', image: w.cwrcRootUrl+'img/link.png', 'class': 'entityButton link',
 					onclick : function() {
 						ed.execCommand('addEntity', 'link');
 					}
 				});
-				ed.addButton('addtitle', {title: 'Tag Text/Title', image: 'img/book.png', 'class': 'entityButton textTitle',
+				ed.addButton('addtitle', {title: 'Tag Text/Title', image: w.cwrcRootUrl+'img/book.png', 'class': 'entityButton textTitle',
 					onclick : function() {
 						ed.execCommand('addEntity', 'title');
 					}
 				});
-				ed.addButton('editTag', {title: 'Edit Tag', image: 'img/tag_blue_edit.png', 'class': 'entityButton',
+				ed.addButton('editTag', {title: 'Edit Tag', image: w.cwrcRootUrl+'img/tag_blue_edit.png', 'class': 'entityButton',
 					onclick : function() {
 						ed.execCommand('editTag');
 					}
 				});
-				ed.addButton('removeTag', {title: 'Remove Tag', image: 'img/tag_blue_delete.png', 'class': 'entityButton',
+				ed.addButton('removeTag', {title: 'Remove Tag', image: w.cwrcRootUrl+'img/tag_blue_delete.png', 'class': 'entityButton',
 					onclick : function() {
 						ed.execCommand('removeTag');
 					}
 				});
-				ed.addButton('newbutton', {title: 'New', image: 'img/page_white_text.png', 'class': 'entityButton',
+				ed.addButton('newbutton', {title: 'New', image: w.cwrcRootUrl+'img/page_white_text.png', 'class': 'entityButton',
 					onclick: function() {
 						w.fm.newDocument();
 					}
 				});
-				ed.addButton('savebutton', {title: 'Save', image: 'img/save.png',
+				ed.addButton('savebutton', {title: 'Save', image: w.cwrcRootUrl+'img/save.png',
 					onclick: function() {
 						w.fm.saveDocument();
 					}
 				});
-				ed.addButton('saveasbutton', {title: 'Save As', image: 'img/save_as.png',
+				ed.addButton('saveasbutton', {title: 'Save As', image: w.cwrcRootUrl+'img/save_as.png',
 					onclick: function() {
 						w.dialogs.filemanager.showSaver();
 					}
 				});
-				ed.addButton('loadbutton', {title: 'Load', image: 'img/folder_page.png', 'class': 'entityButton',
+				ed.addButton('loadbutton', {title: 'Load', image: w.cwrcRootUrl+'img/folder_page.png', 'class': 'entityButton',
 					onclick: function() {
 						w.dialogs.filemanager.showLoader();
 					}
 				});
-				ed.addButton('editsource', {title: 'Edit Source', image: 'img/editsource.gif', 'class': 'wideButton',
+				ed.addButton('editsource', {title: 'Edit Source', image: w.cwrcRootUrl+'img/editsource.gif', 'class': 'wideButton',
 					onclick: function() {
 						w.fm.editSource();
 					}
 				});
-				ed.addButton('validate', {title: 'Validate', image: 'img/validate.png', 'class': 'entityButton',
+				ed.addButton('validate', {title: 'Validate', image: w.cwrcRootUrl+'img/validate.png', 'class': 'entityButton',
 					onclick: function() {
 						w.delegator.validate();
 					}
 				});
-				ed.addButton('addtriple', {title: 'Add Relation', image: 'img/chart_org.png', 'class': 'entityButton',
+				ed.addButton('addtriple', {title: 'Add Relation', image: w.cwrcRootUrl+'img/chart_org.png', 'class': 'entityButton',
 					onclick: function() {
 						$('#westTabs').tabs('select', 2);
 						w.dialogs.show('triple');
