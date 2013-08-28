@@ -74,7 +74,8 @@
 					success: function(data, status, xhr) {
 						writer = new Writer({
 							project: data,
-							delegator: Delegator
+							delegator: Delegator,
+							cwrcRootUrl: window.location.protocol+'//'+window.location.host+'/editor/test/'
 						});
 						writer.init();
 						writer.layout.close('east');
@@ -82,7 +83,7 @@
 					error: function() {
 						writer = new Writer({
 							delegator: Delegator,
-							cwrcRootUrl: window.location.protocol+'//'+window.location.host+'/editor/test/'
+							cwrcRootUrl: window.location.protocol+'//'+window.location.host+'/cwrc/'
 						});
 						writer.init();
 						writer.layout.close('east');
