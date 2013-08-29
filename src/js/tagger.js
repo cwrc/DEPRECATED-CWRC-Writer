@@ -412,5 +412,15 @@ function Tagger(config) {
 		w.editor.currentStruct = null;
 	};
 	
+	tagger.removeStructureTagContents = function(id) {
+		var node = $('#'+id, w.editor.getBody());
+		node.find('[_tag]').each(function(index, el) {
+			var childId = $(el).attr('id');
+			delete w.structs[childId];
+		});
+		node.contents().remove();
+		w.tree.update();
+	};
+	
 	return tagger;
 }

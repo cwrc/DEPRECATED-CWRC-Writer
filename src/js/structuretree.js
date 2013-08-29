@@ -433,6 +433,13 @@ function StructureTree(config) {
 								w.tagger.removeStructureTag(obj.attr('name'));
 							}
 						},
+						'delete_content': {
+							label: 'Remove Content Only',
+							icon: 'img/tag_blue_delete.png',
+							action: function(obj) {
+								w.tagger.removeStructureTagContents(obj.attr('name'));
+							}
+						},
 						'delete_all': {
 							label: 'Remove Tag and All Content',
 							icon: 'img/tag_blue_delete.png',

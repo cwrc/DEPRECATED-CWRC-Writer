@@ -316,9 +316,9 @@ function Writer(config) {
 				// cancel keyboard delete
 				tinymce.dom.Event.cancel(evt);
 				if (w.tree.selectionType == w.tree.NODE_SELECTED) {
-					$('#'+w.tree.currentlySelectedNode, ed.getBody()).remove();
+					w.tagger.removeStructureTag(w.tree.currentlySelectedNode, true);
 				} else {
-					$('#'+w.tree.currentlySelectedNode, ed.getBody()).contents().remove();
+					w.tagger.removeStructureTagContents(w.tree.currentlySelectedNode);
 				}
 			}
 		}
