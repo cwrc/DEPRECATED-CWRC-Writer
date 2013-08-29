@@ -469,6 +469,8 @@ function FileManager(config) {
 				schemaId = 'events';
 			} else if (fileName.toLowerCase().indexOf('biography') != -1) {
 				schemaId = 'biography';
+			} else if (fileName.toLowerCase().indexOf('writing') != -1) {
+				schemaId = 'writing';
 			} else if (fileName.toLowerCase().indexOf('tei') != -1) {
 				schemaId = 'tei';
 			} else {
