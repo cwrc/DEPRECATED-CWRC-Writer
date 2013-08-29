@@ -94,7 +94,7 @@ function FileManager(config) {
 			array.push(openingTag);
 			array.push('</'+tag+'>');
 		} else if (entityEntry) {
-			array = w.em.getMappingTags(entityEntry, w.validationSchema);
+			array = w.em.getMappingTags(entityEntry, w.validationId);
 		} else {
 			// not a valid tag so return empty strings
 			array = ['', ''];
@@ -340,6 +340,15 @@ function FileManager(config) {
 		return relationships;
 	};
 	
+	fm.loadDocument = function(docName) {
+		w.currentDocId = docName;
+		w.delegator.loadDocument(fm.processDocument);
+	};
+	
+	/**
+	 * Loads a document into the editor
+	 * @param docUrl An URL pointing to an XML document
+	 */
 	fm.loadDocumentFromUrl = function(docUrl) {
 		w.currentDocId = docUrl;
 		
@@ -348,7 +357,7 @@ function FileManager(config) {
 			type: 'GET',
 			success: function(doc, status, xhr) {
 				window.location.hash = '';
-				_loadDocumentHandler(doc);
+				fm.processDocument(doc);
 			},
 			error: function(xhr, status, error) {
 				w.currentDocId = null;
@@ -362,46 +371,13 @@ function FileManager(config) {
 		});
 	};
 	
+	/**
+	 * Loads a document into the editor.
+	 * @param docXml An XML DOM
+	 */
 	fm.loadDocumentFromXml = function(docXml) {
 		window.location.hash = '';
-		_loadDocumentHandler(docXml);
-	};
-	
-	fm.loadDocument = function(docName) {
-		w.currentDocId = docName;
-		
-		$.ajax({
-			url: w.baseUrl+'editor/documents/'+docName,
-			type: 'GET',
-			success: function(doc, status, xhr) {
-				window.location.hash = '#'+docName;
-				_loadDocumentHandler(doc);
-			},
-			error: function(xhr, status, error) {
-				w.currentDocId = null;
-				w.dialogs.show('message', {
-					title: 'Error',
-					msg: 'An error ('+status+') occurred and '+docName+' was not loaded.',
-					type: 'error'
-				});
-			},
-			dataType: 'xml'
-		});
-	};
-	
-
-	fm.loadEMICDocument = function() {
-		w.currentDocId = PID;
-		
-		$.ajax({
-			url: cwrc_params.BASE_PATH + '/cwrc/getCWRC/' + PID,
-			async: false,
-			dataType : 'xml',
-			success: _loadDocumentHandler,
-			error: function() {
-				w.editor.setContent('<p> Page <strong>' + PID + '</strong> contains errors </p>');
-			}
-		});
+		fm.processDocument(docXml);
 	};
 	
 	/**
@@ -475,29 +451,48 @@ function FileManager(config) {
 		return editorString;
 	};
 	
-	function _loadDocumentHandler(doc) {
+	/**
+	 * Processes a document and loads it into the editor.
+	 * @param doc An XML DOM
+	 */
+	fm.processDocument = function(doc) {
 		var rootName = doc.firstChild.nodeName;
+		// TODO need a better way of tying this to the schemas config
+		// grab the schema from xml-model
 		if (rootName == 'xml-model') {
 			var xmlModelData = doc.firstChild.data;
 			var schemaUrl = xmlModelData.match(/href="([^"]*)"/)[1];
 			var urlParts = schemaUrl.match(/^(.*):\/\/([a-z\-.]+)(?=:[0-9]+)?\/(.*)/);
 			var fileName = urlParts[3];
-			fm.loadSchema(fileName, false, processDocument);
+			var schemaId = '';
+			if (fileName.indexOf('events') != -1) {
+				schemaId = 'events';
+			} else if (fileName.toLowerCase().indexOf('tei') != -1) {
+				schemaId = 'tei';
+			} else {
+				schemaId = 'customSchema';
+				w.schemas.customSchema = {
+					name: 'Custom Schema',
+					url: schemaUrl
+				};
+			}
+			fm.loadSchema(schemaId, false, doProcessing);
+		// determine the schema based on the root element
 		} else {
 			rootName = rootName.toLowerCase();
 			if (rootName != w.root.toLowerCase()) {
 				// roots don't match so load the appropriate schema
+				var schemaId = 'tei';
 				if (rootName == 'events') {
-					fm.loadSchema('schema/events.rng', false, processDocument);
-				} else {
-					fm.loadSchema('schema/CWRC-TEIBasic.rng', false, processDocument);
+					schemaId = 'events';
 				}
+				fm.loadSchema(schemaId, false, doProcessing);
 			} else {
-				processDocument();
+				doProcessing();
 			}
 		}
 		
-		function processDocument() {
+		function doProcessing() {
 			// reset the stores
 			w.entities = {};
 			w.structs = {};
@@ -761,7 +756,7 @@ function FileManager(config) {
 					w._fireNodeChange(bodyTag);
 				}
 			}, 50);
-		} // end processDocument
+		} // end doProcessing
 	};
 	
 	fm.editSource = function() {
@@ -780,16 +775,18 @@ function FileManager(config) {
 	
 	/**
 	 * Load a new schema.
-	 * @param {String} schemaFile The schema file to load
+	 * @param {String} schemaId The ID of the schema to load (from the config)
 	 * @param {Boolean} startText Whether to include the default starting text
 	 * @param {Function} callback Callback for when the load is complete
 	 */
-	fm.loadSchema = function(schemaFile, startText, callback) {
+	fm.loadSchema = function(schemaId, startText, callback) {
 		var baseUrl = ''; //w.project == null ? '' : w.baseUrl; // handling difference between local and server urls
-		w.validationSchema = schemaFile;
+		w.schemaId = schemaId;
+		
+		var url = 
 		
 		$.ajax({
-			url: baseUrl + schemaFile,
+			url: w.schemas[w.schemaId].url,
 			dataType: 'xml',
 			success: function(data, status, xhr) {
 				w.schemaXML = data;
@@ -802,19 +799,14 @@ function FileManager(config) {
 //				w.editor.schema.addCustomElements(w.root);
 //			    w.editor.schema.addCustomElements(w.root.toLowerCase());
 				
-			    var cssUrl;
 				var additionalBlockElements;
 			    if (w.root == 'TEI') {
-			    	cssUrl = 'css/tei_converted.css';
-					
 			    	additionalBlockElements = ['argument', 'back', 'bibl', 'biblFull', 'biblScope', 'body', 'byline', 'category', 'change', 'cit', 'classCode', 'elementSpec', 'macroSpec', 'classSpec', 'closer', 'creation', 'date', 'distributor', 'div', 'div1', 'div2', 'div3', 'div4', 'div5', 'div6', 'div7', 'docAuthor', 'edition', 'editionStmt', 'editor', 'eg', 'epigraph', 'extent', 'figure', 'front', 'funder', 'group', 'head', 'dateline', 'idno', 'item', 'keywords', 'l', 'label', 'langUsage', 'lb', 'lg', 'list', 'listBibl', 'note', 'noteStmt', 'opener', 'p', 'principal', 'publicationStmt', 'publisher', 'pubPlace', 'q', 'rendition', 'resp', 'respStmt', 'salute', 'samplingDecl', 'seriesStmt', 'signed', 'sp', 'sponsor', 'tagUsage', 'taxonomy', 'textClass', 'titlePage', 'titlePart', 'trailer', 'TEI', 'teiHeader', 'text', 'authority', 'availability', 'fileDesc', 'sourceDesc', 'revisionDesc', 'catDesc', 'encodingDesc', 'profileDesc', 'projectDesc', 'docDate', 'docEdition', 'docImprint', 'docTitle'];
 			    	
 			    	w.header = 'teiHeader';
 			    	// FIXME temp fix for doc structure
 			    	w.idName = 'xml:id';
-			    } else {
-			    	cssUrl = 'css/orlando_converted.css';
-					
+			    } else {					
 			    	additionalBlockElements = ['DIV0', 'DIV1', 'EVENTS', 'ORLANDOHEADER', 'DOCAUTHOR', 'DOCEDITOR', 'DOCEXTENT', 'PUBLICATIONSTMT', 'TITLESTMT', 'PUBPLACE', 'L', 'P', 'HEADING', 'CHRONEVENT', 'CHRONSTRUCT'];
 					
 					w.header = 'ORLANDOHEADER';
@@ -830,7 +822,10 @@ function FileManager(config) {
 				    $('#schemaTags', w.editor.dom.doc).remove();
 				    $('#schemaRules', w.editor.dom.doc).remove();
 				    
-				    fm.loadSchemaCSS(cssUrl);
+				    var cssUrl = w.schemas[w.schemaId].cssUrl;
+				    if (cssUrl) {
+				    	fm.loadSchemaCSS(cssUrl);
+				    }
 				    
 				    // create css to display schema tags
 					$('head', w.editor.getDoc()).append('<style id="schemaTags" type="text/css" />');
@@ -985,8 +980,6 @@ function FileManager(config) {
 			_loadTemplate('xml/'+name+'.xml', name);
 		} else if (start != '') {
 			w.fm.loadDocument(start.substr(1));
-		} else if (PID != null){
-			w.fm.loadEMICDocument();
 		}
 	};
 	
@@ -1008,7 +1001,7 @@ function FileManager(config) {
 					root = data.firstChild;
 				}
 				$(root).prepend(rdf);
-				_loadDocumentHandler(data);
+				fm.processDocument(data);
 			},
 			error: function(xhr, status, error) {
 				if (console) console.log(status);

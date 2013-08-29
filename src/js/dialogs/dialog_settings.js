@@ -12,7 +12,7 @@ var SettingsDialog = function(writer, config) {
 	
 	var defaultSettings = {
 		mode: w.mode,
-		validationSchema: w.validationSchema
+		validationSchema: w.schemaId
 	};
 	jQuery.extend(defaultSettings, settings);
 	
@@ -58,7 +58,7 @@ var SettingsDialog = function(writer, config) {
 	'</select>'+
 	'</div>'+
 	'<div style="margin-top: 10px;">'+
-	// schema selection is disabled for now, as changing this would require loading the new schema
+	// TODO schemas should be populated from the config
 	'<label>Schema</label><select name="schema" disabled="disabled">'+
 	'<option value="cwrcbasic">CWRC Basic TEI Schema</option>'+
 	'<option value="events">Events Schema</option>'+
@@ -74,7 +74,7 @@ var SettingsDialog = function(writer, config) {
 		$('#showentitybrackets').prop('checked', settings.showEntityBrackets);
 		$('#showstructbrackets').prop('checked', settings.showStructBrackets);
 		$('select[name="editormode"] > option[value="'+w.mode+'"]', $('#settingsDialog')).attr('selected', true);
-		$('select[name="schema"] > option[value="'+w.validationSchema+'"]', $('#settingsDialog')).attr('selected', true);
+		$('select[name="schema"] > option[value="'+w.schemaId+'"]', $('#settingsDialog')).attr('selected', true);
 		$('#settingsDialog').dialog('open');
 	});
 	
@@ -164,8 +164,7 @@ var SettingsDialog = function(writer, config) {
 		}
 		settings.showStructBrackets = $('#showstructbrackets').prop('checked');
 		
-		// TODO validationSchema is currently a filename
-//		w.validationSchema = $('select[name="schema"]', $('#settingsDialog')).val();
+//		w.schemaId = $('select[name="schema"]', $('#settingsDialog')).val();
 		
 		var styles = {
 			fontSize: settings.fontSize,

@@ -62,12 +62,14 @@ function Delegator(config) {
 	
 	del.validate = function(callback) {
 		var docText = w.fm.getDocumentContent(false);
+		var schemaUrl = w.schemas[w.schemaId].url;
+		
 		$.ajax({
 			url: w.baseUrl+'services/validator/validate.html',
 			type: 'POST',
 			dataType: 'XML',
 			data: {
-				sch: 'http://cwrc.ca/'+w.validationSchema,
+				sch: schemaUrl,
 				type: 'RNG_XML',
 				content: docText
 			},
@@ -97,6 +99,31 @@ function Delegator(config) {
 					type: 'error'
 				});
 			}
+		});
+	};
+	
+	/**
+	 * Loads a document based on the currentDocId
+	 * TODO Move currentDocId system out of CWRCWriter
+	 * @param docName
+	 */
+	del.loadDocument = function(callback) {
+		$.ajax({
+			url: w.baseUrl+'editor/documents/'+w.currentDocId,
+			type: 'GET',
+			success: function(doc, status, xhr) {
+				window.location.hash = '#'+w.currentDocId;
+				callback.call(w, doc);
+			},
+			error: function(xhr, status, error) {
+				w.dialogs.show('message', {
+					title: 'Error',
+					msg: 'An error ('+status+') occurred and '+w.currentDocId+' was not loaded.',
+					type: 'error'
+				});
+				w.currentDocId = null;
+			},
+			dataType: 'xml'
 		});
 	};
 	
@@ -139,13 +166,5 @@ function Delegator(config) {
 		return w.u.getDocumentationForTag(tagName);
 	};
 	
-	del.annoAdded = function(rdf) {
-		
-	};
-	
-	del.annoUpdated = function(rdf) {
-		
-	};
-	
 	return del;
-};
+}

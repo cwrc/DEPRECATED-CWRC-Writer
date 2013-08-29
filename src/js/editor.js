@@ -13,6 +13,17 @@ function Writer(config) {
 	w.deletedEntities = {};
 	w.deletedStructs = {};
 
+	/**
+	 * A map of schema objects. The key represents the schema ID, the "value" should have the following properties:
+	 * @param name A name/label for the schema
+	 * @param url The URL where the schema is located
+	 * @param cssUrl The URL where the schema's CSS is located
+	 */
+	w.schemas = config.schemas || {};
+	
+	// the ID of the current validation schema, according to config.schemas
+	w.schemaId = null;
+	
 	w.schemaXML = null; // a cached copy of the loaded schema
 	w.schemaJSON = null; // a json version of the schema
 	w.schema = {elements: []}; // stores a list of all the elements of the loaded schema
@@ -29,10 +40,6 @@ function Writer(config) {
 	
 	// editor mode
 	w.mode = config.mode;
-	
-	// schema for validation (http://www.arts.ualberta.ca/~cwrc/schema/)
-	// file name and path, relative to the server
-	w.validationSchema = null;
 	
 	// root block element, should come from schema
 	w.root = '';
@@ -552,10 +559,6 @@ function Writer(config) {
 				spacing_open: 0,
 				spacing_closed: 0
 			},
-//			east: {
-//				size: 'auto',
-//				minSize: 300
-//			},
 			south: {
 				size: 34,
 				resizable: false,

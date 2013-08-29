@@ -65,28 +65,52 @@
 
 		<script type="text/javascript">
 			$(function() {
-				PID = null;
 				cwrc_params = {};
+				
 				writer = null;
+				
+				var baseUrl = window.location.protocol+'//'+window.location.host;
+				var config = {
+					delegator: Delegator,
+					cwrcRootUrl: baseUrl+'/editor/test/',
+					schemas: {
+						tei: {
+							name: 'CWRC Basic TEI Schema',
+							url: baseUrl+'/editor/test/schema/CWRC-TEIBasic.rng',
+							cssUrl: baseUrl+'/editor/test/css/tei_converted.css'
+						},
+						events: {
+							name: 'Events Schema',
+							url: baseUrl+'/editor/test/schema/events.rng',
+							cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
+						}
+					}
+				};
+				
 				$.ajax({
 					url: 'http://apps.testing.cwrc.ca/editor/documents/info/projectname',
 					timeout: 3000,
 					success: function(data, status, xhr) {
-						writer = new Writer({
-							project: data,
-							delegator: Delegator,
-							cwrcRootUrl: window.location.protocol+'//'+window.location.host+'/editor/test/'
-						});
+						config.project = data;
+						writer = new Writer(config);
 						writer.init();
-						writer.layout.close('east');
 					},
 					error: function() {
-						writer = new Writer({
-							delegator: Delegator,
-							cwrcRootUrl: window.location.protocol+'//'+window.location.host+'/cwrc/'
-						});
+						config.cwrcRootUrl = baseUrl+'/cwrc/';
+						config.schemas = {
+							tei: {
+								name: 'CWRC Basic TEI Schema',
+								url: baseUrl+'/cwrc/schema/CWRC-TEIBasic.rng',
+								cssUrl: baseUrl+'/cwrc/css/tei_converted.css'
+							},
+							events: {
+								name: 'Events Schema',
+								url: baseUrl+'/cwrc/schema/events.rng',
+								cssUrl: baseUrl+'/cwrc/css/orlando_converted.css'
+							}
+						};
+						writer = new Writer(config);
 						writer.init();
-						writer.layout.close('east');
 					}
 				});
 			});
