@@ -467,6 +467,8 @@ function FileManager(config) {
 			var schemaId = '';
 			if (fileName.indexOf('events') != -1) {
 				schemaId = 'events';
+			} else if (fileName.toLowerCase().indexOf('biography') != -1) {
+				schemaId = 'biography';
 			} else if (fileName.toLowerCase().indexOf('tei') != -1) {
 				schemaId = 'tei';
 			} else {
@@ -485,6 +487,8 @@ function FileManager(config) {
 				var schemaId = 'tei';
 				if (rootName == 'events') {
 					schemaId = 'events';
+				} else if (rootName == 'biography') {
+					schemaId = 'biography';
 				}
 				fm.loadSchema(schemaId, false, doProcessing);
 			} else {
