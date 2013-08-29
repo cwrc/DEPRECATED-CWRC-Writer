@@ -785,9 +785,7 @@ function FileManager(config) {
 	 */
 	fm.loadSchema = function(schemaId, startText, callback) {
 		var baseUrl = ''; //w.project == null ? '' : w.baseUrl; // handling difference between local and server urls
-		w.schemaId = schemaId;
-		
-		var url = 
+		w.schemaId = schemaId; 
 		
 		$.ajax({
 			url: w.schemas[w.schemaId].url,
