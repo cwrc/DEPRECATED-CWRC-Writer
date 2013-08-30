@@ -388,7 +388,12 @@
 			t.schemaDialog.dialog('close');
 			// check if beforeClose cancelled or not
 			if (t.schemaDialog.is(':hidden')) {
-				$('ins', parent).tooltip('destroy');
+				try {
+					$('ins', parent).tooltip('destroy');
+				} catch (e) {
+					if (console) console.log('error destroying tooltip');
+				}
+				
 				t.editor.writer.tree.enableHotkeys();
 				
 				switch (t.mode) {
@@ -404,10 +409,17 @@
 		
 		cancel: function() {
 			var t = this;
-			t.editor.selection.moveToBookmark(t.editor.currentBookmark);
-			t.editor.currentBookmark = null;
-			$('#schemaDialog ins').tooltip('destroy');
 			t.schemaDialog.dialog('close');
+			// check if beforeClose cancelled or not
+			if (t.schemaDialog.is(':hidden')) {
+				t.editor.selection.moveToBookmark(t.editor.currentBookmark);
+				t.editor.currentBookmark = null;
+				try {
+					$('#schemaDialog ins').tooltip('destroy');
+				} catch (e) {
+					if (console) console.log('error destroying tooltip');
+				}
+			}
 		},
 		
 		createControl: function(n, cm) {
