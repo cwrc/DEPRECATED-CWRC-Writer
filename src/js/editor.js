@@ -236,11 +236,15 @@ function Writer(config) {
 		var rng = w.editor.dom.createRng();
 		if (selectContentsOnly) {
 			if (tinymce.isWebKit) {
-				$('[data-mce-bogus]', node).remove();
-				node.prepend('<span data-mce-bogus="1">\uFEFF</span>').append('<span data-mce-bogus="1">\uFEFF</span>');
+//				$('[data-mce-bogus]', node).remove();
+//				node.prepend('<span data-mce-bogus="1">\uFEFF</span>').append('<span data-mce-bogus="1">\uFEFF</span>');
+//				rng.setStart(nodeEl.firstChild, 0);
+//				rng.setEnd(nodeEl.lastChild, nodeEl.lastChild.length);
+				node.append('\uFEFF');
+				rng.selectNodeContents(nodeEl);
+			} else {
+				rng.selectNodeContents(nodeEl);
 			}
-			rng.setStart(nodeEl.firstChild, 0);
-			rng.setEnd(nodeEl.lastChild, nodeEl.lastChild.length);
 		} else {
 			$('[data-mce-bogus]', node.parent()).remove();
 			
@@ -309,8 +313,8 @@ function Writer(config) {
 		w.editor.onNodeChange.dispatch(w.editor, w.editor.controlManager, nodeEl, false, w.editor);
 	};
 	
-	// webkit has trouble deleting divs, so use the tree and jquery as a workaround
-	function _webKitOnKeyDownDeleteHandler(ed, evt) {
+	// browsers have trouble deleting divs, so use the tree and jquery as a workaround
+	function _onKeyDownDeleteHandler(ed, evt) {
 		if (evt.which == 8 || evt.which == 46) {
 			if (w.tree.currentlySelectedNode != null) {
 				// cancel keyboard delete
@@ -800,9 +804,7 @@ function Writer(config) {
 					ed.onMouseUp.addToTop(_onMouseUpHandler);
 					
 					ed.onKeyDown.add(_onKeyDownHandler);
-					if (tinymce.isWebKit) {
-						ed.onKeyDown.addToTop(_webKitOnKeyDownDeleteHandler);
-					}
+					ed.onKeyDown.addToTop(_onKeyDownDeleteHandler);
 					ed.onKeyUp.add(_onKeyUpHandler);
 					
 					setTimeout(function() {
