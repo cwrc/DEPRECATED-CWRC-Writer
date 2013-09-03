@@ -302,6 +302,13 @@ function Tagger(config) {
 		return id;
 	};
 	
+	/**
+	 * Adds a structure tag to the document, based on the params.
+	 * @param params An object with the following properties:
+	 * @param params.bookmark A tinymce bookmark object, with an optional custom tagId property
+	 * @param params.attributes Various properties related to the tag
+	 * @param params.action Where to insert the tag, relative to the bookmark (before, after, around, inside); can also be null
+	 */
 	tagger.addStructureTag = function(params) {
 		var bookmark = params.bookmark;
 		var attributes = params.attributes;
@@ -356,11 +363,18 @@ function Tagger(config) {
 			range.surroundContents(tempNode[0]);
 			tempNode.replaceWith(content);
 		}
-		if (selection == '\uFEFF') {
-			w.selectStructureTag(id, true);
-		}
 		
 		w.tree.update();
+		
+		if (selection == '\uFEFF') {
+			w.selectStructureTag(id, true);
+		} else if (action == undefined) {
+			// place the cursor at the end of the tag's contents
+			var rng = w.editor.selection.getRng(true);
+			rng.selectNodeContents($('#'+id, w.editor.getBody())[0]);
+			rng.collapse(false);
+			w.editor.selection.setRng(rng);
+		}
 	};
 	
 	tagger.editStructureTag = function(tag, attributes) {
