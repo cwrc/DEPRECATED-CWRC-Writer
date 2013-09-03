@@ -98,16 +98,20 @@
 					return;
 				}
 				
-				var sel = t.editor.selection;
-				var content = sel.getContent();
-				var range = sel.getRng(true);
-				if (range.startContainer == range.endContainer) {
-					var leftTrimAmount = content.match(/^\s{0,1}/)[0].length;
-					var rightTrimAmount = content.match(/\s{0,1}$/)[0].length;
-					range.setStart(range.startContainer, range.startOffset+leftTrimAmount);
-					range.setEnd(range.endContainer, range.endOffset-rightTrimAmount);
-					sel.setRng(range);
-				}				
+				// reset bookmark after possible modification by isSelectionValid
+				t.editor.currentBookmark = t.editor.selection.getBookmark(1);
+				
+				// isSelectionValid should perform this function
+//				var sel = t.editor.selection;
+//				var content = sel.getContent();
+//				var range = sel.getRng(true);
+//				if (range.startContainer == range.endContainer) {
+//					var leftTrimAmount = content.match(/^\s{0,1}/)[0].length;
+//					var rightTrimAmount = content.match(/\s{0,1}$/)[0].length;
+//					range.setStart(range.startContainer, range.startOffset+leftTrimAmount);
+//					range.setEnd(range.endContainer, range.endOffset-rightTrimAmount);
+//					sel.setRng(range);
+//				}				
 				
 				t.mode = t.ADD;
 				t.showDialog(key, pos);
