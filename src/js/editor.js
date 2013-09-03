@@ -324,7 +324,9 @@ function Writer(config) {
 				if (w.tree.selectionType == w.tree.NODE_SELECTED) {
 					w.tagger.removeStructureTag(w.tree.currentlySelectedNode, true);
 				} else {
+					var id = w.tree.currentlySelectedNode;
 					w.tagger.removeStructureTagContents(w.tree.currentlySelectedNode);
+					w.selectStructureTag(id, true);
 				}
 			}
 		}
