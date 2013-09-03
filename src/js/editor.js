@@ -240,7 +240,9 @@ function Writer(config) {
 //				node.prepend('<span data-mce-bogus="1">\uFEFF</span>').append('<span data-mce-bogus="1">\uFEFF</span>');
 //				rng.setStart(nodeEl.firstChild, 0);
 //				rng.setEnd(nodeEl.lastChild, nodeEl.lastChild.length);
-				node.append('\uFEFF');
+				if (nodeEl.firstChild == null) {
+					node.append('\uFEFF');
+				}
 				rng.selectNodeContents(nodeEl);
 			} else {
 				rng.selectNodeContents(nodeEl);
