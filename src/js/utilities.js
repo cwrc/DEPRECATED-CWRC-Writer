@@ -147,21 +147,19 @@ function Utilities(config) {
 			return doFind(node, direction, 0);
 		}
 		
-		// fix for when start and/or end containers are element nodes (should always be text nodes for entities)
-		if (!isStructTag) {
-			if (range.startContainer.nodeType == Node.ELEMENT_NODE) {
-				var end = range.endContainer;
-				if (end.nodeType != Node.TEXT_NODE || range.endOffset == 0) {
-					end = findTextNode(range.endContainer, 'back');
-					if (end == null) return w.NO_COMMON_PARENT;
-					range.setEnd(end, end.length);
-				}
-				range.setStart(end, 0);
+		// fix for when start and/or end containers are element nodes
+		if (range.startContainer.nodeType == Node.ELEMENT_NODE) {
+			var end = range.endContainer;
+			if (end.nodeType != Node.TEXT_NODE || range.endOffset == 0) {
+				end = findTextNode(range.endContainer, 'back');
+				if (end == null) return w.NO_COMMON_PARENT;
+				range.setEnd(end, end.length);
 			}
-			if (range.endContainer.nodeType == Node.ELEMENT_NODE) {
-				// don't need to check nodeType here since we've already ensured startContainer is text
-				range.setEnd(range.startContainer, range.startContainer.length);
-			}
+			range.setStart(end, 0);
+		}
+		if (range.endContainer.nodeType == Node.ELEMENT_NODE) {
+			// don't need to check nodeType here since we've already ensured startContainer is text
+			range.setEnd(range.startContainer, range.startContainer.length);
 		}
 		
 		/**
