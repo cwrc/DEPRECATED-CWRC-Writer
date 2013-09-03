@@ -424,6 +424,12 @@ function Writer(config) {
 //				w.selectStructureTag(newTag.attr('id'), true);
 //			}
 		}
+		
+		// if the user's typing we don't want the currentlySelectedNode to be set
+		// calling selectNode will clear currentlySelectedNode
+		if (w.tree.currentlySelectedNode != null) {
+			w.tree.selectNode($('#'+w.tree.currentlySelectedNode, w.editor.getBody())[0]);
+		}
 	};
 	
 	function _onChangeHandler(ed, event) {
