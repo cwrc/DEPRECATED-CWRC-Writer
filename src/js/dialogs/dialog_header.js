@@ -6,8 +6,7 @@ var HeaderDialog = function(config) {
 	
 	$(document.body).append(''+
 	'<div id="headerDialog">'+
-	'<textarea id="header_textarea" style="width: 100%; height: 98%;"></textarea>'+
-	'</div>'+
+	'<textarea></textarea>'+
 	'</div>');
 	
 	var header = $('#headerDialog');
@@ -20,7 +19,7 @@ var HeaderDialog = function(config) {
 		autoOpen: false,
 		buttons: {
 			'Ok': function() {
-				var editorString = '<head>'+$('#header_textarea').val()+'</head>';
+				var editorString = '<head>'+$('#headerDialog textarea').val()+'</head>';
 				var xml;
 				try {
 					xml = $.parseXML(editorString);
@@ -37,7 +36,7 @@ var HeaderDialog = function(config) {
 				$(xml).find('head').children().each(function(index, el) {
 					headerString += w.fm.buildEditorString(el);
 				});
-				$(w.editor.getBody()).find('span[_tag="'+w.header+'"]').html(headerString);
+				$('[_tag="'+w.header+'"]', w.editor.getBody()).html(headerString);
 				
 				header.dialog('close');
 			},
@@ -49,11 +48,11 @@ var HeaderDialog = function(config) {
 	
 	function doOpen() {
 		var headerString = '';
-		var headerEl = $(w.editor.getBody()).find('span[_tag="'+w.header+'"]');
+		var headerEl = $('[_tag="'+w.header+'"]', w.editor.getBody());
 		headerEl.children().each(function(index, el) {
 			headerString += w.fm.buildXMLString($(el));
 		});
-		$('#header_textarea').val(headerString);
+		$('#headerDialog textarea').val(headerString);
 		header.dialog('open');
 	}
 	
