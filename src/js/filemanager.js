@@ -94,7 +94,7 @@ function FileManager(config) {
 			array.push(openingTag);
 			array.push('</'+tag+'>');
 		} else if (entityEntry) {
-			array = w.em.getMappingTags(entityEntry, w.validationId);
+			array = w.em.getMappingTags(entityEntry, w.schemaId);
 		} else {
 			// not a valid tag so return empty strings
 			array = ['', ''];

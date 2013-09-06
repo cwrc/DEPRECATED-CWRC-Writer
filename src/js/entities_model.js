@@ -135,10 +135,10 @@ var EntitiesModel = function() {
 	pm.getMappingTags = function(entity, schema) {
 		var e = entities[entity.props.type];
 		if (e) {
-			if (schema.indexOf('events') != -1) {
-				schema = 'events';
-			} else {
+			if (schema.indexOf('tei') != -1) {
 				schema = 'tei';
+			} else {
+				schema = 'events';
 			}
 			
 			if (e.mapping && e.mapping[schema]) {
