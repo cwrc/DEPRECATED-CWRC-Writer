@@ -465,18 +465,18 @@ button.ui-button::-moz-focus-inner {
 	border-right-width: 0;
 	border-left-width: 1px;
 }
-.ui-dialog {
+.cwrc .ui-dialog {
 	position: absolute;
 	top: 0;
 	left: 0;
 	padding: .2em;
 	outline: 0;
 }
-.ui-dialog .ui-dialog-titlebar {
+.cwrc .ui-dialog .ui-dialog-titlebar {
 	padding: .4em 1em;
 	position: relative;
 }
-.ui-dialog .ui-dialog-title {
+.cwrc .ui-dialog .ui-dialog-title {
 	float: left;
 	margin: .1em 0;
 	white-space: nowrap;
@@ -484,7 +484,7 @@ button.ui-button::-moz-focus-inner {
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-.ui-dialog .ui-dialog-titlebar-close {
+.cwrc .ui-dialog .ui-dialog-titlebar-close {
 	position: absolute;
 	right: .3em;
 	top: 50%;
@@ -493,35 +493,35 @@ button.ui-button::-moz-focus-inner {
 	padding: 1px;
 	height: 20px;
 }
-.ui-dialog .ui-dialog-content {
+.cwrc .ui-dialog .ui-dialog-content {
 	position: relative;
 	border: 0;
 	padding: .5em 1em;
 	background: none;
 	overflow: auto;
 }
-.ui-dialog .ui-dialog-buttonpane {
+.cwrc .ui-dialog .ui-dialog-buttonpane {
 	text-align: left;
 	border-width: 1px 0 0 0;
 	background-image: none;
 	margin-top: .5em;
 	padding: .3em 1em .5em .4em;
 }
-.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+.cwrc .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
 	float: right;
 }
-.ui-dialog .ui-dialog-buttonpane button {
+.cwrc .ui-dialog .ui-dialog-buttonpane button {
 	margin: .5em .4em .5em 0;
 	cursor: pointer;
 }
-.ui-dialog .ui-resizable-se {
+.cwrc .ui-dialog .ui-resizable-se {
 	width: 12px;
 	height: 12px;
-	right: -5px;
-	bottom: -5px;
-	background-position: 16px 16px;
+	right: 3px;
+	bottom: 3px;
+	/*background-position: 16px 16px;*/
 }
-.ui-draggable .ui-dialog-titlebar {
+.cwrc .ui-draggable .ui-dialog-titlebar {
 	cursor: move;
 }
 .ui-menu {
@@ -729,15 +729,15 @@ button.ui-button::-moz-focus-inner {
 	/* need to fix icons sprite */
 	background-position: -65px -16px;
 }
-.ui-tabs {
+.cwrc .ui-tabs {
 	position: relative;/* position: relative prevents IE scroll bug (element with position: relative inside container with overflow: auto appear as "fixed") */
 	padding: .2em;
 }
-.ui-tabs .ui-tabs-nav {
+.cwrc .ui-tabs .ui-tabs-nav {
 	margin: 0;
 	padding: .2em .2em 0;
 }
-.ui-tabs .ui-tabs-nav li {
+.cwrc .ui-tabs .ui-tabs-nav li {
 	list-style: none;
 	float: left;
 	position: relative;
@@ -747,25 +747,25 @@ button.ui-button::-moz-focus-inner {
 	padding: 0;
 	white-space: nowrap;
 }
-.ui-tabs .ui-tabs-nav li a {
+.cwrc .ui-tabs .ui-tabs-nav li a {
 	float: left;
 	padding: .5em 1em;
 	text-decoration: none;
 }
-.ui-tabs .ui-tabs-nav li.ui-tabs-active {
+.cwrc .ui-tabs .ui-tabs-nav li.ui-tabs-active {
 	margin-bottom: -1px;
 	padding-bottom: 1px;
 }
-.ui-tabs .ui-tabs-nav li.ui-tabs-active a,
-.ui-tabs .ui-tabs-nav li.ui-state-disabled a,
-.ui-tabs .ui-tabs-nav li.ui-tabs-loading a {
+.cwrc .ui-tabs .ui-tabs-nav li.ui-tabs-active a,
+.cwrc .ui-tabs .ui-tabs-nav li.ui-state-disabled a,
+.cwrc .ui-tabs .ui-tabs-nav li.ui-tabs-loading a {
 	cursor: text;
 }
-.ui-tabs .ui-tabs-nav li a, /* first selector in group seems obsolete, but required to overcome bug in Opera applying cursor: text overall if defined elsewhere... */
-.ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-active a {
+.cwrc .ui-tabs .ui-tabs-nav li a, /* first selector in group seems obsolete, but required to overcome bug in Opera applying cursor: text overall if defined elsewhere... */
+.cwrc .ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-active a {
 	cursor: pointer;
 }
-.ui-tabs .ui-tabs-panel {
+.cwrc .ui-tabs .ui-tabs-panel {
 	display: block;
 	border-width: 0;
 	padding: 1em 1.4em;
