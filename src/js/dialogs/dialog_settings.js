@@ -103,14 +103,14 @@ var SettingsDialog = function(writer, config) {
 				$('#settingsDialog').dialog('close');
 			},
 		},{
-			text: 'Ok',
+			text: 'Cancel',
 			click: function() {
-				applySettings();
 				$('#settingsDialog').dialog('close');
 			}
 		},{
-			text: 'Cancel',
+			text: 'Ok',
 			click: function() {
+				applySettings();
 				$('#settingsDialog').dialog('close');
 			}
 		}]
