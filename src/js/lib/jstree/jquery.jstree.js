@@ -760,7 +760,7 @@
 					}
 					d.append(tmp);
 				});
-				
+//				d.prepend("<ins class='jstree-icon'>&#160;</ins>");
 				if(obj === -1) {
 					obj = this.get_container();
 					if(position === "before") { position = "first"; }
@@ -769,7 +769,7 @@
 				
 				// CHANGED manual indent
 				d.prepend("<ins class='jstree-icon'>&#160;</ins>");
-				var indent = (obj.parents().length - 8) * 16;
+				var indent = (obj.parents().length - 7) * 16;
 				d.prepend("<span class='jstree-indent' style='width: "+indent+"px;'/>");
 				
 				

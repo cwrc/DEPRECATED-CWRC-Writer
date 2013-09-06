@@ -22,32 +22,32 @@ function StructureTree(config) {
 	tree.update = function() {
 		var treeRef = $.jstree._reference('#tree');
 		
+		// store open nodes to re-open after updating
 		var openNodes = [];
-		$('#tree #root').find('li.jstree-open').each(function () {
+		$('#tree #cwrc_tree_root').find('li.jstree-open').each(function () {
 			var id = $(this).attr('name');
 			openNodes.push(id);
 		});
 		
-		treeRef.delete_node('#root');
+		treeRef.delete_node('#cwrc_tree_root');
 		
-		var root = {
-			data: 'Tags',
-			attr: {id: 'root'},
-			state: 'open',
-			children: []
-		};
-		_doUpdate($(w.editor.getBody()).children(), root, 0);
-		
-		var settings = treeRef._get_settings();
-		settings.json_data.data = root;
-		treeRef._set_settings(settings);
-		treeRef.load_node_json(-1, false, false);
-		treeRef._themeroller();
-		_onNodeLoad($('#tree #root li').first());
-		
-		$.each(openNodes, function (i, val) {
-			treeRef.open_node($('li[name='+val+']', $tree), false, true); 
-		});
+		var rootNode = $('[_tag="'+w.root+'"]', w.editor.getBody());
+		var rootData = _processNode(rootNode, 0);
+		if (rootData != null) {
+			rootData.attr.id = 'cwrc_tree_root';
+			_doUpdate(rootNode.children(), rootData, 0);
+			
+			var settings = treeRef._get_settings();
+			settings.json_data.data = rootData;
+			treeRef._set_settings(settings);
+			treeRef.load_node_json(-1, false, false);
+			treeRef._themeroller();
+			_onNodeLoad($('#tree #cwrc_tree_root').first());
+			
+			$.each(openNodes, function (i, val) {
+				treeRef.open_node($('li[name='+val+']', $tree), false, true); 
+			});
+		}
 	};
 	
 	tree.selectNode = function(node) {
@@ -88,80 +88,100 @@ function StructureTree(config) {
 		$.jstree._reference('#tree').disable_hotkeys();
 	};
 	
+	/**
+	 * Processes an element in the editor and returns relevant data for the tree
+	 * @param node A jQuery object
+	 * @param level The current tree depth
+	 */
+	function _processNode(node, level) {
+		var nodeData = null;
+		
+		// structure tag
+		if (node.attr('_tag')) {
+			var id = node.attr('id');
+			var tag = node.attr('_tag');
+
+//			var isLeaf = node.find('[_tag]').length > 0 ? 'open' : null;
+//			if (tag == w.header) isLeaf = false;
+			
+			// new struct check
+			if (id == '' || id == null) {
+				id = tinymce.DOM.uniqueId('struct_');
+				if (w.schema.elements.indexOf(tag) != -1) {
+					node.attr('id', id).attr('_tag', tag);
+					w.structs[id] = {
+						id: id,
+						_tag: tag
+					};
+				}					
+			// duplicate struct check
+			} else {
+				var match = $('[id='+id+']', w.editor.getBody());
+				if (match.length > 1) {
+					match.each(function(index, el) {
+						if (index > 0) {
+							var newStruct = $(el);
+							var newId = tinymce.DOM.uniqueId('struct_');
+							newStruct.attr('id', newId);
+							w.structs[newId] = {};
+							for (var key in w.structs[id]) {
+								w.structs[newId][key] = w.structs[id][key];
+							}
+							w.structs[newId].id = newId;
+						}
+					});
+				}
+			}
+			
+			var info = w.structs[id];
+			if (info == undefined) {
+				// redo/undo re-added a struct check
+				info = w.deletedStructs[id];
+				if (info != undefined) {
+					w.structs[id] = info;
+					delete w.deletedStructs[id];
+				}
+			}
+			if (info) {
+				nodeData = {
+					data: info._tag,
+					attr: {name: id},
+					state: level < 2 ? 'open' : null
+				};
+			}
+		// entity tag
+		} else if (node.attr('_entity') && node.hasClass('start')) {
+			var id = node.attr('name');
+			var type = node.attr('_type');
+			
+			nodeData = {
+				data: type,
+				attr: {name: id}, // 'class': type}
+				state: level < 2 ? 'open' : null
+			};
+		}
+		
+		return nodeData;
+	}
 	
+	/**
+	 * Recursively work through all elements in the editor and create the data for the tree.
+	 */
 	function _doUpdate(children, nodeParent, level) {
 		children.each(function(index, el) {
 			var node = $(this);
 			var newNodeParent = nodeParent;
-			if (node.attr('_tag')) {
-				var id = node.attr('id');
-				var tag = node.attr('_tag');
-
-//				var isLeaf = node.find('[_tag]').length > 0 ? 'open' : null;
-//				if (tag == w.header) isLeaf = false;
-				
-				// new struct check
-				if (id == '' || id == null) {
-					id = tinymce.DOM.uniqueId('struct_');
-					if (w.schema.elements.indexOf(tag) != -1) {
-						node.attr('id', id).attr('_tag', tag);
-						w.structs[id] = {
-							id: id,
-							_tag: tag
-						};
-					}					
-				// duplicate struct check
-				} else {
-					var match = $('[id='+id+']', w.editor.getBody());
-					if (match.length > 1) {
-						match.each(function(index, el) {
-							if (index > 0) {
-								var newStruct = $(el);
-								var newId = tinymce.DOM.uniqueId('struct_');
-								newStruct.attr('id', newId);
-								w.structs[newId] = {};
-								for (var key in w.structs[id]) {
-									w.structs[newId][key] = w.structs[id][key];
-								}
-								w.structs[newId].id = newId;
-							}
-						});
-					}
-				}
-				
-				var info = w.structs[id];
-				if (info == undefined) {
-					// redo/undo re-added a struct check
-					info = w.deletedStructs[id];
-					if (info != undefined) {
-						w.structs[id] = info;
-						delete w.deletedStructs[id];
-					}
-				}
-				if (info) {
-					if (nodeParent.children == null) {
-						nodeParent.children = [];
-					}
-					nodeParent.children.push({
-						data: info._tag,
-						attr: {name: id}
-						,state: level < 2 ? 'open' : null
-					});
-					
-					newNodeParent = nodeParent.children[nodeParent.children.length-1];
-				}
-			} else if (node.attr('_entity') && node.hasClass('start')) {
-				var id = node.attr('name');
-				var type = node.attr('_type');
+			
+			var nodeData = _processNode(node, level);
+			if (nodeData) {
 				if (nodeParent.children == null) {
 					nodeParent.children = [];
 				}
-				nodeParent.children.push({
-					data: type,
-					attr: {name: id}//, 'class': type}
-					,state: level < 2 ? 'open' : null
-				});
+				nodeParent.children.push(nodeData);
+				
+				newNodeParent = nodeParent.children[nodeParent.children.length-1];
 			}
+			
 			if (node.attr('_tag') != w.header) {
 				_doUpdate(node.children(), newNodeParent, level+1);
 			}
@@ -171,7 +191,7 @@ function StructureTree(config) {
 	function _onNodeLoad(context) {
 		$('li', context).each(function(index, el) {
 			var li = $(this);
-			var indent = (li.parents('ul').length - 2) * 16;
+			var indent = (li.parents('ul').length - 1) * 16;
 			li.prepend("<span class='jstree-indent' style='width: "+indent+"px;'/>");
 		});
 	}
@@ -344,7 +364,7 @@ function StructureTree(config) {
 		json_data: {
 			data: {
 				data: 'Tags',
-				attr: {id: 'root'},
+				attr: {id: 'cwrc_tree_root'},
 				state: 'open'
 			},
 			progressive_render: true
@@ -357,7 +377,7 @@ function StructureTree(config) {
 			show_at_node: false,
 			items: function(node) {
 				_hidePopup();
-				if (node.attr('id') == 'root') return {};
+				if (node.attr('id') == 'cwrc_tree_root') return {};
 				
 				var parentNode = node.parents('li:first');
 				
@@ -504,7 +524,7 @@ function StructureTree(config) {
 //		
 //		var node = data.rslt.obj;
 //		
-//		if (node.attr('id') == 'root') return;
+//		if (node.attr('id') == 'cwrc_tree_root') return;
 //		
 //		var id = node.attr('name');
 //		var info = w.structs[id];
