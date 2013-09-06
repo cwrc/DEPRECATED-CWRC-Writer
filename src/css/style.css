@@ -7,37 +7,32 @@ body {
 	overflow: hidden;
 }
 
-h1 {
+.cwrc h1 {
 	font-size: 14px;
 }
 
-h2 {
+.cwrc h2 {
 	font-size: 12px;
 }
 
-h3 {
+.cwrc h3 {
 	font-size: 11px;
 }
 
-h1, h2, h3 {
+.cwrc h1, h2, h3 {
 	margin: 0;
 }
 
-textarea {
+.cwrc textarea {
 	overflow: auto;
 	resize: none;
 }
 
-label {
+.cwrc label {
 	margin-right: 5px;
 }
 
-#wrap {
-	margin: 0;
-	padding: 0;
-}
-
-#header {
+#cwrc_header {
 	padding: 0 10px;
 	color: #eee;
 	background-color: #455372;
@@ -48,7 +43,7 @@ label {
 	background-position: left center;
 }
 
-#header h1 {
+#cwrc_header h1 {
 	float: left;
 	cursor: pointer;
 	margin-top: 10px;
@@ -105,14 +100,14 @@ label {
 	padding-top: 5px !important;
 }
 
-.tabs {
+.cwrc .tabs {
 	overflow: hidden;
 	border: none !important;
 	border-right: 1px solid #ccc !important;
 	padding: 0 !important;
 }
 
-.tabs > ul {
+.cwrc .tabs > ul {
 	padding: 3px 2px 0 !important;
 	border-top: none !important;
 	border-left: none !important;
@@ -120,11 +115,11 @@ label {
 	border-radius: 0 !important;
 }
 
-.tabs > ul li a {
+.cwrc .tabs > ul li a {
 	padding: 4px 1em !important;
 }
 
-.tabs .ui-tabs-panel {
+.cwrc .tabs .ui-tabs-panel {
 	padding: 5px 0 0 0 !important;
 	overflow: auto;
 }
@@ -407,7 +402,7 @@ label {
 	width: 225px;
 }
 
-#lookup_alternate ins, #schemaDialog ins {
+#lookup_alternate ins, .attributeWidget ins {
 	display: inline-block;
 	vertical-align: bottom;
 	margin-left: -5px;
@@ -503,6 +498,10 @@ label {
 	margin-bottom: 15px;
 }
 
+.annotationDialog .ui-accordion-content {
+  padding: 5px 10px !important;
+}
+
 #titleDialog div, #correctionDialog div {
 	margin-bottom: 10px;
 }
@@ -580,7 +579,7 @@ label {
 	width: 185px;
 }
 
-.required {
+.cwrc .required {
 	color: red;
 }
 
@@ -709,80 +708,12 @@ label {
 	text-align: left;
 }
 
-#headerDialog h1, #headerDialog h2, #headerDialog h3 {
-	margin: 5px 0;
-}
-
-#headerDialog label {
-	display: inline-block;
-    text-align: right;
-    width: 120px;
-}
-
-#headerDialog input {
-	width: 200px;
-	vertical-align: top;
-}
- /*
-#headerDialog ul {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-	display: block;
-}
-
-#headerDialog li.root {
-	margin-left: 0;
-}
-
-#headerDialog li {
-	padding: 0;
-	margin-left: 16px;
-	min-height: 26px;
-	line-height: 26px;
-	background-color: #fff;
-	display: block;
-}
-
-#headerDialog li.over {
-
-}
-
-#headerDialog li > button {
-	display: none;
-}
-
-#headerDialog li.over > button {
-	display: inline-block;
-	float: right;
-}
-
-#headerDialog .ui-widget {
-	font-size: 0.8em;
-}
-
-#headerDialog label {
-	font-weight: bold;
-}
-
-#headerDialog input {
-	width: 200px;
-	vertical-align: top;
-}
-*/
-
-#headerAddDialog select {
-	width: 150px;
-}
-
-#headerAddDialog textarea {
-	width: 98%;
-	height: 100px;
-}
-
-#headerDoc {
-	float: right;
-	width: 150px;
+#headerDialog textarea {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	bottom: 5px;
+	left: 5px;
 }
 
 /* tinymce style overrides */
@@ -814,7 +745,7 @@ label {
 	padding: 0 !important;
 }
 
-.inputParent {
+.cwrc .inputParent {
 	background-color: #ffffff !important;
 	border: 1px solid #D4D0C8 !important;
 	position: absolute !important;
@@ -825,12 +756,12 @@ label {
 	font-size: 11px !important;
 }
 
-.inputParent span {
+.cwrc .inputParent span {
 	margin: 4px 0 4px 3px !important;
 	display: inline-block !important;
 }
 
-.inputParent input {
+.cwrc .inputParent input {
 	margin: 4px 3px !important;
 	position: relative !important;
 	display: inline-block !important;

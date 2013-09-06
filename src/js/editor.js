@@ -620,7 +620,7 @@ function Writer(config) {
 			}
 		});
 		
-		$('#header h1').click(function() {
+		$('#cwrc_header h1').click(function() {
 			window.location = 'http://www.cwrc.ca';
 		});
 		
@@ -939,7 +939,7 @@ function Writer(config) {
 				});
 				ed.addButton('addtriple', {title: 'Add Relation', image: w.cwrcRootUrl+'img/chart_org.png', 'class': 'entityButton',
 					onclick: function() {
-						$('#westTabs').tabs('select', 2);
+						$('#westTabs').tabs('option', 'active', 2);
 						w.dialogs.show('triple');
 					}
 				});

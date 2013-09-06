@@ -26,7 +26,7 @@ var KeywordDialog = function(config) {
 	
 	$('#keyword_choice').accordion({
 		header: 'div > h3',
-		fillSpace: true
+		heightStyle: 'fill'
 	});
 	
 	var keyword = $('#keywordDialog');
@@ -171,16 +171,16 @@ var KeywordDialog = function(config) {
 			$('#keyword_input').val('');
 			$('#keyword_lookup').val('');
 			$('#keyword_index ul').css({borderColor: '#fff'}).empty();
-			$('#keyword_choice').accordion('resize');
+			$('#keyword_choice').accordion('refresh');
 			if (mode == ADD) {
-				$('#keyword_choice').accordion('activate', 0);
+				$('#keyword_choice').accordion('option', 'active', 0);
 			} else {
 				prefix = 'Edit ';
 				if (config.entry.info.type == 'keyword') {
-					$('#keyword_choice').accordion('activate', 0);
+					$('#keyword_choice').accordion('option', 'active', 0);
 					$('#keyword_input').val(config.entry.info.keyword);
 				} else {
-					$('#keyword_choice').accordion('activate', 1);
+					$('#keyword_choice').accordion('option', 'active', 1);
 					$('#keyword_lookup').val(config.entry.info.lookup);
 				}
 			}

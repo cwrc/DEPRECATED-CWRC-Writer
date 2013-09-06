@@ -1,3 +1,15 @@
+// add event listeners to all of our jquery ui dialogs
+// wrapping our dialogs in the cwrc css scope
+$.extend($.ui.dialog.prototype.options, {
+	create: function(event) {
+		$(event.target).on('dialogopen', function(event) {
+			$(event.target).parent('.ui-dialog').prev('.ui-widget-overlay').andSelf().wrapAll('<div class="cwrc" />');
+		}).on('dialogclose', function(event) {
+			$(event.target).parent('.ui-dialog').unwrap();
+		});
+	}
+});
+
 function DialogManager(config) {
 	var w = config.writer;
 	
@@ -20,6 +32,7 @@ function DialogManager(config) {
 		triple: new TripleDialog(config),
 		header: new HeaderDialog(config),
 		filemanager: new FileManagerDialogs(config)
+//		,person: new PersonDialog(config)
 	};
 	
 	dialogs.person = dialogs.search;

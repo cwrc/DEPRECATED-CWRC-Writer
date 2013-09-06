@@ -65,7 +65,7 @@ var SearchDialog = function(config) {
 	
 	$('#lookupServices').accordion({
 		header: 'div > h3',
-		fillSpace: true,
+		heightStyle: 'fill',
 		activate: function(event, ui) {
 			if ($('#lookupServices').accordion('option', 'active') < 2) doQuery();
 		}
@@ -250,21 +250,21 @@ var SearchDialog = function(config) {
 			}
 			search.dialog('open');
 			
-			$('#lookupServices').accordion('resize');
+			$('#lookupServices').accordion('refresh');
 			if (mode == EDIT) {
 				$('#certainty input[value="'+config.entry.info.certainty+'"]').click();
 				if (config.entry.info.type && config.entry.info.type == 'alt_id') {
-					$('#lookupServices').accordion('activate', 2);
+					$('#lookupServices').accordion('option', 'active', 2);
 					$('#lookup_alternate input[name="'+config.entry.info.typeName+'"]').val(config.entry.info.value).prevAll('input').click();
 				} else {
-					$('#lookupServices').accordion('activate', 0);
+					$('#lookupServices').accordion('option', 'active', 0);
 				}
 			} else {
 				$('#c_definite').trigger('click');
 				if ($('#lookupServices').accordion('option', 'active') == 0) {
 					doQuery();
 				} else {
-					$('#lookupServices').accordion('activate', 0);
+					$('#lookupServices').accordion('option', 'active', 0);
 				}
 			}
 		},

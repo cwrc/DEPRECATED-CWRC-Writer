@@ -26,6 +26,11 @@
 				var node;
 				
 				menu.beforeShowMenu.add(function(m) {
+					var parentContainer = $(m.element.getParent());
+					if (parentContainer.parent('.cwrc').length == 0) {
+						parentContainer.wrap('<div class="cwrc" />');
+					}
+					
 					t.editor.writer.tree.disableHotkeys();
 					
 					var filterKey;
