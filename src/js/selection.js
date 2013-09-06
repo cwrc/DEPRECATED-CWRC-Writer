@@ -13,7 +13,7 @@ function Selection(config) {
 		$('#selectionContents').html(contents);
 		var xmlString = w.fm.buildXMLString($('#selectionContents'));
 		var escapedContents = w.u.escapeHTMLString(xmlString);   //$('#selectionContents')[0].innerHTML
-		if (escapedContents.length < 100000) {
+		if (escapedContents.length < 100000 && escapedContents != '\uFEFF') {
 			$('#selection').html('<pre>'+escapedContents+'</pre>');
 			$('#selection > pre').snippet('html', {
 				style: 'typical',
