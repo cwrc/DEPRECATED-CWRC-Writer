@@ -491,6 +491,8 @@ function FileManager(config) {
 					schemaId = 'events';
 				} else if (rootName == 'biography') {
 					schemaId = 'biography';
+				} else if (rootName == 'writing') {
+					schemaId = 'writing';
 				}
 				fm.loadSchema(schemaId, false, doProcessing);
 			} else {
