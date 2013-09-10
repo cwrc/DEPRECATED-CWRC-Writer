@@ -386,16 +386,25 @@ function Writer(config) {
 		if (ed.currentNode) {
 			// check if text is allowed in this node
 			if (ed.currentNode.getAttribute('_textallowed') == 'false') {
-				w.dialogs.show('message', {
-					title: 'No Text Allowed',
-					msg: 'Text is not allowed in the current tag: '+ed.currentNode.getAttribute('_tag')+'.',
-					type: 'error'
-				});
-				
-				// remove all text
-				$(ed.currentNode).contents().filter(function() {
-					return this.nodeType == 3;
-				}).remove();
+				if (evt.ctrlKey || evt.which == 17) {
+					// don't show message if we got here through undo/redo
+					var node = $('[_textallowed="true"]', w.editor.getBody()).first();
+					var rng = w.editor.selection.getRng(true);
+					rng.selectNodeContents(node[0]);
+					rng.collapse(true);
+					w.editor.selection.setRng(rng);
+				} else {
+					w.dialogs.show('message', {
+						title: 'No Text Allowed',
+						msg: 'Text is not allowed in the current tag: '+ed.currentNode.getAttribute('_tag')+'.',
+						type: 'error'
+					});
+					
+					// remove all text
+					$(ed.currentNode).contents().filter(function() {
+						return this.nodeType == 3;
+					}).remove();
+				}
 			}
 			
 			// replace br's inserted on shift+enter

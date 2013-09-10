@@ -258,7 +258,22 @@ function Tagger(config) {
 		}
 	};
 	
+	
+	/**
+	 * Add our own undo level, then erase the next one that gets added by tinymce
+	 */
+	function _doCustomTaggerUndo() {
+		w.editor.undoManager.add();
+		w.editor.undoManager.onAdd.addToTop(function() {
+			console.log('onAdd');
+			this.data.splice(this.data.length-1, 1); // remove last undo level
+			this.onAdd.listeners.splice(0, 1); // remove this listener
+		}, w.editor.undoManager);
+	}
+	
 	tagger.addEntityTag = function(type) {
+		_doCustomTaggerUndo();
+		
 		var sel = w.editor.selection;
 		var content = sel.getContent();
 		var range = sel.getRng(true);
@@ -310,6 +325,8 @@ function Tagger(config) {
 	 * @param params.action Where to insert the tag, relative to the bookmark (before, after, around, inside); can also be null
 	 */
 	tagger.addStructureTag = function(params) {
+		_doCustomTaggerUndo();
+		
 		var bookmark = params.bookmark;
 		var attributes = params.attributes;
 		var action = params.action;
@@ -378,6 +395,7 @@ function Tagger(config) {
 	};
 	
 	tagger.editStructureTag = function(tag, attributes) {
+		// TODO add support for span/div changing, add undo support
 		var id = tag.attr('id');
 		attributes.id = id;
 		$.each($(tag[0].attributes), function(index, att) {
@@ -395,6 +413,8 @@ function Tagger(config) {
 	};
 	
 	tagger.removeStructureTag = function(id, removeContents) {
+		_doCustomTaggerUndo();
+		
 		id = id || w.editor.currentStruct;
 		
 		if (removeContents == undefined) {
@@ -405,10 +425,6 @@ function Tagger(config) {
 		
 		var node = $('#'+id, w.editor.getBody());
 		if (removeContents) {
-			node.find('[_tag]').each(function(index, el) {
-				var childId = $(el).attr('id');
-				delete w.structs[childId];
-			});
 			node.remove();
 		} else {
 			var parent = node.parent()[0];
@@ -421,18 +437,17 @@ function Tagger(config) {
 			parent.normalize();
 		}
 		
-		delete w.structs[id];
+		w.tagger.findNewAndDeletedTags();
 		w.tree.update();
 		w.editor.currentStruct = null;
 	};
 	
 	tagger.removeStructureTagContents = function(id) {
+		_doCustomTaggerUndo();
+		
 		var node = $('#'+id, w.editor.getBody());
-		node.find('[_tag]').each(function(index, el) {
-			var childId = $(el).attr('id');
-			delete w.structs[childId];
-		});
 		node.contents().remove();
+		w.tagger.findNewAndDeletedTags();
 		w.tree.update();
 	};
 	

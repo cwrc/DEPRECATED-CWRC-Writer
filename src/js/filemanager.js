@@ -764,6 +764,10 @@ function FileManager(config) {
 					w._fireNodeChange(bodyTag);
 				}
 			}, 50);
+			
+			// reset the undo manager
+			w.editor.undoManager.clear();
+			
 		} // end doProcessing
 	};
 	
