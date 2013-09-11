@@ -265,7 +265,6 @@ function Tagger(config) {
 	function _doCustomTaggerUndo() {
 		w.editor.undoManager.add();
 		w.editor.undoManager.onAdd.addToTop(function() {
-			console.log('onAdd');
 			this.data.splice(this.data.length-1, 1); // remove last undo level
 			this.onAdd.listeners.splice(0, 1); // remove this listener
 		}, w.editor.undoManager);

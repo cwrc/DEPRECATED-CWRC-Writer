@@ -51,32 +51,36 @@ function StructureTree(config) {
 	};
 	
 	tree.selectNode = function(node) {
-		var id = node.id;
-		if (id && !ignoreSelect) {
-			ignoreSelect = true;
-			if (id == 'entityHighlight') {
-				id = $(node).find('[_entity]').first().attr('name');
-			}
-			var treeNode = $('#tree [name="'+id+'"]');
-			if (treeNode.length === 0) {
-				var parents = [];
-				$(node).parentsUntil('#tinymce').each(function(index, el) {
-					parents.push(el.id);
-				});
-				parents.reverse();
-				for (var i = 0; i < parents.length; i++) {
-					var parentId = parents[i];
-					var parentNode = $('#tree [name="'+parentId+'"]');
-					var isOpen = $tree.jstree('is_open', parentNode);
-					if (!isOpen) {
-						$tree.jstree('open_node', parentNode, false, true);
-					}
+		if (node) {
+			var id = node.id;
+			if (id && !ignoreSelect) {
+				ignoreSelect = true;
+				if (id == 'entityHighlight') {
+					id = $(node).find('[_entity]').first().attr('name');
 				}
-				treeNode = $('#tree [name="'+id+'"]');
+				var treeNode = $('#tree [name="'+id+'"]');
+				if (treeNode.length === 0) {
+					var parents = [];
+					$(node).parentsUntil('#tinymce').each(function(index, el) {
+						parents.push(el.id);
+					});
+					parents.reverse();
+					for (var i = 0; i < parents.length; i++) {
+						var parentId = parents[i];
+						var parentNode = $('#tree [name="'+parentId+'"]');
+						var isOpen = $tree.jstree('is_open', parentNode);
+						if (!isOpen) {
+							$tree.jstree('open_node', parentNode, false, true);
+						}
+					}
+					treeNode = $('#tree [name="'+id+'"]');
+				}
+				_onNodeDeselect(); // manually trigger deselect behaviour, primarily to clear currentlySelectedNode
+				var result = $tree.jstree('select_node', treeNode, true);
+				if (result.attr('id') == 'tree') ignoreSelect = false;
 			}
-			_onNodeDeselect(); // manually trigger deselect behaviour, primarily to clear currentlySelectedNode
-			var result = $tree.jstree('select_node', treeNode, true);
-			if (result.attr('id') == 'tree') ignoreSelect = false;
+		} else {
+			_onNodeDeselect();
 		}
 	};
 	

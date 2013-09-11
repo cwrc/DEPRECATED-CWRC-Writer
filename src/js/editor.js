@@ -315,18 +315,39 @@ function Writer(config) {
 		w.editor.onNodeChange.dispatch(w.editor, w.editor.controlManager, nodeEl, false, w.editor);
 	};
 	
-	// browsers have trouble deleting divs, so use the tree and jquery as a workaround
 	function _onKeyDownDeleteHandler(ed, evt) {
-		if (evt.which == 8 || evt.which == 46) {
-			if (w.tree.currentlySelectedNode != null) {
-				// cancel keyboard delete
-				tinymce.dom.Event.cancel(evt);
+		if (w.tree.currentlySelectedNode != null) {
+			// browsers have trouble deleting divs, so use the tree and jquery as a workaround
+			if (evt.which == 8 || evt.which == 46) {
+					// cancel keyboard delete
+					tinymce.dom.Event.cancel(evt);
+					if (w.tree.selectionType == w.tree.NODE_SELECTED) {
+						w.tagger.removeStructureTag(w.tree.currentlySelectedNode, true);
+					} else {
+						var id = w.tree.currentlySelectedNode;
+						w.tagger.removeStructureTagContents(w.tree.currentlySelectedNode);
+						w.selectStructureTag(id, true);
+					}
+			} else if (evt.which >= 48 && evt.which <= 90) {
+				// handle alphanumeric characters when whole tree node is selected
+				// remove the selected node and set the focus to the closest node
 				if (w.tree.selectionType == w.tree.NODE_SELECTED) {
-					w.tagger.removeStructureTag(w.tree.currentlySelectedNode, true);
-				} else {
-					var id = w.tree.currentlySelectedNode;
-					w.tagger.removeStructureTagContents(w.tree.currentlySelectedNode);
-					w.selectStructureTag(id, true);
+					var currNode = $('#'+w.tree.currentlySelectedNode, ed.getBody());
+					var closestNode = currNode.prev();
+					if (closestNode.length == 0) {
+						closestNode = currNode.next();
+					}
+					var rng = w.editor.selection.getRng(true);
+					if (closestNode.length == 0) {
+						closestNode = currNode.parent();
+						w.tagger.removeStructureTag(w.tree.currentlySelectedNode, true);
+						rng.selectNodeContents(closestNode[0]);
+					} else {
+						w.tagger.removeStructureTag(w.tree.currentlySelectedNode, true);
+						rng.selectNode(closestNode[0]);
+					}
+					rng.collapse(true);
+					w.editor.selection.setRng(rng);
 				}
 			}
 		}
@@ -439,7 +460,8 @@ function Writer(config) {
 		// if the user's typing we don't want the currentlySelectedNode to be set
 		// calling selectNode will clear currentlySelectedNode
 		if (w.tree.currentlySelectedNode != null) {
-			w.tree.selectNode($('#'+w.tree.currentlySelectedNode, w.editor.getBody())[0]);
+			var currNode = $('#'+w.tree.currentlySelectedNode, w.editor.getBody())[0];
+			w.tree.selectNode(currNode);
 		}
 	};
 	
