@@ -242,6 +242,7 @@ function FileManager(config) {
 				bodyString += el.data;
 			}
 		});
+		bodyString = bodyString.replace(/\uFEFF/g, ''); // remove characters inserted by node selecting
 		
 		xmlString += rdfString + bodyString;
 		
