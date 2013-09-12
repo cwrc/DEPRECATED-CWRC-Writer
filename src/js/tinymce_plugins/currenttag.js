@@ -47,7 +47,9 @@
 				
 				$('#currentPath a').click(function() {
 					var id = $(this).attr('name');
-					if (id) t.editor.writer.selectStructureTag(id);
+					if (id) {
+						t.editor.writer.tree.selectNode($('#'+id, t.editor.getBody())[0], t.editor.writer.tree.NODE_SELECTED);
+					}
 				});
 			});
 			

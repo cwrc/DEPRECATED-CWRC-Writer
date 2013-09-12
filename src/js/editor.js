@@ -109,7 +109,7 @@ function Writer(config) {
 				$(w.editor.dom.doc.body).scrollTop(val);
 			}
 			
-			w.tree.selectNode($('#entityHighlight', w.editor.getBody())[0]);
+			w.tree.highlightNode($('#entityHighlight', w.editor.getBody())[0]);
 			
 			$('#entities > ul > li[name="'+id+'"]').addClass('selected').find('div[class="info"]').show();
 		}
@@ -458,10 +458,10 @@ function Writer(config) {
 		}
 		
 		// if the user's typing we don't want the currentlySelectedNode to be set
-		// calling selectNode will clear currentlySelectedNode
+		// calling highlightNode will clear currentlySelectedNode
 		if (w.tree.currentlySelectedNode != null) {
 			var currNode = $('#'+w.tree.currentlySelectedNode, w.editor.getBody())[0];
-			w.tree.selectNode(currNode);
+			w.tree.highlightNode(currNode);
 		}
 	};
 	
@@ -503,7 +503,7 @@ function Writer(config) {
 				}
 			}
 			if (ed.currentNode) {
-				w.tree.selectNode(ed.currentNode);
+				w.tree.highlightNode(ed.currentNode);
 			}
 			if (w.emptyTagId) {
 				delete w.entities[w.emptyTagId];
