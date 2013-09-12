@@ -483,7 +483,21 @@ function Writer(config) {
 				if (e.getAttribute('_tag') == null) {
 					if (e.getAttribute('data-mce-bogus') != null) {
 						// artifact from selectStructureTag
-						var sibling = $(e).next('[_tag]')[0];
+						var sibling;
+						var rng = ed.selection.getRng(true);
+						if (rng.collapsed) {
+							// the user's trying to type in a bogus tag
+							// find the closest previous valid tag and correct the cursor location
+							sibling = $(e).prevAll('[_tag]')[0];
+							if (sibling != null) {
+								rng.selectNodeContents(sibling);
+								rng.collapse(false);
+								ed.selection.setRng(rng);
+							}
+						} else {
+							// the structure is selected
+							sibling = $(e).next('[_tag]')[0];
+						}
 						if (sibling != null) {
 							e = sibling;
 						} else {
