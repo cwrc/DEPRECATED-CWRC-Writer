@@ -147,8 +147,8 @@
 					'<div class="attsContainer">'+
 						'<div class="level1Atts"></div>'+
 						'<div class="highLevelAtts"></div>'+
-						'<div class="schemaHelp"></div>'+
 					'</div>'+
+					'<div class="schemaHelp"></div>'+
 				'</div>'
 			);
 			
@@ -162,6 +162,7 @@
 				},
 				height: 460,
 				width: 550,
+				minWidth: 510,
 				autoOpen: false,
 				open: function(event, ui) {
 					t.dialogOpenTimestamp = event.timeStamp;
