@@ -359,6 +359,8 @@ function Writer(config) {
 	};
 	
 	function _onKeyDownHandler(ed, evt) {
+		ed.lastKeyPress = evt.which; // store the last key press
+		
 		// TODO move to keyup
 		// redo/undo listener
 		if ((evt.which == 89 || evt.which == 90) && evt.ctrlKey) {
@@ -487,11 +489,20 @@ function Writer(config) {
 						var rng = ed.selection.getRng(true);
 						if (rng.collapsed) {
 							// the user's trying to type in a bogus tag
-							// find the closest previous valid tag and correct the cursor location
-							sibling = $(e).prevAll('[_tag]')[0];
+							// find the closest valid tag and correct the cursor location
+							var backwardDirection = true;
+							if (ed.lastKeyPress == 36 || ed.lastKeyPress == 37 || ed.lastKeyPress == 38) {
+								sibling = $(e).prevAll('[_tag]')[0];
+								backwardDirection = false;
+							} else {
+								sibling = $(e).nextAll('[_tag]')[0];
+								if (sibling == null) {
+									sibling = $(e).parent().nextAll('[_tag]')[0];
+								}
+							}
 							if (sibling != null) {
 								rng.selectNodeContents(sibling);
-								rng.collapse(false);
+								rng.collapse(backwardDirection);
 								ed.selection.setRng(rng);
 							}
 						} else {
@@ -806,6 +817,7 @@ function Writer(config) {
 				ed.entityCopy = null; // store a copy of an entity for pasting
 				ed.contextMenuPos = null; // the position of the context menu (used to position related dialog box)
 				ed.copiedElement = {selectionType: null, element: null}; // the element that was copied (when first selected through the structure tree)
+				ed.lastKeyPress = null; // the last key the user pressed
 				
 				ed.onInit.add(function(ed) {
 					// modify isBlock method to check _tag attributes
