@@ -4,13 +4,6 @@ function Validation(config) {
 	
 	$(config.parentId).append('<div id="validation"><button>Validate</button><button>Clear</button><ul class="validationList"></ul></div>');
 	
-	$('#validation button:eq(0)').button().click(function() {
-		w.delegator.validate();
-	});
-	$('#validation button:eq(1)').button().click(function() {
-		$('#validation > ul').empty();
-	});
-	
 	var validation = {};
 	
 	/**
@@ -105,6 +98,18 @@ function Validation(config) {
 		w.layout.center.children.layout1.open('south');
 		$('#southTabs').tabs('option', 'active', 0);
 	};
+	
+	validation.clearResult = function() {
+		$('#validation > ul').empty();
+	};
+	
+
+	$('#validation button:eq(0)').button().click(function() {
+		w.delegator.validate();
+	});
+	$('#validation button:eq(1)').button().click(function() {
+		validation.clearResult();
+	});
 	
 	return validation;
 };

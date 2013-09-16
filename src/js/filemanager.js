@@ -272,6 +272,22 @@ function FileManager(config) {
 		});
 	};
 	
+	/**
+	 * For debug
+	 */
+	fm.getEntityOffsets = function() {
+		var body = $(w.editor.getBody());
+		var offsets = _getNodeOffsetsFromRoot(body);
+		var ents = [];
+		for (var i = 0; i < offsets.length; i++) {
+			var o = offsets[i];
+			if (o.entity) {
+				ents.push(o);
+			}
+		}
+		return ents;
+	};
+	
 	function _getNodeOffsetsFromRoot(root) {
 		var currentOffset = 0;
 		var offsets = [];
@@ -755,6 +771,7 @@ function FileManager(config) {
 			w.entitiesList.update();
 			w.tree.update(true);
 			w.relations.update();
+			w.validation.clearResult();
 			
 			// try putting the cursor in the body
 			window.setTimeout(function() {
