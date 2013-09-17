@@ -431,7 +431,7 @@ function FileManager(config) {
 				editorString += ' id="'+id+'"';
 			}
 			var idNum = parseInt(id.split('_')[1]);
-			if (idNum > tinymce.DOM.counter) tinymce.DOM.counter = idNum;
+			if (idNum >= tinymce.DOM.counter) tinymce.DOM.counter = idNum+1;
 			
 			var canContainText = w.u.canTagContainText(tag);
 			editorString += ' _textallowed="'+canContainText+'"';
@@ -564,7 +564,7 @@ function FileManager(config) {
 						// entity
 						if (entity != '') {
 							var idNum = parseInt(id.split('_')[1]);
-							if (idNum > tinymce.DOM.counter) tinymce.DOM.counter = idNum;
+							if (idNum >= tinymce.DOM.counter) tinymce.DOM.counter = idNum+1;
 							
 							offsets.push({
 								id: id,

@@ -116,7 +116,6 @@ var EntitiesList = function(config) {
 					entry = w.entities[id];
 				}
 				if (entry) {
-					entityTags = entityTags.not('[name='+id+']');
 					entitiesString += _buildEntity(entry);
 				}
 			});
