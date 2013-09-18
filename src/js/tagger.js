@@ -14,13 +14,13 @@ function Tagger(config) {
 		var sel = w.editor.selection;
 		var bm = sel.getBookmark();
 		
-		var start = w.editor.dom.create('span', {'_entity': true, '_type': type, 'class': 'entity '+type+' start', 'name': id}, '\uFEFF');
+		var start = w.editor.dom.create('span', {'_entity': true, '_type': type, 'class': 'entity '+type+' start', 'name': id}, '');
 		range.insertNode(start);
 		w.editor.dom.bind(start, 'click', _doMarkerClick);
 		
 		w.editor.selection.moveToBookmark(bm);
 		
-		var end = w.editor.dom.create('span', {'_entity': true, '_type': type, 'class': 'entity '+type+' end', 'name': id}, '\uFEFF');
+		var end = w.editor.dom.create('span', {'_entity': true, '_type': type, 'class': 'entity '+type+' end', 'name': id}, '');
 		sel.collapse(false);
 		range = sel.getRng(true);
 		range.insertNode(end);

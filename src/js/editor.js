@@ -576,9 +576,9 @@ function Writer(config) {
 		var range = ed.selection.getRng(true);
 		
 		// check if inside boundary tag
-		var parent = range.commonAncestorContainer.parentNode;
-		if (parent.hasAttribute('_entity')) {
-			w.highlightEntity();
+		var parent = range.commonAncestorContainer;
+		if (parent.nodeType == 1 && parent.hasAttribute('_entity')) {
+			w.highlightEntity(); // remove highlight
 			if ((w.editor.dom.hasClass(parent, 'start') && evt.which == 37) || 
 				(w.editor.dom.hasClass(parent, 'end') && evt.which != 39)) {
 				var prevNode = w.u.getPreviousTextNode(parent);
