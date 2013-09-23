@@ -328,7 +328,7 @@ function Writer(config) {
 						w.tagger.removeStructureTagContents(w.tree.currentlySelectedNode);
 						w.selectStructureTag(id, true);
 					}
-			} else if (evt.which >= 48 && evt.which <= 90) {
+			} else if (evt.ctrlKey == false && evt.metaKey == false && evt.which >= 48 && evt.which <= 90) {
 				// handle alphanumeric characters when whole tree node is selected
 				// remove the selected node and set the focus to the closest node
 				if (w.tree.selectionType == w.tree.NODE_SELECTED) {
