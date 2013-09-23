@@ -95,6 +95,7 @@
 					return;
 				}
 				
+				var tagId = t.editor.currentBookmark.tagId;
 				t.editor.selection.moveToBookmark(t.editor.currentBookmark);
 				
 				var valid = t.editor.execCommand('isSelectionValid', true, t.action);
@@ -105,6 +106,9 @@
 				
 				// reset bookmark after possible modification by isSelectionValid
 				t.editor.currentBookmark = t.editor.selection.getBookmark(1);
+				if (tagId != null) {
+					t.editor.currentBookmark.tagId = tagId;
+				}
 				
 				// isSelectionValid should perform this function
 //				var sel = t.editor.selection;
