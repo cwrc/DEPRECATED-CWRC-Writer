@@ -434,6 +434,7 @@ function FileManager(config) {
 			if (idNum >= tinymce.DOM.counter) tinymce.DOM.counter = idNum+1;
 			
 			var canContainText = w.u.canTagContainText(tag);
+			// TODO find non-intensive way to check if tags can possess attributes
 			editorString += ' _textallowed="'+canContainText+'"';
 			
 			w.structs[id] = {
@@ -811,10 +812,11 @@ function FileManager(config) {
 	 */
 	fm.loadSchema = function(schemaId, startText, callback) {
 		var baseUrl = ''; //w.project == null ? '' : w.baseUrl; // handling difference between local and server urls
-		w.schemaId = schemaId; 
+		w.schemaId = schemaId;
+		var schemaUrl = w.schemas[w.schemaId].url;
 		
 		$.ajax({
-			url: w.schemas[w.schemaId].url,
+			url: schemaUrl,
 			dataType: 'xml',
 			success: function(data, status, xhr) {
 				w.schemaXML = data;
@@ -904,9 +906,17 @@ function FileManager(config) {
 				// handle includes
 				var include = $('include:first', w.schemaXML); // TODO add handling for multiple includes
 				if (include.length == 1) {
-					var href = include.attr('href');
+					var url = '';
+					var schemaFile = include.attr('href');
+					var schemaBase = schemaUrl.match(/(.*\/)(.*)/)[1];
+					if (schemaBase != null) {
+						url = schemaBase + schemaFile;
+					} else {
+						url = baseUrl + 'schema/'+schemaFile;
+					}
+					
 					$.ajax({
-						url: baseUrl + 'schema/'+href,
+						url: url,
 						dataType: 'xml',
 						success: function(data, status, xhr) {
 							// handle redefinitions
