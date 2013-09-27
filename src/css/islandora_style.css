@@ -302,7 +302,7 @@ A:hover
 
 
 /* Entities Tab */
-
+/*
 #westTabs .title
 {
   margin-left: 10px;
@@ -320,7 +320,7 @@ A:hover
   margin-left: 0px;
   vertical-align: 0px;
 }
-
+*/
 #westTabs #entities ul li
 {
   margin: 5px 0px;
