@@ -88,14 +88,14 @@ var NoteDialog = function(config) {
 			function postSetup() {
 //				noteEditor.focus();
 				if (mode == ADD) {
-					$('#note_type input:eq(0)').attr('checked', 'checked').button('refresh');
-					$('#note_access input:eq(0)').attr('checked', 'checked').button('refresh');
+					$('#note_type input:eq(0)').click();
+					$('#note_access input:eq(0)').click();
 					$('#note_textarea').val('');
 //					noteEditor.setContent('');
 				} else {
 					prefix = 'Edit ';
-					$('#note_type input[value="'+config.entry.info.type+'"]').attr('checked', 'checked').button('refresh');
-					$('#note_access input[value="'+config.entry.info.access+'"]').attr('checked', 'checked').button('refresh');
+					$('#note_type input[value="'+config.entry.info.type+'"]').click();
+					$('#note_access input[value="'+config.entry.info.access+'"]').click();
 					var content = w.u.unescapeHTMLString(config.entry.info.content);
 					$('#note_textarea').val(content);
 //					noteEditor.setContent(content);
