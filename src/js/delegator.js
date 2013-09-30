@@ -65,7 +65,7 @@ function Delegator(config) {
 		var schemaUrl = w.schemas[w.schemaId].url;
 		
 		$.ajax({
-			url: w.baseUrl+'services/validator/validate.html',
+			url: w.baseUrl+'services/validator2/validate.html',
 			type: 'POST',
 			dataType: 'XML',
 			data: {
