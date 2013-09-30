@@ -908,8 +908,10 @@ function FileManager(config) {
 				if (include.length == 1) {
 					var url = '';
 					var includeHref = include.attr('href');
-					var schemaFile = includeHref.match(/(.*\/)(.*)/)[2]; // grab just the filename
-					if (schemaFile == null) {
+					var schemaFile;
+					if (includeHref.indexOf('/') != -1) {
+						schemaFile = includeHref.match(/(.*\/)(.*)/)[2]; // grab the filename
+					} else {
 						schemaFile = includeHref;
 					}
 					var schemaBase = schemaUrl.match(/(.*\/)(.*)/)[1];
