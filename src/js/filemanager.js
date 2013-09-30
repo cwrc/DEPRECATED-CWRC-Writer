@@ -907,7 +907,11 @@ function FileManager(config) {
 				var include = $('include:first', w.schemaXML); // TODO add handling for multiple includes
 				if (include.length == 1) {
 					var url = '';
-					var schemaFile = include.attr('href');
+					var includeHref = include.attr('href');
+					var schemaFile = includeHref.match(/(.*\/)(.*)/)[2]; // grab just the filename
+					if (schemaFile == null) {
+						schemaFile = includeHref;
+					}
 					var schemaBase = schemaUrl.match(/(.*\/)(.*)/)[1];
 					if (schemaBase != null) {
 						url = schemaBase + schemaFile;
