@@ -43,8 +43,10 @@ var FileManagerDialogs = function(config) {
 		height: 450,
 		width: 450,
 		autoOpen: false,
-		buttons: {
-			'Load': function() {
+		buttons: [{
+			text: 'Load',
+			id: 'cwrc_loaderDialog_loadButton',
+			click : function() {
 				var selected = $('#files ul li.selected');
 				var data = selected.data();
 				var isDoc = selected.parent('ul')[0] == $('#files ul:eq(0)')[0];
@@ -57,11 +59,14 @@ var FileManagerDialogs = function(config) {
 				} else {
 					$('#files ul').css({borderColor: 'red'});
 				}
-			},
-			'Cancel': function() {
+			}
+		},{
+			text: 'Cancel',
+			id: 'cwrc_loaderDialog_cancelButton',
+			click: function() {
 				loader.dialog('close');
 			}
-		}
+		}]
 	});
 	
 	// templates events
