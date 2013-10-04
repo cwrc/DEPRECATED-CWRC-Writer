@@ -161,15 +161,13 @@
 				resizable: true,
 				dialogClass: 'splitButtons',
 				closeOnEscape: false,
-				open: function(event, ui) {
-					t.schemaDialog.parent().find('.ui-dialog-titlebar-close').hide();
-				},
 				height: 460,
 				width: 550,
 				minWidth: 510,
 				autoOpen: false,
 				open: function(event, ui) {
 					t.dialogOpenTimestamp = event.timeStamp;
+					t.schemaDialog.parent().find('.ui-dialog-titlebar-close').hide();
 				},
 				beforeClose: function(event, ui) {
 					if (event.timeStamp - t.dialogOpenTimestamp < 150) {
