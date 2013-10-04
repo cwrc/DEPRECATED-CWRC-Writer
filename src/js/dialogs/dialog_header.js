@@ -6,7 +6,7 @@ var HeaderDialog = function(config) {
 	
 	$(document.body).append(''+
 	'<div id="headerDialog">'+
-	'<textarea></textarea>'+
+	'<div><textarea></textarea></div>'+
 	'</div>');
 	
 	var header = $('#headerDialog');
