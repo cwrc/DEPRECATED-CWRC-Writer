@@ -17,7 +17,7 @@ var NoteDialog = function(config) {
 		'<input type="radio" id="note_ann" name="note_type" value="annotation" /><label for="note_ann" title="Informal notes">Annotation</label>'+
 		'<input type="radio" id="note_trans" name="note_type" value="translation" /><label for="note_trans">Translation</label>'+
 		'</div>'+
-	    '<textarea id="note_textarea"></textarea>'+
+	    '<form method="post" action=""><textarea id="note_textarea"></textarea></form>'+
 	    '<div id="note_access"><p>Access</p>'+
 		'<input type="radio" id="note_pub" name="note_access" value="public" /><label for="note_pub">Public</label>'+
 		'<input type="radio" id="note_pro" name="note_access" value="project" /><label for="note_pro">Project</label>'+
@@ -46,27 +46,30 @@ var NoteDialog = function(config) {
 		}
 	});
 	$('#note_type, #note_access').buttonset();
-
-	$('#note_textarea').width(380).height(225);
 	
 	function noteResult(cancelled) {
 		var data = null;
 		if (!cancelled) {
-//			var content = w.u.escapeHTMLString(noteEditor.getContent());
-			var content = w.u.escapeHTMLString($('#note_textarea').val());
+			var content = w.u.escapeHTMLString(noteEditor.getContent());
 			var data = {
 				content: content,
 				type: $('#note_type input:checked').val(),
 				access: $('#note_access input:checked').val()
 			};
 		}
+		
+		w.editor.focus();
 		if (mode == EDIT && data != null) {
 			w.editEntity(w.editor.currentEntity, data);
 		} else {
 			w.finalizeEntity(currentType, data);
 		}
+		
+		noteEditor.remove();
+		noteEditor.destroy();
+		noteEditor = null;
+		
 		note.dialog('close');
-		w.editor.focus();
 		currentType = null;
 	};
 	
@@ -86,44 +89,41 @@ var NoteDialog = function(config) {
 			note.dialog('open');
 			
 			function postSetup() {
-//				noteEditor.focus();
+				noteEditor.focus();
 				if (mode == ADD) {
 					$('#note_type input:eq(0)').click();
 					$('#note_access input:eq(0)').click();
-					$('#note_textarea').val('');
-//					noteEditor.setContent('');
+					noteEditor.setContent('');
 				} else {
 					prefix = 'Edit ';
 					$('#note_type input[value="'+config.entry.info.type+'"]').click();
 					$('#note_access input[value="'+config.entry.info.access+'"]').click();
 					var content = w.u.unescapeHTMLString(config.entry.info.content);
-					$('#note_textarea').val(content);
-//					noteEditor.setContent(content);
+					noteEditor.setContent(content);
 				}
 			}
 			
 			if (noteEditor == null) {
-				postSetup();
-//				tinyMCE.init({
-//					mode: 'exact',
-//					elements: 'note_textarea',
-//					height: '225',
-//					width: '380',
-//					theme: 'advanced',
-//					theme_advanced_buttons1: 'bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,|,formatselect',
-//					theme_advanced_buttons2: '',
-//					theme_advanced_buttons3: '',
-//					theme_advanced_toolbar_location : 'top',
-//				    theme_advanced_toolbar_align : 'left',
-//					theme_advanced_path: false,
-//					theme_advanced_statusbar_location: 'none',
-//					setup: function(ed) {
-//						noteEditor = ed;
-//					},
-//					oninit: function() {
-//						postSetup();
-//					}
-//				});
+				tinyMCE.init({
+					mode: 'exact',
+					elements: 'note_textarea',
+					height: '225',
+					width: '380',
+					theme: 'advanced',
+					theme_advanced_buttons1: 'bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,|,formatselect',
+					theme_advanced_buttons2: '',
+					theme_advanced_buttons3: '',
+					theme_advanced_toolbar_location : 'top',
+				    theme_advanced_toolbar_align : 'left',
+					theme_advanced_path: false,
+					theme_advanced_statusbar_location: 'none',
+					setup: function(ed) {
+						noteEditor = ed;
+					},
+					oninit: function() {
+						postSetup();
+					}
+				});
 			} else {
 				postSetup();
 			}
