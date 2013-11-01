@@ -121,7 +121,7 @@ var SearchDialog = function(config) {
 			for (i = 0; i < results.length; i++) {
 				r = results[i];
 				
-				label = r.identifier || r.term || r[currentType];
+				label = r.name || r.identifier || r.term || r[currentType];
 
 				if (i == results.length - 1) last = 'last';
 				else last = '';
