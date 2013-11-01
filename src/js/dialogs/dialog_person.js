@@ -33,7 +33,20 @@ var PersonDialog = function(config) {
 	};
 	
 	var onSaveClick = function() {
-		var buttonLabel = dialog.dialog('option', 'buttons')[1].text;
+		function processDate(dateString) {
+			var dateParts = dateString.split('-');
+			switch (dateParts.length) {
+				case 1:
+					currentData.birthDate = dateString;
+					break;
+				case 2:
+					currentData.birthDate = dateParts[0];
+					currentData.deathDate = dateParts[1];
+					break;
+			}
+		}
+		
+		var buttonLabel = $('#'+id+'SaveButton').button('option', 'label');
 		switch (buttonLabel) {
 			case SAVE_LABEL:
 				dialog.dialog('close');
@@ -53,17 +66,11 @@ var PersonDialog = function(config) {
 						currentData.lastName = nameParts[0];
 						currentData.firstName = nameParts[1];
 						var date = nameParts[2];
-						var dateParts = date.split('-');
-						switch (dateParts.length) {
-							case 1:
-								currentData.birthDate = date;
-								break;
-							case 2:
-								currentData.birthDate = dateParts[0];
-								currentData.deathDate = dateParts[1];
-								break;
-						}
+						processDate(date);
 						break;
+				}
+				if (currentData.date) {
+					processDate(currentData.date);
 				}
 				w.dialogs.show('addperson', {writer: w, data: currentData});
 				break;
