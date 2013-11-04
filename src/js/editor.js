@@ -615,7 +615,6 @@ function Writer(config) {
 	 * Begin init functions
 	 */
 	w.init = function() {
-<<<<<<< HEAD
 		w.layout = $('#cwrc_wrapper').layout({
 			defaults: {
 				maskIframesOnResize: true,
