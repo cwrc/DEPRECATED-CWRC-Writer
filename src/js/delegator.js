@@ -40,6 +40,7 @@ function Delegator(config) {
 				}
 			});
 		} else if (lookupService == 'viaf') {
+<<<<<<< HEAD
 			$.ajax({
 				url: 'http://viaf.org/viaf/AutoSuggest',
 				data: {
@@ -55,6 +56,70 @@ function Delegator(config) {
 				},
 				error: function() {
 					callback.call(w, null);
+=======
+			var queryPrefix = 'local.';
+			var querySuffix = '"';
+			var specificQuery = '';
+			if (type) {
+				if (type == 'person') {
+					queryPrefix += 'personalNames+all+"';
+				}
+				specificQuery = queryPrefix + encodeURIComponent(query) + querySuffix;
+			}
+			$.ajax({
+				url: w.baseUrl+'services/viaf/search',
+				data: {
+					query: specificQuery,
+					httpAccept: 'text/xml'
+				},
+				dataType: 'xml',
+				success: function(data, status, xhr) {
+					var processed = [];
+					$('searchRetrieveResponse record', data).each(function(index, el) {
+						var mainEl = $('mainHeadingEl', el).first();
+						var name = $('subfield[code="a"]', mainEl).text();
+						var date = $('subfield[code="d"]', mainEl).text();
+						var gender = $('gender', el).text();
+						switch (gender) {
+							case 'a':
+								gender = 'f';
+								break;
+							case 'b':
+								gender = 'm';
+								break;
+							default:
+								gender = 'u';
+						}
+						processed.push({
+							name: name,
+							date: date,
+							gender: gender
+						});
+					});
+					callback.call(w, processed);
+				},
+				error: function() {
+					$.ajax({
+						url: 'http://viaf.org/viaf/AutoSuggest',
+						data: {
+							query: query
+						},
+						dataType: 'jsonp',
+						success: function(data, status, xhr) {
+							if (data != null && data.result != null) {
+								var processed = $.map(data.result, function(val, index) {
+									return {name: val.term};
+								});
+								callback.call(w, processed);
+							} else {
+								callback.call(w, []);
+							}
+						},
+						error: function() {
+							callback.call(w, null);
+						}
+					});
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 				}
 			});
 		}
@@ -67,7 +132,11 @@ function Delegator(config) {
 		$.ajax({
 			url: w.baseUrl+'services/validator/validate.html',
 			type: 'POST',
+<<<<<<< HEAD
 			dataType: 'XML',
+=======
+			dataType: 'xml',
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 			data: {
 				sch: schemaUrl,
 				type: 'RNG_XML',

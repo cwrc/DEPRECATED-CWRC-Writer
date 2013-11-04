@@ -11,6 +11,7 @@ var CorrectionDialog = function(config) {
 	'<div id="correctionDialog">'+
 	    '<div><p>Correction</p><textarea id="correctionInput" name="correction"></textarea></div>'+
 	    '<div id="corr_cert"><p>Certainty</p>'+
+<<<<<<< HEAD
 	    '<input type="radio" id="corr_definite" name="certainty" value="definite" /><label for="corr_definite">Definite</label>'+
 		'<input type="radio" id="corr_reasonable" name="certainty" value="reasonable" /><label for="corr_reasonable">Reasonably Certain</label>'+
 		'<input type="radio" id="corr_probable" name="certainty" value="probable" /><label for="corr_probable">Probable</label>'+
@@ -20,6 +21,17 @@ var CorrectionDialog = function(config) {
 		'<input type="radio" id="corr_ocr" name="type" value="ocr" /><label for="corr_ocr">OCR</label>'+
 		'<input type="radio" id="corr_typo" name="type" value="typographical" /><label for="corr_typo">Typographical</label>'+
 		'<input type="radio" id="corr_other" name="type" value="other" /><label for="corr_other">Other</label>'+
+=======
+	    '<input type="radio" id="corr_definite" name="corr_certainty" value="definite" /><label for="corr_definite">Definite</label>'+
+		'<input type="radio" id="corr_reasonable" name="corr_certainty" value="reasonable" /><label for="corr_reasonable">Reasonably Certain</label>'+
+		'<input type="radio" id="corr_probable" name="corr_certainty" value="probable" /><label for="corr_probable">Probable</label>'+
+		'<input type="radio" id="corr_speculative" name="corr_certainty" value="speculative" /><label for="corr_speculative">Speculative</label>'+
+		'</div>'+
+		'<div id="corr_type"><p>Type</p>'+
+		'<input type="radio" id="corr_ocr" name="corr_type" value="ocr" /><label for="corr_ocr">OCR</label>'+
+		'<input type="radio" id="corr_typo" name="corr_type" value="typographical" /><label for="corr_typo">Typographical</label>'+
+		'<input type="radio" id="corr_other" name="corr_type" value="other" /><label for="corr_other">Other</label>'+
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 		'</div>'+
 	'</div>');
 	

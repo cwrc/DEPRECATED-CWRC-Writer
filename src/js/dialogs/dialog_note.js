@@ -12,6 +12,7 @@ var NoteDialog = function(config) {
 	$(document.body).append(''+
 	'<div id="noteDialog">'+
 		'<div id="note_type"><p>Type</p>'+
+<<<<<<< HEAD
 		'<input type="radio" id="note_re" name="type" value="research" /><label for="note_re" title="Internal to projects">Research Note</label>'+
 		'<input type="radio" id="note_scho" name="type" value="scholarly" /><label for="note_scho" title="Footnotes/endnotes">Scholarly Note</label>'+
 		'<input type="radio" id="note_ann" name="type" value="annotation" /><label for="note_ann" title="Informal notes">Annotation</label>'+
@@ -22,6 +23,18 @@ var NoteDialog = function(config) {
 		'<input type="radio" id="note_pub" name="access" value="public" /><label for="note_pub">Public</label>'+
 		'<input type="radio" id="note_pro" name="access" value="project" /><label for="note_pro">Project</label>'+
 		'<input type="radio" id="note_pri" name="access" value="private" /><label for="note_pri">Private</label>'+
+=======
+		'<input type="radio" id="note_re" name="note_type" value="research" /><label for="note_re" title="Internal to projects">Research Note</label>'+
+		'<input type="radio" id="note_scho" name="note_type" value="scholarly" /><label for="note_scho" title="Footnotes/endnotes">Scholarly Note</label>'+
+		'<input type="radio" id="note_ann" name="note_type" value="annotation" /><label for="note_ann" title="Informal notes">Annotation</label>'+
+		'<input type="radio" id="note_trans" name="note_type" value="translation" /><label for="note_trans">Translation</label>'+
+		'</div>'+
+	    '<form method="post" action=""><textarea id="note_textarea"></textarea></form>'+
+	    '<div id="note_access"><p>Access</p>'+
+		'<input type="radio" id="note_pub" name="note_access" value="public" /><label for="note_pub">Public</label>'+
+		'<input type="radio" id="note_pro" name="note_access" value="project" /><label for="note_pro">Project</label>'+
+		'<input type="radio" id="note_pri" name="note_access" value="private" /><label for="note_pri">Private</label>'+
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 		'</div>'+
 	'</div>');
 	
@@ -46,6 +59,7 @@ var NoteDialog = function(config) {
 		}
 	});
 	$('#note_type, #note_access').buttonset();
+<<<<<<< HEAD
 
 	$('#note_textarea').tinymce({
 		script_url : 'js/tinymce/jscripts/tiny_mce/tiny_mce.js',
@@ -63,6 +77,8 @@ var NoteDialog = function(config) {
 			noteEditor = ed;
 		}
 	});
+=======
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 	
 	function noteResult(cancelled) {
 		var data = null;
@@ -74,12 +90,25 @@ var NoteDialog = function(config) {
 				access: $('#note_access input:checked').val()
 			};
 		}
+<<<<<<< HEAD
 		tinyMCE.activeEditor = tinyMCE.selectedInstance = w.editor; // make sure original editor is active
+=======
+		
+		w.editor.focus();
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 		if (mode == EDIT && data != null) {
 			w.editEntity(w.editor.currentEntity, data);
 		} else {
 			w.finalizeEntity(currentType, data);
 		}
+<<<<<<< HEAD
+=======
+		
+		noteEditor.remove();
+		noteEditor.destroy();
+		noteEditor = null;
+		
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 		note.dialog('close');
 		currentType = null;
 	};
@@ -90,6 +119,7 @@ var NoteDialog = function(config) {
 			mode = config.entry ? EDIT : ADD;
 			var prefix = 'Add ';
 			
+<<<<<<< HEAD
 			if (mode == ADD) {
 				$('#note_type input:eq(0)').click();
 				$('#note_access input:eq(0)').click();
@@ -102,6 +132,8 @@ var NoteDialog = function(config) {
 				noteEditor.setContent(content);
 			}
 			
+=======
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 			var title = prefix+config.title;
 			note.dialog('option', 'title', title);
 			if (config.pos) {
@@ -110,9 +142,56 @@ var NoteDialog = function(config) {
 				note.dialog('option', 'position', 'center');
 			}
 			note.dialog('open');
+<<<<<<< HEAD
 		},
 		hide: function() {
 			note.dialog('close');
+=======
+			
+			function postSetup() {
+				noteEditor.focus();
+				if (mode == ADD) {
+					$('#note_type input:eq(0)').click();
+					$('#note_access input:eq(0)').click();
+					noteEditor.setContent('');
+				} else {
+					prefix = 'Edit ';
+					$('#note_type input[value="'+config.entry.info.type+'"]').click();
+					$('#note_access input[value="'+config.entry.info.access+'"]').click();
+					var content = w.u.unescapeHTMLString(config.entry.info.content);
+					noteEditor.setContent(content);
+				}
+			}
+			
+			if (noteEditor == null) {
+				tinyMCE.init({
+					mode: 'exact',
+					elements: 'note_textarea',
+					height: '225',
+					width: '380',
+					theme: 'advanced',
+					theme_advanced_buttons1: 'bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,|,formatselect',
+					theme_advanced_buttons2: '',
+					theme_advanced_buttons3: '',
+					theme_advanced_toolbar_location : 'top',
+				    theme_advanced_toolbar_align : 'left',
+					theme_advanced_path: false,
+					theme_advanced_statusbar_location: 'none',
+					setup: function(ed) {
+						noteEditor = ed;
+					},
+					oninit: function() {
+						postSetup();
+					}
+				});
+			} else {
+				postSetup();
+			}
+		},
+		hide: function() {
+			note.dialog('close');
+			w.editor.focus();
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 		}
 	};
 };

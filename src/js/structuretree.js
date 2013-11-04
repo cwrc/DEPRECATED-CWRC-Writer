@@ -1,6 +1,10 @@
 function StructureTree(config) {
 	
 	var w = config.writer;
+<<<<<<< HEAD
+=======
+	
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 	var tree = {
 		currentlySelectedNode: null, // id of the currently selected node
 		currentlySelectedEntity: null, // id of the currently selected entity (as opposed to node, ie. struct tag)
@@ -20,13 +24,23 @@ function StructureTree(config) {
 	 */
 	tree.update = function() {
 		var treeRef = $.jstree._reference('#tree');
+<<<<<<< HEAD
+=======
+		
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 		// store open nodes to re-open after updating
 		var openNodes = [];
 		$('#tree #cwrc_tree_root').find('li.jstree-open').each(function () {
 			var id = $(this).attr('name');
 			openNodes.push(id);
 		});
+<<<<<<< HEAD
 		treeRef.delete_node('#cwrc_tree_root');
+=======
+		
+		treeRef.delete_node('#cwrc_tree_root');
+		
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 		var rootNode = $('[_tag="'+w.root+'"]', w.editor.getBody());
 		var rootData = _processNode(rootNode, 0);
 		if (rootData != null) {
@@ -46,6 +60,7 @@ function StructureTree(config) {
 		}
 	};
 	
+<<<<<<< HEAD
 	tree.selectNode = function(node) {
 		var id = node.id;
 		if (id && !ignoreSelect) {
@@ -76,6 +91,121 @@ function StructureTree(config) {
 		}
 	};
 	
+=======
+	/**
+	 * Expands the parents of a particular node
+	 * @param {element} node A node that exists in the editor
+	 */
+	function _expandParentsForNode(node) {
+		// get the actual parent nodes in the editor
+		var parents = [];
+		$(node).parentsUntil('#tinymce').each(function(index, el) {
+			parents.push(el.id);
+		});
+		parents.reverse();
+		// expand the corresponding nodes in the tree
+		for (var i = 0; i < parents.length; i++) {
+			var parentId = parents[i];
+			var parentNode = $('#tree [name="'+parentId+'"]');
+			var isOpen = $tree.jstree('is_open', parentNode);
+			if (!isOpen) {
+				$tree.jstree('open_node', parentNode, false, true);
+			}
+		}
+	}
+	
+	/**
+	 * Displays (if collapsed) and highlights a node in the tree based on a node in the editor
+	 * @param {element} node A node that exists in the editor
+	 */
+	tree.highlightNode = function(node) {
+		if (node) {
+			var id = node.id;
+			if (id && !ignoreSelect) {
+				ignoreSelect = true;
+				if (id == 'entityHighlight') {
+					id = $(node).find('[_entity]').first().attr('name');
+				}
+				var treeNode = $('#tree [name="'+id+'"]');
+				if (treeNode.length === 0) {
+					_expandParentsForNode(node);
+					treeNode = $('#tree [name="'+id+'"]');
+				}
+				_onNodeDeselect(); // manually trigger deselect behaviour, primarily to clear currentlySelectedNode
+				var result = $tree.jstree('select_node', treeNode, true);
+				if (result.attr('id') == 'tree') ignoreSelect = false;
+			}
+		} else {
+			_onNodeDeselect();
+		}
+	};
+	
+	/**
+	 * Selects a node in the tree based on a node in the editor
+	 * @param {element} node A node that exists in the editor
+	 * @param {integer} selectionType The type of selection to do, should match NODE_SELECTED or CONTENTS_SELECTED
+	 */
+	tree.selectNode = function(node, selectionType) {
+		if (node) {
+			var id = node.id;
+			if (id) {
+				if (id == 'entityHighlight') {
+					id = $(node).find('[_entity]').first().attr('name');
+				}
+				var treeNode = $('#tree [name="'+id+'"]');
+				if (treeNode.length === 0) {
+					_expandParentsForNode(node);
+					treeNode = $('#tree [name="'+id+'"]');
+				}
+				selectNode(treeNode, selectionType);
+			}
+		}
+	};
+	
+	/**
+	 * Performs actual selection of a tree node
+	 * @param {element} node A node (LI) in the tree
+	 * @param {integer} selectionType NODE_SELECTED or CONTENTS_SELECTED
+	 */
+	function selectNode(node, selectionType) {
+		_removeCustomClasses();
+		var activeNode = $('a[class*=ui-state-active]', '#tree');
+		activeNode.removeClass('jstree-clicked ui-state-active');
+		
+		var aChildren = node.children('a');
+		var id = node.attr('name');
+		
+		var selectContents = selectionType == tree.CONTENTS_SELECTED;
+		if (selectContents) {
+			aChildren.addClass('contentsSelected').removeClass('nodeSelected');
+		} else {
+			aChildren.addClass('nodeSelected').removeClass('contentsSelected');
+		}
+		aChildren.addClass('jstree-clicked ui-state-active');
+		
+		tree.currentlySelectedNode = id;
+		tree.selectionType = selectionType;
+		
+		if (w.structs[id] != null) {
+			tree.currentlySelectedEntity = null;
+			if (w.structs[id]._tag == w.header) {
+				w.dialogs.show('header');
+			} else {
+				ignoreSelect = true; // set to true so tree.highlightNode code isn't run by editor's onNodeChange handler 
+				w.selectStructureTag(id, selectContents);
+			}
+		} else if (w.entities[id] != null) {
+			tree.currentlySelectedEntity = id;
+			tree.currentlySelectedNode = null;
+			tree.selectionType = null;
+			aChildren.addClass('nodeSelected').removeClass('contentsSelected');
+//			ignoreSelect = true;
+			w.highlightEntity(id, null, true);
+		}
+		ignoreSelect = false;
+	}
+	
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 	tree.enableHotkeys = function() {
 		$.jstree._reference('#tree').enable_hotkeys();
 	};
@@ -219,7 +349,11 @@ function StructureTree(config) {
 					if (w.structs[id]._tag == w.header) {
 						w.dialogs.show('header');
 					} else {
+<<<<<<< HEAD
 						ignoreSelect = true; // set to true so tree.selectNode code isn't run by editor's onNodeChange handler 
+=======
+						ignoreSelect = true; // set to true so tree.highlightNode code isn't run by editor's onNodeChange handler 
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 						w.selectStructureTag(id, selectContents);
 					}
 				} else if (w.entities[id] != null) {
@@ -280,8 +414,11 @@ function StructureTree(config) {
 	}
 	
 	function _getSubmenu(tags, info) {
+<<<<<<< HEAD
 		var islandoraCriticalEditionsImgUrl = Drupal.settings.basePath +
 	      Drupal.settings.islandora_critical_edition.module_base + "/CWRC-Writer/src/img/";
+=======
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 		var tagInfo = info;
 		var inserts = {};
 		var inserted = false;
@@ -296,7 +433,11 @@ function StructureTree(config) {
 			}
 			inserts[key] = {
 				label: '<span title="'+doc+'">'+key+'</span>',
+<<<<<<< HEAD
 				icon: islandoraCriticalEditionsImgUrl + 'tag_blue.png',
+=======
+				icon: 'img/tag_blue.png',
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 				action: function(obj) {
 					var actionType = obj.parents('li.submenu').children('a').attr('rel');
 					var key = obj.text();
@@ -319,7 +460,11 @@ function StructureTree(config) {
 		if (!inserted) {
 			inserts['no_tags'] = {
 				label: 'No tags available.',
+<<<<<<< HEAD
 				icon: islandoraCriticalEditionsImgUrl + 'img/cross.png',
+=======
+				icon: 'img/cross.png',
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 				action: function(obj) {}
 			};
 		}
@@ -398,6 +543,7 @@ function StructureTree(config) {
 	//				var parentSubmenu = _getSubmenu(parentKeys, info);
 					var siblingSubmenu = _getSubmenu(siblingKeys, info);
 					
+<<<<<<< HEAD
 					// Needed to fix image path loading.
 					var islandoraCriticalEditionsImgUrl = Drupal.settings.basePath +
 				      Drupal.settings.islandora_critical_edition.module_base + "/CWRC-Writer/src/img/";
@@ -406,12 +552,23 @@ function StructureTree(config) {
 						'before': {
 							label: 'Insert Tag Before',
 							icon: islandoraCriticalEditionsImgUrl + 'tag_blue_add.png',
+=======
+	
+					var items = {
+						'before': {
+							label: 'Insert Tag Before',
+							icon: 'img/tag_blue_add.png',
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 							_class: 'submenu',
 							submenu: siblingSubmenu
 						},
 						'after': {
 							label: 'Insert Tag After',
+<<<<<<< HEAD
 							icon: islandoraCriticalEditionsImgUrl + 'tag_blue_add.png',
+=======
+							icon: 'img/tag_blue_add.png',
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 							_class: 'submenu',
 							submenu: siblingSubmenu
 						},
@@ -423,20 +580,32 @@ function StructureTree(config) {
 	//					},
 						'inside': {
 							label: 'Insert Tag Inside',
+<<<<<<< HEAD
 							icon: islandoraCriticalEditionsImgUrl + 'tag_blue_add.png',
+=======
+							icon: 'img/tag_blue_add.png',
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 							_class: 'submenu',
 							separator_after: true,
 							submenu: submenu
 						},
 						'change': {
 							label: 'Change Tag',
+<<<<<<< HEAD
 							icon: islandoraCriticalEditionsImgUrl + 'tag_blue_edit.png',
+=======
+							icon: 'img/tag_blue_edit.png',
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 							_class: 'submenu',
 							submenu: siblingSubmenu
 						},
 						'edit': {
 							label: 'Edit Tag',
+<<<<<<< HEAD
 							icon: islandoraCriticalEditionsImgUrl + 'tag_blue_edit.png',
+=======
+							icon: 'img/tag_blue_edit.png',
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 							separator_after: true,
 							action: function(obj) {
 								var offset = $('#vakata-contextmenu').offset();
@@ -449,21 +618,33 @@ function StructureTree(config) {
 						},
 						'delete': {
 							label: 'Remove Tag Only',
+<<<<<<< HEAD
 							icon: islandoraCriticalEditionsImgUrl + 'tag_blue_delete.png',
+=======
+							icon: 'img/tag_blue_delete.png',
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 							action: function(obj) {
 								w.tagger.removeStructureTag(obj.attr('name'));
 							}
 						},
 						'delete_content': {
 							label: 'Remove Content Only',
+<<<<<<< HEAD
 							icon: islandoraCriticalEditionsImgUrl + 'tag_blue_delete.png',
+=======
+							icon: 'img/tag_blue_delete.png',
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 							action: function(obj) {
 								w.tagger.removeStructureTagContents(obj.attr('name'));
 							}
 						},
 						'delete_all': {
 							label: 'Remove Tag and All Content',
+<<<<<<< HEAD
 							icon: islandoraCriticalEditionsImgUrl + 'tag_blue_delete.png',
+=======
+							icon: 'img/tag_blue_delete.png',
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 							action: function(obj) {
 								w.tagger.removeStructureTag(obj.attr('name'), true);
 							}
@@ -476,7 +657,11 @@ function StructureTree(config) {
 					return {
 						'editEntity': {
 							label: 'Edit Entity',
+<<<<<<< HEAD
 							icon: islandoraCriticalEditionsImgUrl + 'tag_blue_edit.png',
+=======
+							icon: 'img/tag_blue_edit.png',
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 							action: function(obj) {
 								var offset = $('#vakata-contextmenu').offset();
 								var pos = {
@@ -488,7 +673,11 @@ function StructureTree(config) {
 						},
 						'copyEntity': {
 							label: 'Copy Entity',
+<<<<<<< HEAD
 							icon: islandoraCriticalEditionsImgUrl + 'tag_blue_copy.png',
+=======
+							icon: 'img/tag_blue_copy.png',
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 							action: function(obj) {
 								w.copyEntity(obj.attr('name'));
 							}

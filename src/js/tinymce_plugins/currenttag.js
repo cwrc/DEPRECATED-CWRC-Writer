@@ -47,7 +47,13 @@
 				
 				$('#currentPath a').click(function() {
 					var id = $(this).attr('name');
+<<<<<<< HEAD
 					if (id) t.editor.writer.selectStructureTag(id);
+=======
+					if (id) {
+						t.editor.writer.tree.selectNode($('#'+id, t.editor.getBody())[0], t.editor.writer.tree.NODE_SELECTED);
+					}
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 				});
 			});
 			

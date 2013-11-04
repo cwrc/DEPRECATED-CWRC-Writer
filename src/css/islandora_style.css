@@ -302,7 +302,11 @@ A:hover
 
 
 /* Entities Tab */
+<<<<<<< HEAD
 
+=======
+/*
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 #westTabs .title
 {
   margin-left: 10px;
@@ -320,7 +324,11 @@ A:hover
   margin-left: 0px;
   vertical-align: 0px;
 }
+<<<<<<< HEAD
 
+=======
+*/
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 #westTabs #entities ul li
 {
   margin: 5px 0px;

@@ -6,7 +6,11 @@ var HeaderDialog = function(config) {
 	
 	$(document.body).append(''+
 	'<div id="headerDialog">'+
+<<<<<<< HEAD
 	'<textarea></textarea>'+
+=======
+	'<div><textarea></textarea></div>'+
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 	'</div>');
 	
 	var header = $('#headerDialog');

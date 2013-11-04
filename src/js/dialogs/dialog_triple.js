@@ -60,6 +60,7 @@ var TripleDialog = function(config) {
 			object: object
 		});
 		w.relations.update();
+<<<<<<< HEAD
 		var cnt = 0;
         $('#relations').children().each(function() {
         	if(cnt == 0) {
@@ -68,6 +69,8 @@ var TripleDialog = function(config) {
           //$(this).css('position','relative');
           cnt++;
         });
+=======
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 	});
 	
 	var loadPredicates = function(type) {

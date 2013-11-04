@@ -69,9 +69,13 @@ var DateDialog = function(config) {
 		maxDate: new Date(2020, 11, 31),
 		showOn: 'button',
 		buttonText: 'Date Picker',
+<<<<<<< HEAD
 		buttonImage: Drupal.settings.basePath +
       Drupal.settings.islandora_critical_edition.module_base +
       '/CWRC-Writer/src/img/calendar.png',
+=======
+		buttonImage: 'img/calendar.png',
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 		buttonImageOnly: true
 	});
 	
@@ -94,9 +98,13 @@ var DateDialog = function(config) {
 		maxDate: new Date(2020, 11, 31),
 		showOn: 'button',
 		buttonText: 'Date Picker',
+<<<<<<< HEAD
 		buttonImage: Drupal.settings.basePath +
       Drupal.settings.islandora_critical_edition.module_base +
       '/CWRC-Writer/src/img/calendar.png',
+=======
+		buttonImage: 'img/calendar.png',
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 		buttonImageOnly: true,
 		onSelect: function(selectedDate) {
 			var option = this.id == "startDate" ? "minDate" : "maxDate";

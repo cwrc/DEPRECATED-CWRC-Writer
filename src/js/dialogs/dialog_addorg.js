@@ -9,7 +9,11 @@ var AddOrganizationDialog = function(config) {
 		'</div>'+
 		'<div>'+
 		'<label>Type</label>'+
+<<<<<<< HEAD
 		'<select name="type">'+
+=======
+		'<select name="org_type">'+
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 		'<option value="">Corporation</option>'+
 		'<option value="">Government</option>'+
 		'<option value="">Non-governmental</option>'+

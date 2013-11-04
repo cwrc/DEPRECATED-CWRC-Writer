@@ -32,6 +32,20 @@ body {
 	margin-right: 5px;
 }
 
+<<<<<<< HEAD
+=======
+#cwrc_header {
+	padding: 0 10px;
+	color: #eee;
+	background-color: #455372;
+	border-bottom: 1px solid #ccc;
+	overflow: hidden;
+	background-image: url(../img/cwrc_logo_small.png);
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 #cwrc_header h1 {
 	float: left;
 	cursor: pointer;
@@ -484,7 +498,11 @@ body {
 }
 
 .annotationDialog > div {
+<<<<<<< HEAD
 	margin-bottom: 15px;
+=======
+	margin-bottom: 20px;
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 }
 
 .annotationDialog .ui-accordion-content {
@@ -514,7 +532,11 @@ body {
 
 .attributeWidget .attributeSelector {
 	border: 1px solid #999;
+<<<<<<< HEAD
 	top: 5px;
+=======
+	top: 8px;
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 	bottom: 0;
 	width: 130px;
 	position: absolute;
@@ -557,6 +579,10 @@ body {
 
 .attributeWidget .level1Atts, .attributeWidget .highLevelAtts {
 	float: left;
+<<<<<<< HEAD
+=======
+	clear: left;
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 }
 
 .attributeWidget .attsContainer label {
@@ -566,6 +592,11 @@ body {
 .attributeWidget .schemaHelp {
 	float: right;
 	width: 185px;
+<<<<<<< HEAD
+=======
+	margin-top: 5px;
+	margin-right: 5px;
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 }
 
 .cwrc .required {
@@ -574,6 +605,10 @@ body {
 
 .cwrc-tooltip {
 	max-width: 250px;
+<<<<<<< HEAD
+=======
+	background-color: #fff;
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 }
 
 #personName input {
@@ -697,7 +732,11 @@ body {
 	text-align: left;
 }
 
+<<<<<<< HEAD
 #headerDialog textarea {
+=======
+#headerDialog div {
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 	position: absolute;
 	top: 5px;
 	right: 5px;
@@ -705,6 +744,16 @@ body {
 	left: 5px;
 }
 
+<<<<<<< HEAD
+=======
+#headerDialog textarea {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 /* tinymce style overrides */
 #editor_parent table.mceLayout tr.mceFirst td {
 	border: 0 none !important;

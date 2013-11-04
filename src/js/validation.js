@@ -4,6 +4,7 @@ function Validation(config) {
 	
 	$(config.parentId).append('<div id="validation"><button>Validate</button><button>Clear</button><ul class="validationList"></ul></div>');
 	
+<<<<<<< HEAD
 	$('#validation button:eq(0)').button().click(function() {
 		w.delegator.validate();
 	});
@@ -11,6 +12,8 @@ function Validation(config) {
 		$('#validation > ul').empty();
 	});
 	
+=======
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 	var validation = {};
 	
 	/**
@@ -34,16 +37,28 @@ function Validation(config) {
 				'</li>');
 		}
 		
+<<<<<<< HEAD
 		$('error, warning', resultDoc).each(function(index, el) {
+=======
+		$('warning', resultDoc).each(function(index, el) {
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 			var id = '';
 			
 			var type = el.nodeName;
 			var message = $(this).find('message').text();
+<<<<<<< HEAD
 			var parentId = $(this).find('parentId').text();
 			var column = parseInt($(this).find('column').text());
 			
 			if (parentId != '') {
 				id = parentId;
+=======
+			var elementId = $(this).find('elementId').text();
+			var column = parseInt($(this).find('column').text());
+			
+			if (elementId != '') {
+				id = elementId;
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 			} else if (!isNaN(column)) {
 				var docSubstring = docString.substring(0, column);
 				var tags = docSubstring.match(/<.*?>/g);
@@ -88,8 +103,13 @@ function Validation(config) {
 			}
 			
 			var item = list.append(''+
+<<<<<<< HEAD
 				'<li class="'+(type=='error'?'ui-state-error':'ui-state-highlight')+'">'+
 					'<span class="ui-icon '+(type=='error'?'ui-icon-alert':'ui-icon-info')+'" style="float: left; margin-right: 4px;"></span>'+message+
+=======
+				'<li class="'+(type=='warning'?'ui-state-error':'ui-state-highlight')+'">'+
+					'<span class="ui-icon '+(type=='warning'?'ui-icon-alert':'ui-icon-info')+'" style="float: left; margin-right: 4px;"></span>'+message+
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 				'</li>'
 			).find('li:last');
 			item.data('id', id);
@@ -106,5 +126,20 @@ function Validation(config) {
 		$('#southTabs').tabs('option', 'active', 0);
 	};
 	
+<<<<<<< HEAD
+=======
+	validation.clearResult = function() {
+		$('#validation > ul').empty();
+	};
+	
+
+	$('#validation button:eq(0)').button().click(function() {
+		w.delegator.validate();
+	});
+	$('#validation button:eq(1)').button().click(function() {
+		validation.clearResult();
+	});
+	
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 	return validation;
 };

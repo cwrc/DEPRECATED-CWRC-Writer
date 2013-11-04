@@ -4,6 +4,7 @@
 		<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 		<title>CWRCWriter</title>
+<<<<<<< HEAD
 		<script type="text/javascript" src="http://discoverygarden-vagrant-i7latest.local/sites/all/modules/islandora_critical_edition/CWRC-Writer/src/js/lib/jquery/jquery-1.9.1.js"></script>
 		<script type="text/javascript" src="http://discoverygarden-vagrant-i7latest.local/sites/all/modules/islandora_critical_edition/CWRC-Writer/src/js/lib/jquery/jquery-ui-1.10.3.custom.js"></script>
 		<script type="text/javascript" src="http://discoverygarden-vagrant-i7latest.local/sites/all/modules/islandora_critical_edition/CWRC-Writer/src/js/lib/jquery/jquery.layout-latest.min.js"></script>
@@ -62,6 +63,66 @@
 		<link type="text/css" rel="stylesheet" href="http://discoverygarden-vagrant-i7latest.local/sites/all/modules/islandora_critical_edition/CWRC-Writer/src/smoothness/jquery-ui-1.10.3.custom.css" />
 		<link type="text/css" rel="stylesheet" href="http://discoverygarden-vagrant-i7latest.local/sites/all/modules/islandora_critical_edition/CWRC-Writer/src/css/layout-default-latest.css" />
 		<link type="text/css" rel="stylesheet" href="http://discoverygarden-vagrant-i7latest.local/sites/all/modules/islandora_critical_edition/CWRC-Writer/src/js/lib/snippet/jquery.snippet.css" />
+=======
+		<script type="text/javascript" src="js/lib/jquery/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="js/lib/jquery/jquery-ui-1.10.3.custom.js"></script>
+		<script type="text/javascript" src="js/lib/jquery/jquery.layout-latest.min.js"></script>
+		<script type="text/javascript" src="js/lib/jquery/jquery.layout.resizeTabLayout-1.3.js"></script>
+		<script type="text/javascript" src="js/lib/jquery/jquery.contextmenu.js"></script>
+		<script type="text/javascript" src="js/lib/jquery/jquery.tmpl.min.js"></script>
+		<script type="text/javascript" src="js/lib/jquery/jquery.watermark.min.js"></script>
+		
+		<script type="text/javascript" src="js/lib/tinymce/tiny_mce_src.js"></script>
+		<script type="text/javascript" src="js/lib/tinymce/copy_event.js"></script>
+		
+		<script type="text/javascript" src="js/lib/tinymce/jquery.tinymce.js"></script>
+		<script type="text/javascript" src="js/lib/jstree/jquery.hotkeys.js"></script>
+		<!-- can't use jquery.jtree.min.js due to modification -->
+		<script type="text/javascript" src="js/lib/jstree/jquery.jstree.js"></script>
+		<script type="text/javascript" src="js/lib/snippet/jquery.snippet.min.js"></script>
+		<script type="text/javascript" src="js/lib/moment/moment.min.js"></script>
+		<script type="text/javascript" src="js/lib/objtree/ObjTree.js"></script>
+		
+		<script type="text/javascript" src="js/dialogs/dialog_addevent.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_addorg.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_addperson.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_addplace.js"></script>
+		<script type="text/javascript" src="js/dialogs/search_widget.js"></script>
+		<script type="text/javascript" src="js/dialogs/attribute_widget.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_citation.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_correction.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_date.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_header.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_keyword.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_link.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_message.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_note.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_search.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_settings.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_title.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_triple.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_filemanager.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_person.js"></script>
+		<script type="text/javascript" src="js/editor.js"></script>
+		<script type="text/javascript" src="js/tagger.js"></script>
+		<script type="text/javascript" src="js/dialog.js"></script>
+		<script type="text/javascript" src="js/utilities.js"></script>
+		<script type="text/javascript" src="js/filemanager.js"></script>
+		<script type="text/javascript" src="js/structuretree.js"></script>
+		<script type="text/javascript" src="js/entitieslist.js"></script>
+		<script type="text/javascript" src="js/entities_model.js"></script>
+		<script type="text/javascript" src="js/relations.js"></script>
+		<script type="text/javascript" src="js/validation.js"></script>
+		<script type="text/javascript" src="js/selection.js"></script>
+		<script type="text/javascript" src="js/delegator.js"></script>
+
+		<link type="text/css" rel="stylesheet" href="css/style.css" />
+		<link type="text/css" rel="stylesheet" href="css/islandora_style.css" />
+		
+		<link type="text/css" rel="stylesheet" href="smoothness/jquery-ui-1.10.3.custom.css" />
+		<link type="text/css" rel="stylesheet" href="css/layout-default-latest.css" />
+		<link type="text/css" rel="stylesheet" href="js/lib/snippet/jquery.snippet.css" />
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 
 		<script type="text/javascript">
 			$(function() {
@@ -72,6 +133,7 @@
 				var baseUrl = window.location.protocol+'//'+window.location.host;
 				var config = {
 					delegator: Delegator,
+<<<<<<< HEAD
 					cwrcRootUrl: 'http://discoverygarden-vagrant-i7latest.local/sites/all/modules/islandora_critical_edition/CWRC-Writer/src/',
 					schemas: {
 						tei: {
@@ -93,12 +155,39 @@
 							name: 'Writing Schema',
 							url: 'http://discoverygarden-vagrant-i7latest.local/sites/all/modules/islandora_critical_edition/CWRC-Writer/src/schema/writing.rng',
 							cssUrl: 'http://discoverygarden-vagrant-i7latest.local/sites/all/modules/islandora_critical_edition/CWRC-Writer/src/css/orlando_converted.css'
+=======
+					cwrcRootUrl: baseUrl+'/editor/test/',
+					schemas: {
+						tei: {
+							name: 'CWRC Basic TEI Schema',
+							url: baseUrl+'/schema/CWRC-TEIBasic.rng',
+							cssUrl: baseUrl+'/editor/test/css/tei_converted.css'
+						},
+						events: {
+							name: 'Events Schema',
+							url: baseUrl+'/schema/events.rng',
+							cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
+						},
+						biography: {
+							name: 'Biography Schema',
+							url: baseUrl+'/schema/biography.rng',
+							cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
+						},
+						writing: {
+							name: 'Writing Schema',
+							url: baseUrl+'/schema/writing.rng',
+							cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 						}
 					}
 				};
 				
 				$.ajax({
+<<<<<<< HEAD
 					url: 'http://discoverygarden-vagrant-i7latest.local/islandora/cwrcwriter/setup/islandora:10',
+=======
+					url: 'http://apps.testing.cwrc.ca/editor/documents/info/projectname',
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 					timeout: 3000,
 					success: function(data, status, xhr) {
 						config.project = data;
@@ -110,6 +199,7 @@
 						config.schemas = {
 							tei: {
 								name: 'CWRC Basic TEI Schema',
+<<<<<<< HEAD
 								url: 'http://discoverygarden-vagrant-i7latest.local/sites/all/modules/islandora_critical_edition/CWRC-Writer/src/schema/CWRC-TEIBasic.rng',
 								cssUrl: 'http://discoverygarden-vagrant-i7latest.local/sites/all/modules/islandora_critical_edition/CWRC-Writer/src/cwrc/css/tei_converted.css'
 							},
@@ -127,6 +217,25 @@
 								name: 'Writing Schema',
 								url: 'http://discoverygarden-vagrant-i7latest.local/sites/all/modules/islandora_critical_edition/CWRC-Writer/src/schema/writing.rng',
 								cssUrl: 'http://discoverygarden-vagrant-i7latest.local/sites/all/modules/islandora_critical_edition/CWRC-Writer/src/css/orlando_converted.css'
+=======
+								url: baseUrl+'/cwrc/schema/CWRC-TEIBasic.rng',
+								cssUrl: baseUrl+'/cwrc/css/tei_converted.css'
+							},
+							events: {
+								name: 'Events Schema',
+								url: baseUrl+'/cwrc/schema/events.rng',
+								cssUrl: baseUrl+'/cwrc/css/orlando_converted.css'
+							},
+							biography: {
+								name: 'Biography Schema',
+								url: baseUrl+'/cwrc/schema/biography.rng',
+								cssUrl: baseUrl+'/cwrc/css/orlando_converted.css'
+							},
+							writing: {
+								name: 'Writing Schema',
+								url: baseUrl+'/cwrc/schema/writing.rng',
+								cssUrl: baseUrl+'/cwrc/css/orlando_converted.css'
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 							}
 						};
 						writer = new Writer(config);

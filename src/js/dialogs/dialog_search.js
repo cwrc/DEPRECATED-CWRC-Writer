@@ -15,10 +15,17 @@ var SearchDialog = function(config) {
 		    '<label for="search_query">Search</label>'+
 		    '<input type="text" name="query" id="search_query" />'+
 	    '</div>'+
+<<<<<<< HEAD
 	    '<div style="position: absolute; top: 55px; left: 10px; right: 10px; bottom: 70px;">'+
 		    '<div id="lookupServices">'+
 		    	'<div id="lookup_project">'+
 			    '<h3>Results from '+w.project.title+' Project</h3>'+
+=======
+	    '<div style="position: absolute; top: 41px; left: 10px; right: 10px; bottom: 70px;">'+
+		    '<div id="lookupServices">'+
+		    	'<div id="lookup_project">'+
+			    '<h3>Results from '+w.project+' Project</h3>'+
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 			    '<div><div class="searchResultsParent"><ul class="searchResults"></ul></div></div>'+
 			    '</div>'+
 			    '<div id="lookup_viaf">'+
@@ -35,11 +42,19 @@ var SearchDialog = function(config) {
 			    '</div>'+
 		    '</div>'+
 	    '</div>'+
+<<<<<<< HEAD
 	    '<div id="certainty" style="position: absolute; bottom: 0; left: 10px; right: 10px;">'+
 	    	'<p>This identification is:</p>'+
 			'<input type="radio" id="c_definite" name="certainty" value="definite" /><label for="c_definite">Definite</label>'+
 			'<input type="radio" id="c_reasonable" name="certainty" value="reasonable" /><label for="c_reasonable">Reasonably Certain</label>'+
 			'<input type="radio" id="c_speculative" name="certainty" value="speculative" /><label for="c_speculative">Speculative</label>'+
+=======
+	    '<div id="certainty" style="position: absolute; bottom: 0; left: 10px; right: 10px; height: 65px;">'+
+	    	'<p>This identification is:</p>'+
+			'<input type="radio" id="c_definite" name="search_certainty" value="definite" /><label for="c_definite">Definite</label>'+
+			'<input type="radio" id="c_reasonable" name="search_certainty" value="reasonable" /><label for="c_reasonable">Reasonably Certain</label>'+
+			'<input type="radio" id="c_speculative" name="search_certainty" value="speculative" /><label for="c_speculative">Speculative</label>'+
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 	    '</div>'+
 	'</div>');
 	
@@ -94,7 +109,11 @@ var SearchDialog = function(config) {
 	});
 	
 	$('#certainty').buttonset();
+<<<<<<< HEAD
 	var lookupService;
+=======
+	
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 	var doQuery = function() {
 		var lookupService = $('#lookupServices div.ui-accordion-content-active').parent()[0].id.replace('lookup_', '');
 		var type = search.dialog('option', 'title');
@@ -108,7 +127,10 @@ var SearchDialog = function(config) {
 		w.delegator.lookupEntity({type: type, query: query, lookupService: lookupService}, handleResults);
 	};
 	
+<<<<<<< HEAD
 	
+=======
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 	var handleResults = function(results) {
 		var formattedResults = '';
 		var last = '';
@@ -122,7 +144,11 @@ var SearchDialog = function(config) {
 			for (i = 0; i < results.length; i++) {
 				r = results[i];
 				
+<<<<<<< HEAD
 				label = r.identifier || r.term || r[currentType];
+=======
+				label = r.name || r.identifier || r.term || r[currentType];
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 
 				if (i == results.length - 1) last = 'last';
 				else last = '';
@@ -236,6 +262,7 @@ var SearchDialog = function(config) {
 			},{
 				text: 'Add New '+config.title,
 				click: function() {
+<<<<<<< HEAD
 				  switch(config.type) {
             case 'place':
               window.open(cwrc_params.create_entity_callbacks.places);
@@ -250,6 +277,9 @@ var SearchDialog = function(config) {
               window.open(cwrc_params.create_entity_callbacks.organizations);
               break;
 				  }
+=======
+					window.open(cwrc_params.BASE_PATH + '/fedora/repository/' + cwrc_params.authority_mappings[config.title]);
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 				}
 			},{
 				text: 'Tag '+config.title,

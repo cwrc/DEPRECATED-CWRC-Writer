@@ -14,13 +14,21 @@ function Tagger(config) {
 		var sel = w.editor.selection;
 		var bm = sel.getBookmark();
 		
+<<<<<<< HEAD
 		var start = w.editor.dom.create('span', {'_entity': true, '_type': type, 'class': 'entity '+type+' start', 'name': id}, '\uFEFF');
+=======
+		var start = w.editor.dom.create('span', {'_entity': true, '_type': type, 'class': 'entity '+type+' start', 'name': id}, '');
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 		range.insertNode(start);
 		w.editor.dom.bind(start, 'click', _doMarkerClick);
 		
 		w.editor.selection.moveToBookmark(bm);
 		
+<<<<<<< HEAD
 		var end = w.editor.dom.create('span', {'_entity': true, '_type': type, 'class': 'entity '+type+' end', 'name': id}, '\uFEFF');
+=======
+		var end = w.editor.dom.create('span', {'_entity': true, '_type': type, 'class': 'entity '+type+' end', 'name': id}, '');
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 		sel.collapse(false);
 		range = sel.getRng(true);
 		range.insertNode(end);
@@ -311,8 +319,11 @@ function Tagger(config) {
 			w.emptyTagId = id;
 		}
 		
+<<<<<<< HEAD
 		w.tree.update();
 		
+=======
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 		return id;
 	};
 	

@@ -15,9 +15,15 @@ var EntitiesList = function(config) {
 			'</div></div>');
 	$(document.body).append(''+
 		'<div id="entitiesMenu" class="contextMenu" style="display: none;"><ul>'+
+<<<<<<< HEAD
 		'<li id="editEntity"><ins style="background:url(../img/tag_blue_edit.png) center center no-repeat;" />Edit Entity</li>'+
 		'<li id="removeEntity"><ins style="background:url(../img/cross.png) center center no-repeat;" />Remove Entity</li>'+
 		'<li class="separator" id="copyEntity"><ins style="background:url(../img/tag_blue_copy.png) center center no-repeat;" />Copy Entity</li>'+
+=======
+		'<li id="editEntity"><ins style="background:url(img/tag_blue_edit.png) center center no-repeat;" />Edit Entity</li>'+
+		'<li id="removeEntity"><ins style="background:url(img/cross.png) center center no-repeat;" />Remove Entity</li>'+
+		'<li class="separator" id="copyEntity"><ins style="background:url(img/tag_blue_copy.png) center center no-repeat;" />Copy Entity</li>'+
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 		'</ul></div>'
 	);
 	
@@ -31,7 +37,10 @@ var EntitiesList = function(config) {
 	});
 	$('#sortBy').buttonset();
 	$('#metaKeys').button().click(function() {
+<<<<<<< HEAD
 		console.log("meta clicked");
+=======
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 		showMetaKeys = !showMetaKeys;
 		w.entitiesList.update();
 		w.highlightEntity(w.editor.currentEntity);
@@ -117,7 +126,10 @@ var EntitiesList = function(config) {
 					entry = w.entities[id];
 				}
 				if (entry) {
+<<<<<<< HEAD
 					entityTags = entityTags.not('[name='+id+']');
+=======
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 					entitiesString += _buildEntity(entry);
 				}
 			});
@@ -132,7 +144,11 @@ var EntitiesList = function(config) {
 			if (!$(this).hasClass('selected')) {
 				$(this).removeClass('over');
 			}
+<<<<<<< HEAD
 		}).click(function(event) {
+=======
+		}).mousedown(function(event) {
+>>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 			$(this).removeClass('over');
 			w.highlightEntity(this.getAttribute('name'), null, true);
 		}).contextMenu('entitiesMenu', {
