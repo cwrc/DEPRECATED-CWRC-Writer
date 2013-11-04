@@ -48,7 +48,6 @@
 				$('#currentPath a').click(function() {
 					var id = $(this).attr('name');
 					if (id) {
-						// TODO: may need to selecy node by 'id'.
 						t.editor.writer.tree.selectNode($('#'+id, t.editor.getBody())[0], t.editor.writer.tree.NODE_SELECTED);
 					}
 				});
