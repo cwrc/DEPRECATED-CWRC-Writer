@@ -70,7 +70,6 @@ var AddPersonDialog = function(config) {
       '/CWRC-Writer/src/img/calendar.png',
 		buttonImageOnly: true,
 		onSelect: function(selectedDate) {
-			var option = this.id == "dob" ? "minDate" : "maxDate";
 			var option = this.id == "addPersonDialog_dob" ? "minDate" : "maxDate";
 			var instance = $(this).data("datepicker");
 			var date = $.datepicker.parseDate(instance.settings.dateFormat || $.datepicker._defaults.dateFormat, selectedDate, instance.settings);

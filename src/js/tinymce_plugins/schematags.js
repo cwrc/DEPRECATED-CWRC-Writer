@@ -261,6 +261,7 @@
 			var atts = t.editor.writer.u.getChildrenForTag({tag: key, type: 'attribute', returnType: 'array'});
 			
 			var canTagContainAttributes = atts.length != 0;
+			
 			$('input[name="attsAllowed"]', parent).val(canTagContainAttributes);
 			// build atts
 			var level1Atts = '';
@@ -398,6 +399,7 @@
 				}
 				return;
 			}
+			
 			
 			attributes._attsallowed = $('input[name="attsAllowed"]', parent).val() != 'false';
 			attributes._tag = t.currentKey;
