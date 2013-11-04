@@ -310,8 +310,6 @@ function Tagger(config) {
 		} else {
 			w.emptyTagId = id;
 		}
-		//TODO: confirm this on CWRC-Writer/master branch.
-		w.tree.update();
 		
 		return id;
 	};
