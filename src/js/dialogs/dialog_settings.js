@@ -59,7 +59,7 @@ var SettingsDialog = function(writer, config) {
 	'</div>'+
 	'<div style="margin-top: 10px;">'+
 	// TODO schemas should be populated from the config
-	'<label>Schema</label><select name="schema" disabled="disabled">'+
+	'<label>Schema</label><select name="schema">'+
 	'<option value="cwrcbasic">CWRC Basic TEI Schema</option>'+
 	'<option value="events">Events Schema</option>'+
 	'</select>'+
