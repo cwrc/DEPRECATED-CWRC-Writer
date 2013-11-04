@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://cwrc.ca/schema/CWRC-TEIBasic.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Sample Document Title</title>
+            </titleStmt>
+            <publicationStmt>
+                <p/>
+            </publicationStmt>
+            <sourceDesc sameAs="http://www.cwrc.ca">
+                <p>Created from original research by members of CWRC/CS&#201;C unless otherwise
+                    noted.</p>
+            </sourceDesc>
+        </fileDesc>
+    </teiHeader>
+    <text>
+        <body>
+            <div type="letter">
+                <head>
+                    <title>Sample Letter Title</title>
+                </head>
+                <opener>
+                    <note type="setting">
+                        <p>Some opening note describing the writing setting</p>
+                    </note>
+                    <dateline>
+                        <date>Some date (set date value in attribute).</date>
+                    </dateline>
+                    <salute>Some salutation, e.g. "Dearest <persName
+                            sameAs="http://www.freebase.com/view/en/miquel_brown"
+                        >Miquel</persName>"</salute>
+                </opener>
+                <p>Sample letter content</p>
+                <closer>
+                    <salute>Some closing salutation, e.g. "With love..."</salute>
+                    <signed>
+                        <persName sameAs="http://www.example.org/bertrand_russell">Sender name
+                            and/or signature.</persName>
+                    </signed>
+                </closer>
+            </div>            
+        </body>
+    </text>
+</TEI>

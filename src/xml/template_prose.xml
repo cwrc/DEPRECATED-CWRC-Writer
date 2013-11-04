@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://cwrc.ca/schema/CWRC-TEIBasic.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Sample Document Title</title>
+            </titleStmt>
+            <publicationStmt>
+                <p/>
+            </publicationStmt>
+            <notesStmt>
+                <note type="abstract">Sample abstract text</note>
+            </notesStmt>
+            <sourceDesc sameAs="http://www.cwrc.ca">
+                <p>Created from original research by members of CWRC/CS&#201;C unless otherwise
+                    noted.</p>
+            </sourceDesc>
+        </fileDesc>
+    </teiHeader>
+    <text>
+        <body>
+            <div type="prose">
+                <head>
+                    <title>Sample Title</title>
+                </head>
+                <p>Sample paragraph. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent felis purus, placerat sed tempus imperdiet, rutrum eget leo. Nulla facilisi. Morbi laoreet elit in leo dignissim sit amet feugiat ipsum auctor. Sed magna dui, pharetra ac scelerisque ac, varius at odio. Etiam nec nisi orci, mollis dignissim nunc. Fusce vitae libero justo, in ullamcorper sem. Nunc at ipsum arcu, lobortis bibendum libero. Sed ipsum urna, consequat a sodales a, pharetra ut magna. Aliquam sit amet arcu sed mauris volutpat consequat. Nulla quis ornare nulla. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Phasellus lacinia bibendum porttitor.</p>
+                <p>Mauris vestibulum tortor in libero laoreet pharetra. Fusce nec eros mi. Nunc semper porta risus nec volutpat. Mauris tincidunt ultricies dui vitae malesuada. Donec pharetra hendrerit pretium. Maecenas at mi eu arcu congue rhoncus sit amet ac nunc. Nunc at elit et mi laoreet accumsan sed sed augue. Aenean quis massa augue, ac facilisis quam. Sed nisi erat, commodo id ornare vel, ullamcorper sed leo. Donec pellentesque euismod hendrerit. Praesent sollicitudin iaculis gravida. Nulla tristique, diam non gravida tristique, diam purus imperdiet massa, et fermentum magna est commodo justo. Donec venenatis nisl at augue suscipit quis dictum risus iaculis. Donec dapibus purus at justo malesuada a laoreet ligula varius. Fusce erat odio, aliquet viverra auctor in, vehicula vel nulla. Duis suscipit dignissim enim id lacinia.</p>
+            </div>
+            <div type="notes">
+                <head>Notes</head>
+                <note n="1" type="scholarlyNote">The poem has a suggestion of the magical imagery of <persName
+                    sameAs="www.cwrc.ca/person/someID">Kenneth Leslie</persName>’s <title level="a">By Stubborn
+                    Stars</title>.</note>
+                <note n="2" type="scholarlyNote">The <title level="m">Oxford Dictionary of National
+                Biography</title> argues the author did not publish this text before 1934.</note>
+                <note n="3" type="scholarlyNote">Sample footnote.</note>
+            </div>
+            <div type="annotations">
+                <head>Annotations and Keywords</head>
+                <note type="researchNote">These annotations can be added to the prose content or in a
+                    separate section</note>
+                <note type="link">Poem featured in <ref
+                    target="http://ceww.wordpress.com/2012/03/21/glimpse-by-floris-clark-mclaren/"><title
+                        sameAs="http://ceww.wordpress.com" level="m">Canada's Early
+                        Women Writers</title></ref></note>
+                <note type="keyword">Sample annotation</note>
+                <note type="correction">Sample correction</note>
+                <note type="indexTerm">Sample index term</note>
+                <note type="translation">Sample translation</note>
+            </div>
+            <div type="works">
+                <head>Works Cited</head>
+                <bibl><title level="j">The New Monthly Magazine</title>. Alternate Titles: <title level="j"
+                    type="alternate">The New Monthly Magazine and Universal
+                    Register; The New Monthly Magazine and Literary Journal; Colburn's New Monthly
+                    Magazine; The New Monthly Magazine and Humorist</title>. <pubPlace
+                        sameAs="someURI">London</pubPlace>: <publisher><orgName sameAs="someURI">H. Colburn</orgName></publisher>;
+                    <publisher><orgName sameAs="someURI">Chapman and Hall</orgName></publisher>; <publisher><orgName sameAs="someURI">John Bale and
+                        Sons</orgName></publisher>, <date from-iso="1814">1814</date>-<date to-iso="1884">1884</date>.
+                </bibl>
+                <bibl>Sample bibliographic record:
+                    <author>McLaren, Floris Clark</author>. <title level="a">Glimpse</title>. <title
+                        level="j">Canadian Poetry Magazine</title> <biblScope type="vol">1.1</biblScope> <biblScope
+                            type="issue"><date>(1936)</date></biblScope>: <biblScope type="pp">23</biblScope>.
+                </bibl>
+                <bibl>Sample bibliographic record:
+                    <author>McLaren, Floris Clark</author>. <title level="a">Glimpse</title>. <title
+                        level="j">Canadian Poetry Magazine</title> <biblScope type="vol">1.1</biblScope> <biblScope
+                            type="issue"><date>(1936)</date></biblScope>: <biblScope
+                                type="pp">23</biblScope>. <note type="scholarlyNote">Volume I: 1450-1625, Volume II: 1625-1700, Volume III: 1700-1800, Volume IV: 1800-1900, Volume V: Indexes of Titles, First Lines, Names, Repositories</note>
+                </bibl>                
+            </div>
+        </body>
+    </text>
+</TEI>

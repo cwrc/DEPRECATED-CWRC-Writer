@@ -1,0 +1,56 @@
+.cwrc_wrapper .arrowLeft {
+    background-image: url('../img/arrow_left.gif');
+}
+
+.cwrc_wrapper .arrowRight {
+    background-image: url('../img/arrow_right.gif');
+}
+.ui-layout-toggler-north-open, .ui-layout-toggler-south-closed {
+    background: url("../img/arrow_up.gif") no-repeat scroll center bottom transparent;
+}
+.ui-layout-toggler-north-closed, .ui-layout-toggler-south-open {
+    background: url("../img/arrow_down.gif") no-repeat scroll center top transparent;
+}
+.ui-layout-toggler-east-closed, .ui-layout-toggler-west-open {
+    background: url("../img/arrow_left.gif") no-repeat scroll right center transparent;
+}
+.ui-layout-toggler-east-open, .ui-layout-toggler-west-closed {
+    background: url("../img/arrow_right.gif") no-repeat scroll left center transparent;
+}
+.cwrc_wrapper #helpLink {
+    background: url("../img/help.png") no-repeat scroll 0 0px transparent;
+    padding-left: 20px;
+}
+
+/*This was getting overridden by drupal theme.*/
+li.jstree-closed > ul {
+    display: none !important;
+}
+
+#header .header-nav a
+{
+  float: left;
+  width: 30px;
+  height: 35px;
+
+  background-image: url('../img/nav-arrows.png'); /* 38px x 85px */ 
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  
+  opacity: 0.85 !important; /* Chrome 4+, FF2+, Saf3.1+, Opera 9+, IE9, iOS 3.2+, Android 2.1+ */
+  filter: alpha(opacity=85) !important; /* IE6-IE8 */
+
+}
+#cwrc_wrapper .ui-layout-north
+{
+  padding: 0px 0px 0px 0px;
+  background-color: #455372;
+  background-image: url("../img/cwrc_logo_small.png") !important;
+  background-position: left center;
+  background-repeat: no-repeat;
+  border-bottom: 1px solid #CCCCCC;
+  color: #EEEEEE;
+  overflow: hidden;
+  padding: 0 10px;
+}

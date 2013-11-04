@@ -1,0 +1,234 @@
+*[_tag="EVENTS"] {
+	font-family: Georgia, serif;
+	line-height: 1.5;
+	color: rgb(51, 51, 51);
+}
+
+*[_tag="ORLANDOHEADER"] {
+	font-size: 16px;
+	display: block;
+	background: none repeat scroll 0% 0% rgb(238, 238, 238);
+	margin-bottom: 1.5em;
+	padding: 0.5em;
+}
+
+*[_tag="FILEDESC"] {
+	background-color: rgb(255, 255, 255);
+	color: gray;
+}
+
+*[_tag="DOCTITLE"] {
+	color: gray;
+	font-weight: bold;
+}
+
+*[_tag="DOCAUTHOR"],*[_tag="DOCEDITOR"],*[_tag="DOCEXTENT"],*[_tag="PUBLICATIONSTMT"],*[_tag="TITLESTMT"],*[_tag="PUBPLACE"]
+	{
+	display: block;
+}
+
+*[_tag="RESPONSIBILITY"] {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: small;
+	background-color: rgb(240, 237, 252);
+	display: list-item;
+}
+
+*[_tag="EMPH"] {
+	font-style: italic;
+}
+
+*[_tag="FOREIGN"] {
+	font-style: italic;
+}
+
+*[_tag="TITLE"][TITLETYPE="MONOGRAPHIC"],*[_tag="TITLE"][TITLETYPE="JOURNAL"]
+	{
+	font-style: italic;
+	color: rgb(51, 102, 153);
+}
+
+*[_tag="TITLE"][TITLETYPE="SERIES"] {
+	font-style: normal;
+	color: rgb(51, 102, 153);
+}
+
+*[_tag="TITLE"][TITLETYPE="ANALYTIC"],*[_tag="TITLE"][TITLETYPE="UNPUBLISHED"]
+	{
+	font-style: normal;
+	color: rgb(51, 102, 153);
+}
+
+*[_tag="TITLE"][TITLETYPE="ANALYTIC"]:before,*[_tag="TITLE"][TITLETYPE="UNPUBLISHED"]:before
+	{
+	content: open-quote;
+}
+
+*[_tag="TITLE"][TITLETYPE="ANALYTIC"]:after,*[_tag="TITLE"][TITLETYPE="UNPUBLISHED"]:after
+	{
+	content: close-quote;
+}
+
+*[_tag="ADDRLINE"] {
+	display: list-item;
+}
+
+*[_tag="IDNO"] {
+	display: list-item;
+}
+
+*[_tag="AVAILABILITY"] {
+	display: inline;
+}
+
+*[_tag="P"] {
+	display: block;
+}
+
+*[_tag="RESEARCHNOTE"] {
+	background-color: rgb(251, 239, 239);
+	color: rgb(102, 51, 102);
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: smaller;
+	display: list-item;
+}
+
+*[_tag="DIV0"] *[_tag="HEADING"] {
+	display: list-item;
+	font-weight: bold;
+	font-size: x-large;
+	color: rgb(0, 51, 153);
+	margin: 25px 0px 0px;
+}
+
+*[_tag="DIV1"] {
+	margin: 20px 0px 0px;
+}
+
+*[_tag="DIV1"] *[_tag="HEADING"] {
+	display: block;
+	font-weight: bold;
+	font-size: large;
+	color: rgb(0, 51, 153);
+}
+
+*[_tag="CHRONEVENT"] {
+	display: block;
+	margin: 15px 0px;
+}
+
+*[_tag="CHRONSTRUCT"] {
+	display: block;
+	padding: 0px 0px 0px 30px;
+}
+
+*[_tag="CHRONSTRUCT"] *[_tag="DATE"] {
+	font-weight: bold;
+	display: inline;
+}
+
+*[_tag="CHRONSTRUCT"] *[_tag="DATE"]:after {
+	content: ": ";
+}
+
+*[_tag="CHRONSTRUCT"][CHRONCOLUMN="WOMENWRITERS"] {
+	background-image: url("../img/orlando/pen1.gif");
+	background-repeat: no-repeat;
+}
+
+*[_tag="CHRONSTRUCT"][CHRONCOLUMN="NATIONALINTERNATIONAL"] {
+	background-image: url("../img/orlando/earth1.gif");
+	background-repeat: no-repeat;
+}
+
+*[_tag="CHRONSTRUCT"][CHRONCOLUMN="SOCIALCLIMATE"] {
+	background-image: url("../img/orlando/people1.gif");
+	background-repeat: no-repeat;
+}
+
+*[_tag="CHRONSTRUCT"][CHRONCOLUMN="WRITINGCLIMATE"] {
+	background-image: url("../img/orlando/book1.gif");
+	background-repeat: no-repeat;
+}
+
+*[_tag="SHORTPROSE"] *[_tag="P"] {
+	padding-left: 4em;
+	margin: 10px 0px 0px;
+}
+
+*[_tag="BIBCIT"] {
+	
+}
+
+*[_tag="BIBCIT"]:before {
+	content: "(";
+}
+
+*[_tag="BIBCIT"]:after {
+	content: ")";
+}
+
+*[_tag="SCHOLARNOTE"] *[_tag="P"]:before {
+	content: url("../img/orlando/note.gif");
+}
+
+*[_tag="SCHOLARNOTE"] *[_tag="P"] {
+	background-color: rgb(224, 224, 248);
+}
+
+*[_tag="NAME"] {
+	color: rgb(51, 102, 153);
+}
+
+*[_tag="ORGNAME"] {
+	color: rgb(51, 102, 153);
+}
+
+*[_tag="SETTLEMENT"] {
+	font-weight: bold;
+	color: rgb(51, 102, 153);
+}
+
+*[_tag="REGION"] {
+	font-weight: bold;
+	color: rgb(51, 102, 153);
+}
+
+*[_tag="GEOG"] {
+	font-weight: bold;
+	color: rgb(51, 102, 153);
+}
+
+*[_tag="AREA"] {
+	font-weight: bold;
+	color: rgb(51, 102, 153);
+}
+
+*[_tag="TOPIC"] {
+	font-weight: bold;
+	color: rgb(51, 102, 153);
+}
+
+*[_tag="QUOTE"]:before {
+	content: open-quote;
+}
+
+*[_tag="QUOTE"]:after {
+	content: close-quote;
+}
+
+*[_tag="QUOTE"][DIRECT="N"]:before {
+	content: "\'";
+}
+
+*[_tag="QUOTE"][DIRECT="N"]:after {
+	content: "\'";
+}
+
+*[_tag="SOCALLED"]:before {
+	content: "\'";
+}
+
+*[_tag="SOCALLED"]:after {
+	content: "\'";
+}

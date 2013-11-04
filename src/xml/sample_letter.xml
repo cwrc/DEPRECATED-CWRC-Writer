@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://cwrc.ca/schema/CWRC-TEIBasic.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Sample Document Title</title>
+            </titleStmt>
+            <publicationStmt>
+                <p/>
+            </publicationStmt>
+            <sourceDesc sameAs="http://www.cwrc.ca">
+                <p>Created from original research by members of CWRC/CS&#201;C unless otherwise
+                    noted.</p>
+            </sourceDesc>
+        </fileDesc>
+    </teiHeader>
+    <text>
+        <body>
+            <div type="letter">
+                <head>
+                    <title>Sample Letter - Bertrand Russell to Patricia Spence - October 21,
+                        1935</title>
+                </head>
+                <opener>
+                    <note>
+                        <p>Bad writing due to shaky train</p>
+                        <p>In train</p>
+                        <p><placeName sameAs="http://www.freebase.com/view/en/oslo" cert="definite"
+                            source="http://www,somesource.org/source/123456">Oslo</placeName>
+                            to <placeName sameAs="http://www.freebase.com/view/en/bergen"
+                                >Bergen</placeName></p>
+                    </note>
+                    <dateline>
+                        <date when="1935-10-21">21.10.35</date>
+                    </dateline>
+                    <salute>Dearest - </salute>
+                </opener>
+
+                <p>I have had no letter from you since I left <placeName
+                        sameAs="http://www.freebase.com/view/en/stockholm" cert="definite"
+                        >Stockholm</placeName>, but I had a nice one from <persName
+                        sameAs="http://cwrc.ca/person/123456" cert="definite">John</persName> in an
+                    envelope you had sent him. I had sent him one addressed to <placeName
+                        sameAs="http://www.freebase.com/view/en/copenhagen">Copenhagen</placeName>
+                    but he hadn't used it.</p>
+                <p>When I reached Oslo yesterday evening, Brynjulf Bull should have been there to
+                    meet me, but wasn't. He is not on the telephone, so I took a taxi to his
+                    address, which turned out to be a students' club with no one about on Sundays,
+                    so I went to a hotel feeling rather non-plussed. But presently he turned up. He
+                    had got the <pb n="2"/> time of my arrival wrong, and <corr>when</corr> he had found he had
+                    missed me he phoned to every hotel in Oslo till he hit on the right one. He left
+                    me at 10, and then I had to do a <title
+                        sameAs="http://www.freebase.com/view/en/sunday_referee" cert="definite"
+                        level="j">Sunday Referee</title> article. <listEvent><event><desc><date
+                            cert="definite" when="1935-10-21">Today</date> my
+                            journey lasts from 9 till 9 - fortunately one of the most beautiful
+                                railway journeys in the world.</desc></event>
+                            <event when="1935-10-22"><desc> <date type="event:time" calendar="gregorian"
+                                cert="definite" when="1935-10-22">Tomorrow</date> I lecture at
+                                <placeName type="event:place">Bergen</placeName> to the <orgName
+                                    sameAs="http://cwrc.ca/organization/6545466" cert="probable"
+                                    >Anglo-Norwegian Society</orgName>.</desc></event>
+                        <event><desc>Next day I go back to Oslo, lecture there Fri. and
+                            Sat.</desc></event>
+                        <event><desc>and then start for home via
+                    Bergen</desc></event></listEvent>.</p>
+                <pb n="3"/>
+                <p>Bull is a nice young man but incompetent - can't quite stand the communists, but
+                    finds the socialists too mild.</p>
+
+                <p>I am unhappily wondering what you are feeling about me.</p>
+
+                <closer>
+                    <salute>I love you very much -</salute>
+                    <signed>
+                        <persName sameAs="http://www.freebase.com/view/en/bertrand_russell"
+                            >B</persName>
+                    </signed>
+                </closer>
+            </div>
+        </body>
+    </text>
+</TEI>

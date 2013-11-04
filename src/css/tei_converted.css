@@ -1,0 +1,234 @@
+*[_tag="TEI"] { line-height: 1.5; }
+*[_tag="abbr"] { display: inline; }
+*[_tag="add"] { display: inline; color: green; background-color: inherit; text-decoration: underline; }
+*[_tag="anchor"] { display: none; }
+*[_tag="argument"] { display: block; margin-bottom: 0.5em; }
+*[_tag="att"] { display: inline; font-family: sans-serif; color: blue; background-color: inherit; }
+*[_tag="att"]:before { content: "@"; }
+*[_tag="author"] { display: inline; }
+*[_tag="back"] { display: block; border: thin solid black; margin-top: 1em; padding: 0.5em; }
+*[_tag="bibl"] { display: inline; }
+*[_tag="div"][type="works"] { text-indent: -2em; margin: 0px 0px 0px 2em; }
+*[_tag="bibl"] > *[_tag="note"] { display: inline; }
+*[_tag="bibl"] > *[_tag="title"][type="subtitle"] { content: ""; }
+*[_tag="argument"] > *[_tag="bibl"], *[_tag="body"] > *[_tag="bibl"], *[_tag="cit"] > *[_tag="bibl"], *[_tag="div"] > *[_tag="bibl"], *[_tag="div0"] > *[_tag="bibl"], *[_tag="div1"] > *[_tag="bibl"], *[_tag="div2"] > *[_tag="bibl"], *[_tag="div3"] > *[_tag="bibl"], *[_tag="div4"] > *[_tag="bibl"], *[_tag="div5"] > *[_tag="bibl"], *[_tag="div6"] > *[_tag="bibl"], *[_tag="div7"] > *[_tag="bibl"], *[_tag="epigraph"] > *[_tag="bibl"], *[_tag="listBibl"] > *[_tag="bibl"] > *[_tag="bibl"], *[_tag="taxonomy"] > *[_tag="bibl"] { display: block; margin-bottom: 0.5em; }
+*[_tag="biblFull"] { display: inline; }
+*[_tag="argument"] > *[_tag="biblFull"], *[_tag="body"] > *[_tag="biblFull"], *[_tag="cit"] > *[_tag="biblFull"], *[_tag="div"] > *[_tag="biblFull"], *[_tag="div0"] > *[_tag="biblFull"], *[_tag="div1"] > *[_tag="biblFull"], *[_tag="div2"] > *[_tag="biblFull"], *[_tag="div3"] > *[_tag="biblFull"], *[_tag="div4"] > *[_tag="biblFull"], *[_tag="div5"] > *[_tag="biblFull"], *[_tag="div6"] > *[_tag="biblFull"], *[_tag="div7"] > *[_tag="biblFull"], *[_tag="epigraph"] > *[_tag="biblFull"], *[_tag="listBibl"] > *[_tag="biblFull"] > *[_tag="biblFull"], *[_tag="taxonomy"] > *[_tag="biblFull"] { display: block; margin-bottom: 0.5em; }
+*[_tag="biblScope"] { display: inline; }
+*[_tag="imprint"] > *[_tag="biblScope"] { display: block; }
+*[_tag="body"] { margin-top: 5px; padding: 0px 2em 0px 0px; display: block; counter-reset: div1; }
+*[_tag="byline"] { display: block; font-style: italic; margin-bottom: 0.5em; }
+*[_tag="category"] { display: block; margin-bottom: 1em; }
+*[_tag="catRef"] { display: none; }
+*[_tag="cell"] { display: table-cell; border: 1px solid rgb(238, 239, 238); padding: 3px; color: inherit; background-color: inherit; }
+*[_tag="cell"][role="label"] { color: inherit; background-color: rgb(187, 187, 187); }
+*[_tag="change"] { display: block; margin-bottom: 1em; margin-left: 2em; }
+*[_tag="cit"] { display: inline; }
+*[_tag="argument"] > *[_tag="cit"], *[_tag="body"] > *[_tag="cit"], *[_tag="div"] > *[_tag="cit"], *[_tag="div0"] > *[_tag="cit"], *[_tag="div1"] > *[_tag="cit"], *[_tag="div2"] > *[_tag="cit"], *[_tag="div3"] > *[_tag="cit"], *[_tag="div4"] > *[_tag="cit"], *[_tag="div5"] > *[_tag="cit"], *[_tag="div6"] > *[_tag="cit"], *[_tag="div7"] > *[_tag="cit"], *[_tag="epigraph"] > *[_tag="cit"] { display: block; margin-bottom: 0.5em; margin-top: 0.5em; }
+*[_tag="classCode"] { display: block; }
+*[_tag="elementSpec"], *[_tag="macroSpec"], *[_tag="classSpec"] { display: block; margin-bottom: 1em; }
+*[_tag="closer"] { display: block; margin-bottom: 1em; width: 95%; }
+*[_tag="code"] { display: inline; font-family: monospace; }
+*[_tag="corr"] { display: inline; color: green; background-color: inherit; }
+*[_tag="creation"] { display: block; }
+*[_tag="date"] { display: inline; }
+*[_tag="change"] > *[_tag="date"], *[_tag="publicationStmt"] > *[_tag="date"] { display: block; font-weight: bold; }
+*[_tag="dateline"] { display: inline; }
+*[_tag="del"] { display: inline; color: red; background-color: inherit; text-decoration: line-through; }
+*[_tag="distributor"] { display: block; margin-bottom: 0.5em; }
+*[_tag="body"] > *[_tag="div"] { display: block; counter-increment: div1; counter-reset: div2; margin: 0px 0px 1.5em; }
+*[_tag="body"] > *[_tag="div"] > *[_tag="div"] { display: block; margin-bottom: 1em; counter-increment: div2; counter-reset: div3; }
+*[_tag="body"] > *[_tag="div"] > *[_tag="div"] > *[_tag="div"] { display: block; margin-bottom: 1em; counter-increment: div3; }
+*[_tag="body"] > *[_tag="div"][type="letter"] { margin-bottom: 2em ! important; }
+*[_tag="div"][type="poem"] { counter-reset: line; }
+*[_tag="div1"] { display: block; margin-bottom: 1em; counter-increment: div1; counter-reset: div2; }
+*[_tag="div2"] { display: block; margin-bottom: 1em; counter-increment: div2; counter-reset: div3; }
+*[_tag="div3"] { display: block; margin-bottom: 1em; counter-increment: div3; counter-reset: div4; }
+*[_tag="div4"] { display: block; margin-bottom: 1em; counter-increment: div4; counter-reset: div5; }
+*[_tag="div5"] { display: block; margin-bottom: 1em; counter-increment: div5; counter-reset: div6; }
+*[_tag="div6"] { display: block; margin-bottom: 1em; counter-increment: div6; counter-reset: div7; }
+*[_tag="div7"] { display: block; margin-bottom: 1em; counter-increment: div7; }
+*[_tag="divGen"] { display: none; }
+*[_tag="docAuthor"] { display: block; margin-bottom: 0.5em; }
+*[_tag="byline"] *[_tag="docAuthor"] { display: inline; }
+*[_tag="titlePage"] *[_tag="docAuthor"] { }
+*[_tag="titlePage"] *[_tag="docTitle"] { }
+*[_tag="edition"] { display: block; margin-bottom: 0.5em; }
+*[_tag="bibl"] *[_tag="edition"] { display: inline; }
+*[_tag="editionStmt"] { display: block; margin-bottom: 1em; }
+*[_tag="editor"] { display: block; }
+*[_tag="bibl"] *[_tag="editor"] { display: inline; }
+*[_tag="eg"] { font-family: monospace; padding-top: 3mm; padding-left: 4pt; padding-bottom: 2pt; display: block; margin-top: 12pt; margin-bottom: 12pt; white-space: pre; color: inherit; background-color: rgb(255, 204, 153); }
+*[_tag="argument"] > *[_tag="eg"], *[_tag="body"] > *[_tag="eg"], *[_tag="div"] > *[_tag="eg"], *[_tag="div0"] > *[_tag="eg"], *[_tag="div1"] > *[_tag="eg"], *[_tag="div2"] > *[_tag="eg"], *[_tag="div3"] > *[_tag="eg"], *[_tag="div4"] > *[_tag="eg"], *[_tag="div5"] > *[_tag="eg"], *[_tag="div6"] > *[_tag="eg"], *[_tag="div7"] > *[_tag="eg"], *[_tag="epigraph"] > *[_tag="eg"] { display: block; margin-bottom: 1em; }
+*[_tag="emph"] { display: inline; font-style: italic; }
+*[_tag="epigraph"] { display: block; margin-bottom: 1em; text-align: center; }
+*[_tag="extent"] { display: block; margin-bottom: 1em; }
+*[_tag="bibl"] *[_tag="extent"] { display: inline; }
+*[_tag="graphic"] { color: gray; background-color: inherit; content: "{" attr(url) "}"; }
+*[_tag="figure"] { display: block; margin-bottom: 1em; }
+*[_tag="foreign"] { display: inline; font-style: italic; }
+*[_tag="formula"] { display: inline; font-style: italic; }
+*[_tag="front"] { display: block; margin-bottom: 1em; padding: 0.5em; }
+*[_tag="funder"] { display: block; margin-bottom: 0.5em; }
+*[_tag="gap"] { display: none; }
+*[_tag="gap"]:after { content: "[...]"; font-style: italic; }
+*[_tag="gi"], *[_tag="tag"] { display: inline; font-family: sans-serif; color: blue; background-color: inherit; }
+*[_tag="tag"]:before, *[_tag="gi"]:before { content: "<"; }
+*[_tag="tag"]:after, *[_tag="gi"]:after { content: ">"; }
+*[_tag="gloss"] { display: inline; }
+*[_tag="group"] { display: block; margin-bottom: 1em; }
+*[_tag="body"] > *[_tag="div"] > *[_tag="head"] { display: block; padding-top: 7px; padding-bottom: 10px; color: inherit; font-weight: bold; margin-bottom: 0.5em; margin-top: 1em; font-size: 18px; }
+*[_tag="body"] > *[_tag="div"][type="poem"] > *[_tag="head"] *[_tag="author"] { font-weight: normal; }
+*[_tag="body"] > *[_tag="div"] > *[_tag="div"] > *[_tag="head"] { display: block; padding-top: 14px; padding-bottom: 10px; padding-left: 10px; color: inherit; background-color: rgb(187, 187, 187); font-weight: bold; margin-bottom: 0.5em; margin-top: 11px; }
+*[_tag="body"] > *[_tag="div"] > *[_tag="div"] > *[_tag="div"] > *[_tag="head"] { display: block; padding-top: 14px; padding-bottom: 10px; padding-left: 10px; color: inherit; background-color: rgb(187, 187, 187); font-weight: bold; margin-bottom: 0.5em; margin-top: 1em; }
+*[_tag="div"] *[_tag="opener"] *[_tag="dateline"] { display: block; text-align: right; width: 95%; }
+*[_tag="div1"] > *[_tag="head"]:before { color: black; background-color: inherit; }
+*[_tag="div2"] > *[_tag="head"]:before { color: black; background-color: inherit; }
+*[_tag="div3"] > *[_tag="head"]:before { color: black; background-color: inherit; }
+*[_tag="body"] > *[_tag="div"] > *[_tag="head"]:before { color: black; background-color: inherit; }
+*[_tag="body"] > *[_tag="div"] > *[_tag="div"] > *[_tag="head"]:before { color: black; background-color: inherit; }
+*[_tag="body"] > *[_tag="div"] > *[_tag="div"] > *[_tag="div"] > *[_tag="head"]:before { color: black; background-color: inherit; }
+*[_tag="hi"] { display: inline; background-color: yellow; color: black; }
+*[_tag="hi"][rend] { background-color: inherit; color: inherit; }
+*[_tag="hi"][rend="bold"] { display: inline; font-weight: bold; }
+*[_tag="hi"][rend="italic"] { display: inline; font-style: italic; }
+*[_tag="hi"][rend="underline"] { display: inline; text-decoration: underline; }
+*[_tag="hi"][rend="it"] { display: inline; font-style: italic; }
+*[_tag="hi"][rend="sc"] { display: inline; font-variant: small-caps; }
+*[_tag="hi"][rend="sup"] { display: inline; vertical-align: super; font-size: smaller; }
+*[_tag="hi"][rend="sub"] { display: inline; vertical-align: sub; font-size: smaller; }
+*[_tag="hi"][rend="ul"] { display: inline; text-decoration: underline; }
+*[_tag="ident"] { display: inline; font-family: monospace; }
+*[_tag="idno"] { display: block; margin-bottom: 1em; }
+*[_tag="bibl"] *[_tag="idno"] { display: inline; }
+*[_tag="imprint"] { display: inline; }
+*[_tag="index"] { display: none; }
+*[_tag="interp"] { display: none; }
+*[_tag="interpGrp"] { display: none; }
+*[_tag="list"][type="gloss"] *[_tag="item"] { display: block; margin-left: 1em; }
+*[_tag="list"] *[_tag="item"] { display: list-item; margin-left: 12pt; }
+*[_tag="item"] { display: list-item; margin-left: 12pt; }
+*[_tag="item"][n]:before { content: attr(n) ". "; list-style: none outside none; }
+*[_tag="change"] *[_tag="item"] { display: block; margin-bottom: 0.5em; margin-left: 1em; margin-top: 0.5em; }
+*[_tag="keywords"] { display: block; margin-bottom: 0.5em; }
+*[_tag="kw"] { display: inline; font-style: italic; }
+*[_tag="l"] { display: block; white-space: nowrap; }
+*[_tag="l"]:after { content: counter(line, decimal); counter-increment: line; text-align: right; float: right; color: silver; margin-right: 50px; }
+*[_tag="label"] { display: inline; font-weight: bold; }
+*[_tag="Label"] { display: inline; font-weight: bold; color: rgb(47, 79, 79); background-color: inherit; }
+*[_tag="argument"] > *[_tag="label"], *[_tag="body"] > *[_tag="label"], *[_tag="div"] > *[_tag="label"], *[_tag="div0"] > *[_tag="label"], *[_tag="div1"] > *[_tag="label"], *[_tag="div2"] > *[_tag="label"], *[_tag="div3"] > *[_tag="label"], *[_tag="div4"] > *[_tag="label"], *[_tag="div5"] > *[_tag="label"], *[_tag="div6"] > *[_tag="label"], *[_tag="div7"] > *[_tag="label"], *[_tag="epigraph"] > *[_tag="label"] { display: block; font-weight: bold; }
+*[_tag="langUsage"] { display: block; margin-bottom: 1em; }
+*[_tag="lb"] { display: block; }
+*[_tag="lg"] { display: block; margin-bottom: 0.5em; }
+*[_tag="list"] { display: block; list-style-type: disc; list-style-position: outside; margin-bottom: 1em; margin-left: 2em; margin-top: 1em; }
+*[_tag="list"][rend="runon"] { display: inline; }
+*[_tag="list"][type="bulleted"] { list-style-type: disc; list-style-position: outside; }
+*[_tag="list"][type="unordered"] { list-style-type: disc; list-style-position: outside; }
+*[_tag="list"][type="ordered"] { list-style-type: decimal; list-style-position: outside; }
+*[_tag="list"][type="numbered"] { list-style-type: decimal; list-style-position: outside; }
+*[_tag="list"][type="none"] { list-style-type: none; }
+*[_tag="listBibl"] { display: block; margin-bottom: 0.5em; }
+*[_tag="mentioned"] { display: inline; font-style: italic; }
+*[_tag="milestone"] { display: none; }
+*[_tag="name"] { display: inline; }
+*[_tag="note"] { display: block; color: rgb(153, 153, 153); }
+*[_tag="note"]:before { content: "note: "; font-variant: small-caps; }
+*[_tag="note"][type]:before { content: attr(type) ": "; }
+*[_tag="opener"] *[_tag="note"] { display: block; color: rgb(153, 153, 153); }
+*[_tag="opener"] *[_tag="note"]:before { content: ""; font-variant: normal; }
+*[_tag="opener"] *[_tag="note"][type]:before { content: ""; }
+*[_tag="note"][n]:before { content: attr(n) " "; vertical-align: super; }
+*[_tag="div"] *[_tag="note"] *[_tag="persName"], *[_tag="div"] *[_tag="note"] *[_tag="orgName"], *[_tag="div"] *[_tag="note"] *[_tag="title"], *[_tag="div"] *[_tag="note"] *[_tag="placeName"] { color: rgb(109, 176, 204) ! important; }
+*[_tag="note"][place="left"] { float: left; }
+*[_tag="note"][place="right"] { float: right; }
+*[_tag="note"][place="inline"], *[_tag="note"][place="unspecified"] { display: inline; }
+*[_tag="notesStmt"] { display: block; }
+*[_tag="num"] { display: inline; }
+*[_tag="opener"] { display: block; margin-bottom: 0.5em; }
+*[_tag="opener"] *[_tag="p"] { text-align: justify ! important; text-indent: 0px ! important; }
+*[_tag="orig"] { display: inline; }
+*[_tag="p"] { display: block; margin-bottom: 0.5em; }
+*[_tag="pb"] { display: none; }
+*[_tag="pb"]:after { content: attr(n); font-weight: bold; margin-bottom: 1em; margin-top: 1em; text-align: center; }
+*[_tag="div"] *[_tag="persName"], *[_tag="div"] *[_tag="placeName"], *[_tag="div"] *[_tag="orgName"], *[_tag="div"] *[_tag="title"] { color: rgb(51, 102, 153); }
+*[_tag="principal"] { display: block; margin-bottom: 0.5em; }
+*[_tag="ptr"] { color: navy; text-decoration: underline; background-color: inherit; }
+*[_tag="ptr"]:before { background-color: inherit; color: red; content: "[" attr(target) "]"; }
+*[_tag="publicationStmt"] { }
+*[_tag="publicationStmt"] *[_tag="p"] { display: block; margin-bottom: 0px; }
+*[_tag="publisher"] { display: inline; }
+*[_tag="imprint"] > *[_tag="publisher"], *[_tag="publicationStmt"] > *[_tag="publisher"] { display: block; margin-bottom: 0.5em; }
+*[_tag="pubPlace"] { display: inline; }
+*[_tag="imprint"] > *[_tag="pubPlace"], *[_tag="publicationStmt"] > *[_tag="pubPlace"] { display: block; margin-bottom: 0.5em; }
+*[_tag="q"] { display: inline; quotes: "\"" "\"" "\'" "\'"; margin: 0em; }
+*[_tag="q"][rend="display"], *[_tag="argument"] > *[_tag="q"], *[_tag="body"] > *[_tag="q"], *[_tag="cit"] > *[_tag="q"], *[_tag="div"] > *[_tag="q"], *[_tag="div0"] > *[_tag="q"], *[_tag="div1"] > *[_tag="q"], *[_tag="div2"] > *[_tag="q"], *[_tag="div3"] > *[_tag="q"], *[_tag="div4"] > *[_tag="q"], *[_tag="div5"] > *[_tag="q"], *[_tag="div6"] > *[_tag="q"], *[_tag="div7"] > *[_tag="q"], *[_tag="epigraph"] > *[_tag="q"] { display: block; margin-bottom: 0.5em; margin-left: 3em; margin-right: 3em; quotes: none; }
+*[_tag="q"]:before { content: open-quote; }
+*[_tag="q"]:after { content: close-quote; }
+*[_tag="ref"] { display: inline; color: blue; background-color: inherit; }
+*[_tag="ref"]:before { color: gray; background-color: inherit; text-decoration: underline; }
+*[_tag="reg"] { display: inline; font-style: italic; }
+*[_tag="rendition"] { display: block; margin-bottom: 0.5em; }
+*[_tag="resp"] { display: block; }
+*[_tag="respStmt"] { display: block; margin-left: 1em; }
+*[_tag="respStmt"] > *[_tag="name"]:before { content: attr(role) ": "; display: block ! important; font-variant: small-caps; }
+*[_tag="bibl"] *[_tag="respStmt"] { display: inline; }
+*[_tag="rdg"]:before { background-color: inherit; content: "[" attr(wit) "] "; color: red; }
+*[_tag="row"] { display: table-row; }
+*[_tag="row"][role="label"] { color: inherit; background-color: rgb(187, 187, 187); }
+*[_tag="rs"] { display: inline; }
+*[_tag="s"] { display: inline; }
+*[_tag="salute"] { display: block; margin-bottom: 0.5em; margin-top: 1em; }
+*[_tag="samplingDecl"] { display: block; margin-bottom: 1em; }
+*[_tag="seg"] { display: inline; }
+*[_tag="seriesStmt"] { display: block; margin-bottom: 1em; }
+*[_tag="sic"] { display: inline; color: red; background-color: inherit; }
+*[_tag="sic"]:after { content: " [sic]"; }
+*[_tag="signed"] { display: block; text-align: right; }
+*[_tag="soCalled"] { display: inline; font-style: italic; quotes: "\'" "\'"; }
+*[_tag="soCalled"]:before { content: open-quote; }
+*[_tag="soCalled"]:after { content: close-quote; }
+*[_tag="sp"] { display: block; margin-bottom: 0.5em; margin-left: 2em; }
+*[_tag="div"] *[_tag="p"] { text-align: justify; text-indent: 30px; }
+*[_tag="speaker"] { display: inline; font-weight: bold; }
+*[_tag="sponsor"] { display: block; margin-bottom: 0.5em; }
+*[_tag="stage"] { display: inline; font-style: italic; }
+*[_tag="table"] { text-align: center; display: table; margin: 1em; }
+*[_tag="table"] > *[_tag="head"] { display: table-caption; font-style: italic; margin-bottom: 6pt; }
+*[_tag="tagUsage"] { display: block; margin-bottom: 0.5em; }
+*[_tag="taxonomy"] { display: block; margin-bottom: 0.5em; }
+*[_tag="term"] { font-family: sans-serif; color: blue; background-color: inherit; display: inline; }
+*[_tag="textClass"] { display: block; margin-bottom: 0.5em; }
+*[_tag="time"] { display: inline; }
+*[_tag="title"] { display: inline; }
+*[_tag="title"][type="subtitle"] { display: block; font-weight: normal; }
+*[_tag="title"][level="m"], *[_tag="title"][level="j"] { font-style: italic; }
+*[_tag="title"][level="s"] { font-style: normal; }
+*[_tag="title"][level="a"], *[_tag="title"][level="u"] { font-style: normal; }
+*[_tag="title"][level="a"]:before, *[_tag="title"][level="u"]:before { content: open-quote; }
+*[_tag="title"][level="a"]:after, *[_tag="title"][level="u"]:after { content: close-quote; }
+*[_tag="seriesStmt"] > *[_tag="title"], *[_tag="titleStmt"] > *[_tag="title"] { color: gray; font-weight: bold; }
+*[_tag="titlePage"] { display: block; border: thin solid black; margin-bottom: 2em; text-align: center; padding: 1em; }
+*[_tag="titlePart"] { display: block; }
+*[_tag="titleStmt"] { margin-bottom: 1em; color: rgb(51, 51, 51); }
+*[_tag="trailer"] { display: block; margin-bottom: 1em; }
+*[_tag="unclear"] { display: inline; color: gray; background-color: inherit; font-style: italic; }
+*[_tag="teiHeader"] { display: block; color: gray; background-color: rgb(251, 242, 234); padding: 0.5em; }
+*[_tag="teiHeader"] *[_tag="author"]:before { font-variant: small-caps; content: "author: "; }
+*[_tag="teiHeader"] *[_tag="editor"]:before { font-variant: small-caps; content: "editor: "; }
+*[_tag="teiHeader"] *[_tag="title"] { color: gray; }
+*[_tag="titleStmt"] > *[_tag="author"] { display: block; margin-left: 1em; }
+*[_tag="authority"] { display: block; margin-bottom: 0.5em; }
+*[_tag="availability"] { display: block; margin-bottom: 0.5em; }
+*[_tag="fileDesc"] { }
+*[_tag="sourceDesc"] { }
+*[_tag="sourceDesc"] *[_tag="p"] { margin: 0px; }
+*[_tag="revisionDesc"] { display: block; margin-bottom: 1em; }
+*[_tag="catDesc"] { display: block; margin-bottom: 0.5em; }
+*[_tag="encodingDesc"] { display: block; margin-bottom: 1em; }
+*[_tag="profileDesc"] { display: block; margin-bottom: 1em; }
+*[_tag="projectDesc"] { display: block; margin-bottom: 1em; }
+*[_tag="docDate"] { display: block; margin-bottom: 0.5em; }
+*[_tag="docImprint"] *[_tag="docDate"] { display: inline; }
+*[_tag="docEdition"] { display: block; margin-bottom: 0.5em; }
+*[_tag="docImprint"] { display: block; margin-bottom: 0.5em; }
+*[_tag="docTitle"] { display: block; margin-bottom: 0.5em; font-weight: bold; } 

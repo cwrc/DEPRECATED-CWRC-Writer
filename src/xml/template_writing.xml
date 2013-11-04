@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://cwrc.ca/schema/writing.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-stylesheet type="text/css" href="http://cwrc.ca/templates/css/orlando.css"?>
+
+<WRITING>
+    <ORLANDOHEADER>
+        <FILEDESC>
+            <TITLESTMT>
+                <DOCTITLE>[Insert Author Name]</DOCTITLE>
+            </TITLESTMT>
+            <PUBLICATIONSTMT>
+                <AUTHORITY>Canadian Writing and Research Collaboratory</AUTHORITY>
+            </PUBLICATIONSTMT>
+            <SOURCEDESC>Created from original research by members of [insert project name
+                here]</SOURCEDESC>
+        </FILEDESC>
+        <REVISIONDESC>
+            <RESPONSIBILITY RESP="MPO" WORKSTATUS="SUB" WORKVALUE="I">
+                <DATE VALUE="2010-09-13">13 September 2010</DATE>
+                <ITEM>document template complete</ITEM>
+            </RESPONSIBILITY>
+        </REVISIONDESC>
+    </ORLANDOHEADER>
+    <DIV0>
+        <HEADING>Writing</HEADING>
+        <STANDARD>[InsertAuthorStandardName]</STANDARD>
+        <AUTHORSUMMARY>
+            <RESEARCHNOTE>This subsection (AUTHORSUMMARY) usually encloses summary
+                statements about an author (a short preface) before opening the writing
+                document of each woman writer. This element can contain a short writer
+                profile, or an entry summary (similar to an abstract). It is useful both for
+                minor writers about whom little is known, and for major writers whose work
+                needs to be sumarized before launching into the details. </RESEARCHNOTE>
+            <SHORTPROSE>
+                <P>[Insert author summary here]</P>
+            </SHORTPROSE>
+        </AUTHORSUMMARY>
+        <DIV1>
+            <HEADING>Insert Subtitle 1</HEADING>
+            <DIV2>
+                <TEXTSCOPE>
+                    <PRODUCTION>
+                        <RESEARCHNOTE>PRODUCTION : In this section you can expand on
+                            literary activity related to the work or group of works in
+                            question, writing influences, literary schools, material
+                            conditions of writing, authorship issues, relationships with
+                            publishers, rejections, earnings, editions, mode of publication,
+                            type of press, place of publication, price, editions, periodical
+                            publication, circulation, press run, advertising,
+                            anthologization, media, manuscript history, current archival
+                            locations, etc.</RESEARCHNOTE>
+                        <CHRONSTRUCT CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="SELECTIVE"
+                            RESP="SYS">
+                            <DATE>DD Month YYY</DATE>
+                            <CHRONPROSE>[Event Prose (publication, prize, any literary
+                                activity)]</CHRONPROSE>
+                        </CHRONSTRUCT>
+                        <SHORTPROSE>
+                            <P>[Details of Event / other production ]</P>
+                        </SHORTPROSE>
+                    </PRODUCTION>
+                    <TEXTUALFEATURES>
+                        <RESEARCHNOTE>TEXTUALFEATURES: Descriptions or summaries of plot,
+                            setting, genre names, tone/style, voice/narration, literary
+                            techniques, theme/topic, motifs, characters, and
+                            intertextuality</RESEARCHNOTE>
+                        <SHORTPROSE>
+                            <P>[Textual features prose here]</P>
+                        </SHORTPROSE>
+                    </TEXTUALFEATURES>
+                    <RECEPTION>
+                        <RESEARCHNOTE>RECEPTION: Responses to his/her work: reviews,
+                            self-description, fictionalized treatments of the author,
+                            recognitions with name and value where appropriate, penalties,
+                            destruction of work, influence exerted, best known work,
+                            landmark text (if any)</RESEARCHNOTE>
+                        <SHORTPROSE>
+                            <P>[Reception prose here]</P>
+                        </SHORTPROSE>
+                    </RECEPTION>
+                </TEXTSCOPE>
+            </DIV2>
+        </DIV1>
+        <DIV1>
+            <HEADING>Insert Subtitle 2</HEADING>
+            <DIV2>
+                <TEXTSCOPE>
+                    <PRODUCTION>
+                        <CHRONSTRUCT CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="SELECTIVE"
+                            RESP="SYS">
+                            <DATE>DD Month YYY</DATE>
+                            <CHRONPROSE>[Event Prose (publication, prize, literary
+                                activity)]</CHRONPROSE>
+                        </CHRONSTRUCT>
+                        <SHORTPROSE>
+                            <P>[Details of Event / other production ]</P>
+                        </SHORTPROSE>
+                    </PRODUCTION>
+                    <TEXTUALFEATURES>
+                        <SHORTPROSE>
+                            <P>[Textual features prose here]</P>
+                        </SHORTPROSE>
+                    </TEXTUALFEATURES>
+                    <RECEPTION>
+                        <SHORTPROSE>
+                            <P>[Reception prose here]</P>
+                        </SHORTPROSE>
+                    </RECEPTION>
+                </TEXTSCOPE>
+            </DIV2>
+            <RESEARCHNOTE>To create more subsections, copy this entire DIV1 and paste below,
+                before the WORKSCITED tag </RESEARCHNOTE>
+        </DIV1>
+        <WORKSCITED>
+            <SOURCE> Unless otherwise noted, all information is from
+                <TITLE>[InsertTitle]</TITLE>. </SOURCE>
+            <SOURCE>[InsertWorkCited]</SOURCE>
+        </WORKSCITED>
+    </DIV0>
+</WRITING>

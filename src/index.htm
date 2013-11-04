@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<title>CWRCWriter</title>
+		<link type="text/css" rel="stylesheet" href="css/style.css" />
+		<link type="text/css" rel="stylesheet" href="smoothness/jquery-ui-1.9.0.custom.css" />
+		<style type="text/css">
+			h1 {
+				font-size: 38px;
+				text-align: center;
+			}
+			h2 {
+				font-size: 16px;
+				text-align: center;
+			}
+			img {
+				border: none;
+			}
+			#content {
+				text-align: left;
+				width: 640px;
+				margin: 50px auto 0;
+				font-size: 12px;
+			}
+			#buttonsParent {
+				text-align: center;
+				border-top: 1px solid #ccc;
+				border-bottom: 1px solid #ccc;
+				padding: 10px 0;
+				margin: 10px 0;
+			}
+			#buttonsParent .column {
+				float: left;
+				width: 320px;
+			}
+			#buttonsParent button {
+				margin: 10px;
+				width: 300px;
+			}
+			#buttonsParent button .ui-button-text {
+				font-size: 14px !important;
+			}
+			#logos {
+				padding-top: 20px;
+				margin: 0px auto;
+				width: 760px;
+			}
+		</style>
+		<script type="text/javascript" src="js/lib/jquery/jquery-1.8.3.js"></script>
+		<script type="text/javascript" src="js/lib/jquery/jquery-ui-1.9.0.custom.min.js"></script>
+		<script type="text/javascript">
+			$(function() {
+				var buttons = $('button').button();
+				buttons.each(function(index, el) {
+					var url = 'editor_dev.htm#';
+					$(el).click(function() {
+						window.location = url+$(this).data('url');
+					});
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div id="content">
+			<h1>CWRC-Writer</h1>
+			<h2>an open-source editor for online digital scholarship</h2>
+			<p>This is an early prototype for demonstration purposes:
+			certain features are not yet functional and there are many bugs.
+			The editor works best with the current version of the <a href="http://www.mozilla.org/en-US/firefox/new/" target="_blank">Firefox</a> or <a href="http://www.google.com/intl/en/chrome/browser/" target="_blank">Chrome</a> browsers.</p>
+			<p>For more information or to help with testing CWRC-Writer, visit <a href="http://www.cwrc.ca/projects/infrastructure-projects/technical-projects/cwrc-writer/" target="_blank">here</a>.</p>
+			<div id="buttonsParent">
+				<div class="column" style="width: 640px;">
+					<button>Load an Existing Document</button>
+				</div>
+				<div class="column">
+					<button data-url="template_biography">Create an Orlando Biography</button>
+					<button data-url="template_writing">Create Orlando Writing</button>
+					<button data-url="template_letter">Create a Letter</button>
+					<button data-url="template_poem">Create a Poem</button>
+					<button data-url="template_prose">Create Prose</button>
+					<button data-url="template_event">Create an Event</button>
+				</div>
+				<div class="column">
+					<button data-url="sample_biography">See a Sample Orlando Biography</button>
+					<button data-url="sample_writing">See Sample Orlando Writing</button>
+					<button data-url="sample_letter">See a Sample Letter</button>
+					<button data-url="sample_poem">See a Sample Poem</button>
+				</div>
+				<div style="clear: both;"></div>
+			</div>
+		</div>
+		<div id="logos">
+			<a href="http://www.cwrc.ca/en/" target="_blank"><img src="img/CWRC_logo_text_web_small.png" /></a>
+			<a href="http://innovation.ca/" target="_blank" style="margin-left: 20px;"><img src="img/en.png" /></a>
+		</div>
+	</body>
+</html>

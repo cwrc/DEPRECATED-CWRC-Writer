@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://cwrc.ca/schema/CWRC-TEIBasic.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<TEI xmlns:xi="http://www.w3.org/2001/XInclude" xmlns="http://www.tei-c.org/ns/1.0">
+
+ <teiHeader>
+  <fileDesc>
+   <titleStmt>
+    <title>Sample Document Title</title>
+    <editor sameAs="www.cwrc.ca/person/someID">Editor Name</editor>
+   </titleStmt>
+   <publicationStmt>
+    <p/>
+   </publicationStmt>
+   <sourceDesc sameAs="http://www.cwrc.ca">
+    <p>Created by members of CWRC/CS&#201;C unless otherwise noted.</p>
+   </sourceDesc>
+  </fileDesc>
+ </teiHeader>
+ <text>
+  <body>
+   <div type="poem">
+    <head type="poem">
+     <title level="a">Sample Poem Title</title>
+     <title type="subtitle">Sample Subtitle</title>
+    </head>
+    <lg>
+     <l>Verse line</l>
+     <l>Verse line</l>
+     <l>Verse line</l>
+    </lg>
+    <lg>
+     <l>Verse line</l>
+     <l>Verse line</l>
+     <l>Verse line</l>
+    </lg>
+   </div>
+   <div type="poem">
+    <head type="poem">     
+     <bibl>
+      <title level="a">Glimpse</title>
+      <title type="subtitle">Sample Poem</title>
+      <author sameAs="www.cwrc.ca/person/someID">Floris Clark McLaren</author>
+     </bibl>
+    </head>
+    <lg>
+     <l>Against the blue of spruce, and the gray</l>
+     <l>Of bare-boughed poplar, suddenly</l>
+     <l>As though a snowdrift burst in scattering fragments,</l>
+     <l>Ptarmigan rise with heavy whir of wings,</l>
+     <l>Show for a moment clear among the branches,</l>
+     <l>Then disappear,</l>
+     <l>White lost on white again.</l>
+    </lg>
+    <bibl>
+     <author>McLaren, Floris Clark</author>. <title level="a">Glimpse</title>. <title
+      level="j">Canadian Poetry Magazine</title> <biblScope type="vol">1.1</biblScope> <biblScope
+       type="issue"><date>(1936)</date></biblScope>: <biblScope type="pp">23</biblScope>.
+    </bibl>
+    <note type="researchNote">This poem has a suggestion of the magical imagery of <persName
+     sameAs="www.cwrc.ca/person/someID">Kenneth Leslie</persName>’s <title level="a">By Stubborn
+     Stars</title>.</note>
+    <note type="link">Poem featured in <ref
+     target="http://ceww.wordpress.com/2012/03/21/glimpse-by-floris-clark-mclaren/"><title
+      sameAs="http://ceww.wordpress.com" level="m">Canada's Early
+      Women Writers</title></ref></note> 
+   </div>
+  </body>
+ </text>
+</TEI>

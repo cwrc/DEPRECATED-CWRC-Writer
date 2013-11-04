@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://cwrc.ca/schema/biography.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-stylesheet type="text/css" href="http://cwrc.ca/templates/css/orlando.css"?>
+
+<BIOGRAPHY PERSON="BRWWRITER" SEX="FEMALE">
+    <ORLANDOHEADER>
+        <FILEDESC>
+            <TITLESTMT>
+                <DOCTITLE>[Insert Author Name]</DOCTITLE>
+            </TITLESTMT>
+            <PUBLICATIONSTMT>
+                <AUTHORITY>Canadian Writing and Research Collaboratory</AUTHORITY>
+            </PUBLICATIONSTMT>
+            <SOURCEDESC>Created from original research by members of [insert project name
+                here]</SOURCEDESC>
+        </FILEDESC>
+        <REVISIONDESC>
+            <RESPONSIBILITY RESP="MPO" WORKSTATUS="SUB" WORKVALUE="I">
+                <DATE VALUE="2010-09-13">13 September 2010</DATE>
+                <ITEM>document template complete</ITEM>
+            </RESPONSIBILITY>
+        </REVISIONDESC>
+    </ORLANDOHEADER>
+    <DIV0>
+        <RESEARCHNOTE>This template provides sections for topics generally found in a
+            writer's entry. Please note that any irrelevant tags or sections can simply be
+            deleted when not applicable. You can also add other sections not provided in
+            this template. Other available tags include: CULTURALFORMATION (issues and
+            circumstances surrounding class, language, religion, sexuality, race, ethnicity,
+            nationality, and geographical heritage; if you want to enter into detail about
+            one of these, do so in a second-level DIV2 tag within it) .INTIMATERELATIONSHIPS
+            (non-familial intimate relationships; this tag has an attribute),
+            FRIENDSASSOCIATES (close, and broader social circle), HEALTH (mental and
+            physical health, including issues having to do with the female body; this tag
+            has an attribute), LOCATION (travel, visits, moves, migrations, and residences;
+            this tag has an attribute), POLITICS (political affiliations and degree of
+            involvement in political organizations), LEISUREANDSOCIETY (social and leisure
+            activities), VIOLENCE (any domestic or other violence), WEALTH (material wealth
+            or poverty; significant changes in standard of living).</RESEARCHNOTE>
+        <HEADING>Biography</HEADING>
+        <STANDARD>[InsertAuthorStandardName]</STANDARD>
+        <DIV1>
+            <PERSONNAME>
+                <DIV2>
+                    <DATASTRUCT>
+                        <RESEARCHNOTE>Delete any name types that do not apply (including its
+                            enclosing DATAITEM tag)</RESEARCHNOTE>
+                        <DATAITEM>
+                            <BIRTHNAME>
+                                <GIVEN>[BirthGivenName]</GIVEN>
+                                <SURNAME>[BirthSurname]</SURNAME>
+                            </BIRTHNAME>
+                        </DATAITEM>
+                        <DATAITEM>
+                            <NICKNAME>[InsertNickname]</NICKNAME>
+                        </DATAITEM>
+                        <DATAITEM>
+                            <MARRIED>[InsertMarriedName]</MARRIED>
+                        </DATAITEM>
+                        <DATAITEM>
+                            <INDEXED>[InsertIndexedName]</INDEXED>
+                        </DATAITEM>
+                        <DATAITEM>
+                            <SELFCONSTRUCTED>[InsertSelfConsctructedName]</SELFCONSTRUCTED>
+                        </DATAITEM>
+                        <DATAITEM>
+                            <PSEUDONYM>[InsertPseudonym]</PSEUDONYM>
+                        </DATAITEM>
+                        <DATAITEM>
+                            <RELIGIOUSNAME>[InsertReligiousName]</RELIGIOUSNAME>
+                        </DATAITEM>
+                        <DATAITEM>
+                            <ROYAL>[InsertRoyalName]</ROYAL>
+                        </DATAITEM>
+                        <DATAITEM>
+                            <STYLED>[InsertStyledName]</STYLED>
+                        </DATAITEM>
+                        <DATAITEM>
+                            <TITLED>[InsertTitledName]</TITLED>
+                        </DATAITEM>
+                    </DATASTRUCT>
+                </DIV2>
+            </PERSONNAME>
+        </DIV1>
+        <DIV1>
+            <HEADING>Birth</HEADING>
+            <BIRTH>
+                <DIV2>
+                    <CHRONSTRUCT RESP="SYS" RELEVANCE="SELECTIVE"
+                        CHRONCOLUMN="WRITINGCLIMATE">
+                        <DATE>[Insert date]</DATE>
+                        <CHRONPROSE>[Insert summary of birth here]. <BIRTHPOSITION> [Insert
+                            prose on birth position] </BIRTHPOSITION></CHRONPROSE>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P>[Insert details of birth here] <RESEARCHNOTE>Below is an empty
+                            bibliographical citation (BIBCIT tag): please fill in the
+                            appropriate information, and edit both the PLACEHOLDER, and
+                            the DBREF attributes. Note that the plural BIBCITS tag is
+                            used to group any number of BIBCIT tags. Please insert at
+                            least one BIBCIT at the end of each paragraph or
+                            CHRONSTRUCT.</RESEARCHNOTE><BIBCITS>
+                                <BIBCIT>Insert citation information here</BIBCIT>
+                            </BIBCITS></P>
+                    </SHORTPROSE>
+                </DIV2>
+            </BIRTH>
+        </DIV1>
+        <DIV1>
+            <HEADING>Family</HEADING>
+            <FAMILY>
+                <MEMBER RELATION="MOTHER">
+                    <DIV2>
+                        <HEADING>Mother</HEADING>
+                        <SHORTPROSE>
+                            <P>[Insert prose here]</P>
+                        </SHORTPROSE>
+                    </DIV2>
+                </MEMBER>
+                <MEMBER RELATION="FATHER">
+                    <DIV2>
+                        <HEADING>Father</HEADING>
+                        <SHORTPROSE>
+                            <P>[Insert prose here]</P>
+                        </SHORTPROSE>
+                    </DIV2>
+                </MEMBER>
+            </FAMILY>
+        </DIV1>
+        <DIV1>
+            <HEADING>Education</HEADING>
+            <RESEARCHNOTE>Please click on the EDUCATION element below, and add the
+                appropriate MODE attribute value (see attribute panel after clicking on
+                EDUCATION)</RESEARCHNOTE>
+            <EDUCATION>
+                <DIV2>
+                    <SHORTPROSE>
+                        <P>[Insert prose here]</P>
+                    </SHORTPROSE>
+                </DIV2>
+            </EDUCATION>
+        </DIV1>
+        <DIV1>
+            <HEADING>Marriage</HEADING>
+            <RESEARCHNOTE>Please click on the MEMBER element below, and add the appropriate
+                RELATION attribute value (currently set to "HUSBAND". Delete complete DIV1
+                if not applicable.)</RESEARCHNOTE>
+            <FAMILY>
+                <MEMBER RELATION="HUSBAND">
+                    <MARRIAGE>
+                        <DIV2>
+                            <SHORTPROSE>
+                                <P>[Insert prose here]</P>
+                            </SHORTPROSE>
+                        </DIV2>
+                    </MARRIAGE>
+                </MEMBER>
+            </FAMILY>
+        </DIV1>
+        <DIV1>
+            <HEADING>Occupation</HEADING>
+            <OCCUPATION>
+                <DIV2>
+                    <SHORTPROSE>
+                        <P>[Insert prose here]</P>
+                    </SHORTPROSE>
+                </DIV2>
+            </OCCUPATION>
+        </DIV1>
+        <RESEARCHNOTE>Delete the below DIV1 (Death) if not applicable</RESEARCHNOTE>
+        <DIV1>
+            <HEADING>Death</HEADING>
+            <DEATH>
+                <DIV2>
+                    <CHRONSTRUCT RESP="SYS" RELEVANCE="SELECTIVE"
+                        CHRONCOLUMN="WRITINGCLIMATE">
+                        <DATE>[InsertDate]</DATE>
+                        <CHRONPROSE>[Insert summary of event here]</CHRONPROSE>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P>[Insert details of event here]</P>
+                    </SHORTPROSE>
+                </DIV2>
+            </DEATH>
+        </DIV1>
+        <WORKSCITED>
+            <SOURCE> Unless otherwise noted, all information is from
+                <TITLE>[InsertSourceTitle]</TITLE>. </SOURCE>
+            <SOURCE>[InsertWorkCited]</SOURCE>
+        </WORKSCITED>
+    </DIV0>
+</BIOGRAPHY>

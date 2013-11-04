@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Events schema for use by Biography, Events and Writing schemas
+    written 2010-03-31 by Mariana Paredes-Olea, based on events.dtd(SGML)
+    Copyright 2010 The Orlando Project -->
+<!-- Revision as of 2011-01-16 -->
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns:xhtml="http://www.w3.org/1999/xhtml" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <include href="orlando_common_schema.rng">
+        <start>
+            <ref name="Events-element"/>
+        </start>
+        
+        <!-- Chronstruct does not accept bibcit/s
+            in event submission database, this is a variation of chronstruct to
+            restrict use ob bibcit/s (only for events)-->
+        <define name="chronStruct-element">   
+            <element name="CHRONSTRUCT">
+                <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">A chronStruct is an element that holds together and therefore associates a date with the prose that describes an event.</a:documentation>
+                <xhtml:h2>Definition</xhtml:h2>
+                <xhtml:p>A chronStruct is an element that holds together and therefore associates a date with the prose that describes an event.</xhtml:p>
+                <xhtml:h2>Placement</xhtml:h2>
+                <xhtml:p>Biography</xhtml:p>
+                <xhtml:p>Events</xhtml:p>
+                <xhtml:p>Writing</xhtml:p>
+                <xhtml:p>A chronStruct can only contain sub-elements. You are not permitted to type directly into this element. A chronStruct can only include one date, dateRange, or dateStruct to be followed by a chronProse. Although you may not include two dates in the chronStruct, you are allowed to use the date element again the chronProse if needed.</xhtml:p>
+                <xhtml:h2>Relationships</xhtml:h2>
+                <xhtml:p>In events documents a chronStruct is contained by a chronEvent. In biography documents, it can appear inside a Div1--content tag such as birth or death, or inside a Div2 or Div3. In writing documents, a chronStruct can appear inside a Div2--production, Div2--reception, or Div2--textualFeatures or inside a Div3. In biography and writing documents, please insert a chronStruct at the level that is most appropriate to research you are tagging. Every chronStruct no matter which document it appears in contains a date followed by a chronProse. Both these sub-elements are required. chronStruct is modified by the required chronColumn attribute in events documents.</xhtml:p>              
+                <xhtml:h2>Examples</xhtml:h2>
+                <xhtml:p>&lt;CHRONSTRUCT CHRONCOLUMN="NATIONALINTERNATIONAL"&gt;&lt;DATE&gt;July 1832&lt;/&gt;&lt;CHRONPROSE&gt;&lt;The Friends of the Oppressed established by a group of politically active London women.&gt;&lt;/&gt;&lt;/&gt;</xhtml:p>
+                <xhtml:p>&lt;CHRONSTRUCT CHRONCOLUMN="NATIONALINTERNATIONAL"&gt;&lt;DATE&gt;1 April 1905&lt;/&gt;&lt;CHRONPROSE&gt;&lt;Penny Post was available one way from the United Kingdom to Australia&gt;&lt;/&gt;&lt;/&gt;</xhtml:p>
+                <xhtml:h2>Practice Issues</xhtml:h2>
+                <xhtml:p>Because chronStructs may be removed from the documents in which they were created and be placed alongside unrelated information, always make sure that you put enough information in a chronStruct such that it will make sense when read out of context. Make sure that any important names, dates, places, or orgNames are tagged inside a chronStruct. Also, do not use pronouns in a chronStruct unless their referent is also present.</xhtml:p>
+                <ref name="ID-attribute"/>
+                <optional>
+                    <ref name="chronColumn-attributes"/>
+                </optional>
+                <optional>
+                    <ref name="relevance-attributes"/>
+                </optional>
+                <optional>
+                    <ref name="resp-attribute"/>
+                </optional>
+                <interleave>
+                    <group>
+                        <choice>
+                            <ref name="dateRange-element"/>
+                            <ref name="dateStruct-element"/>
+                            <ref name="date-element"/>
+                        </choice>
+                        <ref name="chronProse-element"/>
+                    </group>
+                    <ref name="Div0-inclusion"/>
+                    <zeroOrMore>
+                        <choice>
+                            <ref name="name-element"/>
+                            <ref name="place-element"/>
+                            <ref name="orgName-element"/>
+                            <ref name="rs-element"/>
+                            <ref name="sic-element"/>
+                            <ref name="corr-element"/>
+                            <ref name="emph-element"/>
+                            <ref name="quote-element"/>
+                            <ref name="foreign-element"/>
+                            <ref name="soCalled-element"/>
+                            <ref name="topic-element"/>
+                            <ref name="tGenre-element"/>
+                            <ref name="job-element"/>
+                            <ref name="xptr-element"/>
+                            <ref name="xref-element"/>
+                            <ref name="l-element"/>
+                            <ref name="lg-element"/>
+                            <ref name="time-element"/>                
+                        </choice>
+                    </zeroOrMore>
+                </interleave>
+            </element>
+        </define>
+        
+    </include>
+    
+    <define name="Events-element">
+        <element name="EVENTS">
+            <a:documentation xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">Events is the largest element available in events documents and its sole purpose is to contain the overall document structure.</a:documentation>
+            <xhtml:h2>Definition</xhtml:h2>
+            <xhtml:p>Events is the largest element available in events documents and its sole purpose is to contain the overall document structure.</xhtml:p>
+            <xhtml:h2>Placement</xhtml:h2>
+            <xhtml:p>Events</xhtml:p>
+            <xhtml:h2>Relationships</xhtml:h2>
+            <xhtml:p>Events is the first element inserted in an events document. It contains the OrlandoHeader and at least one Div0. It has no unique attributes.</xhtml:p>
+            <optional>
+                <ref name="ID-attribute"/>
+            </optional>
+            <ref name="OrlandoHeader-element"/>
+            <oneOrMore>
+                <ref name="Div0-element"/>
+            </oneOrMore>
+        </element>
+    </define>
+    
+    
+</grammar>

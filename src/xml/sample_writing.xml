@@ -1,0 +1,1340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://cwrc.ca/schema/writing.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-stylesheet type="text/css" href="http://cwrc.ca/templates/css/orlando.css"?>
+
+<WRITING SEX="FEMALE" PERSON="WRITER">
+    <ORLANDOHEADER TYPE="text">
+        <FILEDESC>
+            <TITLESTMT>
+                <DOCTITLE>Pauline Johnson: writing</DOCTITLE>
+            </TITLESTMT>
+            <PUBLICATIONSTMT>
+                <AUTHORITY>Orlando Project</AUTHORITY>
+            </PUBLICATIONSTMT>
+            <SOURCEDESC>Based on original research by members of the Orlando Project.</SOURCEDESC>
+        </FILEDESC>
+        <REVISIONDESC>
+            <RESPONSIBILITY RESP="JSC" WORKSTATUS="RWT" WORKVALUE="I">
+                <DATE>8 January 1998</DATE>
+                <ITEM>Initial document given to tagger.</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="JSC" WORKSTATUS="RWT" WORKVALUE="I">
+                <DATE>10 February 1998</DATE>
+                <ITEM>Template for v1 Writing </ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="JSC" WORKSTATUS="RWT" WORKVALUE="I">
+                <DATE>11 March 1998</DATE>
+                <ITEM>Template for v1 Writing </ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SIB" WORKSTATUS="RWT" WORKVALUE="C">
+                <DATE>6 October 1998</DATE>
+                <ITEM>Updated for Sept 1998 Audit</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="JSC" WORKSTATUS="REV" WORKVALUE="C">
+                <DATE>4 November 1998</DATE>
+                <ITEM>fixed writing attribute</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SYS" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>21 December 1999</DATE>
+                <ITEM>BATCH CHANGE: primarily orgName and bibCit cleanup</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="DRG" WORKSTATUS="REV" WORKVALUE="C">
+                <DATE>1 February 2001</DATE>
+                <ITEM>converted textual apostrophes and quotation marks to entity references</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="KDC" WORKSTATUS="RWT" WORKVALUE="I">
+                <DATE>12 May 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="KDC" WORKSTATUS="RWT" WORKVALUE="I">
+                <DATE>12 June 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SIB" WORKSTATUS="REV" WORKVALUE="C">
+                <DATE>26 June 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="KDC" WORKSTATUS="RWT" WORKVALUE="C">
+                <DATE>14 August 2001</DATE>
+                <ITEM>revised</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="KDC" WORKSTATUS="RWT" WORKVALUE="C">
+                <DATE>14 August 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="I">
+                <DATE>18 October 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="I">
+                <DATE>18 October 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="I">
+                <DATE>23 October 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="I">
+                <DATE>27 October 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="I">
+                <DATE>30 October 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="I">
+                <DATE>30 October 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="I">
+                <DATE>31 October 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="P">
+                <DATE>5 November 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="P">
+                <DATE>6 November 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="P">
+                <DATE>19 November 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="P">
+                <DATE>20 November 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="C">
+                <DATE>30 November 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="C">
+                <DATE>3 December 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="CAS" WORKVALUE="C">
+                <DATE>19 December 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SIB" WORKSTATUS="REV" WORKVALUE="C">
+                <DATE>20 December 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="REV" WORKVALUE="C">
+                <DATE>20 December 2001</DATE>
+                <ITEM>answered research notes</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="REV" WORKVALUE="C">
+                <DATE>21 December 2001</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SIB" WORKSTATUS="RBV" WORKVALUE="C">
+                <DATE>6 January 2002</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="KDC" WORKSTATUS="REV" WORKVALUE="C">
+                <DATE>7 January 2002</DATE>
+                <ITEM>revised</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="RSC" WORKSTATUS="PUB" WORKVALUE="I">
+                <DATE>8 January 2002</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="RSC" WORKSTATUS="PUB" WORKVALUE="I">
+                <DATE>9 January 2002</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="PUB" WORKVALUE="I">
+                <DATE>23 January 2002</DATE>
+                <ITEM>removed title tag(s) from workscited</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>24 January 2002</DATE>
+                <ITEM>fixed socalled</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>28 January 2002</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>4 February 2002</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>5 February 2002</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>12 February 2002</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>12 February 2002</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>12 February 2002</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>14 February 2002</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="AFP" WORKSTATUS="REV" WORKVALUE="C">
+                <DATE>25 February 2002</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SIB" WORKSTATUS="REV" WORKVALUE="C">
+                <DATE>29 March 2002</DATE>
+                <ITEM>added sentence on influence of EBB</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="REV" WORKVALUE="C">
+                <DATE>12 April 2002</DATE>
+                <ITEM>fixed socalled</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="JAH" WORKSTATUS="CFB" WORKVALUE="C">
+                <DATE>26 August 2002</DATE>
+                <ITEM>cfb done</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="JAH" WORKSTATUS="CFB" WORKVALUE="C">
+                <DATE>29 August 2002</DATE>
+                <ITEM>fixed title</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="JAH" WORKSTATUS="CFB" WORKVALUE="C">
+                <DATE>30 August 2002</DATE>
+                <ITEM>fixed bibcits</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>24 January 2003</DATE>
+                <ITEM> fixed PLACE</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>31 January 2003</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>12 February 2003</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="JAH" WORKSTATUS="CFB" WORKVALUE="C">
+                <DATE>20 March 2003</DATE>
+                <ITEM>fixed bibcit</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SYS" WORKSTATUS="CFT" WORKVALUE="I">
+                <DATE>14 April 2003</DATE>
+                <ITEM>BATCH CHANGE: primarily PLACE cleanup</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="PUB" WORKVALUE="C">
+                <DATE>23 April 2003</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="KDC" WORKSTATUS="REV" WORKVALUE="C">
+                <DATE>23 May 2003</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SYS" WORKSTATUS="CFT" WORKVALUE="I">
+                <DATE>16 June 2003</DATE>
+                <ITEM>BATCH CHANGE: primarily TGENRENAME cleanup, BIBCIT following P moved before P,
+                    BIBCITS TAG added</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="IMG" WORKSTATUS="REV" WORKVALUE="C">
+                <DATE>7 January 2005</DATE>
+                <ITEM>revised chroncolumn</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SYS" WORKSTATUS="CFT" WORKVALUE="I">
+                <DATE>08 April 2005</DATE>
+                <ITEM>BATCH CHANGE: March 2005 Specifications. Mainly tag/attribute name
+                    changes</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="JAH" WORKSTATUS="CFB" WORKVALUE="C">
+                <DATE>29 June 2005</DATE>
+                <ITEM>fixed title</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="IMG" WORKSTATUS="REV" WORKVALUE="C">
+                <DATE>10 April 2006</DATE>
+                <ITEM>final readthrough</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="REV" WORKVALUE="C">
+                <DATE>7 September 2006</DATE>
+                <ITEM>fixed motifnames</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SIB" WORKSTATUS="REV" WORKVALUE="C">
+                <DATE>6 February 2008</DATE>
+                <ITEM>fixed bibcit misplacement</ITEM>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="SLB" WORKSTATUS="CFT" WORKVALUE="C">
+                <DATE>11 February 2008</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY RESP="MKD" WORKSTATUS="REV" WORKVALUE="C">
+                <DATE>8 June 2011</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+            <RESPONSIBILITY WORKSTATUS="REV" RESP="MDG" WORKVALUE="C">
+                <DATE>11 July 2012</DATE>
+                <ITEM/>
+            </RESPONSIBILITY>
+        </REVISIONDESC>
+    </ORLANDOHEADER>
+    <DIV0>
+        <HEADING>Writing</HEADING>
+        <STANDARD>Johnson, Pauline</STANDARD>
+        <AUTHORSUMMARY>
+            <SHORTPROSE>
+                <P><GENERICRANGE>PJ is best remembered for the <TGENRE GENRENAME="POETRY">poem</TGENRE>
+                        <TITLE TITLETYPE="ANALYTIC">The Song My Paddle Sings</TITLE>, published in
+                        1892, which has been memorized by generations of Canadian school children,
+                        but she also wrote <TGENRE GENRENAME="SHORTSTORY">short stories</TGENRE> and
+                            <TGENRE GENRENAME="JOURNALISM">journalism</TGENRE>, and recorded the
+                            <TGENRE GENRENAME="LEGENDFOLKTALE">legends</TGENRE> of the Squamish
+                        people.</GENERICRANGE> Her writing struggles to bring together the two world
+                    views, British and Native, with which she was acquainted, and her literary
+                    persona straddles the figures of the New Woman and the emergent Canadian author.
+                    Poet <NAME>Glenn Wilmott</NAME>, citing critic <NAME>Terry Goldie</NAME>,
+                    advises anyone who wants <QUOTE DIRECT="Y">to learn something about the history
+                        and historicity of literary value, go to this poet.</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Wilmott 44" DBREF="9600" QTDIN="QTDINYES">44</BIBCIT></BIBCITS></P>
+            </SHORTPROSE>
+        </AUTHORSUMMARY>
+        <DIV1>
+            <HEADING>Poetry</HEADING>
+            <DIV2>
+                <HEADING>Early Years</HEADING>
+                <PRODUCTION>
+                    <CHRONSTRUCT RESP="KDC" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="SELECTIVE">
+                        <DATE>1883</DATE>
+                        <CHRONPROSE>
+                            <PFIRSTLITERARYACTIVITY>PJ published her first <TGENRE GENRENAME="POETRY">poem</TGENRE>, <TITLE TITLETYPE="ANALYTIC">My
+                                    Little Jean</TITLE>, apparently in the periodical <TITLE TITLETYPE="JOURNAL">Gems of Poetry</TITLE>; but no verification
+                                has been made to date.</PFIRSTLITERARYACTIVITY>
+                        </CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 219" DBREF="9599">219</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P>Biographer <NAME>Betty Keller</NAME> believes that the poem was first
+                            penned in 1879 and addressed to PJ's close friend <NAME>Jean
+                                Morton</NAME>, from the <ORGNAME>Brantford Collegiate
+                                Institute</ORGNAME>, PJ's high school. Biographers <NAME STANDARD="Gerson, Carole">Gerson</NAME> and <NAME STANDARD="Strong-Boag, Veronica">Strong-Boag</NAME> find evidence of
+                            its publication history in the <TITLE TITLETYPE="MONOGRAPHIC">History of
+                                the County of Brant</TITLE> but have been unable actually to locate
+                            the poem in <TITLE TITLETYPE="JOURNAL">Gems of Poetry</TITLE>, a
+                            periodical not associated with the high school.
+                                <PPERIODICALPUBLICATION>The first poem they are able to find in that
+                                journal appeared in <DATE>August 1884</DATE>, entitled <TITLE TITLETYPE="ANALYTIC">The Rift</TITLE>. <PAUTHORSHIP AUTHORNAMETYPE="PSEUDONYMOUS">PJ signed it with the pseudonym
+                                        <NAME>Margaret Rox</NAME>.</PAUTHORSHIP> She continued in
+                                the following years to publish poems in <TITLE TITLETYPE="JOURNAL">Gems of Poetry</TITLE>, <TITLE TITLETYPE="JOURNAL">The
+                                    Week</TITLE> (the most prestigious literary and intellectual
+                                journal in Canada at the time), and <TITLE TITLETYPE="JOURNAL">Saturday
+                                    Night</TITLE>.</PPERIODICALPUBLICATION><BIBCITS><BIBCIT PLACEHOLDER="Keller 36" DBREF="9598">36</BIBCIT><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 277, 219" DBREF="9599">277,
+                                    219</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                    <CHRONSTRUCT RESP="KDC" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="DECADE">
+                        <DATE>16 April 1885</DATE>
+                        <CHRONPROSE>
+                            <PPERIODICALPUBLICATION>PJ's <TGENRE GENRENAME="POETRY">poem</TGENRE>
+                                <TITLE TITLETYPE="ANALYTIC">The Sea Queen</TITLE>, published this
+                                day in <TITLE TITLETYPE="JOURNAL">The Week</TITLE>, attracted the
+                                attention of its former editor, <NAME>Charles G. D. Roberts</NAME>;
+                                they began to correspond.</PPERIODICALPUBLICATION>
+                        </CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Keller 46" DBREF="9598">46</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P>
+                            <RRECOGNITIONS>PJ did not meet Roberts in person until the <DATESTRUCT CERTAINTY="BY" VALUE="1895-08-"><SEASON>summer</SEASON> of
+                                        <YEAR>1895</YEAR></DATESTRUCT>, when he presented her with a
+                                manuscript copy of his book <TITLE TITLETYPE="MONOGRAPHIC">Songs of
+                                    the Common Day</TITLE> and the pen he used to write
+                                it.</RRECOGNITIONS>
+                            <BIBCITS>
+                                <BIBCIT PLACEHOLDER="Keller 108-9" DBREF="9598">108-9</BIBCIT>
+                            </BIBCITS>
+                        </P>
+                    </SHORTPROSE>
+                    <CHRONSTRUCT RESP="IMG" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="DECADE" CHRONCOLUMN1="NATIONALINTERNATIONAL1" RELEVANCE1="COMPREHENSIVE1">
+                        <DATE>18 June 1885</DATE>
+                        <CHRONPROSE>
+                            <PPERIODICALPUBLICATION>Between the two surrenders which ended the North
+                                West Rebellion (that of <NAME>Poundmaker</NAME> on <DATE VALUE="1885-05-26">26 May</DATE> and that of <NAME STANDARD="Big Bear">Big Bear</NAME> on <DATE VALUE="1885-07-02">2 July</DATE>), PJ published in <TITLE TITLETYPE="JOURNAL">The
+                                    Week</TITLE> her <TGENRE GENRENAME="POETRY">poem</TGENRE>
+                                <TITLE TITLETYPE="ANALYTIC">A Cry from an Indian
+                                Wife</TITLE>.</PPERIODICALPUBLICATION>
+                        </CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 220" DBREF="9599">220</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P>This is the poem she read at a Toronto literary evening in 1892 which is
+                            said to have launched her performing career. <TCHARACTERIZATION>It is
+                                the first poem in which she engages with
+                                    <TTHEMETOPIC>hybridity</TTHEMETOPIC>, a theme that she would
+                                continue to explore with mixed-race heroines such as Christine in
+                                    <TITLE TITLETYPE="ANALYTIC">Red Girl's
+                                Reasoning</TITLE>.</TCHARACTERIZATION><BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 16, 149" DBREF="9599">16,
+                                    149</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </PRODUCTION>
+                <TEXTUALFEATURES>
+                    <SHORTPROSE>
+                        <P><TTECHNIQUES TECHNIQUETYPE="VERSIFICATION">The poem, presented as a
+                                    <TGENRE GENRENAME="MONOLOGUE">dramatic monologue</TGENRE>,
+                                figures the nation of Canada as a hybrid of two founding peoples. It
+                                alternates support for <TCHARACTERTYPEROLE>Anglo-European
+                                    Canadians</TCHARACTERTYPEROLE> and
+                                    <TCHARACTERTYPEROLE>dispossessed natives</TCHARACTERTYPEROLE>,
+                                while overlooking the French.</TTECHNIQUES> It ends, however, with a
+                            clear, though resentfully equivocating, declaration of
+                                <TTHEMETOPIC>Native rights</TTHEMETOPIC>: <QUOTE DIRECT="Y"><L>Go
+                                    forth, nor bend to greed of white men's hands,</L><L>By
+                                    right, by birth we Indians own these lands,</L><L>Though
+                                    starved, crushed, plundered lies our nation low . .
+                                    .</L><L>Perhaps the white man's God has willed it
+                                            so.<BIBCITS><BIBCIT PLACEHOLDER="Pauline Johnson Wampum 18" DBREF="10476">18</BIBCIT><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 149" DBREF="9599">149</BIBCIT></BIBCITS></L></QUOTE></P>
+                        <P>
+                            <TINTERTEXTUALITY INTERTEXTTYPE="IMITATION" GENDEROFAUTHOR="FEMALE">Particularly in its foregrounding of religion in its attack on
+                                racial inequality, this poem seems indebted to <NAME>Elizabeth
+                                    Barrett Browning</NAME>'s <TITLE TITLETYPE="ANALYTIC">The
+                                    Runaway Slave at Pilgrim's
+                                Point</TITLE>.</TINTERTEXTUALITY>
+                        </P>
+                    </SHORTPROSE>
+                </TEXTUALFEATURES>
+                <RECEPTION>
+                    <SHORTPROSE>
+                        <P>
+                            <RRESPONSES RESPONSETYPE="INITIAL" FORMALITY="FORMAL" GENDEREDRESPONSE="GENDEREDYES">One of the early responses to the
+                                work addressed PJ as <QUOTE DIRECT="Y">the dark daughter of the
+                                    forest</QUOTE> and admonished her that <QUOTE DIRECT="Y">men
+                                    must work and women must weep.</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Keller 46" DBREF="9598">46</BIBCIT></BIBCITS></RRESPONSES>
+                        </P>
+                    </SHORTPROSE>
+                </RECEPTION>
+            </DIV2>
+            <DIV2>
+                <HEADING>Early Reception and Literary Nationalism</HEADING>
+                <PRODUCTION>
+                    <CHRONSTRUCT RESP="KDC" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="DECADE">
+                        <DATE>17 September 1885</DATE>
+                        <CHRONPROSE>
+                            <PSUBMISSIONSREJECTIONS>
+                                <PPERIODICALPUBLICATION>PJ published <TITLE TITLETYPE="ANALYTIC">In
+                                        the Shadows</TITLE>, a <TTHEMETOPIC>canoeing</TTHEMETOPIC>
+                                    <TGENRE GENRENAME="POETRY">poem</TGENRE>, in <TITLE TITLETYPE="JOURNAL">The Week</TITLE> after it had been
+                                    rejected by her mother's cousin <NAME>William Dean
+                                        Howells</NAME>, then editor at <TITLE TITLETYPE="JOURNAL" REG="Harper's Weekly">Harper's</TITLE>.</PPERIODICALPUBLICATION>
+                            </PSUBMISSIONSREJECTIONS>
+                        </CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Keller 55" DBREF="9598">55</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P><PPERIODICALPUBLICATION>It re-appeared later in the <TITLE TITLETYPE="JOURNAL">Athenæum</TITLE>.</PPERIODICALPUBLICATION>
+                            <PINFLUENCESHER INFLUENCETYPE="FAMILIAL">PJ was particularly annoyed
+                                that her own relation had responded negatively to her
+                                work.</PINFLUENCESHER> Howells allegedly boasted of his connection
+                            to the Johnson family (as exotics) while he was the US consul in Venice,
+                            although it is not clear that PJ knew about this.<BIBCITS><BIBCIT PLACEHOLDER="Keller 55" DBREF="9598">55</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </PRODUCTION>
+                <TEXTUALFEATURES>
+                    <SHORTPROSE>
+                        <P>This poem exhibits what was to become a recurrent theme for her: the
+                            sensuality of canoeing and of the outdoors. <TTECHNIQUES TECHNIQUETYPE="IMAGERY">She writes evocatively of the <QUOTE DIRECT="Y"><L> . . . perfume of some burning</L><L>Far-off
+                                        brushwood, ever turning</L><L>To exhale</L><L>All its smoky
+                                        fragrance dying,</L><L>In the arms of evening
+                                        lying,</L><L>Where I sail.<BIBCITS><BIBCIT PLACEHOLDER="Pauline Johnson Wampum 83-4" DBREF="10476">83-4</BIBCIT></BIBCITS></L></QUOTE></TTECHNIQUES></P>
+                    </SHORTPROSE>
+                </TEXTUALFEATURES>
+                <RECEPTION>
+                    <CHRONSTRUCT RESP="KDC" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="DECADE">
+                        <DATE>14 October 1886</DATE>
+                        <CHRONPROSE>
+                            <RRESPONSES RESPONSETYPE="INITIAL" FORMALITY="FORMAL">The <TITLE TITLETYPE="JOURNAL" REG="Globe and Mail">Globe</TITLE> published
+                                an interview between PJ and Brantford writer <NAME>Sara Jeannette
+                                    Duncan</NAME>, who was just one year the elder of the
+                                two.</RRESPONSES>
+                        </CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Keller 49" DBREF="9598">49</BIBCIT>
+                            <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 116" DBREF="9599">116</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P>Duncan, using the pseudonym <NAME STANDARD="Duncan, Sara Jeannette">Garth
+                                Grafton</NAME>, mentioned knowing PJ for some time and focused on
+                            her physical attributes and Mohawk ancestry. <PADVERTISING>The publicity
+                                which resulted from the interview brought Johnson wider
+                                attention.</PADVERTISING><BIBCITS><BIBCIT PLACEHOLDER="Keller 49, 50" DBREF="9598">49-50</BIBCIT></BIBCITS></P>
+                        <P>Critics <NAME>Carole Gerson</NAME> and <NAME>Veronica Strong-Boag</NAME>
+                            argue that during this period PJ <QUOTE DIRECT="Y">contributed
+                                significantly to the remarkable upsurge of Canadian literary
+                                activity that occurred during an era of fervent cultural and
+                                political nationalism on both sides of the Atlantic.
+                                    <PLITERARYSCHOOLS>From about 1885 onward, PJ joined a critical
+                                    mass of writers who were constructing a distinct national
+                                    identity for former colonies struggling towards collective
+                                    consciousness.</PLITERARYSCHOOLS><BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 100-1" DBREF="9599">100-1</BIBCIT></BIBCITS></QUOTE></P>
+                    </SHORTPROSE>
+                    <CHRONSTRUCT RESP="KDC" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="PERIOD">
+                        <DATE VALUE="1889--" CERTAINTY="C">1889</DATE>
+                        <CHRONPROSE>
+                            <RRECOGNITIONS><PANTHOLOGIZATION>Two of PJ's <TGENRE GENRENAME="POETRY">poems</TGENRE> were chosen for the
+                                    influential Canadian anthology <TITLE TITLETYPE="MONOGRAPHIC">Songs of the <PLACE><GEOG REG="Canada">Great
+                                                Dominion</GEOG></PLACE></TITLE></PANTHOLOGIZATION>,
+                                edited by <NAME STANDARD="Lighthall, William Douw">W. D.
+                                    Lighthall</NAME>.</RRECOGNITIONS>
+                        </CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 101" DBREF="9599">101</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P>This helped to establish her as a key figure in English-Canadian
+                            literature. The two poems chosen were <TITLE TITLETYPE="ANALYTIC">In the
+                                Shadows</TITLE> and <TITLE TITLETYPE="ANALYTIC">At The Ferry</TITLE>
+                            (about the <TTHEMETOPIC><PLACE><REGION>Grand River</REGION><GEOG REG="Canada"/></PLACE><PLACE><REGION REG="Ontario"/><GEOG REG="Canada"/></PLACE></TTHEMETOPIC>).
+                                    <PANTHOLOGIZATION><PCIRCULATION>Wider circulation resulted when
+                                    her poetry was included in an 1893 anthology meant for school
+                                    use,</PCIRCULATION>
+                                <NAME STANDARD="Wetherell, James Elgin">J. E.
+                                Wetherell</NAME>'s <TITLE TITLETYPE="MONOGRAPHIC">Later
+                                    Canadian Poems</TITLE></PANTHOLOGIZATION>. It is possible that
+                            PJ herself persuaded Wetherell to add women poets to the
+                                    edition.<BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 101, 119" DBREF="9599">101,
+                                    119</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </RECEPTION>
+            </DIV2>
+            <DIV2>
+                <HEADING>A Breakthrough Performance</HEADING>
+                <PRODUCTION>
+                    <CHRONSTRUCT RESP="KDC" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="DECADE">
+                        <DATE>16 January 1892</DATE>
+                        <CHRONPROSE>
+                            <PPERFORMANCE>PJ read <TITLE TITLETYPE="ANALYTIC">A Cry from an Indian
+                                    Wife</TITLE> at <NAME>Frank Yeigh</NAME>'s <QUOTE DIRECT="Y">Canadian Literature Evening</QUOTE> in
+                                        <PLACE><SETTLEMENT>Toronto</SETTLEMENT><REGION REG="Ontario"/><GEOG REG="Canada"/></PLACE>; it was a huge success and
+                                launched her performance career.</PPERFORMANCE>
+                        </CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 102" DBREF="9599">102</BIBCIT>
+                            <BIBCIT PLACEHOLDER="Keller 58" DBREF="9598">58</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P>Also read that night was poetry by <NAME>Agnes Maule Machar</NAME> and
+                                <NAME STANDARD="Campbell, William Wilfred">Wilfrid Campbell</NAME>.
+                            PJ's encore piece was <TITLE TITLETYPE="ANALYTIC">As Red Men
+                                Die</TITLE>, based on a <TGENRE GENRENAME="LEGENDFOLKTALE">legend</TGENRE> about a Mohawk man who chooses death on live coals
+                            instead of <TTHEMETOPIC>slavery</TTHEMETOPIC>. This was not her first
+                            performance: she had given public readings before in Brantford, but
+                            Yeigh, her first manager, later claimed this as the originating moment
+                            of her public career.<SCHOLARNOTE><P>Yeigh claimed that he persuaded her
+                                    to dress that night in <SOCALLED>Indian togs</SOCALLED> while
+                                    many others, including newspaper reports of the time, remember
+                                    her in a simple grey gown. She did not begin wearing native
+                                    clothing until the <DATE VALUE="1893-11-" CERTAINTY="BY">fall of
+                                        1893</DATE>.</P></SCHOLARNOTE> Her success was such that
+                            follow-up recitals were scheduled for the next week and featured a new
+                            work: <TITLE TITLETYPE="ANALYTIC">The Song My Paddle
+                                    Sings</TITLE>.<BIBCITS><BIBCIT PLACEHOLDER="McMaster, life" DBREF="9746"/><BIBCIT PLACEHOLDER="Keller 57-62" DBREF="9598">57-62</BIBCIT><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 102, 103" DBREF="9599">102-3</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </PRODUCTION>
+                <RECEPTION>
+                    <SHORTPROSE>
+                        <P>
+                            <RRESPONSES RESPONSETYPE="INITIAL" FORMALITY="FORMAL">In a review of the
+                                evening, a Toronto <TITLE TITLETYPE="JOURNAL" REG="Globe and Mail">Globe</TITLE> critic misread Johnson's poem as a lament
+                                for a disappearing race: <QUOTE DIRECT="Y">it was like the voice of
+                                    the nations who once possessed this country, who have wasted
+                                    away before our civilization, speaking through this cultured,
+                                    gifted, soft-voiced descendant.</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Leighton 150" DBREF="9748" QTDIN="QTDINYES">150</BIBCIT></BIBCITS></RRESPONSES>
+                        </P>
+                    </SHORTPROSE>
+                </RECEPTION>
+                <RECEPTION>
+                    <CHRONSTRUCT RESP="KDC" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="DECADE">
+                        <DATE VALUE="1894-08-" CERTAINTY="BY">By August 1894</DATE>
+                        <CHRONPROSE>
+                            <RRESPONSES RESPONSETYPE="INITIAL" FORMALITY="FORMAL">PJ's recitals
+                                were noticed in the <TITLE TITLETYPE="JOURNAL">New York
+                                    Times</TITLE> (as <QUOTE DIRECT="Y">full of dramatic power and
+                                    tragic motive</QUOTE>) and the <TITLE TITLETYPE="JOURNAL">New
+                                    York Sun</TITLE> (as the work of <QUOTE DIRECT="Y">perhaps the
+                                    most unique figure in the literary world on this
+                                    continent</QUOTE>).</RRESPONSES>
+                        </CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Keller 71" DBREF="9598" QTDIN="QTDINYES">71</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                </RECEPTION>
+            </DIV2>
+            <DIV2>
+                <HEADING>
+                    <TITLE TITLETYPE="ANALYTIC">The Song My Paddle Sings</TITLE>
+                </HEADING>
+                <PRODUCTION>
+                    <CHRONSTRUCT RESP="KDC" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="SELECTIVE">
+                        <DATE>27 February 1892</DATE>
+                        <CHRONPROSE>
+                            <PPERIODICALPUBLICATION>
+                                <RBESTKNOWNWORK>PJ first published her best-known poem, <TITLE TITLETYPE="ANALYTIC">The <TGENRE GENRENAME="SONG">Song</TGENRE> My Paddle Sings</TITLE>, in <TITLE TITLETYPE="JOURNAL">Saturday Night</TITLE>.</RBESTKNOWNWORK>
+                            </PPERIODICALPUBLICATION>
+                        </CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 223" DBREF="9599">223</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                </PRODUCTION>
+                <TEXTUALFEATURES>
+                    <SHORTPROSE>
+                        <P><TTECHNIQUES TECHNIQUETYPE="VERSIFICATION"><TVOICENARRATION>The poem is
+                                    written in the first person (thereby lending itself to
+                                    performance), but also combines the paddler and her canoe into a
+                                        <QUOTE DIRECT="Y">we</QUOTE>, challenging male narratives
+                                    which see the landscape as something to be
+                                    conquered.</TVOICENARRATION></TTECHNIQUES>
+                            <TTECHNIQUES TECHNIQUETYPE="IMAGERY">Critics Gerson and Strong Boag
+                                identify the canoe as a Canadian equivalent to the iconographic
+                                bicycle of the New Woman.</TTECHNIQUES> Unlike a bicycle, a canoe
+                            can be a site of sexual encounters, as implied in other verses by PJ. In
+                            this poem, however, the erotic connection is between the canoeist and
+                            nature. <TTECHNIQUES TECHNIQUETYPE="IMAGERY"><TVOICENARRATION>For
+                                    example, the narrator and canoeist speaks of courting the west
+                                    wind: <QUOTE DIRECT="Y"><L>I stow the sail, unship the
+                                            mast:</L><L>I wooed you long but my wooing's
+                                            past;</L><L>My paddle will lull you into rest.</L><L>O!
+                                            Drowsy wind of the drowsy west . . . .<BIBCITS><BIBCIT PLACEHOLDER="Pauline Johnson Wampum 32" DBREF="10476">32</BIBCIT></BIBCITS></L></QUOTE></TVOICENARRATION></TTECHNIQUES></P>
+                        <P>A description of rapids brings the poem to a climax before returning to
+                            the gentle rhythms of the beginning, with <QUOTE DIRECT="Y">A fir tree
+                                rocking its lullaby.</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Pauline Johnson Wampum 34" DBREF="10476">34</BIBCIT><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 153-4" DBREF="9599">153-4</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </TEXTUALFEATURES>
+            </DIV2>
+            <DIV2>
+                <HEADING>
+                    <TITLE TITLETYPE="MONOGRAPHIC">The White Wampum</TITLE>
+                </HEADING>
+                <TEXTSCOPE DBREF="10476" PLACEHOLDER="PJ, The White Wampum, 1895"/>
+                <PRODUCTION>
+                    <CHRONSTRUCT RESP="JSC" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="PERIOD">
+                        <DATE>July 1895</DATE>
+                        <CHRONPROSE>
+                            <PPLACEOFPUBLICATION>PJ's first collection of poetry, <TITLE TITLETYPE="MONOGRAPHIC">The White Wampum</TITLE>, was published
+                                by <ORGNAME>John Lane</ORGNAME> in
+                                        <PLACE><SETTLEMENT>London</SETTLEMENT><GEOG REG="England"/><REGION REG="Middlesex"/></PLACE>.</PPLACEOFPUBLICATION>
+                        </CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Keller 101" DBREF="9598">101</BIBCIT>
+                            <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 219" DBREF="9599">219</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P>
+                            <PRELATIONSWITHPUBLISHER RELATIONSHIPTYPE="PROFESSIONAL">
+                                <PSUBMISSIONSREJECTIONS>The association with Lane was the outcome of
+                                    PJ's visit to London. She secured him as her publisher
+                                    after a recommendation from critic <NAME>Clement Scott</NAME>,
+                                    and positive responses to her work by <NAME>John Davidson</NAME>
+                                    and <NAME>Percy White</NAME>.</PSUBMISSIONSREJECTIONS>
+                            </PRELATIONSWITHPUBLISHER>
+                            <PRARITIESFEATURESDECORATIONS>The cover was reddish brown with a design
+                                by <NAME STANDARD="New, Edmund Hort">E. H. New</NAME> featuring a
+                                hatchet and wampum belt over Johnson's Mohawk
+                                name.</PRARITIESFEATURESDECORATIONS>
+                            <BIBCITS>
+                                <BIBCIT PLACEHOLDER="Keller 83, 85" DBREF="9598">83, 85</BIBCIT>
+                            </BIBCITS>
+                        </P>
+                    </SHORTPROSE>
+                </PRODUCTION>
+                <RECEPTION>
+                    <SHORTPROSE>
+                        <P>
+                            <RRESPONSES RESPONSETYPE="INITIAL" FORMALITY="FORMAL">Reviews for this
+                                work were kind in Canada—<TITLE TITLETYPE="JOURNAL">The
+                                    Week</TITLE> wrote glowing comments, for example—but mixed
+                                in Britain. A <TITLE TITLETYPE="JOURNAL" REG="Guardian, The">Guardian</TITLE> reviewer, who seemingly missed the point that
+                                PJ was half-Mohawk, suggested that <QUOTE DIRECT="Y">the idea of
+                                    posing as an Indian bard cannot be counted among her happiest
+                                    inspirations.</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Keller 101-2" DBREF="9598" QTDIN="QTDINYES">101-2</BIBCIT></BIBCITS></RRESPONSES>
+                        </P>
+                        <P>PJ later mused philosophically about rejection and praise: <QUOTE DIRECT="Y"><TMOTIF MOTIFNAME="works (literary) as children">[p]oems
+                                    are our brain children</TMOTIF>—we love them too much to
+                                have them treated badly. Then, too, what will please one critic will
+                                not, with his line of thought, please
+                                    another.</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Keller 60" DBREF="9598" QTDIN="QTDINYES">60</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </RECEPTION>
+            </DIV2>
+            <DIV2>
+                <HEADING>Lost Poem</HEADING>
+                <PRODUCTION>
+                    <SHORTPROSE>
+                        <P><PNONSURVIVAL>One poem that was not published was <TITLE TITLETYPE="ANALYTIC">His Sister's Son</TITLE>, although it
+                                appeared frequently on her recital program during the
+                                mid-1890s.</PNONSURVIVAL> It dealt with the effect of
+                                <TTHEMETOPIC>residential schools on uprooted native
+                                children</TTHEMETOPIC>, <TTONESTYLE>and one stanza preserved by a
+                                journalist shows it to be strongly condemnatory.</TTONESTYLE> Only
+                            this one stanza survives.<BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 148" DBREF="9599">148</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </PRODUCTION>
+            </DIV2>
+            <DIV2>
+                <HEADING>Answering Duncan Campbell Scott</HEADING>
+                <PRODUCTION>
+                    <CHRONSTRUCT RESP="KDC" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="DECADE">
+                        <DATE>5 September 1896</DATE>
+                        <CHRONPROSE>
+                            <TINTERTEXTUALITY INTERTEXTTYPE="ANSWER" GENDEROFAUTHOR="MALE">
+                                <PPERIODICALPUBLICATION>PJ's <TITLE TITLETYPE="ANALYTIC">The
+                                        Corn-Husker</TITLE>, a direct <TGENRE GENRENAME="POETRY">poetic</TGENRE> response to <NAME>Duncan Campbell
+                                        Scott</NAME>'s poems <TITLE TITLETYPE="ANALYTIC">Onandaga Madonna</TITLE> and <TITLE TITLETYPE="ANALYTIC">Watkewenies</TITLE>, appeared in <TITLE TITLETYPE="JOURNAL">Harper's Weekly</TITLE>.</PPERIODICALPUBLICATION>
+                            </TINTERTEXTUALITY>
+                        </CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 151, 225" DBREF="9599">151,
+                                225</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P>Scott's characters were figured as members of a disappearing race.
+                            One poem associates Indian women with promiscuity and the other
+                            associates Indian men with violence. <TTECHNIQUES TECHNIQUETYPE="DICTION">PJ answers his implications with carefully
+                                chosen wording when she blames the demise of First Nations'
+                                cultures on <QUOTE DIRECT="Y">might's
+                                        injustice</QUOTE>.<BIBCITS><BIBCIT PLACEHOLDER="Johnson, Flint and Feather: The Complete Poems (online edition) 95" DBREF="9747">95</BIBCIT></BIBCITS></TTECHNIQUES> After the
+                            appearance of this poem, PJ turned from poetry to prose as a more
+                            effective vehicle for <TTHEMETOPIC>Native
+                                    advocacy</TTHEMETOPIC>.<BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 151" DBREF="9599">151</BIBCIT></BIBCITS></P>
+                        <P><RSHEINFLUENCED>Scott also answered Johnson in his own
+                                poetry.</RSHEINFLUENCED> Critics Gerson and Strong-Boag find echoes
+                            of her dramatic poem <TITLE TITLETYPE="ANALYTIC">Ojistoh</TITLE> in his
+                            work <TITLE TITLETYPE="ANALYTIC">At Gull Lake:
+                                    1810</TITLE>.<BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 121" DBREF="9599">121</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </PRODUCTION>
+            </DIV2>
+            <DIV2>
+                <HEADING>
+                    <TITLE TITLETYPE="MONOGRAPHIC">Canadian Born</TITLE>
+                </HEADING>
+                <TEXTSCOPE DBREF="10479" PLACEHOLDER="PJ, Canadian Born, 1903"/>
+                <PRODUCTION>
+                    <CHRONSTRUCT RESP="JSC" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="SELECTIVE">
+                        <DATE CERTAINTY="BY">1903</DATE>
+                        <CHRONPROSE>
+                            <PPLACEOFPUBLICATION>PJ published a collection of <TGENRE GENRENAME="POETRY">poems</TGENRE>, <TITLE TITLETYPE="MONOGRAPHIC">Canadian Born</TITLE>, with
+                                    <ORGNAME>Morang</ORGNAME> in
+                                        <PLACE><SETTLEMENT>Toronto</SETTLEMENT><REGION REG="Ontario"/><GEOG REG="Canada"/></PLACE>.</PPLACEOFPUBLICATION>
+                        </CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 219" DBREF="9599">219</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P><PRARITIESFEATURESDECORATIONS>It was a slim volume with a light blue
+                                cover and featured a picture of PJ in native
+                                costume.</PRARITIESFEATURESDECORATIONS>
+                            <PDEDICATION>An inscription addressed the book to anyone Canadian born,
+                                    <QUOTE DIRECT="Y">whether he be my paleface compatriot who has
+                                    given to me his right hand of good fellowship . . . or whether
+                                    he be that dear Red brother of whatsoever tribe or
+                                    Province.</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 179" DBREF="9599" QTDIN="QTDINYES">179</BIBCIT></BIBCITS></PDEDICATION> The
+                            title poem was first performed around 1897. <RRESPONSES RESPONSETYPE="INITIAL" FORMALITY="FORMAL">The collection met with
+                                negative critical response.</RRESPONSES><BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 178" DBREF="9599">178</BIBCIT><BIBCIT PLACEHOLDER="Keller 197" DBREF="9598">197</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </PRODUCTION>
+            </DIV2>
+            <DIV2>
+                <HEADING>
+                    <TITLE TITLETYPE="MONOGRAPHIC">Flint and Feather</TITLE>
+                </HEADING>
+                <TEXTSCOPE DBREF="10477" PLACEHOLDER="PJ, Flint and Feather, 1912"/>
+                <PRODUCTION>
+                    <CHRONSTRUCT RESP="JSC" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="DECADE">
+                        <DATE>December 1912</DATE>
+                        <CHRONPROSE>PJ's <TITLE TITLETYPE="MONOGRAPHIC">Flint and
+                                Feather</TITLE>, another collection of <TGENRE GENRENAME="POETRY">poetry</TGENRE>, was published.</CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Keller 264" DBREF="9598">264</BIBCIT>
+                            <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 232" DBREF="9599">232</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P><PEDITIONS>This was revised and enlarged in 1913, and again, as <TITLE TITLETYPE="MONOGRAPHIC" REG="Flint and Feather">Flint and
+                                    Feather: The Complete Poems of E. Pauline Johnson</TITLE>, in
+                                1917.</PEDITIONS> A 1921 edition has been made available online, and
+                            a 1997 edition appeared in the <TITLE TITLETYPE="SERIES">Iroquois
+                                Reprints</TITLE> series.<BIBCITS><BIBCIT PLACEHOLDER="OCLC" DBREF="1709"/><BIBCIT PLACEHOLDER="Johnson, Flint and Feather: The Complete Poems (online edition)" DBREF="9747"/></BIBCITS></P>
+                    </SHORTPROSE>
+                </PRODUCTION>
+            </DIV2>
+            <DIV2>
+                <HEADING>Commercial Verse</HEADING>
+                <RECEPTION>
+                    <CHRONSTRUCT RESP="KDC" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="DECADE">
+                        <DATE>1896</DATE>
+                        <CHRONPROSE><RRECOGNITIONS>PJ won first prize for a campaign song, <TITLE TITLETYPE="ANALYTIC">The Good Old N. P.</TITLE>, written to
+                                extol the virtues of the <ORGNAME>National Policy
+                                League</ORGNAME>,</RRECOGNITIONS> which opposed free
+                            trade.</CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Keller 196" DBREF="9598">196</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                </RECEPTION>
+                <PRODUCTION>
+                    <SHORTPROSE>
+                        <P>PJ also wrote <TGENRE GENRENAME="ADVERTISINGCOPY"><TGENRE GENRENAME="POETRY">jingles</TGENRE></TGENRE> used by the
+                                <ORGNAME>Summerland Development Company</ORGNAME> and by the
+                                <ORGNAME>Canadian Manufacturers' Association</ORGNAME> at a
+                            banquet in <PLACE><SETTLEMENT>Brantford</SETTLEMENT><REGION REG="Ontario"/><GEOG REG="Canada"/></PLACE>.<BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 210" DBREF="9599">210</BIBCIT><BIBCIT PLACEHOLDER="Keller 196" DBREF="9598">196</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </PRODUCTION>
+            </DIV2>
+        </DIV1>
+        <DIV1>
+            <HEADING>Short Fiction</HEADING>
+            <DIV2>
+                <HEADING>
+                    <TITLE TITLETYPE="ANALYTIC">Red Girl's Reasoning</TITLE>
+                </HEADING>
+                <PRODUCTION>
+                    <CHRONSTRUCT RESP="KDC" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="DECADE">
+                        <DATE VALUE="1893-02-19" CERTAINTY="AFTER">February 1893</DATE>
+                        <CHRONPROSE>
+                            <PPERIODICALPUBLICATION>
+                                <RRECOGNITIONS>PJ's <TGENRE GENRENAME="SHORTSTORY">short
+                                        story</TGENRE>
+                                    <TITLE TITLETYPE="ANALYTIC">Red Girl's Reasoning</TITLE>
+                                    was published in <TITLE TITLETYPE="JOURNAL">Dominion
+                                        Illustrated</TITLE> after winning first prize for fiction in
+                                    their contest the previous year.</RRECOGNITIONS>
+                            </PPERIODICALPUBLICATION>
+                        </CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Ruoff, Justice for Indians and Women, 252" DBREF="9602">252</BIBCIT>
+                            <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 223" DBREF="9599">223</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                </PRODUCTION>
+                <TEXTUALFEATURES>
+                    <SHORTPROSE>
+                        <P><TPLOT>This story features a <TCHARACTERTYPEROLE PROTAGONIST="FEMALE">mixed-race heroine named <TCHARACTERNAME>Christine
+                                        Robinson</TCHARACTERNAME></TCHARACTERTYPEROLE>, daughter of
+                                a happily married <TCHARACTERTYPEROLE>Native
+                                    mother</TCHARACTERTYPEROLE> and <TCHARACTERTYPEROLE>trader
+                                    father</TCHARACTERTYPEROLE>, who falls in love with a
+                                    <TCHARACTERTYPEROLE>white boy from the
+                                city</TCHARACTERTYPEROLE>. She eventually marries the city boy,
+                                Charles McDonald, who has earned respect from the native community,
+                                and they move to a city. Their marriage ends after a party where
+                                Christine tells a group of listeners that her parents were married
+                                by Indian rites. Horrified, Charles accuses her of disgracing him by
+                                announcing, in effect, her <TMOTIF>illegitimacy</TMOTIF>. This
+                                provokes Christine to discount her own marriage: <QUOTE DIRECT="Y">Why should I recognize the rites of your nation when you do not
+                                    acknowledge the rites of mine?</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Ruoff, Justice for Indians and Women, 253" DBREF="9602" QTDIN="QTDINYES">253</BIBCIT></BIBCITS></TPLOT>
+                            Though she still loves her husband, she leaves him to go live in a small
+                            town where she supports herself doing embroidery and plain sewing. Even
+                            after Charles begs her to come back, Christine coolly answers that
+                                <QUOTE DIRECT="Y">neither church, nor law . . . nor even love can
+                                make a slave of a red girl.</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Ruoff, Justice for Indians and Women, 253" DBREF="9602" QTDIN="QTDINYES">253</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </TEXTUALFEATURES>
+                <RECEPTION>
+                    <SHORTPROSE>
+                        <P><PCIRCULATION>PJ considered turning <TITLE TITLETYPE="ANALYTIC">Red
+                                    Girl's Reasoning</TITLE>, one of her most popular stories,
+                                into a play, but little came of this idea.<SCHOLARNOTE><P>Keller
+                                        reports that it developed into a <TGENRE GENRENAME="DRAMA">playlet</TGENRE> performed at recitals.<BIBCITS><BIBCIT PLACEHOLDER="Keller 70" DBREF="9598">70</BIBCIT></BIBCITS></P></SCHOLARNOTE></PCIRCULATION>
+                            Critic <NAME STANDARD="Ruoff, A. LaVonne Brown">LaVonne Brown
+                                Ruoff</NAME> summarizes the story as being about the
+                                <TTHEMETOPIC>legitimacy of tribal ceremonies</TTHEMETOPIC> for
+                            linking native women and white men, and the <TTHEMETOPIC>independence of
+                                native women</TTHEMETOPIC>. <RLANDMARKTEXT>She argues that the
+                                    <TMOTIF MOTIFNAME="divorce"><TTHEMETOPIC>dissolution of
+                                        marriage</TTHEMETOPIC></TMOTIF> was unusual in a <TGENRE GENRENAME="ROMANCE">romance</TGENRE> written at this time and
+                                reads it, in part, as a cautionary tale about white men who seem
+                                sympathetic to native ways but are
+                                    not.</RLANDMARKTEXT><BIBCITS><BIBCIT PLACEHOLDER="Ruoff, Justice for Indians and Women 252,253" DBREF="9602">252-3</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </RECEPTION>
+                <PRODUCTION>
+                    <SHORTPROSE>
+                        <P>The story was later collected in <TITLE TITLETYPE="MONOGRAPHIC">The
+                                Moccasin Maker</TITLE>.<BIBCITS><BIBCIT PLACEHOLDER="McMaster, writings" DBREF="9746"/></BIBCITS></P>
+                    </SHORTPROSE>
+                </PRODUCTION>
+            </DIV2>
+            <DIV2>
+                <HEADING>
+                    <TITLE TITLETYPE="ANALYTIC">As It Was in the Beginning</TITLE>
+                </HEADING>
+                <PRODUCTION>
+                    <CHRONSTRUCT RESP="KDC" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="DECADE">
+                        <DATE VALUE="1899-12-25" CERTAINTY="C">Christmas 1899</DATE>
+                        <CHRONPROSE>
+                            <PPERIODICALPUBLICATION>PJ published in <TITLE TITLETYPE="JOURNAL">Saturday Night</TITLE> the short story <TITLE TITLETYPE="ANALYTIC">As It Was in the Beginning</TITLE>, which
+                                explores issues of <TTHEMETOPIC>racial
+                                intolerance</TTHEMETOPIC>.</PPERIODICALPUBLICATION>
+                        </CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 227" DBREF="9599">227</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P><TPLOT><TITLE TITLETYPE="ANALYTIC">As It Was in the Beginning</TITLE>
+                                features a <TCHARACTERTYPEROLE PROTAGONIST="FEMALE">Cree and French
+                                    heroine, Esther</TCHARACTERTYPEROLE>, who kills her white lover
+                                after he is dissuaded from marrying her by his uncle,
+                                    <TCHARACTERTYPEROLE>a priest</TCHARACTERTYPEROLE> named
+                                    <TCHARACTERNAME REG="Father Paul">Father
+                                Paul</TCHARACTERNAME>.</TPLOT>
+                            <TSETTINGPLACE>The story begins with Esther's removal to a
+                                residential school run by Father Paul where she experiences culture
+                                shock mitigated only by her friendship with Lawrence, who later
+                                wishes to marry her.</TSETTINGPLACE> The priest warns Lawrence that
+                            you can never tell what <QUOTE DIRECT="Y">lurks in a caged animal that
+                                has once been wild.</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Ruoff, Justice for Indians and Women 253" DBREF="9602" QTDIN="QTDINYES">253</BIBCIT></BIBCITS> The speech
+                            is overheard by Esther, who then arranges to <TMOTIF MOTIFNAME="murder">kill her lover</TMOTIF> with an arrowhead tipped with snake
+                                    venom.<BIBCITS><BIBCIT PLACEHOLDER="Ruoff, Justice for Indians and Women 253-254" DBREF="9602">253-4</BIBCIT></BIBCITS></P>
+                        <P>Critic <NAME STANDARD="Ruoff, A. LaVonne Brown">LaVonne Brown
+                                Ruoff</NAME> notes that unlike Christine in <TITLE TITLETYPE="ANALYTIC">Red Girl's Reasoning</TITLE>, Esther does
+                            not confront her oppressors with arguments or verbal jousting. Her
+                            response is not negotiation or protest but <TMOTIF>violence</TMOTIF>, as
+                            if she has given up the hope of peaceful resolution between Natives and
+                                    Anglo-Europeans.<BIBCITS><BIBCIT PLACEHOLDER="Ruoff, Justice for Indians and Women 254" DBREF="9602">254</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </PRODUCTION>
+            </DIV2>
+            <DIV2>
+                <HEADING>
+                    <TITLE TITLETYPE="ANALYTIC">The Haunting Thaw</TITLE>
+                </HEADING>
+                <PRODUCTION>
+                    <SHORTPROSE>
+                        <P>On <DATE>23 May 1904</DATE> PJ and McRaye stopped in
+                                    <PLACE><SETTLEMENT>Edmonton</SETTLEMENT>,
+                                    <REGION>Alberta</REGION><GEOG REG="Canada"/></PLACE>, for the
+                            last of the winter snow. While there, PJ watched as a tired dog team
+                            made its way into town, and listened as the sled kept scraping over the
+                            bare ground. This event inspired her short story <TITLE TITLETYPE="ANALYTIC">The Haunting Thaw</TITLE>.<BIBCITS><BIBCIT PLACEHOLDER="Keller 200" DBREF="9598">200</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </PRODUCTION>
+            </DIV2>
+            <DIV2>
+                <HEADING>Writing for Children</HEADING>
+                <TEXTSCOPE DBREF="10481" PLACEHOLDER="PJ, The Shagganappi, 1913"/>
+                <PRODUCTION>
+                    <CHRONSTRUCT RESP="KDC" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="DECADE">
+                        <DATE>13 June 1903</DATE>
+                        <CHRONPROSE>An article in the <TITLE TITLETYPE="JOURNAL" REG="Globe and Mail">Globe</TITLE> by <NAME>Marjorie
+                                Pickthall</NAME> suggested that PJ should try <TGENRE GENRENAME="CHILDRENSLITERATURE">children's stories</TGENRE>;
+                            Johnson began that summer.</CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Keller 198" DBREF="9598">198</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P>
+                            <PMOTIVES MOTIVETYPE="SELF-IDENTIFIED">PJ looked at the healthy market
+                                for boys' stories (in periodicals such as <TITLE TITLETYPE="JOURNAL">The Boys' World</TITLE>) and began
+                                spinning tales of <QUOTE DIRECT="Y"><TCHARACTERTYPEROLE>brave
+                                        Mounties</TCHARACTERTYPEROLE>,
+                                        <TCHARACTERTYPEROLE>trappers</TCHARACTERTYPEROLE>, and
+                                        <TCHARACTERTYPEROLE>cowboys</TCHARACTERTYPEROLE> battling
+                                        <TTHEMETOPIC>blizzards</TTHEMETOPIC>, raging torrents, and
+                                    ravening beasts in the <TTHEMETOPIC>Canadian
+                                        wilderness</TTHEMETOPIC>.</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Keller 205" DBREF="9598">205</BIBCIT></BIBCITS></PMOTIVES>
+                        </P>
+                        <P><TCHARACTERIZATION>Some of the stories, such as <TITLE TITLETYPE="ANALYTIC">The Shagganappi</TITLE> and <TITLE TITLETYPE="ANALYTIC">Little Wolf-Willow</TITLE>, featured
+                                    <TCHARACTERTYPEROLE>Native pupils</TCHARACTERTYPEROLE> to point
+                                up <TTHEMETOPIC>intolerance in Canadian
+                                classrooms</TTHEMETOPIC></TCHARACTERIZATION>.
+                                    <TPLOT><TCHARACTERNAME>Little Wolf-Willow</TCHARACTERNAME>, who
+                                stands up to a principal at a <TTHEMETOPIC>residential
+                                    school</TTHEMETOPIC>, is rewarded later in the story with a
+                                position of importance and trust from all
+                                    sides.</TPLOT><BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 197" DBREF="9599">197</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                    <CHRONSTRUCT RESP="KDC" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="PERIOD">
+                        <DATE VALUE="1913-03-" CERTAINTY="AFTER">1913</DATE>
+                        <CHRONPROSE>The <ORGNAME>Canadian Women's Press Club</ORGNAME> issued
+                            two posthumous collections of stories by PJ: <TITLE TITLETYPE="MONOGRAPHIC">The Shagganappi</TITLE> (reprinted from
+                                <TITLE TITLETYPE="JOURNAL">The Boys' World</TITLE>) and <TITLE TITLETYPE="MONOGRAPHIC">The Moccasin Maker</TITLE> (from <TITLE TITLETYPE="JOURNAL">Mother's Magazine</TITLE>).</CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Keller 260" DBREF="9598">260</BIBCIT>
+                            <BIBCIT PLACEHOLDER="McMaster, bibliography" DBREF="9746"/>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                </PRODUCTION>
+            </DIV2>
+            <DIV2>
+                <HEADING>Writing for Mothers</HEADING>
+                <TEXTSCOPE DBREF="10480" PLACEHOLDER="PJ, The Moccasin Maker, 1913"/>
+                <PRODUCTION>
+                    <CHRONSTRUCT RESP="KDC" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="DECADE">
+                        <DATE VALUE="1907-07-11" CERTAINTY="BY">Early July 1907</DATE>
+                        <CHRONPROSE>
+                            <PSUBMISSIONSREJECTIONS> The editor of <TITLE TITLETYPE="JOURNAL">Mother's Magazine</TITLE> solicited a <QUOTE DIRECT="Y">Dominion Day <TTHEMETOPIC>Mother's
+                                    Story</TTHEMETOPIC></QUOTE> from PJ, <PEARNINGS>and paid her
+                                    $17.64 for <TITLE TITLETYPE="ANALYTIC">Her
+                                        Dominion—A Story of 1867, and
+                                            <TTHEMETOPIC>Canada's
+                                        Confederation</TTHEMETOPIC></TITLE></PEARNINGS>.</PSUBMISSIONSREJECTIONS>
+                        </CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Keller 226-7" DBREF="9598">226-7</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                </PRODUCTION>
+                <TEXTUALFEATURES>
+                    <SHORTPROSE>
+                        <P>The story centres on the <TCHARACTERTYPEROLE PROTAGONIST="FEMALE">mother</TCHARACTERTYPEROLE> of one of the <SOCALLED>Fathers of
+                                Confederation</SOCALLED>. She is shown inventing the term
+                                <SOCALLED>confederation</SOCALLED>, which her son then appropriates,
+                            shifting its sense away from the mothering and towards the fathering of
+                            a nation.<BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 72-73" DBREF="9599">72-3</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </TEXTUALFEATURES>
+                <PRODUCTION>
+                    <SHORTPROSE>
+                        <P>For this market PJ prepared not only short stories but non-fiction. <DATE VALUE="1908-01-" CERTAINTY="AFTER">From January 1908</DATE> she
+                            published a series of articles in <TITLE TITLETYPE="JOURNAL">Mother's Magazine</TITLE> on topics of interest to
+                                    mothers.<BIBCITS><BIBCIT PLACEHOLDER="Keller 227" DBREF="9598">227</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </PRODUCTION>
+            </DIV2>
+        </DIV1>
+        <DIV1>
+            <HEADING>Non-Fiction on Indians and Women</HEADING>
+            <DIV2>
+                <PRODUCTION>
+                    <SHORTPROSE>
+                        <P>
+                            <PLITERARYSCHOOLS>PJ wrote extensively on <TTHEMETOPIC>women's
+                                    sporting life</TTHEMETOPIC>, as was appropriate for a
+                                    <TTHEMETOPIC>New Woman</TTHEMETOPIC>.</PLITERARYSCHOOLS>
+                            <PPERIODICALPUBLICATION>In publications such as <TITLE TITLETYPE="JOURNAL">Saturday Night</TITLE>, the <TITLE TITLETYPE="JOURNAL">Weekly Detroit Free Press</TITLE>, and
+                                    <TITLE TITLETYPE="JOURNAL">Outing</TITLE>, she advocated
+                                    <TTHEMETOPIC>canoeing</TTHEMETOPIC>,
+                                    <TTHEMETOPIC>hockey</TTHEMETOPIC>, and
+                                    <TTHEMETOPIC>camping</TTHEMETOPIC> as healthy activities for
+                                women.</PPERIODICALPUBLICATION>
+                            <BIBCITS>
+                                <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 221, 222, 223" DBREF="9599">221-3</BIBCIT>
+                            </BIBCITS>
+                        </P>
+                    </SHORTPROSE>
+                </PRODUCTION>
+            </DIV2>
+            <DIV2>
+                <HEADING>
+                    <TITLE TITLETYPE="ANALYTIC" REG="A Strong Race Opinion: On the Indian Girl in Modern Fiction">The Indian
+                        Girl in Modern Fiction</TITLE>
+                </HEADING>
+                <PRODUCTION>
+                    <CHRONSTRUCT RESP="KDC" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="DECADE">
+                        <DATE>22 May 1892</DATE>
+                        <CHRONPROSE>
+                            <PPERIODICALPUBLICATION>PJ published in the Toronto <TITLE TITLETYPE="JOURNAL">Sunday Globe</TITLE> a prescient piece of
+                                    <TGENRE GENRENAME="LITERARYCRITICISM">literary
+                                    criticism</TGENRE> entitled <TCHARACTERIZATION><TITLE TITLETYPE="ANALYTIC">A Strong Race Opinion: On the
+                                            <TTHEMETOPIC>Indian Girl in Modern
+                                        Fiction</TTHEMETOPIC></TITLE></TCHARACTERIZATION>.</PPERIODICALPUBLICATION>
+                        </CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="McMaster, writings" DBREF="9746"/>
+                            <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 223" DBREF="9599">223</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                </PRODUCTION>
+                <TEXTUALFEATURES>
+                    <SHORTPROSE>
+                        <P><TCHARACTERIZATION>The essay questions why Native women are portrayed by
+                                a single stereotype in the literature of the
+                                time</TCHARACTERIZATION>, as <QUOTE DIRECT="Y"><QUOTE DIRECT="N">dog-like,</QUOTE>
+                                <QUOTE DIRECT="N">fawn-like,</QUOTE>
+                                <QUOTE DIRECT="N">crouching,</QUOTE>
+                                <QUOTE DIRECT="N">fire-eyed</QUOTE> [and] <QUOTE DIRECT="N">submissive</QUOTE>.</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 188" DBREF="9599" QTDIN="QTDINYES">188</BIBCIT></BIBCITS> In particular, PJ
+                            criticizes the novel <TITLE TITLETYPE="MONOGRAPHIC">An Algonquin
+                                Maiden</TITLE> by <NAME>G. Mercer Adam</NAME> and <NAME STANDARD="Wetherald, Ethelwyn">A. Ethelwyn
+                                    Wetherald</NAME>.<BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 187" DBREF="9599">187</BIBCIT></BIBCITS></P>
+                    </SHORTPROSE>
+                </TEXTUALFEATURES>
+            </DIV2>
+            <DIV2>
+                <HEADING>Life on the Grand River</HEADING>
+                <PRODUCTION>
+                    <CHRONSTRUCT RESP="KDC" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="DECADE">
+                        <DATE VALUE="1894-06-23"> 23 June 1894</DATE>
+                        <CHRONPROSE>
+                            <PPERIODICALPUBLICATION>PJ published <TITLE TITLETYPE="ANALYTIC">Iroquois of the <PLACE><REGION>Grand River</REGION><GEOG REG="Canada"/></PLACE><PLACE><REGION REG="Ontario"/><GEOG REG="Canada"/></PLACE></TITLE> in <TITLE TITLETYPE="JOURNAL">Harper's
+                                Weekly</TITLE>.</PPERIODICALPUBLICATION>
+                        </CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 224" DBREF="9599">224</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P>
+                            <PRARITIESFEATURESDECORATIONS>The illustrations for this article were by
+                                    <NAME STANDARD="Heming, Arthur Henry Howard">A. H. H.
+                                    Heming</NAME>, who depicted PJ's brother Allen in
+                                    <SOCALLED>Indian</SOCALLED> costume with a ring in his
+                                nose.</PRARITIESFEATURESDECORATIONS>
+                            <BIBCITS>
+                                <BIBCIT PLACEHOLDER="Keller 111" DBREF="9598">111</BIBCIT>
+                            </BIBCITS>
+                        </P>
+                    </SHORTPROSE>
+                </PRODUCTION>
+                <TEXTUALFEATURES>
+                    <SHORTPROSE>
+                        <P><TVOICENARRATION>PJ's language is plain and direct.
+                                </TVOICENARRATION><TTONESTYLE>Other articles about Iroquois culture,
+                                such as <TITLE TITLETYPE="ANALYTIC">A Glimpse at the Grand River
+                                    Indians</TITLE>, are condescending in tone to her
+                                    <SOCALLED>pagan</SOCALLED>
+                                    subjects.</TTONESTYLE><BIBCITS><BIBCIT PLACEHOLDER="Keller 111-12" DBREF="9598">111-12</BIBCIT></BIBCITS> A series of <TGENRE GENRENAME="ESSAY">articles</TGENRE> for <TITLE TITLETYPE="JOURNAL">Mother's
+                                Magazine</TITLE> in 1908 characterised Iroquois women as possessing
+                                <QUOTE DIRECT="Y">beautiful old-fashioned womanliness;</QUOTE> for
+                            them <QUOTE DIRECT="Y">the grace of
+                                    <TTHEMETOPIC>motherhood</TTHEMETOPIC> is a primitive
+                                glory.</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Keller 115" DBREF="9598" QTDIN="QTDINYES">115</BIBCIT></BIBCITS>
+                            <TCHARACTERIZATION>This portrayal did little to represent such women as
+                                fully realized individuals.</TCHARACTERIZATION></P>
+                    </SHORTPROSE>
+                </TEXTUALFEATURES>
+            </DIV2>
+            <DIV2>
+                <HEADING>
+                    <TITLE TITLETYPE="ANALYTIC">A Pagan in St. Paul's</TITLE>
+                </HEADING>
+                <PRODUCTION>
+                    <CHRONSTRUCT RESP="KDC" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="PERIOD">
+                        <DATE>3 August 1906</DATE>
+                        <CHRONPROSE>
+                            <PPERIODICALPUBLICATION>PJ published <TITLE TITLETYPE="ANALYTIC">A Pagan
+                                    in St. Paul's</TITLE>, the most successful of three <TGENRE GENRENAME="ESSAY">articles</TGENRE> by her which appeared in
+                                        <PLACE><SETTLEMENT REG="London">London</SETTLEMENT><REGION REG="Middlesex"/><GEOG REG="England"/></PLACE>'s <TITLE TITLETYPE="JOURNAL">Daily Express</TITLE> this
+                                summer.</PPERIODICALPUBLICATION>
+                        </CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Keller 216" DBREF="9598">216</BIBCIT>
+                            <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 228" DBREF="9599">228</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P>The other two articles were <TITLE TITLETYPE="ANALYTIC">The Lodge of the
+                                Law-Makers</TITLE> and <TITLE TITLETYPE="ANALYTIC">The Silent
+                                News-Carrier</TITLE>.</P>
+                    </SHORTPROSE>
+                </PRODUCTION>
+                <TEXTUALFEATURES>
+                    <SHORTPROSE>
+                        <P>
+                            <TPLOT><TSETTINGPLACE SETTINGPLACETYPE="REAL" SETTINGCLASS="WIDERANGE"><TITLE TITLETYPE="ANALYTIC">A Pagan in St.
+                                        Paul's</TITLE> describes a <TCHARACTERTYPEROLE>Native
+                                        person</TCHARACTERTYPEROLE> who is drawn into the crowd of
+                                    worshippers at <PLACE><PLACENAME>St Paul's
+                                            Cathedral</PLACENAME> in
+                                                <ADDRESS><ADDRLINE>Aldermanbury</ADDRLINE></ADDRESS>,
+                                            <SETTLEMENT REG="London">London</SETTLEMENT><REGION REG="Middlesex"/><GEOG REG="England"/></PLACE>,</TSETTINGPLACE> where he discerns no real difference
+                                between Native and British religious views.</TPLOT>
+                            <BIBCITS>
+                                <BIBCIT PLACEHOLDER="Keller 216" DBREF="9598">216</BIBCIT>
+                            </BIBCITS>
+                        </P>
+                    </SHORTPROSE>
+                </TEXTUALFEATURES>
+            </DIV2>
+            <DIV2>
+                <HEADING>The Caribou Road</HEADING>
+                <PRODUCTION>
+                    <CHRONSTRUCT RESP="KDC" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="DECADE">
+                        <DATE>13 October 1906</DATE>
+                        <CHRONPROSE>
+                            <PPERIODICALPUBLICATION><TSETTINGPLACE SETTINGPLACETYPE="REAL">PJ
+                                    published a <TGENRE GENRENAME="TRAVELWRITING">travel
+                                        story</TGENRE> in <TITLE TITLETYPE="JOURNAL">Toronto
+                                        Saturday Night</TITLE>, retelling her adventures on the
+                                            <PLACE><PLACENAME>Cariboo Road</PLACENAME> in
+                                            <REGION>British Columbia</REGION><GEOG REG="Canada"/></PLACE></TSETTINGPLACE>.</PPERIODICALPUBLICATION>
+                        </CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Keller 201" DBREF="9598">201</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                </PRODUCTION>
+            </DIV2>
+        </DIV1>
+        <DIV1>
+            <HEADING>Legends</HEADING>
+            <DIV2>
+                <HEADING>Of the Capilanos</HEADING>
+                <TEXTSCOPE DBREF="10482" PLACEHOLDER="PJ, Legends of Vancouver, 1911"/>
+                <PRODUCTION>
+                    <CHRONSTRUCT RESP="KDC" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="DECADE">
+                        <DATE VALUE="1909-01-">January 1909</DATE>
+                        <CHRONPROSE>
+                            <TINTERTEXTUALITY INTERTEXTTYPE="ADAPTATION-UPDATE">
+                                <PPERIODICALPUBLICATION>PJ published in <TITLE TITLETYPE="JOURNAL">Mother's Magazine</TITLE> a story based on the
+                                    Squamish <TGENRE GENRENAME="LEGENDFOLKTALE">legends</TGENRE>
+                                    told to her by <NAME STANDARD="Su-à-pu-luck">Chief Joe
+                                        Capilano</NAME>; many more followed in
+                                    1910.</PPERIODICALPUBLICATION>
+                            </TINTERTEXTUALITY>
+                        </CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 173" DBREF="9599">173</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P>
+                            <PPERIODICALPUBLICATION>The publication of these legends, in the <TITLE TITLETYPE="JOURNAL">Vancouver Province</TITLE> for example,
+                                provoked criticism.</PPERIODICALPUBLICATION>
+                            <RRESPONSES RESPONSETYPE="INITIAL" FORMALITY="FORMAL" GENDEREDRESPONSE="GENDEREDNO">PJ was accused of misunderstanding
+                                Chief Joe's Chinook language and his stories, though Keller
+                                suggests that the results of her interpretations were not <QUOTE DIRECT="Y">deliberate falsifications</QUOTE>, but rather a
+                                result of her inability to <QUOTE DIRECT="Y">give a direct
+                                    translation because she reacted mainly to the dramatic parts of
+                                    any tale.</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Keller 250" DBREF="9598">250</BIBCIT></BIBCITS>
+                                <TGENREISSUE><TINTERTEXTUALITY INTERTEXTTYPE="ADAPTATION-UPDATE">It
+                                        was, oddly enough, one of her few introductions to the oral
+                                        tradition of First Nations people, and her re-tellings
+                                        mediated between oral and literary traditions of
+                                                story-telling.<BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 177" DBREF="9599">177</BIBCIT></BIBCITS> Critics Gerson
+                                        and Strong-Boag suggest these writings <QUOTE DIRECT="Y">performed significant cultural work regarding local
+                                            White/Native
+                                    relations.</QUOTE></TINTERTEXTUALITY></TGENREISSUE></RRESPONSES>
+                            <BIBCITS>
+                                <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 175, 176" DBREF="9599">175-6</BIBCIT>
+                            </BIBCITS>
+                        </P>
+                        <P><PMATERIALCONDITIONS>When PJ was unable to continue writing because
+                                cancer was sending shooting pains down her arm, <TITLE TITLETYPE="JOURNAL">Vancouver Province</TITLE> editor
+                                    <NAME>Lionel Makovski</NAME> transcribed her stories as she
+                                dictated them from her couch.</PMATERIALCONDITIONS> In this way, the
+                            legends continued to find their way into print during the <DATE VALUE="1910-07-" CERTAINTY="C">summer of
+                                    1910</DATE>.<BIBCITS><BIBCIT PLACEHOLDER="Keller 251-2" DBREF="9598">251-2</BIBCIT></BIBCITS></P>
+                        <P><PMODEOFPUBLICATION PUBLICATIONMODE="PRIVATELYPRINTED">Sensing that she
+                                needed money, PJ's friends devised a scheme to raise funds and
+                                publish the legends, with all profits to go to
+                                her.</PMODEOFPUBLICATION> The <ORGNAME>Women's Canadian
+                                Club</ORGNAME> held a recital in
+                                    <PLACE><SETTLEMENT>Vancouver</SETTLEMENT><REGION REG="British Columbia"/><GEOG REG="Canada"/>'s
+                                    <PLACENAME>Pender Auditorium</PLACENAME></PLACE> featuring,
+                            among other entertainments, <NAME>Isabel Ecclestone MacKay</NAME>
+                            reading poetry.</P>
+                    </SHORTPROSE>
+                    <CHRONSTRUCT RESP="SIB" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="SELECTIVE">
+                        <DATE VALUE="1911-09-">September 1911</DATE>
+                        <CHRONPROSE>PJ's controversial versions of Capilano <TGENRE GENRENAME="LEGENDFOLKTALE">legends</TGENRE> were published as <TITLE TITLETYPE="MONOGRAPHIC">Legends of Vancouver</TITLE>, not as she
+                            wished under the title <TITLE TITLETYPE="UNPUBLISHED" REG="Legends of Vancouver">Legends of the
+                            Capilanos</TITLE>.</CHRONPROSE>
+                        <BIBCITS>
+                            <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 232" DBREF="9599">232</BIBCIT>
+                            <BIBCIT PLACEHOLDER="Keller 256-7" DBREF="9598">256-7</BIBCIT>
+                        </BIBCITS>
+                    </CHRONSTRUCT>
+                    <SHORTPROSE>
+                        <P>
+                            <PCIRCULATION>
+                                <PEDITIONS>The first edition sold out.</PEDITIONS>
+                            </PCIRCULATION>
+                            <PEARNINGS>She received an influx of money from it, and future editions
+                                provided enough to assist her with her medical expenses.</PEARNINGS>
+                            <BIBCITS>
+                                <BIBCIT PLACEHOLDER="Keller 257-8" DBREF="9598">257-8</BIBCIT>
+                            </BIBCITS>
+                        </P>
+                    </SHORTPROSE>
+                </PRODUCTION>
+            </DIV2>
+            <DIV2>
+                <HEADING>Of Pauline</HEADING>
+                <RECEPTION>
+                    <SHORTPROSE>
+                        <P>Critical reception of PJ's writing has been uneven, ranging from
+                            outright dismissals to celebrations. These responses clearly illuminate
+                            the preoccupations of critics, many of whom were primarily interested in
+                            constructing narrow versions of Canadian literary history. PJ and her
+                            writings were excluded from these exercises in canon formation on
+                            several counts: she was a woman, a Mohawk, and her focus on romantic
+                            love did not fit into the literary models of nation building favoured by
+                            Canadian modernists. <RRECOGNITIONS>Although a commemorative stamp was
+                                issued in her honour in 1961</RRECOGNITIONS>, <RRESPONSES RESPONSETYPE="RECENT" FORMALITY="FORMAL">dominant critical opinion
+                                of her at that time was almost thoroughly dismissive. <NAME>Earle
+                                    Birney</NAME> and <NAME>Robertson Davies</NAME>, for example,
+                                described her poetry as unimportant and
+                                    shallow.</RRESPONSES><BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 130" DBREF="9599">130</BIBCIT></BIBCITS></P>
+                        <P>
+                            <RSHEINFLUENCED><RFICTIONALIZATION>PJ's legacy is reworked more
+                                    recently in <NAME>Joan Crate</NAME>'s poem cycle <TITLE TITLETYPE="MONOGRAPHIC">Pale as Real Ladies</TITLE>,
+                                    published in 1989.</RFICTIONALIZATION> Although the treatment is
+                                generally a sympathetic one, the poet seems to conclude that PJ sold
+                                out by capitalizing on her Native background to pander to
+                                audiences.</RSHEINFLUENCED>
+                        </P>
+                        <P>
+                            <RFICTIONALIZATION>In the 1970s, the nature of PJ's legacy was
+                                subjected to artistic scrutiny in two theatre productions.
+                                    <ORGNAME>Theatre Passe Muraille</ORGNAME> mounted <TITLE TITLETYPE="MONOGRAPHIC">Pauline</TITLE> in 1972 and
+                                    <ORGNAME>Studio Lab</ORGNAME> produced <TITLE TITLETYPE="MONOGRAPHIC">Pauline Johnson</TITLE> in 1975. A third
+                                play, by <NAME>Betty Donaldson</NAME>, was staged in
+                                        <PLACE><SETTLEMENT>Calgary</SETTLEMENT><REGION REG="Alberta"/><GEOG REG="Canada"/></PLACE> in 1993.</RFICTIONALIZATION>
+                            <BIBCITS>
+                                <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 131" DBREF="9599">131</BIBCIT>
+                            </BIBCITS>
+                        </P>
+                        <P>
+                            <RRESPONSES RESPONSETYPE="RECENT" FORMALITY="FORMAL" GENDEREDRESPONSE="GENDEREDNO">As recently as 1999, PJ's
+                                artistic legacy was still dismissed in some quarters. In a televised
+                                biography produced that year for Canada's <ORGNAME>History
+                                    Channel</ORGNAME>, host <NAME>Patrick Watson</NAME> referred
+                                scornfully to <TITLE TITLETYPE="ANALYTIC">The Song My Paddle
+                                    Sings</TITLE>.</RRESPONSES>
+                            <RRESPONSES RESPONSETYPE="RE-EVALUATION" FORMALITY="FORMAL" GENDEREDRESPONSE="GENDEREDYES">
+                                <RSHEINFLUENCED>On the other hand, Mohawk writer <NAME>Beth
+                                        Brant</NAME> claims PJ as the originator of <QUOTE DIRECT="Y">a movement that has proved unstoppable in its
+                                        momentum—the movement of First Nations women to write
+                                        down our stories.</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 134" DBREF="9599" QTDIN="QTDINYES">134</BIBCIT><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 131,134" DBREF="9599">131</BIBCIT></BIBCITS></RSHEINFLUENCED>
+                            </RRESPONSES>
+                        </P>
+                        <P>
+                            <RRECOGNITIONS>PJ's life was later celebrated by the release of a
+                                commemorative stamp in the centennial year of her birth. A secondary
+                                school in <PLACE><SETTLEMENT>Brantford</SETTLEMENT>,
+                                        <REGION>Ontario</REGION><GEOG REG="Canada"/></PLACE>, and an
+                                elementary school in
+                                        <PLACE><SETTLEMENT>Vancouver</SETTLEMENT><REGION REG="British Columbia"/><GEOG REG="Canada"/></PLACE> are
+                                named in her honour.</RRECOGNITIONS>
+                            <BIBCITS>
+                                <BIBCIT PLACEHOLDER="Gerson and Strong-Boag 17" DBREF="9599">17</BIBCIT>
+                            </BIBCITS>
+                        </P>
+                    </SHORTPROSE>
+                </RECEPTION>
+            </DIV2>
+        </DIV1>
+        <WORKSCITED>
+            <SOURCE>Unless otherwise noted, all information is from the FC</SOURCE>
+            <SOURCE>Gerson, Carole, and Veronica Strong-Boag, Paddling her Own Canoe. 2000.</SOURCE>
+            <SOURCE>Keller, Betty. Pauline: A Biography of Pauline Johnson. 1981.</SOURCE>
+            <SOURCE>OCLC.</SOURCE>
+            <SOURCE>Ruoff, Lavonne Brown, Justice for Indians and Women. 1992.</SOURCE>
+        </WORKSCITED>
+    </DIV0>
+</WRITING>
+

@@ -1,0 +1,23 @@
+.collapsibleContainer {
+}
+
+.collapsibleContainerTitle {
+    cursor:pointer;
+	margin-bottom: 0px !important;
+}
+
+.collapsibleContainerTitle ins {
+	float: left;
+	margin-top: 4px;
+	margin-left: 1px;
+}
+
+.collapsibleContainerTitle div {
+    padding-top:5px;
+    padding-left:10px;
+	margin-bottom:5px;
+}
+
+.collapsibleContainerContent {
+    padding: 10px;
+}

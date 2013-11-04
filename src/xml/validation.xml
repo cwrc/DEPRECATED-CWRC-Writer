@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<validation-result>
+	<status>fail</status>
+	<error>
+		<line>2</line>
+		<column>627</column>
+		<message>element "title" not allowed here; expected the element
+			end-tag or element "ab", "anchor", "argument", "bibl", "biblFull",
+			"byline", "certainty", "cit", "dateline", "desc", "div", "divGen",
+			"docAuthor", "docDate", "eg", "epigraph", "figure", "gap", "gb",
+			"head", "index", "interp", "interpGrp", "l", "label", "lb", "lg",
+			"list", "listBibl", "listEvent", "listNym", "listOrg", "listPerson",
+			"listPlace", "listRelation", "milestone", "notatedMusic", "note",
+			"ns:egXML", "opener", "p", "pb", "precision", "q", "quote",
+			"relationGrp", "respons", "said", "salute", "sp", "stage" or "table"
+			(with xmlns:ns="http://www.tei-c.org/ns/Examples")</message>
+	</error>
+	<error>
+		<line>2</line>
+		<column>627</column>
+		<message>element "title" not allowed here; expected the element
+			end-tag or element "ab", "anchor", "argument", "bibl", "biblFull",
+			"byline", "certainty", "cit", "dateline", "desc", "div", "divGen",
+			"docAuthor", "docDate", "eg", "epigraph", "figure", "gap", "gb",
+			"head", "index", "interp", "interpGrp", "l", "label", "lb", "lg",
+			"list", "listBibl", "listEvent", "listNym", "listOrg", "listPerson",
+			"listPlace", "listRelation", "milestone", "notatedMusic", "note",
+			"ns:egXML", "opener", "p", "pb", "precision", "q", "quote",
+			"relationGrp", "respons", "said", "salute", "sp", "stage" or "table"
+			(with xmlns:ns="http://www.tei-c.org/ns/Examples")</message>
+	</error>
+	<error>
+		<line>2</line>
+		<column>627</column>
+		<message>element "title" not allowed here; expected the element
+			end-tag or element "ab", "anchor", "argument", "bibl", "biblFull",
+			"byline", "certainty", "cit", "dateline", "desc", "div", "divGen",
+			"docAuthor", "docDate", "eg", "epigraph", "figure", "gap", "gb",
+			"head", "index", "interp", "interpGrp", "l", "label", "lb", "lg",
+			"list", "listBibl", "listEvent", "listNym", "listOrg", "listPerson",
+			"listPlace", "listRelation", "milestone", "notatedMusic", "note",
+			"ns:egXML", "opener", "p", "pb", "precision", "q", "quote",
+			"relationGrp", "respons", "said", "salute", "sp", "stage" or "table"
+			(with xmlns:ns="http://www.tei-c.org/ns/Examples")</message>
+	</error>
+	<error>
+		<line>2</line>
+		<column>627</column>
+		<message>element "title" not allowed here; expected the element
+			end-tag or element "ab", "anchor", "argument", "bibl", "biblFull",
+			"byline", "certainty", "cit", "dateline", "desc", "div", "divGen",
+			"docAuthor", "docDate", "eg", "epigraph", "figure", "gap", "gb",
+			"head", "index", "interp", "interpGrp", "l", "label", "lb", "lg",
+			"list", "listBibl", "listEvent", "listNym", "listOrg", "listPerson",
+			"listPlace", "listRelation", "milestone", "notatedMusic", "note",
+			"ns:egXML", "opener", "p", "pb", "precision", "q", "quote",
+			"relationGrp", "respons", "said", "salute", "sp", "stage" or "table"
+			(with xmlns:ns="http://www.tei-c.org/ns/Examples")</message>
+	</error>
+	<warning>
+		<line>2</line>
+		<column>123</column>
+		<message>warning message</message>
+	</warning>
+	<warning>
+		<line>2</line>
+		<column>123</column>
+		<message>warning message</message>
+	</warning>
+	<warning>
+		<line>2</line>
+		<column>123</column>
+		<message>warning message</message>
+	</warning>
+</validation-result>
