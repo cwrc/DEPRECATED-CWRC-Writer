@@ -60,14 +60,6 @@ var TripleDialog = function(config) {
 			object: object
 		});
 		w.relations.update();
-		var cnt = 0;
-        $('#relations').children().each(function() {
-        	if(cnt == 0) {
-        		$(this).css('height: 100%; !important');
-        	}
-          //$(this).css('position','relative');
-          cnt++;
-        });
 	});
 	
 	var loadPredicates = function(type) {
