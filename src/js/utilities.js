@@ -710,11 +710,7 @@ function Utilities(config) {
 	
 	/**
 	 * Checks to see if the tag can contain text, as specified in the schema
-<<<<<<< HEAD
-	 * @param tag The tag to check
-=======
 	 * @param {string} tag The tag to check
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 	 * @returns boolean
 	 */
 	u.canTagContainText = function(tag) {
@@ -738,8 +734,6 @@ function Utilities(config) {
 		return canContainText.isTrue;
 	};
 	
-<<<<<<< HEAD
-=======
 	/**
 	 * Checks to see if the tag can have attributes, as specified in the schema
 	 * @param {string} tag The tag to check
@@ -750,6 +744,5 @@ function Utilities(config) {
 		return atts.length != 0;
 	};
 	
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 	return u;
 };

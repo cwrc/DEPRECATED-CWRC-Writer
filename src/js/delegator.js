@@ -40,23 +40,6 @@ function Delegator(config) {
 				}
 			});
 		} else if (lookupService == 'viaf') {
-<<<<<<< HEAD
-			$.ajax({
-				url: 'http://viaf.org/viaf/AutoSuggest',
-				data: {
-					query: query
-				},
-				dataType: 'jsonp',
-				success: function(data, status, xhr) {
-					if (data != null && data.result != null) {
-						callback.call(w, data.result);
-					} else {
-						callback.call(w, []);
-					}
-				},
-				error: function() {
-					callback.call(w, null);
-=======
 			var queryPrefix = 'local.';
 			var querySuffix = '"';
 			var specificQuery = '';
@@ -119,7 +102,6 @@ function Delegator(config) {
 							callback.call(w, null);
 						}
 					});
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 				}
 			});
 		}
@@ -132,11 +114,7 @@ function Delegator(config) {
 		$.ajax({
 			url: w.baseUrl+'services/validator/validate.html',
 			type: 'POST',
-<<<<<<< HEAD
 			dataType: 'XML',
-=======
-			dataType: 'xml',
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 			data: {
 				sch: schemaUrl,
 				type: 'RNG_XML',

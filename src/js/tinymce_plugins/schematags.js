@@ -4,6 +4,7 @@
 		init: function(ed, url) {
 			var t = this;
 			t.url = url;
+			//TODO: this needs to be more configurable.
 			t.imageUrl = t.url+'/../../img/';
 			t.editor = ed;
 			t.currentKey = null;
@@ -95,10 +96,7 @@
 					return;
 				}
 				
-<<<<<<< HEAD
-=======
 				var tagId = t.editor.currentBookmark.tagId;
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 				t.editor.selection.moveToBookmark(t.editor.currentBookmark);
 				
 				var valid = t.editor.execCommand('isSelectionValid', true, t.action);
@@ -109,12 +107,9 @@
 				
 				// reset bookmark after possible modification by isSelectionValid
 				t.editor.currentBookmark = t.editor.selection.getBookmark(1);
-<<<<<<< HEAD
-=======
 				if (tagId != null) {
 					t.editor.currentBookmark.tagId = tagId;
 				}
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 				
 				// isSelectionValid should perform this function
 //				var sel = t.editor.selection;
@@ -157,14 +152,9 @@
 					'<div class="attsContainer">'+
 						'<div class="level1Atts"></div>'+
 						'<div class="highLevelAtts"></div>'+
-<<<<<<< HEAD
-						'<div class="schemaHelp"></div>'+
-					'</div>'+
-=======
 					'</div>'+
 					'<input type="hidden" name="attsAllowed" value="" />'+
 					'<div class="schemaHelp"></div>'+
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 				'</div>'
 			);
 			
@@ -173,16 +163,6 @@
 				resizable: true,
 				dialogClass: 'splitButtons',
 				closeOnEscape: false,
-<<<<<<< HEAD
-				open: function(event, ui) {
-					t.schemaDialog.parent().find('.ui-dialog-titlebar-close').hide();
-				},
-				height: 460,
-				width: 550,
-				autoOpen: false,
-				open: function(event, ui) {
-					t.dialogOpenTimestamp = event.timeStamp;
-=======
 				height: 460,
 				width: 550,
 				minWidth: 510,
@@ -190,7 +170,6 @@
 				open: function(event, ui) {
 					t.dialogOpenTimestamp = event.timeStamp;
 					t.schemaDialog.parent().find('.ui-dialog-titlebar-close').hide();
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 				},
 				beforeClose: function(event, ui) {
 					if (event.timeStamp - t.dialogOpenTimestamp < 150) {
@@ -281,12 +260,8 @@
 			
 			var atts = t.editor.writer.u.getChildrenForTag({tag: key, type: 'attribute', returnType: 'array'});
 			
-<<<<<<< HEAD
-=======
 			var canTagContainAttributes = atts.length != 0;
 			$('input[name="attsAllowed"]', parent).val(canTagContainAttributes);
-			
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 			// build atts
 			var level1Atts = '';
 			var highLevelAtts = '';
@@ -424,11 +399,7 @@
 				return;
 			}
 			
-<<<<<<< HEAD
-=======
 			attributes._attsallowed = $('input[name="attsAllowed"]', parent).val() != 'false';
-			
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 			attributes._tag = t.currentKey;
 			
 			t.schemaDialog.dialog('close');

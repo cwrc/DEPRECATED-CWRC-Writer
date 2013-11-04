@@ -108,12 +108,7 @@ function Writer(config) {
 				var val = $(start).offset().top;
 				$(w.editor.dom.doc.body).scrollTop(val);
 			}
-			
-<<<<<<< HEAD
-			w.tree.selectNode($('#entityHighlight', w.editor.getBody())[0]);
-=======
 			w.tree.highlightNode($('#entityHighlight', w.editor.getBody())[0]);
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 			
 			$('#entities > ul > li[name="'+id+'"]').addClass('selected').find('div[class="info"]').show();
 		}
@@ -319,20 +314,6 @@ function Writer(config) {
 		w.editor.onNodeChange.dispatch(w.editor, w.editor.controlManager, nodeEl, false, w.editor);
 	};
 	
-<<<<<<< HEAD
-	// browsers have trouble deleting divs, so use the tree and jquery as a workaround
-	function _onKeyDownDeleteHandler(ed, evt) {
-		if (evt.which == 8 || evt.which == 46) {
-			if (w.tree.currentlySelectedNode != null) {
-				// cancel keyboard delete
-				tinymce.dom.Event.cancel(evt);
-				if (w.tree.selectionType == w.tree.NODE_SELECTED) {
-					w.tagger.removeStructureTag(w.tree.currentlySelectedNode, true);
-				} else {
-					var id = w.tree.currentlySelectedNode;
-					w.tagger.removeStructureTagContents(w.tree.currentlySelectedNode);
-					w.selectStructureTag(id, true);
-=======
 	function _onKeyDownDeleteHandler(ed, evt) {
 		if (w.tree.currentlySelectedNode != null) {
 			// browsers have trouble deleting divs, so use the tree and jquery as a workaround
@@ -366,7 +347,6 @@ function Writer(config) {
 					}
 					rng.collapse(true);
 					w.editor.selection.setRng(rng);
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 				}
 			}
 		}
@@ -378,11 +358,7 @@ function Writer(config) {
 	};
 	
 	function _onKeyDownHandler(ed, evt) {
-<<<<<<< HEAD
-=======
 		ed.lastKeyPress = evt.which; // store the last key press
-		
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 		// TODO move to keyup
 		// redo/undo listener
 		if ((evt.which == 89 || evt.which == 90) && evt.ctrlKey) {
@@ -482,16 +458,10 @@ function Writer(config) {
 		}
 		
 		// if the user's typing we don't want the currentlySelectedNode to be set
-<<<<<<< HEAD
-		// calling selectNode will clear currentlySelectedNode
-		if (w.tree.currentlySelectedNode != null) {
-			w.tree.selectNode($('#'+w.tree.currentlySelectedNode, w.editor.getBody())[0]);
-=======
 		// calling highlightNode will clear currentlySelectedNode
 		if (w.tree.currentlySelectedNode != null) {
 			var currNode = $('#'+w.tree.currentlySelectedNode, w.editor.getBody())[0];
 			w.tree.highlightNode(currNode);
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 		}
 	};
 	
@@ -504,11 +474,8 @@ function Writer(config) {
 	};
 	
 	function _onNodeChangeHandler(ed, cm, e) {
-<<<<<<< HEAD
-=======
 //		console.log('onNodeChangeHandler');
 //		console.time('nodechange');
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 		if (e != null) {
 			if (e.nodeType != 1) {
 				ed.currentNode = w.u.getRootTag()[0];
@@ -516,9 +483,6 @@ function Writer(config) {
 				if (e.getAttribute('_tag') == null) {
 					if (e.getAttribute('data-mce-bogus') != null) {
 						// artifact from selectStructureTag
-<<<<<<< HEAD
-						var sibling = $(e).next('[_tag]')[0];
-=======
 						var sibling;
 						var rng = ed.selection.getRng(true);
 						if (rng.collapsed) {
@@ -543,7 +507,6 @@ function Writer(config) {
 							// the structure is selected
 							sibling = $(e).next('[_tag]')[0];
 						}
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 						if (sibling != null) {
 							e = sibling;
 						} else {
@@ -555,10 +518,7 @@ function Writer(config) {
 					
 					// use setTimeout to add to the end of the onNodeChange stack
 					window.setTimeout(function(){
-<<<<<<< HEAD
-=======
 //						console.log('fireNodeChange');
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 						w._fireNodeChange(e);
 					}, 0);
 				} else {
@@ -566,11 +526,7 @@ function Writer(config) {
 				}
 			}
 			if (ed.currentNode) {
-<<<<<<< HEAD
-				w.tree.selectNode(ed.currentNode);
-=======
 				w.tree.highlightNode(ed.currentNode);
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 			}
 			if (w.emptyTagId) {
 				delete w.entities[w.emptyTagId];
@@ -614,14 +570,6 @@ function Writer(config) {
 	};
 	
 	function _doHighlightCheck(ed, evt) {
-<<<<<<< HEAD
-		var range = ed.selection.getRng(true);
-		
-		// check if inside boundary tag
-		var parent = range.commonAncestorContainer.parentNode;
-		if (parent.hasAttribute('_entity')) {
-			w.highlightEntity();
-=======
 //		console.log('_doHighlightCheck');
 		var range = ed.selection.getRng(true);
 		
@@ -629,7 +577,6 @@ function Writer(config) {
 		var parent = range.commonAncestorContainer;
 		if (parent.nodeType == 1 && parent.hasAttribute('_entity')) {
 			w.highlightEntity(); // remove highlight
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 			if ((w.editor.dom.hasClass(parent, 'start') && evt.which == 37) || 
 				(w.editor.dom.hasClass(parent, 'end') && evt.which != 39)) {
 				var prevNode = w.u.getPreviousTextNode(parent);
@@ -697,38 +644,18 @@ function Writer(config) {
 			south: {
 				size: 34,
 				resizable: true,
-=======
-		w.layout = $(document.body).layout({
-			defaults: {
-				maskIframesOnResize: true,
-				resizable: true,
-				slidable: false
-			},
-			north: {
-				size: 35,
-				resizable: false,
-				spacing_open: 0,
-				spacing_closed: 0
-			},
-			south: {
-				size: 34,
-				resizable: false,
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 				spacing_open: 0,
 				spacing_closed: 0
 			},
 			west: {
 				size: 'auto',
 				minSize: 325,
-<<<<<<< HEAD
 				resizable: true,
-=======
 				onresize: function(region, pane, state, options) {
 					var tabsHeight = $('#westTabs > ul').outerHeight();
 					$('#westTabsContent').height(state.layoutHeight - tabsHeight);
 //					$.layout.callbacks.resizeTabLayout(region, pane);
 				}
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 			}
 		});
 		w.layout.panes.center.layout({
@@ -745,10 +672,7 @@ function Writer(config) {
 			},
 			south: {
 				size: 250,
-<<<<<<< HEAD
 				resizable: true,
-=======
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 				initClosed: true,
 				activate: function(event, ui) {
 					$.layout.callbacks.resizeTabLayout(event, ui);
@@ -840,13 +764,8 @@ function Writer(config) {
 			mode: 'exact',
 			elements: 'editor',
 			theme: 'advanced',
-<<<<<<< HEAD
 			// Updated from default pull.
 			content_css: config.cwrcRootUrl+'css/editor.css',
-=======
-			
-			content_css: 'css/editor.css',
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
 			
 			width: '100%',
 			
@@ -912,11 +831,7 @@ function Writer(config) {
 				ed.entityCopy = null; // store a copy of an entity for pasting
 				ed.contextMenuPos = null; // the position of the context menu (used to position related dialog box)
 				ed.copiedElement = {selectionType: null, element: null}; // the element that was copied (when first selected through the structure tree)
-<<<<<<< HEAD
-=======
 				ed.lastKeyPress = null; // the last key the user pressed
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
-				
 				ed.onInit.add(function(ed) {
 					// modify isBlock method to check _tag attributes
 					ed.dom.isBlock = function(node) {
@@ -926,11 +841,6 @@ function Writer(config) {
 						if (type) {
 							if (type === 1) {
 								var tag = node.getAttribute('_tag') || node.nodeName;
-<<<<<<< HEAD
-=======
-//								console.log(tag);
->>>>>>> 4c8be3291883c3e1cf3bb67257deae4da66130ef
-//								return !!(ed.schema.getBlockElements()[tag]);
 								return true;
 							}
 						}
