@@ -64,9 +64,11 @@ var NoteDialog = function(config) {
 		} else {
 			w.finalizeEntity(currentType, data);
 		}
+		
 		noteEditor.remove();
 		noteEditor.destroy();
 		noteEditor = null;
+		
 		note.dialog('close');
 		currentType = null;
 	};
@@ -76,6 +78,7 @@ var NoteDialog = function(config) {
 			currentType = config.type;
 			mode = config.entry ? EDIT : ADD;
 			var prefix = 'Add ';
+			
 			var title = prefix+config.title;
 			note.dialog('option', 'title', title);
 			if (config.pos) {
