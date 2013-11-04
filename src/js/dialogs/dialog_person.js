@@ -13,6 +13,59 @@ var PersonDialog = function(config) {
 	
 	var currentData = null;
 	
+	var processData = function() {
+		function processDate(dateString) {
+			var dateParts = dateString.split('-');
+			switch (dateParts.length) {
+				case 1:
+					currentData.birthDate = dateString;
+					break;
+				case 2:
+					currentData.birthDate = dateParts[0];
+					currentData.deathDate = dateParts[1];
+					break;
+			}
+		}
+		
+		var nameParts = currentData.name.split(/,\s*/);
+		switch (nameParts.length) {
+			case 1:
+				currentData.lastName = currentData.name;
+				break;
+			case 2:
+				if (nameParts[1].match(/\d+-/) != null) {
+					processDate(nameParts[1]);
+					nameParts = nameParts[0].split(/\s/);
+					currentData.firstName = nameParts[0];
+					currentData.lastName = nameParts[1];
+				} else {
+					currentData.lastName = nameParts[0];
+					currentData.firstName = nameParts[1];
+				}
+				break;
+			case 3:
+				currentData.lastName = nameParts[0];
+				currentData.firstName = nameParts[1];
+				var date = nameParts[2];
+				processDate(date);
+				break;
+		}
+		if (currentData.date) {
+			processDate(currentData.date);
+		}
+		
+		currentData.certainty = $('#'+id+'_certainty input:checked').val();
+		currentData.type = $('#'+id+'_type input:checked').val();
+		currentData.role = $('#'+id+'_role select').val();
+		currentData.attributes = attributeWidget.getData();
+		
+		for (var key in currentData) {
+			if (currentData[key] == undefined || currentData[key] == '') {
+				delete currentData[key];
+			}
+		}
+	};
+	
 	var onSearchClick = function(data, source, selected) {
 		var tagAs = $('#'+id+'_tagAs span');
 		var label = '';
@@ -33,52 +86,46 @@ var PersonDialog = function(config) {
 	};
 	
 	var onSaveClick = function() {
-		function processDate(dateString) {
-			var dateParts = dateString.split('-');
-			switch (dateParts.length) {
-				case 1:
-					currentData.birthDate = dateString;
-					break;
-				case 2:
-					currentData.birthDate = dateParts[0];
-					currentData.deathDate = dateParts[1];
-					break;
-			}
-		}
-		
 		var buttonLabel = $('#'+id+'SaveButton').button('option', 'label');
 		switch (buttonLabel) {
 			case SAVE_LABEL:
-				dialog.dialog('close');
+				processData();
 				break;
 			case SAVE_ADD_LABEL:
-				dialog.dialog('close');
-				var nameParts = currentData.name.split(/,\s*/);
-				switch (nameParts.length) {
-					case 1:
-						currentData.lastName = currentData.name;
-						break;
-					case 2:
-						currentData.lastName = nameParts[0];
-						currentData.firstName = nameParts[1];
-						break;
-					case 3:
-						currentData.lastName = nameParts[0];
-						currentData.firstName = nameParts[1];
-						var date = nameParts[2];
-						processDate(date);
-						break;
-				}
-				if (currentData.date) {
-					processDate(currentData.date);
-				}
+				processData();
 				w.dialogs.show('addperson', {writer: w, data: currentData});
 				break;
 			case ADD_LABEL:
-				dialog.dialog('close');
 				w.dialogs.show('addperson', {writer: w});
 				break;
 		}
+		dialog.dialog('close');
+	};
+	
+	var initAttributeWidget = function() {
+		var personAtts = w.u.getChildrenForTag({tag: 'person', type: 'attribute', returnType: 'object'});
+		$.map(personAtts, function(val, key) {
+			personAtts[key].parent = 'person';
+		});
+		var persNameAtts = w.u.getChildrenForTag({tag: 'persName', type: 'attribute', returnType: 'object'});
+		$.map(persNameAtts, function(val, key) {
+			persNameAtts[key].parent = 'persName';
+		});
+		var combinedAtts = {};
+		$.extend(combinedAtts, persNameAtts, personAtts);
+
+		var finalAtts = [];
+		for (var key in combinedAtts) {
+			finalAtts.push(combinedAtts[key]);
+		}
+		finalAtts.sort(function(a, b) {
+			if (a.name < b.name) return -1;
+			if (a.name > b.name) return 1;
+			return 0;
+		});
+		
+		attributeWidget.buildWidget(finalAtts);
+		attWidgetInit = true;
 	};
 	
 	$(document.body).append(''+
@@ -92,9 +139,9 @@ var PersonDialog = function(config) {
 	    '</div>'+
 	    '<div id="'+id+'_type">'+
 		    '<p>Person type:</p>'+
-			'<input type="radio" id="'+id+'_real" name="person_type_certainty" value="definite" /><label for="'+id+'_real">Real</label>'+
-			'<input type="radio" id="'+id+'_fictional" name="person_type_certainty" value="reasonable" /><label for="'+id+'_fictional">Fictional</label>'+
-			'<input type="radio" id="'+id+'_both" name="person_type_certainty" value="speculative" /><label for="'+id+'_both">Both</label>'+
+			'<input type="radio" id="'+id+'_real" name="person_type_certainty" value="real" /><label for="'+id+'_real">Real</label>'+
+			'<input type="radio" id="'+id+'_fictional" name="person_type_certainty" value="fictional" /><label for="'+id+'_fictional">Fictional</label>'+
+			'<input type="radio" id="'+id+'_both" name="person_type_certainty" value="both" /><label for="'+id+'_both">Both</label>'+
 	    '</div>'+
 	    '<div id="'+id+'_role">'+
 		    '<h3>Add role (optional)</h3>'+
@@ -170,22 +217,6 @@ var PersonDialog = function(config) {
 	
 	var attributeWidget = new AttributeWidget({writer: w, parentId: id+'_teiParent'});
 	
-	function initAttributeWidget() {
-		var personAtts = w.u.getChildrenForTag({tag: 'person', type: 'attribute', returnType: 'array'});
-		var persNameAtts = w.u.getChildrenForTag({tag: 'persName', type: 'attribute', returnType: 'array'});
-		var uniquePersNameAtts = [];
-		for (var i = 0; i < persNameAtts.length; i++) {
-			var att = persNameAtts[i];
-			if ($.inArray(att, personAtts) == -1) {
-				uniquePersNameAtts.push(att);
-			}
-		}
-		personAtts.join(uniquePersNameAtts);
-		attributeWidget.buildWidget(personAtts);
-		
-		attWidgetInit = true;
-	}
-	
 	return {
 		show: function(config) {
 			if (attWidgetInit == false) {
@@ -196,6 +227,7 @@ var PersonDialog = function(config) {
 			searchWidget.populateSearch(query);
 			
 			// reset the form
+			attributeWidget.reset();
 			$('#'+id+'_certainty input:checked').prop('checked', false).button('refresh');
 			$('#'+id+'_type input:checked').prop('checked', false).button('refresh');
 			$('#'+id+'_role select').val('');
