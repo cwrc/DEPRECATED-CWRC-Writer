@@ -1028,7 +1028,7 @@ function FileManager(config) {
 	function _loadTemplate(url, hashName) {
 		w.currentDocId = null;
 		
-		$.ajax(
+		$.ajax({
 			url: Drupal.settings.basePath +
 			  Drupal.settings.islandora_critical_edition.module_base +
 			  '/CWRC-Writer/src/' + url,
