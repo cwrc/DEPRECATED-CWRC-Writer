@@ -114,7 +114,7 @@ function Delegator(config) {
 		$.ajax({
 			url: w.baseUrl+'services/validator/validate.html',
 			type: 'POST',
-			dataType: 'XML',
+			dataType: 'xml',
 			data: {
 				sch: schemaUrl,
 				type: 'RNG_XML',
