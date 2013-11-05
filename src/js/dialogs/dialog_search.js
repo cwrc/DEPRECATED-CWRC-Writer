@@ -15,10 +15,10 @@ var SearchDialog = function(config) {
 		    '<label for="search_query">Search</label>'+
 		    '<input type="text" name="query" id="search_query" />'+
 	    '</div>'+
-	    '<div style="position: absolute; top: 41px; left: 10px; right: 10px; bottom: 70px;">'+
+	    '<div style="position: absolute; top: 55px; left: 10px; right: 10px; bottom: 70px;">'+
 		    '<div id="lookupServices">'+
 		    	'<div id="lookup_project">'+
-			    '<h3>Results from '+w.project+' Project</h3>'+
+			    '<h3>Results from '+w.project.title+' Project</h3>'+
 			    '<div><div class="searchResultsParent"><ul class="searchResults"></ul></div></div>'+
 			    '</div>'+
 			    '<div id="lookup_viaf">'+
@@ -94,7 +94,6 @@ var SearchDialog = function(config) {
 	});
 	
 	$('#certainty').buttonset();
-	
 	var doQuery = function() {
 		var lookupService = $('#lookupServices div.ui-accordion-content-active').parent()[0].id.replace('lookup_', '');
 		var type = search.dialog('option', 'title');
@@ -107,7 +106,6 @@ var SearchDialog = function(config) {
 		
 		w.delegator.lookupEntity({type: type, query: query, lookupService: lookupService}, handleResults);
 	};
-	
 	var handleResults = function(results) {
 		var formattedResults = '';
 		var last = '';
@@ -120,9 +118,7 @@ var SearchDialog = function(config) {
 			var r, i, label;
 			for (i = 0; i < results.length; i++) {
 				r = results[i];
-				
 				label = r.name || r.identifier || r.term || r[currentType];
-
 				if (i == results.length - 1) last = 'last';
 				else last = '';
 				
@@ -235,7 +231,20 @@ var SearchDialog = function(config) {
 			},{
 				text: 'Add New '+config.title,
 				click: function() {
-					window.open(cwrc_params.BASE_PATH + '/fedora/repository/' + cwrc_params.authority_mappings[config.title]);
+				  switch(config.type) {
+            case 'place':
+              window.open(cwrc_params.create_entity_callbacks.places);
+              break;
+            case 'person':
+              window.open(cwrc_params.create_entity_callbacks.people);
+              break;
+            case 'event':
+              window.open(cwrc_params.create_entity_callbacks.events);
+              break;
+            case 'org':
+              window.open(cwrc_params.create_entity_callbacks.organizations);
+              break;
+				  }
 				}
 			},{
 				text: 'Tag '+config.title,

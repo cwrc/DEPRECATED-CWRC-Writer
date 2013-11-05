@@ -161,7 +161,6 @@ function FileManager(config) {
 		
 		var body = $(w.editor.getBody());
 		var clone = body.clone(false, true); // make a copy, don't clone body events, but clone child events
-		
 		_entitiesToUnicode(body);
 		
 		// rdf
@@ -247,7 +246,6 @@ function FileManager(config) {
 		xmlString += rdfString + bodyString;
 		
 		xmlString += tags[1];
-		
 		body.replaceWith(clone);
 		return xmlString;
 	};
@@ -530,7 +528,7 @@ function FileManager(config) {
 			
 			var docMode;
 			var rdfs = $(doc).find('rdf\\:RDF, RDF');
-			
+
 			if (rdfs.length) {
 				var mode = parseInt(rdfs.find('w\\:mode, mode').first().text());
 				if (mode == w.XML) {
@@ -545,6 +543,7 @@ function FileManager(config) {
 			if (w.mode != docMode) {
 				var editorModeStr = w.mode == w.XML ? 'XML only' : 'XML & RDF';
 				var docModeStr = docMode == w.XML ? 'XML only' : 'XML & RDF';
+
 				w.dialogs.show('message', {
 					title: 'Editor Mode changed',
 					msg: 'The Editor Mode ('+editorModeStr+') has been changed to match the Document Mode ('+docModeStr+').',
@@ -820,7 +819,6 @@ function FileManager(config) {
 			dataType: 'xml',
 			success: function(data, status, xhr) {
 				w.schemaXML = data;
-				
 				// get root element
 				var startName = $('start ref:first', w.schemaXML).attr('name');
 				var startEl = $('define[name="'+startName+'"] element', w.schemaXML).attr('name');
@@ -1031,7 +1029,9 @@ function FileManager(config) {
 		w.currentDocId = null;
 		
 		$.ajax({
-			url: url,
+			url: Drupal.settings.basePath +
+			  Drupal.settings.islandora_critical_edition.module_base +
+			  '/CWRC-Writer/src/' + url,
 			dataType: 'xml',
 			success: function(data, status, xhr) {
 				if (hashName) {

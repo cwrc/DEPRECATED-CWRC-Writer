@@ -108,7 +108,6 @@ function Writer(config) {
 				var val = $(start).offset().top;
 				$(w.editor.dom.doc.body).scrollTop(val);
 			}
-			
 			w.tree.highlightNode($('#entityHighlight', w.editor.getBody())[0]);
 			
 			$('#entities > ul > li[name="'+id+'"]').addClass('selected').find('div[class="info"]').show();
@@ -360,7 +359,6 @@ function Writer(config) {
 	
 	function _onKeyDownHandler(ed, evt) {
 		ed.lastKeyPress = evt.which; // store the last key press
-		
 		// TODO move to keyup
 		// redo/undo listener
 		if ((evt.which == 89 || evt.which == 90) && evt.ctrlKey) {
@@ -617,27 +615,41 @@ function Writer(config) {
 	 * Begin init functions
 	 */
 	w.init = function() {
-		w.layout = $(document.body).layout({
+		w.layout = $('#cwrc_wrapper').layout({
 			defaults: {
 				maskIframesOnResize: true,
 				resizable: true,
-				slidable: false
+				slidable: false,
+				maskIframesOnResize: true,
+			},
+			east: {
+				maskIframesOnResize: true,
+				resizable: true,
+				slidable: false,
+				maskIframesOnResize: true,
+				onresize: function() {
+					// TODO: Move this out of the editor somehow.
+					// Accessing 'writer.layout.east.onresize does no
+					// work.
+					resizeCanvas();
+				},
 			},
 			north: {
 				size: 35,
-				resizable: false,
-				spacing_open: 0,
-				spacing_closed: 0
+				minSize: 35,
+				maxSize: 60,
+				resizable: true,
 			},
 			south: {
 				size: 34,
-				resizable: false,
+				resizable: true,
 				spacing_open: 0,
 				spacing_closed: 0
 			},
 			west: {
 				size: 'auto',
 				minSize: 325,
+				resizable: true,
 				onresize: function(region, pane, state, options) {
 					var tabsHeight = $('#westTabs > ul').outerHeight();
 					$('#westTabsContent').height(state.layoutHeight - tabsHeight);
@@ -659,6 +671,7 @@ function Writer(config) {
 			},
 			south: {
 				size: 250,
+				resizable: true,
 				initClosed: true,
 				activate: function(event, ui) {
 					$.layout.callbacks.resizeTabLayout(event, ui);
@@ -750,8 +763,8 @@ function Writer(config) {
 			mode: 'exact',
 			elements: 'editor',
 			theme: 'advanced',
-			
-			content_css: 'css/editor.css',
+			// Updated from default pull.
+			content_css: config.cwrcRootUrl+'css/editor.css',
 			
 			width: '100%',
 			
@@ -818,7 +831,6 @@ function Writer(config) {
 				ed.contextMenuPos = null; // the position of the context menu (used to position related dialog box)
 				ed.copiedElement = {selectionType: null, element: null}; // the element that was copied (when first selected through the structure tree)
 				ed.lastKeyPress = null; // the last key the user pressed
-				
 				ed.onInit.add(function(ed) {
 					// modify isBlock method to check _tag attributes
 					ed.dom.isBlock = function(node) {
@@ -828,8 +840,6 @@ function Writer(config) {
 						if (type) {
 							if (type === 1) {
 								var tag = node.getAttribute('_tag') || node.nodeName;
-//								console.log(tag);
-//								return !!(ed.schema.getBlockElements()[tag]);
 								return true;
 							}
 						}

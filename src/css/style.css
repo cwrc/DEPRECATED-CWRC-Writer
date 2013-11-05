@@ -495,7 +495,7 @@ body {
 }
 
 .annotationDialog > div {
-	margin-bottom: 20px;
+	margin-bottom: 15px;
 }
 
 .annotationDialog .ui-accordion-content {
@@ -525,7 +525,7 @@ body {
 
 .attributeWidget .attributeSelector {
 	border: 1px solid #999;
-	top: 8px;
+	top: 5px;
 	bottom: 0;
 	width: 130px;
 	position: absolute;
@@ -568,7 +568,6 @@ body {
 
 .attributeWidget .level1Atts, .attributeWidget .highLevelAtts {
 	float: left;
-	clear: left;
 }
 
 .attributeWidget .attsContainer label {

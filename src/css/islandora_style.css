@@ -53,7 +53,6 @@ A:hover
   width: 30px;
   height: 35px;
 
-  background-image: url('../imgs/nav-arrows.png'); /* 38px x 85px */ 
   background-position: 0px 0px;
   background-repeat: no-repeat;
   background-color: transparent;
@@ -302,7 +301,6 @@ A:hover
 
 
 /* Entities Tab */
-/*
 #westTabs .title
 {
   margin-left: 10px;
@@ -320,7 +318,7 @@ A:hover
   margin-left: 0px;
   vertical-align: 0px;
 }
-*/
+
 #westTabs #entities ul li
 {
   margin: 5px 0px;

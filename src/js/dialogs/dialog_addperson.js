@@ -11,6 +11,12 @@ var AddPersonDialog = function(config) {
 		'<input type="text" name="last" value=""/>'+
 		'</div>'+
 		'<div>'+
+		'<label for="dob">Date of Birth (if known)</label><input type="text" id="dob" style="margin-bottom: 5px;"/><br />'+
+	    '<label for="dod">Date of Death (if known)</label><input type="text" id="dod" />'+
+	    '<p>Format: yyyy-mm-dd<br/>e.g. 2010-10-05</p>'+
+	    '</div>'+
+	    '<div>'+
+	    '<label>Occupation (if known)</label><select name="occupation">'+
 		'<label for="addPersonDialog_dob">Date of Birth (if known):</label><input type="text" id="addPersonDialog_dob" style="margin-bottom: 5px;"/><br />'+
 	    '<label for="addPersonDialog_dod">Date of Death (if known):</label><input type="text" id="addPersonDialog_dod" />'+
 	    '<p>Format: yyyy-mm-dd<br/>e.g. 2010-10-05</p>'+
@@ -49,7 +55,6 @@ var AddPersonDialog = function(config) {
 			}
 		}
 	});
-	
 	var lifeSpan = $('#addPersonDialog_dob, #addPersonDialog_dod').datepicker({
 		dateFormat: 'yy-mm-dd',
 		constrainInput: false,
@@ -60,14 +65,16 @@ var AddPersonDialog = function(config) {
 		maxDate: new Date(2020, 11, 31),
 		showOn: 'button',
 		buttonText: 'Date Picker',
-		buttonImage: 'img/calendar.png',
+		buttonImage: Drupal.settings.basePath +
+      Drupal.settings.islandora_critical_edition.module_base +
+      '/CWRC-Writer/src/img/calendar.png',
 		buttonImageOnly: true,
 		onSelect: function(selectedDate) {
 			var option = this.id == "addPersonDialog_dob" ? "minDate" : "maxDate";
 			var instance = $(this).data("datepicker");
 			var date = $.datepicker.parseDate(instance.settings.dateFormat || $.datepicker._defaults.dateFormat, selectedDate, instance.settings);
 			dateRange.not(this).datepicker("option", option, date);
-		}
+		},
 	});
 	
 	$('#addPersonDialog input[name="first"]').watermark('First');
@@ -95,7 +102,6 @@ var AddPersonDialog = function(config) {
 					$('#addPersonDialog_dod').val(config.data.deathDate);
 				}
 			}
-			addPerson.dialog('open');
 		},
 		hide: function() {
 			addPerson.dialog('close');
