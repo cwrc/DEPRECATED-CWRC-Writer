@@ -40,14 +40,26 @@ function Delegator(config) {
 				}
 			});
 		} else if (lookupService == 'viaf') {
-			var queryPrefix = 'local.';
+			var queryPrefix = '';
 			var querySuffix = '"';
 			var specificQuery = '';
 			if (type) {
-				if (type == 'person') {
-					queryPrefix += 'personalNames+all+"';
+				switch (type) {
+					case 'person':
+						queryPrefix += 'local.personalNames+all+"';
+						break;
+					case 'place':
+						queryPrefix += 'local.geographicNames+all+"';
+						break;
+					case 'org':
+						queryPrefix += 'local.corporateNames+all+"';
+						break;
+					default:
+						queryPrefix += 'cql.any+all+"';
 				}
 				specificQuery = queryPrefix + encodeURIComponent(query) + querySuffix;
+			} else {
+				specificQuery = encodeURIComponent(query);
 			}
 			$.ajax({
 				url: w.baseUrl+'services/viaf/search',
