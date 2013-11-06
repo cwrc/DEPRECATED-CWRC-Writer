@@ -5,7 +5,7 @@
 			var t = this;
 			t.url = url;
 			//TODO: this needs to be more configurable.
-			t.imageUrl = t.url+'/../../img/';
+			t.imageUrl = ed.writer.cwrcRootUrl+'img/';
 			t.editor = ed;
 			t.currentKey = null;
 			t.action = null;
@@ -445,10 +445,9 @@
 			if (n == 'schematags') {
 				var t = this;
 				
-				var url = t.url+'/../../img/';
 				t.menuButton = cm.createMenuButton('schemaTagsButton', {
 					title: 'Tags',
-					image: url+'tag_text.png',
+					image: t.imageUrl+'tag_text.png',
 					'class': 'wideButton',
 					menuType: 'filterMenu'
 				}, tinymce.ui.ScrollingMenuButton);

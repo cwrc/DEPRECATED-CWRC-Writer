@@ -65,16 +65,14 @@ var AddPersonDialog = function(config) {
 		maxDate: new Date(2020, 11, 31),
 		showOn: 'button',
 		buttonText: 'Date Picker',
-		buttonImage: Drupal.settings.basePath +
-      Drupal.settings.islandora_critical_edition.module_base +
-      '/CWRC-Writer/src/img/calendar.png',
+		buttonImage: w.cwrcRootUrl+'img/calendar.png',
 		buttonImageOnly: true,
 		onSelect: function(selectedDate) {
 			var option = this.id == "addPersonDialog_dob" ? "minDate" : "maxDate";
 			var instance = $(this).data("datepicker");
 			var date = $.datepicker.parseDate(instance.settings.dateFormat || $.datepicker._defaults.dateFormat, selectedDate, instance.settings);
 			dateRange.not(this).datepicker("option", option, date);
-		},
+		}
 	});
 	
 	$('#addPersonDialog input[name="first"]').watermark('First');

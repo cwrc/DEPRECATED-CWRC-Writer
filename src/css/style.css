@@ -1,4 +1,6 @@
-body {
+html, body {
+	height: 100%;
+	width: 100%;
 	margin: 0;
 	padding: 0;
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
@@ -30,6 +32,11 @@ body {
 
 .cwrc label {
 	margin-right: 5px;
+}
+
+#cwrc_wrapper {
+	height: 100%;
+	width: 100%;
 }
 
 #cwrc_header {
@@ -568,6 +575,7 @@ body {
 
 .attributeWidget .level1Atts, .attributeWidget .highLevelAtts {
 	float: left;
+	clear: left;
 }
 
 .attributeWidget .attsContainer label {

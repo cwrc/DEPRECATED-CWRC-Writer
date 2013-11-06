@@ -28,7 +28,9 @@ function Writer(config) {
 	w.schemaJSON = null; // a json version of the schema
 	w.schema = {elements: []}; // stores a list of all the elements of the loaded schema
 	
-	w.project = config.project; // the current project (cwrc or russell)
+	w.project = config.project || {}; // the current project (cwrc or russell)
+	
+	w.containerId = config.containerId; // the id of the element to initialize cwrcwriter in
 	
 	w.baseUrl = window.location.protocol+'//'+window.location.host+'/'; // the url for referencing various external services
 	w.cwrcRootUrl = config.cwrcRootUrl; // the url which points to the root of the cwrcwriter location
@@ -615,41 +617,34 @@ function Writer(config) {
 	 * Begin init functions
 	 */
 	w.init = function() {
-		w.layout = $('#cwrc_wrapper').layout({
+		w.layout = $('#'+w.containerId).layout({
 			defaults: {
 				maskIframesOnResize: true,
 				resizable: true,
 				slidable: false,
 				maskIframesOnResize: true,
 			},
-			east: {
-				maskIframesOnResize: true,
-				resizable: true,
-				slidable: false,
-				maskIframesOnResize: true,
-				onresize: function() {
-					// TODO: Move this out of the editor somehow.
-					// Accessing 'writer.layout.east.onresize does no
-					// work.
-					resizeCanvas();
-				},
-			},
+//			east: {
+//				onresize: function() {
+//					// TODO: Move this out of the editor somehow.
+//					// Accessing 'writer.layout.east.onresize does no
+//					// work.
+//					resizeCanvas();
+//				},
+//			},
 			north: {
 				size: 35,
 				minSize: 35,
-				maxSize: 60,
-				resizable: true,
+				maxSize: 60
 			},
 			south: {
 				size: 34,
-				resizable: true,
 				spacing_open: 0,
 				spacing_closed: 0
 			},
 			west: {
 				size: 'auto',
 				minSize: 325,
-				resizable: true,
 				onresize: function(region, pane, state, options) {
 					var tabsHeight = $('#westTabs > ul').outerHeight();
 					$('#westTabsContent').height(state.layoutHeight - tabsHeight);
@@ -763,8 +758,7 @@ function Writer(config) {
 			mode: 'exact',
 			elements: 'editor',
 			theme: 'advanced',
-			// Updated from default pull.
-			content_css: config.cwrcRootUrl+'css/editor.css',
+			content_css: w.cwrcRootUrl+'css/editor.css',
 			
 			width: '100%',
 			
@@ -840,7 +834,8 @@ function Writer(config) {
 						if (type) {
 							if (type === 1) {
 								var tag = node.getAttribute('_tag') || node.nodeName;
-								return true;
+//								return true;
+								return !!(ed.schema.getBlockElements()[tag]);
 							}
 						}
 

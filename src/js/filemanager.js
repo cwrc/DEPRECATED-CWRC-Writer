@@ -1029,9 +1029,7 @@ function FileManager(config) {
 		w.currentDocId = null;
 		
 		$.ajax({
-			url: Drupal.settings.basePath +
-			  Drupal.settings.islandora_critical_edition.module_base +
-			  '/CWRC-Writer/src/' + url,
+			url: url,
 			dataType: 'xml',
 			success: function(data, status, xhr) {
 				if (hashName) {

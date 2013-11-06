@@ -362,8 +362,6 @@ function StructureTree(config) {
 	}
 	
 	function _getSubmenu(tags, info) {
-		var islandoraCriticalEditionsImgUrl = Drupal.settings.basePath +
-	      Drupal.settings.islandora_critical_edition.module_base + "/CWRC-Writer/src/img/";
 		var tagInfo = info;
 		var inserts = {};
 		var inserted = false;
@@ -378,7 +376,7 @@ function StructureTree(config) {
 			}
 			inserts[key] = {
 				label: '<span title="'+doc+'">'+key+'</span>',
-				icon: islandoraCriticalEditionsImgUrl + 'tag_blue.png',
+				icon: w.cwrcRootUrl+'img/tag_blue.png',
 				action: function(obj) {
 					var actionType = obj.parents('li.submenu').children('a').attr('rel');
 					var key = obj.text();
@@ -401,7 +399,7 @@ function StructureTree(config) {
 		if (!inserted) {
 			inserts['no_tags'] = {
 				label: 'No tags available.',
-				icon: islandoraCriticalEditionsImgUrl + 'img/cross.png',
+				icon: w.cwrcRootUrl+'img/cross.png',
 				action: function(obj) {}
 			};
 		}
@@ -479,45 +477,41 @@ function StructureTree(config) {
 					var submenu = _getSubmenu(validKeys, info);
 	//				var parentSubmenu = _getSubmenu(parentKeys, info);
 					var siblingSubmenu = _getSubmenu(siblingKeys, info);
-					// Needed to fix image path loading.
-					var islandoraCriticalEditionsImgUrl = Drupal.settings.basePath +
-				      Drupal.settings.islandora_critical_edition.module_base + "/CWRC-Writer/src/img/";
-					//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 					var items = {
 						'before': {
 							label: 'Insert Tag Before',
-							icon: islandoraCriticalEditionsImgUrl + 'tag_blue_add.png',
+							icon: w.cwrcRootUrl+'img/tag_blue_add.png',
 							_class: 'submenu',
 							submenu: siblingSubmenu
 						},
 						'after': {
 							label: 'Insert Tag After',
-							icon: islandoraCriticalEditionsImgUrl + 'tag_blue_add.png',
+							icon: w.cwrcRootUrl+'img/tag_blue_add.png',
 							_class: 'submenu',
 							submenu: siblingSubmenu
 						},
 	//					'around': {
 	//						label: 'Insert Tag Around',
-	//						icon: 'img/tag_blue_add.png',
+	//						icon: w.cwrcRootUrl+'img/tag_blue_add.png',
 	//						_class: 'submenu',
 	//						submenu: parentSubmenu
 	//					},
 						'inside': {
 							label: 'Insert Tag Inside',
-							icon: islandoraCriticalEditionsImgUrl + 'tag_blue_add.png',
+							icon: w.cwrcRootUrl+'img/tag_blue_add.png',
 							_class: 'submenu',
 							separator_after: true,
 							submenu: submenu
 						},
 						'change': {
 							label: 'Change Tag',
-							icon: islandoraCriticalEditionsImgUrl + 'tag_blue_edit.png',
+							icon: w.cwrcRootUrl+'img/tag_blue_edit.png',
 							_class: 'submenu',
 							submenu: siblingSubmenu
 						},
 						'edit': {
 							label: 'Edit Tag',
-							icon: islandoraCriticalEditionsImgUrl + 'tag_blue_edit.png',
+							icon: w.cwrcRootUrl+'img/tag_blue_edit.png',
 							separator_after: true,
 							action: function(obj) {
 								var offset = $('#vakata-contextmenu').offset();
@@ -530,21 +524,21 @@ function StructureTree(config) {
 						},
 						'delete': {
 							label: 'Remove Tag Only',
-							icon: islandoraCriticalEditionsImgUrl + 'tag_blue_delete.png',
+							icon: w.cwrcRootUrl+'img/tag_blue_delete.png',
 							action: function(obj) {
 								w.tagger.removeStructureTag(obj.attr('name'));
 							}
 						},
 						'delete_content': {
 							label: 'Remove Content Only',
-							icon: islandoraCriticalEditionsImgUrl + 'tag_blue_delete.png',
+							icon: w.cwrcRootUrl+'img/tag_blue_delete.png',
 							action: function(obj) {
 								w.tagger.removeStructureTagContents(obj.attr('name'));
 							}
 						},
 						'delete_all': {
 							label: 'Remove Tag and All Content',
-							icon: islandoraCriticalEditionsImgUrl + 'tag_blue_delete.png',
+							icon: w.cwrcRootUrl+'img/tag_blue_delete.png',
 							action: function(obj) {
 								w.tagger.removeStructureTag(obj.attr('name'), true);
 							}
@@ -557,7 +551,7 @@ function StructureTree(config) {
 					return {
 						'editEntity': {
 							label: 'Edit Entity',
-							icon: islandoraCriticalEditionsImgUrl + 'tag_blue_edit.png',
+							icon: w.cwrcRootUrl+'img/tag_blue_edit.png',
 							action: function(obj) {
 								var offset = $('#vakata-contextmenu').offset();
 								var pos = {
@@ -569,7 +563,7 @@ function StructureTree(config) {
 						},
 						'copyEntity': {
 							label: 'Copy Entity',
-							icon: islandoraCriticalEditionsImgUrl + 'tag_blue_copy.png',
+							icon: w.cwrcRootUrl+'img/tag_blue_copy.png',
 							action: function(obj) {
 								w.copyEntity(obj.attr('name'));
 							}

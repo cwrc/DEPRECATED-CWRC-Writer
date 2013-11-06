@@ -71,6 +71,7 @@
 				
 				var baseUrl = window.location.protocol+'//'+window.location.host;
 				var config = {
+					containerId: 'cwrc_wrapper',
 					delegator: Delegator,
 					cwrcRootUrl: baseUrl+'/editor/test/',
 					schemas: {
@@ -137,39 +138,41 @@
 		</script>
 	</head>
 <body>
-<div id="cwrc_header" class="cwrc ui-layout-north">
-	<h1>CWRCWriter v0.6</h1>
-	<div id="headerButtons">
-	</div>
-</div>
-<div class="cwrc ui-layout-west">
-	<div id="westTabs" class="tabs">
-		<ul>
-			<li><a href="#entities">Entities</a></li>
-			<li><a href="#structure">Structure</a></li>
-			<li><a href="#relations">Relations</a></li>
-			<!-- li id="annotation_tab"><a href="#image-annotations">Image Annotations</a></li -->
-		</ul>
-		<div id="westTabsContent" class="ui-layout-content">
-			<!-- div id="image-annotations">
-				<div id="comment_annos_block"></div>
-			</div -->
+<div id="cwrc_wrapper">
+	<div id="cwrc_header" class="cwrc ui-layout-north">
+		<h1>CWRCWriter v0.6</h1>
+		<div id="headerButtons">
 		</div>
 	</div>
-</div>
-<div id="cwrc_main" class="ui-layout-center">
-	<div class="ui-layout-center">
-		<form method="post" action="">
-			<textarea id="editor" name="editor" class="tinymce"></textarea>
-		</form>
-	</div>
-	<div class="cwrc ui-layout-south">
-		<div id="southTabs" class="tabs">
+	<div class="cwrc ui-layout-west">
+		<div id="westTabs" class="tabs">
 			<ul>
-				<li><a href="#validation">Validation</a></li>
-				<li><a href="#selection">Selection</a></li>
+				<li><a href="#entities">Entities</a></li>
+				<li><a href="#structure">Structure</a></li>
+				<li><a href="#relations">Relations</a></li>
+				<!-- li id="annotation_tab"><a href="#image-annotations">Image Annotations</a></li -->
 			</ul>
-			<div id="southTabsContent" class="ui-layout-content"></div>
+			<div id="westTabsContent" class="ui-layout-content">
+				<!-- div id="image-annotations">
+					<div id="comment_annos_block"></div>
+				</div -->
+			</div>
+		</div>
+	</div>
+	<div id="cwrc_main" class="ui-layout-center">
+		<div class="ui-layout-center">
+			<form method="post" action="">
+				<textarea id="editor" name="editor" class="tinymce"></textarea>
+			</form>
+		</div>
+		<div class="cwrc ui-layout-south">
+			<div id="southTabs" class="tabs">
+				<ul>
+					<li><a href="#validation">Validation</a></li>
+					<li><a href="#selection">Selection</a></li>
+				</ul>
+				<div id="southTabsContent" class="ui-layout-content"></div>
+			</div>
 		</div>
 	</div>
 </div>
