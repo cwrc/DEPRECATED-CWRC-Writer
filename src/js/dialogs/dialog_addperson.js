@@ -29,7 +29,6 @@ var AddPersonDialog = function(config) {
 	    '<option>Engineer</option>'+
 	    '</select> -->'+
 	    '</div>'+
-	    '<button>Add Further Information</button>'+
 	    '<p>Note: for DEMO purposes only. Saves are NOT permanent.'+
 	'</div>');
 	
@@ -79,8 +78,6 @@ var AddPersonDialog = function(config) {
 	$('#addPersonDialog input[name="middle"]').watermark('Middle');
 	$('#addPersonDialog input[name="maiden"]').watermark('Maiden');
 	$('#addPersonDialog input[name="last"]').watermark('Last');
-	
-	$('#addPersonDialog > button').button();
 	
 	return {
 		show: function(config) {

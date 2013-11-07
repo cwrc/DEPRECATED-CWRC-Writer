@@ -58,7 +58,7 @@ var AttributeWidget = function(config) {
 						display = 'none';
 						attributeSelector += '<li data-name="'+att.name+'">'+att.name+'</li>';
 					}
-					currAttString += '<div data-name="form_'+att.name+'" style="display:'+display+';"><label>'+att.name+'</label>';
+					currAttString += '<div data-name="form_'+att.name+'" data-parent="'+att.parent+'" style="display:'+display+';"><label>'+att.name+'</label>';
 					if (att.documentation != '') {
 						currAttString += '<ins class="ui-icon ui-icon-help" title="'+att.documentation+'">&nbsp;</ins>';
 					}
@@ -128,6 +128,60 @@ var AttributeWidget = function(config) {
 			$('select, option', parent).click(function(event) {
 				isDirty = true;
 			});
+		},
+		reset: function() {
+			$('.attributeSelector li', parent).each(function(el, index) {
+				$(this).removeClass('selected');
+				var name = $(this).data('name').replace(/:/g, '\\:');
+				var div = $('[data-name="form_'+name+'"]', parent);
+				div.hide();
+			});
+		},
+		getData: function() {
+			// collect values then close dialog
+			var attributes = {};
+			$('.attsContainer > div > div:visible', parent).children('input[type!="hidden"], select').each(function(index, el) {
+				var val = $(this).val();
+				if (val != '') { // ignore blank values
+					var parent = $(this).parent().data().parent;
+					if (parent) {
+						if (attributes[parent] == null) {
+							attributes[parent] = {};
+						}
+						attributes[parent][$(this).attr('name')] = val;
+					} else {
+						attributes[$(this).attr('name')] = val;
+					}
+				}
+			});
+			
+			// validation
+			var invalid = [];
+			$('.attsContainer span.required', parent).parent().children('label').each(function(index, el) {
+				if (attributes[$(this).text()] == '') {
+					invalid.push($(this).text());
+				}
+			});
+			if (invalid.length > 0) {
+				for (var i = 0; i < invalid.length; i++) {
+					var name = invalid[i];
+					$('.attsContainer *[name="'+name+'"]', parent).css({borderColor: 'red'}).keyup(function(event) {
+						$(this).css({borderColor: '#ccc'});
+					});
+				}
+				return;
+			}
+			
+//			attributes._attsallowed = $('input[name="attsAllowed"]', parent).val() != 'false';
+			
+			return attributes;
+		},
+		destroy: function() {
+			try {
+				$('ins', parent).tooltip('destroy');
+			} catch (e) {
+				if (console) console.log('error destroying tooltip');
+			}
 		}
 	};
 };

@@ -32,6 +32,7 @@ var SearchWidget = function(config) {
 	accordionParent.accordion({
 		header: 'div > h3',
 		heightStyle: 'fill',
+		active: 1,
 		activate: function(event, ui) {
 			doQuery();
 		}
