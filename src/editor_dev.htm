@@ -107,27 +107,27 @@
 						writer.init();
 					},
 					error: function() {
-						config.cwrcRootUrl = baseUrl+'/cwrc/';
+						config.cwrcRootUrl = baseUrl+'/cwrc/src/';
 						config.schemas = {
 							tei: {
 								name: 'CWRC Basic TEI Schema',
-								url: baseUrl+'/cwrc/schema/CWRC-TEIBasic.rng',
-								cssUrl: baseUrl+'/cwrc/css/tei_converted.css'
+								url: baseUrl+'/cwrc/src/schema/CWRC-TEIBasic.rng',
+								cssUrl: baseUrl+'/cwrc/src/css/tei_converted.css'
 							},
 							events: {
 								name: 'Events Schema',
-								url: baseUrl+'/cwrc/schema/events.rng',
-								cssUrl: baseUrl+'/cwrc/css/orlando_converted.css'
+								url: baseUrl+'/cwrc/src/schema/events.rng',
+								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
 							},
 							biography: {
 								name: 'Biography Schema',
-								url: baseUrl+'/cwrc/schema/biography.rng',
-								cssUrl: baseUrl+'/cwrc/css/orlando_converted.css'
+								url: baseUrl+'/cwrc/src/schema/biography.rng',
+								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
 							},
 							writing: {
 								name: 'Writing Schema',
-								url: baseUrl+'/cwrc/schema/writing.rng',
-								cssUrl: baseUrl+'/cwrc/css/orlando_converted.css'
+								url: baseUrl+'/cwrc/src/schema/writing.rng',
+								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
 							}
 						};
 						writer = new Writer(config);
