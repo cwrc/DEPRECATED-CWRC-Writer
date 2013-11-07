@@ -1019,7 +1019,7 @@ function FileManager(config) {
 			w.dialogs.filemanager.showLoader();
 		} else if (start.match('sample_') || start.match('template_')) {
 			var name = start.substr(1);
-			_loadTemplate('xml/'+name+'.xml', name);
+			_loadTemplate(w.cwrcRootUrl+'xml/'+name+'.xml', name);
 		} else if (start != '') {
 			w.fm.loadDocument(start.substr(1));
 		}
