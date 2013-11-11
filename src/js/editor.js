@@ -885,6 +885,8 @@ function Writer(config) {
 					
 					// load a starting document
 					w.fm.loadInitialDocument(window.location.hash);
+					
+					$('#'+w.containerId).trigger('writerInitialized');
 				});
 				ed.onChange.add(_onChangeHandler);
 				ed.onNodeChange.add(_onNodeChangeHandler);

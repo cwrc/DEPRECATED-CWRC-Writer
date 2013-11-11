@@ -65,6 +65,16 @@
 <link type="text/css" rel="stylesheet" href="../src/js/lib/snippet/jquery.snippet.css" />
 
 <script type="text/javascript">
+QUnit.config.reorder = false;
+QUnit.config.autostart = false;
+
+test('Type in the editor', function() {
+	writer.editor.focus();
+//	window.robot.type('Hello World', false, function() {
+		equal(writer.editor.getContent(), 'Hello World', 'Content is not "Hello World"');
+//	});
+});
+
 $(function() {
 	cwrc_params = {};
 	
@@ -101,7 +111,7 @@ $(function() {
 	
 	writer = new Writer(config);
 	$('#'+config.containerId).on('writerInitialized', function() {
-		console.log('init!');
+		QUnit.start();
 	});
 	writer.init();
 });
