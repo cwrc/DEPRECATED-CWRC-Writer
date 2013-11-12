@@ -30,6 +30,14 @@ body {
 	border-radius: 5px;
 }
 
+/* TODO: need to get this out of here!! */
+#entityHighlight.txtimglnk {
+    background-color: #00CC00;
+}
+.showEntityBrackets .txtimglnk {
+    border-color: #00CC00;
+}
+
 #entityHighlight.person {
 	background-color: #FF0000;
 }

@@ -173,6 +173,8 @@ var PersonDialog = function(config) {
 				uniquePersNameAtts.push(att);
 			}
 		}
+		console.log("person atts");
+		console.log(personAtts);
 		personAtts.join(uniquePersNameAtts);
 		attributeWidget.buildWidget(personAtts);
 		
