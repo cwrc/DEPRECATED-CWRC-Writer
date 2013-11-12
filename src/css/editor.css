@@ -32,10 +32,10 @@ body {
 
 /* TODO: need to get this out of here!! */
 #entityHighlight.txtimglnk {
-    background-color: #00CC00;
+    background-color: #7F00FF;
 }
 .showEntityBrackets .txtimglnk {
-    border-color: #00CC00;
+    border-color: #7F00FF;
 }
 
 #entityHighlight.person {
