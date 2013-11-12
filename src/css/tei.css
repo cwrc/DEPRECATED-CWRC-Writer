@@ -644,7 +644,8 @@ langUsage {
     margin-bottom : 1em;
 }
 lb {
-    display : block;
+    display: inline;
+    font-style: italic;
 }
 lg {
     display : block;

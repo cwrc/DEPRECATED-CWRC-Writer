@@ -82,6 +82,7 @@ function Writer(config) {
 			
 			$('#entities > ul > li').each(function(index, el) {
 				$(this).removeClass('selected').css('background-color', '').find('div[class="info"]').hide();
+				w.delegator.editorCallback('highlightEntity_looseFocus', $(this));
 			});
 		}
 		
@@ -111,8 +112,8 @@ function Writer(config) {
 				$(w.editor.dom.doc.body).scrollTop(val);
 			}
 			w.tree.highlightNode($('#entityHighlight', w.editor.getBody())[0]);
-			
 			$('#entities > ul > li[name="'+id+'"]').addClass('selected').find('div[class="info"]').show();
+			w.delegator.editorCallback('highlightEntity_gainFocus', $('#entities > ul > li[name="'+id+'"]'));
 		}
 	};
 	
@@ -476,8 +477,8 @@ function Writer(config) {
 	};
 	
 	function _onNodeChangeHandler(ed, cm, e) {
-//		console.log('onNodeChangeHandler');
-//		console.time('nodechange');
+		  console.log('onNodeChangeHandler');
+		  console.time('nodechange');
 		if (e != null) {
 			if (e.nodeType != 1) {
 				ed.currentNode = w.u.getRootTag()[0];
@@ -520,7 +521,7 @@ function Writer(config) {
 					
 					// use setTimeout to add to the end of the onNodeChange stack
 					window.setTimeout(function(){
-//						console.log('fireNodeChange');
+						console.log('fireNodeChange');
 						w._fireNodeChange(e);
 					}, 0);
 				} else {
@@ -534,8 +535,8 @@ function Writer(config) {
 				delete w.entities[w.emptyTagId];
 				w.emptyTagId = null;
 			}
+				console.timeEnd('nodechange');
 		}
-//		console.timeEnd('nodechange');
 	};
 	
 	function _onCopyHandler(ed, event) {
@@ -572,7 +573,7 @@ function Writer(config) {
 	};
 	
 	function _doHighlightCheck(ed, evt) {
-//		console.log('_doHighlightCheck');
+		console.log('_doHighlightCheck');
 		var range = ed.selection.getRng(true);
 		
 		// check if inside boundary tag
@@ -1005,6 +1006,7 @@ function Writer(config) {
 						w.dialogs.show('triple');
 					}
 				});
+				
 				
 //				ed.addButton('toggleeditor', {
 //					title: 'Show Advanced Mode',

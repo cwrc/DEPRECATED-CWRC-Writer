@@ -304,7 +304,6 @@ function Tagger(config) {
 			},
 			info: {}
 		};
-		
 		if (content != '') {
 			tagger.insertBoundaryTags(id, type, range);
 		} else {
