@@ -171,8 +171,6 @@ var SettingsDialog = function(writer, config) {
 		settings.showStructBrackets = $('#showstructbrackets').prop('checked');
 		
 		w.schemaId = $('select[name="schema"]', $('#settingsDialog')).val();
-		console.log(w.schemaId);
-		console.log(w.schemas);
 		var styles = {
 			fontSize: settings.fontSize,
 			fontFamily: settings.fontFamily
