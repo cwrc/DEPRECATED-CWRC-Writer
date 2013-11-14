@@ -863,6 +863,7 @@ function FileManager(config) {
 					$('element', w.schemaXML).each(function(index, el) {
 						var tag = $(el).attr('name');
 						if (tag != null && elements.indexOf(tag) == -1) {
+							
 							elements.push(tag);
 							var tagName = w.u.getTagForEditor(tag);
 							schemaTags += '.showStructBrackets '+tagName+'[_tag='+tag+']:before { color: #aaa; font-weight: normal; font-style: normal; font-family: monospace; content: "<'+tag+'>"; }';

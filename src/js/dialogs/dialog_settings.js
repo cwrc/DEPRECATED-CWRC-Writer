@@ -19,6 +19,10 @@ var SettingsDialog = function(writer, config) {
 	$('#headerButtons').append(''+
 	'<div id="helpLink"><h2>Help</h2></div>'+
 	'<div id="settingsLink"><h2>Settings</h2></div>');
+	var schemasHTML;
+	for(var schema in w.schemas){
+		schemasHTML += '<option value="' + schema + '">"' + w.schemas[schema]['name'] + '"</option>';
+	}
 	
 	$(document.body).append(''+
 	'<div id="settingsDialog">'+
@@ -58,15 +62,17 @@ var SettingsDialog = function(writer, config) {
 	'</select>'+
 	'</div>'+
 	'<div style="margin-top: 10px;">'+
-	// TODO schemas should be populated from the config
-	'<label>Schema</label><select name="schema">'+
-	'<option value="cwrcbasic">CWRC Basic TEI Schema</option>'+
-	'<option value="events">Events Schema</option>'+
+	'<label>Schema</label>'+
+	'<select name="schema">'+
 	'</select>'+
 	'</div>'+
 	'</div>'+
 	'<div id="helpDialog">'+
 	'</div>');
+	
+	if(schemasHTML) {
+		$('select[name="schema"]', $('#settingsDialog')).append(schemasHTML);
+	}
 	
 	$('#settingsLink').click(function() {
 		$('select[name="fontsize"] > option[value="'+settings.fontSize+'"]', $('#settingsDialog')).attr('selected', true);
@@ -164,8 +170,9 @@ var SettingsDialog = function(writer, config) {
 		}
 		settings.showStructBrackets = $('#showstructbrackets').prop('checked');
 		
-//		w.schemaId = $('select[name="schema"]', $('#settingsDialog')).val();
-		
+		w.schemaId = $('select[name="schema"]', $('#settingsDialog')).val();
+		console.log(w.schemaId);
+		console.log(w.schemas);
 		var styles = {
 			fontSize: settings.fontSize,
 			fontFamily: settings.fontFamily

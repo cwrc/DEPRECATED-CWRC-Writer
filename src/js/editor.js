@@ -475,8 +475,6 @@ function Writer(config) {
 	};
 	
 	function _onNodeChangeHandler(ed, cm, e) {
-		  console.log('onNodeChangeHandler');
-		  console.time('nodechange');
 		if (e != null) {
 			if (e.nodeType != 1) {
 				ed.currentNode = w.u.getRootTag()[0];
@@ -519,7 +517,6 @@ function Writer(config) {
 					
 					// use setTimeout to add to the end of the onNodeChange stack
 					window.setTimeout(function(){
-						console.log('fireNodeChange');
 						w._fireNodeChange(e);
 					}, 0);
 				} else {
@@ -571,7 +568,6 @@ function Writer(config) {
 	};
 	
 	function _doHighlightCheck(ed, evt) {
-		console.log('_doHighlightCheck');
 		var range = ed.selection.getRng(true);
 		
 		// check if inside boundary tag
