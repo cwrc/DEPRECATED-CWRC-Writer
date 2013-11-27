@@ -1,5 +1,6 @@
 // add event listeners to all of our jquery ui dialogs
 // wrapping our dialogs in the cwrc css scope
+
 $.extend($.ui.dialog.prototype.options, {
 	create: function(event) {
 		$(event.target).on('dialogopen', function(event) {

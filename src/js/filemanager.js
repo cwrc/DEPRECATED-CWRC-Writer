@@ -8,7 +8,7 @@ function FileManager(config) {
 	$(document.body).append(''+
 		'<div id="entitiesConverter"></div>'+
 		'<div id="editSourceDialog">'+
-			'<textarea style="width: 100%; height: 98%;"></textarea>'+
+			'<textarea></textarea>'+
 		'</div>'
 		//'<iframe id="editDocLoader" style="display: none;"></iframe>'
 	);
