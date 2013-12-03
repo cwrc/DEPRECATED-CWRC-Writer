@@ -4,30 +4,19 @@ var AddPersonDialog = function(config) {
 	$(document.body).append(''+
 	'<div id="addPersonDialog" class="annotationDialog">'+
 		'<div id="personName">'+
-		'<label>Name:</label>'+
-		'<input type="text" name="first" value=""/>'+
-		'<input type="text" name="middle" value=""/>'+
-		'<input type="text" name="maiden" value=""/>'+
-		'<input type="text" name="last" value=""/>'+
+			'<label>Name:</label>'+
+			'<input type="text" name="first" value=""/>'+
+			'<input type="text" name="middle" value=""/>'+
+			'<input type="text" name="maiden" value=""/>'+
+			'<input type="text" name="last" value=""/>'+
 		'</div>'+
-		'<div>'+
-		'<label for="dob">Date of Birth (if known)</label><input type="text" id="dob" style="margin-bottom: 5px;"/><br />'+
-	    '<label for="dod">Date of Death (if known)</label><input type="text" id="dod" />'+
-	    '<p>Format: yyyy-mm-dd<br/>e.g. 2010-10-05</p>'+
+	    '<div>'+
+			'<label for="addPersonDialog_dob">Date of Birth (if known):</label><input type="text" id="addPersonDialog_dob" style="margin-bottom: 5px;"/><br />'+
+		    '<label for="addPersonDialog_dod">Date of Death (if known):</label><input type="text" id="addPersonDialog_dod" />'+
+		    '<p>Format: yyyy-mm-dd<br/>e.g. 2010-10-05</p>'+
 	    '</div>'+
 	    '<div>'+
-	    '<label>Occupation (if known)</label><select name="occupation">'+
-		'<label for="addPersonDialog_dob">Date of Birth (if known):</label><input type="text" id="addPersonDialog_dob" style="margin-bottom: 5px;"/><br />'+
-	    '<label for="addPersonDialog_dod">Date of Death (if known):</label><input type="text" id="addPersonDialog_dod" />'+
-	    '<p>Format: yyyy-mm-dd<br/>e.g. 2010-10-05</p>'+
-	    '</div>'+
-	    '<div>'+
-	    '<!-- <label>Occupation (if known):</label><select name="occupation">'+
-	    '<option></option>'+
-	    '<option>Author</option>'+
-	    '<option>Teacher</option>'+
-	    '<option>Engineer</option>'+
-	    '</select> -->'+
+	    	'<label>Occupation (if known):</label><input type="text" name="role" value=""/>'+
 	    '</div>'+
 	    '<p>Note: for DEMO purposes only. Saves are NOT permanent.'+
 	'</div>');
@@ -81,14 +70,14 @@ var AddPersonDialog = function(config) {
 	
 	return {
 		show: function(config) {
-			$('#addPersonDialog input').val('');
-			$('#addPersonDialog select').val('');
+			$('input', addPerson).val('');
+			$('select', addPerson).val('');
 			if (config.data) {
 				if (config.data.lastName) {
-					$('#addPersonDialog input[name="last"]').val(config.data.lastName);
+					$('input[name="last"]', addPerson).val(config.data.lastName);
 				}
 				if (config.data.firstName) {
-					$('#addPersonDialog input[name="first"]').val(config.data.firstName);
+					$('input[name="first"]', addPerson).val(config.data.firstName);
 				}
 				if (config.data.birthDate) {
 					$('#addPersonDialog_dob').val(config.data.birthDate);
@@ -96,7 +85,11 @@ var AddPersonDialog = function(config) {
 				if (config.data.deathDate) {
 					$('#addPersonDialog_dod').val(config.data.deathDate);
 				}
+				if (config.data.role) {
+					$('input[name="role"]', addPerson).val(config.data.role);
+				}
 			}
+			addPerson.dialog('open');
 		},
 		hide: function() {
 			addPerson.dialog('close');
