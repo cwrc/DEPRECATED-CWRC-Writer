@@ -733,13 +733,15 @@ function Writer(config) {
 			}
 		});
 		
-		window.addEventListener('beforeunload', function(e) {
-			if (tinymce.get('editor').isDirty()) {
-				var msg = 'You have unsaved changes.';
-				(e || window.event).returnValue = msg;
-				return msg;
-			}
-		});
+		if (window.location.hostname != 'localhost') {
+			window.addEventListener('beforeunload', function(e) {
+				if (tinymce.get('editor').isDirty()) {
+					var msg = 'You have unsaved changes.';
+					(e || window.event).returnValue = msg;
+					return msg;
+				}
+			});
+		}
 		
 		$(window).unload(function(e) {
 			// clear the editor first (large docs can cause the browser to freeze)
