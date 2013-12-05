@@ -86,8 +86,12 @@ function FileManager(config) {
 			for (var key in structEntry) {
 				if (key.indexOf('_') != 0) {
 					var attName = key;
-					if (attName == 'id') attName = w.idName;
-					openingTag += ' '+attName+'="'+structEntry[key]+'"';
+					if (attName == 'id') {
+						// leave out IDs
+//						attName = w.idName;
+					} else {
+						openingTag += ' '+attName+'="'+structEntry[key]+'"';
+					}
 				}
 			}
 			openingTag += '>';
@@ -180,7 +184,7 @@ function FileManager(config) {
 			for (var i = 0; i < offsets.length; i++) {
 				var o = offsets[i];
 				if (includeStructRDF || o.entity) {
-					rdfString += '\n<rdf:Description rdf:ID="'+o.id+'">';
+					rdfString += '\n<rdf:Description>';
 					var key;
 					for (key in o) {
 						rdfString += '\n\t<w:'+key+' type="offset">'+o[key]+'</w:'+key+'>';
