@@ -136,6 +136,19 @@ var AttributeWidget = function(config) {
 				var div = $('[data-name="form_'+name+'"]', parent);
 				div.hide();
 			});
+			$('.attsContainer input, .attsContainer select', parent).val('');
+		},
+		setData: function(data) {
+			for (var key in data) {
+				var entry = data[key];
+				// assumes that each entry is a parent for the actual attribute values
+				for (var subkey in entry) {
+					$('.attributeSelector li[data-name="'+subkey+'"]', parent).addClass('selected');
+					var div = $('[data-name="form_'+subkey+'"]', parent);
+					$('input, select', div).val(entry[subkey]);
+					div.show();
+				}
+			}
 		},
 		getData: function() {
 			// collect values then close dialog

@@ -304,7 +304,6 @@ function Tagger(config) {
 			},
 			info: {}
 		};
-		
 		if (content != '') {
 			tagger.insertBoundaryTags(id, type, range);
 		} else {
@@ -351,8 +350,18 @@ function Tagger(config) {
 		for (var key in attributes) {
 			if (key == 'id' || key.match(/^_/) != null) {
 				open_tag += ' '+key+'="'+attributes[key]+'"';
+			} 
+		}
+		// TODO find a better way of handling this
+		if (attributes._tag == 'title') {
+			if (attributes.level != null) {
+				open_tag += ' level="'+attributes.level+'"';
+			}
+			if (attributes.type != null) {
+				open_tag += ' type="'+attributes.type+'"';
 			}
 		}
+		
 		open_tag += '>';
 		var close_tag = '</'+tagName+'>';
 		
@@ -403,6 +412,14 @@ function Tagger(config) {
 		for (var key in attributes) {
 			if (key.match(/^_/) != null) {
 				tag.attr(key, attributes[key]);
+			}
+		}
+		if (attributes._tag == 'title') {
+			if (attributes.level != null) {
+				tag.attr('level', attributes.level);
+			}
+			if (attributes.type != null) {
+				tag.attr('type', attributes.type);
 			}
 		}
 		w.structs[id] = attributes;
