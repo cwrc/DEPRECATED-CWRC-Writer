@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-git.css" type="text/css" />
 <script src="http://code.jquery.com/qunit/qunit-git.js"></script>
 
+
 <script type="text/javascript" src="../src/js/lib/jquery/jquery-1.9.1.js"></script>
 <script type="text/javascript" src="../src/js/lib/jquery/jquery-ui-1.10.3.custom.js"></script>
 <script type="text/javascript" src="../src/js/lib/jquery/jquery.layout-latest.min.js"></script>
@@ -57,6 +58,42 @@
 <script type="text/javascript" src="../src/js/selection.js"></script>
 <script type="text/javascript" src="../src/js/delegator.js"></script>
 
+<!-- include all test pages, one for each js file listed above -->
+		<script type="text/javascript" src="delegator_tests.js"></script>
+		<script type="text/javascript" src="dialog_tests.js"></script>
+		<script type="text/javascript" src="editor_tests.js"></script>
+		<script type="text/javascript" src="entities_model_tests.js"></script>
+		<script type="text/javascript" src="entitieslist_tests.js"></script>
+		<script type="text/javascript" src="filemanager_tests.js"></script>
+		<script type="text/javascript" src="relations_tests.js"></script>
+		<script type="text/javascript" src="selection_tests.js"></script>
+		<script type="text/javascript" src="structuretree_tests.js"></script>
+		<script type="text/javascript" src="tagger_tests.js"></script>
+		<script type="text/javascript" src="utilities_tests.js"></script>
+		<script type="text/javascript" src="valiation_tests.js"></script>
+
+		<script type="text/javascript" src="dialogs/dialog_addevent_tests.js"></script>
+		<script type="text/javascript" src="dialogs/dialog_addorg_tests.js"></script>
+		<script type="text/javascript" src="dialogs/dialog_addperson_tests.js"></script>
+		<script type="text/javascript" src="dialogs/dialog_addplace_tests.js"></script>
+		<script type="text/javascript" src="dialogs/search_widget_tests.js"></script>
+		<script type="text/javascript" src="dialogs/attribute_widget_tests.js"></script>
+		<script type="text/javascript" src="dialogs/dialog_citation_tests.js"></script>
+		<script type="text/javascript" src="dialogs/dialog_correction_tests.js"></script>
+		<script type="text/javascript" src="dialogs/dialog_date_tests.js"></script>
+		<script type="text/javascript" src="dialogs/dialog_header_tests.js"></script>
+		<script type="text/javascript" src="dialogs/dialog_keyword_tests.js"></script>
+		<script type="text/javascript" src="dialogs/dialog_link_tests.js"></script>
+		<script type="text/javascript" src="dialogs/dialog_message_tests.js"></script>
+		<script type="text/javascript" src="dialogs/dialog_note_tests.js"></script>
+		<script type="text/javascript" src="dialogs/dialog_search_tests.js"></script>
+		<script type="text/javascript" src="dialogs/dialog_settings_tests.js"></script>
+		<script type="text/javascript" src="dialogs/dialog_title_tests.js"></script>
+		<script type="text/javascript" src="dialogs/dialog_triple_tests.js"></script>
+		<script type="text/javascript" src="dialogs/dialog_filemanager_tests.js"></script>
+		<script type="text/javascript" src="dialogs/dialog_person_tests.js"></script>
+
+
 <link type="text/css" rel="stylesheet" href="../src/css/style.css" />
 <link type="text/css" rel="stylesheet" href="../src/css/islandora_style.css" />
 		
@@ -68,12 +105,15 @@
 QUnit.config.reorder = false;
 QUnit.config.autostart = false;
 
-test('Type in the editor', function() {
-	writer.editor.focus();
+//test('Type in the editor', function() {
+//	writer.editor.focus();
+	
 //	window.robot.type('Hello World', false, function() {
-		equal(writer.editor.getContent(), 'Hello World', 'Content is not "Hello World"');
+//	ok(writer.editor.getContent().indexOf("Bullit") !== -1)
+	//	equal(writer.editor.getContent(), 'Hello World', 'Content is not "Hello World"');
 //	});
-});
+//});
+
 
 $(function() {
 	cwrc_params = {};
