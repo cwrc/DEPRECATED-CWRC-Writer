@@ -33,11 +33,12 @@ function DialogManager(config) {
 		triple: new TripleDialog(config),
 		header: new HeaderDialog(config),
 		filemanager: new FileManagerDialogs(config),
-		person: new PersonDialog(config)
+		person: new PersonDialog(config),
+		place: new PlaceDialog(config)
 	};
 	
 //	dialogs.person = dialogs.search;
-	dialogs.place = dialogs.search;
+//	dialogs.place = dialogs.search;
 	dialogs.event = dialogs.search;
 	dialogs.org = dialogs.search;
 	

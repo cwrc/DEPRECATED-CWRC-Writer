@@ -116,6 +116,19 @@ function Delegator(config) {
 					});
 				}
 			});
+		} else if (lookupService == 'geonames') {
+			$.ajax({
+					url: 'http://ws.geonames.org/searchJSON',
+					data: {
+						q: encodeURIComponent(query),
+						maxRows: 25,
+						username: 'cwrcwriter'
+					},
+					dataType: 'json',
+					success: function(data, status, xhr) {
+						callback.call(w, data.geonames);
+					}
+			});
 		}
 	};
 	

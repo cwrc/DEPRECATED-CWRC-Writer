@@ -145,33 +145,37 @@ var PersonDialog = function(config) {
 	
 	$(document.body).append(''+
 	'<div id="'+id+'Dialog" class="annotationDialog">'+
-		'<div id="'+id+'_searchParent" style="height: 250px;"></div>'+
-		'<div id="'+id+'_certainty">'+
-	    	'<p>This identification is:</p>'+
-			'<input type="radio" id="'+id+'_definite" name="person_id_certainty" value="definite" /><label for="'+id+'_definite">Definite</label>'+
-			'<input type="radio" id="'+id+'_reasonable" name="person_id_certainty" value="reasonable" /><label for="'+id+'_reasonable">Reasonably Certain</label>'+
-			'<input type="radio" id="'+id+'_speculative" name="person_id_certainty" value="speculative" /><label for="'+id+'_speculative">Speculative</label>'+
-	    '</div>'+
-	    '<div id="'+id+'_type">'+
-		    '<p>Person type:</p>'+
-			'<input type="radio" id="'+id+'_real" name="person_type_certainty" value="real" /><label for="'+id+'_real">Real</label>'+
-			'<input type="radio" id="'+id+'_fictional" name="person_type_certainty" value="fictional" /><label for="'+id+'_fictional">Fictional</label>'+
-			'<input type="radio" id="'+id+'_both" name="person_type_certainty" value="both" /><label for="'+id+'_both">Both</label>'+
-	    '</div>'+
-	    '<div id="'+id+'_role">'+
-		    '<h3>Add role (optional)</h3>'+
-	    	'<div>'+
-	    		'<select></select>'+
-			'</div>'+
-	    '</div>'+
-	    '<div>'+
-		    '<h3>TEI options</h3>'+
-		    '<div id="'+id+'_teiParent" style="position: relative; height: 200px;">'+
+		'<div class="leftPanel">'+
+			'<div id="'+id+'_searchParent" style="height: 450px;"></div>'+
+			'<div id="'+id+'_certainty">'+
+		    	'<p>This identification is:</p>'+
+				'<input type="radio" id="'+id+'_definite" name="'+id+'_id_certainty" value="definite" /><label for="'+id+'_definite">Definite</label>'+
+				'<input type="radio" id="'+id+'_reasonable" name="'+id+'_id_certainty" value="reasonable" /><label for="'+id+'_reasonable">Reasonably Certain</label>'+
+				'<input type="radio" id="'+id+'_speculative" name="'+id+'_id_certainty" value="speculative" /><label for="'+id+'_speculative">Speculative</label>'+
 		    '</div>'+
+		    '<div id="'+id+'_type">'+
+			    '<p>Person type:</p>'+
+				'<input type="radio" id="'+id+'_real" name="'+id+'_type_certainty" value="real" /><label for="'+id+'_real">Real</label>'+
+				'<input type="radio" id="'+id+'_fictional" name="'+id+'_type_certainty" value="fictional" /><label for="'+id+'_fictional">Fictional</label>'+
+				'<input type="radio" id="'+id+'_both" name="'+id+'_type_certainty" value="both" /><label for="'+id+'_both">Both</label>'+
+		    '</div>'+
+		    '<div id="'+id+'_role">'+
+			    '<h3>Add role (optional)</h3>'+
+		    	'<div>'+
+		    		'<select></select>'+
+				'</div>'+
+		    '</div>'+
+		    '<div>'+
+			    '<h3>TEI options</h3>'+
+			    '<div id="'+id+'_teiParent" style="position: relative; height: 200px;">'+
+			    '</div>'+
+			'</div>'+
 		'</div>'+
-		'<div id="'+id+'_tagAs">'+
-	    	'<p>Tag as:</p>'+
-	    	'<span></span>'+
+	    '<div class="rightPanel">'+
+			'<div id="'+id+'_tagAs">'+
+		    	'<p>Tag as:</p>'+
+		    	'<span></span>'+
+		    '</div>'+
 	    '</div>'+
 	'</div>'+
 	'');
@@ -199,6 +203,10 @@ var PersonDialog = function(config) {
 		closeOnEscape: false,
 		open: function(event, ui) {
 			dialog.parent().find('.ui-dialog-titlebar-close').hide();
+			var doc = $(document);
+			dialog.dialog('option', 'width', doc.width() - 100);
+			dialog.dialog('option', 'height', doc.height() - 100);
+			dialog.dialog('option', 'position', { my: "center", at: "center", of: window });
 		},
 		height: 650,
 		width: 400,
@@ -219,6 +227,10 @@ var PersonDialog = function(config) {
 	
 	var searchWidget = new SearchWidget({
 		writer: w, parentId: id+'_searchParent', type: 'person', title: 'Persons',
+		datasource: {
+			name: 'viaf',
+			tmpl: '<span>${name}</span>'
+		},
 		clickHandler: onSearchClick
 	});
 	

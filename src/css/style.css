@@ -497,6 +497,26 @@ html, body {
 	height: 300px;
 }
 
+.annotationDialog .leftPanel {
+	position: absolute;
+	top: 2%;
+	bottom: 2%;
+	left: 15px;
+	right: 50%;
+	border-right: 1px solid #aaa;
+	padding-right: 15px;
+	overflow: auto;
+}
+
+.annotationDialog .rightPanel {
+	position: absolute;
+	top: 15px;
+	bottom: 15px;
+	left: 50%;
+	right: 15px;
+	padding-left: 15px;
+}
+
 .annotationDialog p {
 	margin: 5px 0px;
 }
