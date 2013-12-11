@@ -99,11 +99,11 @@ var PlaceDialog = function(config) {
 			case SAVE_ADD_LABEL:
 				processData();
 				dialog.dialog('close');
-				w.dialogs.show('addperson', {writer: w, data: currentData});
+				w.dialogs.show('addplace', {writer: w, data: currentData});
 				break;
 			case ADD_LABEL:
 				dialog.dialog('close');
-				w.dialogs.show('addperson', {writer: w});
+				w.dialogs.show('addplace', {writer: w});
 				break;
 		}
 		
