@@ -69,6 +69,15 @@ function EventManager(config) {
 	w.event('documentValidated');
 	
 	/**
+	 * A segment of the document was copied.
+	 */
+	w.event('contentCopied');
+	/**
+	 * Content was pasted into the document.
+	 */
+	w.event('contentPasted');
+	
+	/**
 	 * An entity was added to the document.
 	 * @returns {String} The entity ID.
 	 */

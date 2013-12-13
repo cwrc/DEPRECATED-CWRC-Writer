@@ -59,6 +59,9 @@ var EntitiesList = function(config) {
 	w.event('contentChanged').subscribe(function() {
 		pm.update();
 	});
+	w.event('contentPasted').subscribe(function() {
+		pm.update();
+	});
 	w.event('entityAdded').subscribe(function(entityId) {
 		pm.update();
 	});

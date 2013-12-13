@@ -457,21 +457,15 @@ function Writer(config) {
 	function _onCopyHandler(ed, event) {
 		if (ed.copiedElement.element != null) {
 			$(ed.copiedElement.element).remove();
-		}
-		if (w.tree.currentlySelectedNode != null) {
-			var clone = $('#'+w.tree.currentlySelectedNode, ed.getBody()).clone();
-			ed.copiedElement.element = clone.wrapAll('<div />').parent()[0];
-			ed.copiedElement.selectionType = w.tree.selectionType;
-		} else {
 			ed.copiedElement.element = null;
 		}
+		
+		w.event('contentCopied').publish();
 	};
 	
 	function _onPasteHandler(ed, event) {
 		window.setTimeout(function() {
-			w.tagger.findDuplicateTags();
-			w.entitiesList.update();
-			w.tree.update();
+			w.event('contentPasted').publish();
 		}, 0);
 	};
 	

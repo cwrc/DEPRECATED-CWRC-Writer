@@ -554,6 +554,7 @@ function Tagger(config) {
 	
 	w.event('tagRemoved').subscribe(tagger.findNewAndDeletedTags);
 	w.event('tagContentsRemoved').subscribe(tagger.findNewAndDeletedTags);
+	w.event('contentPasted').subscribe(tagger.findDuplicateTags);
 	
 	return tagger;
 }

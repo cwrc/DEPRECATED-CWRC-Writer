@@ -27,6 +27,16 @@ function StructureTree(config) {
 	w.event('contentChanged').subscribe(function() {
 		tree.update();
 	});
+	w.event('contentCopied').subscribe(function() {
+		if (tree.currentlySelectedNode != null) {
+			var clone = $('#'+tree.currentlySelectedNode, w.editor.getBody()).clone();
+			w.editor.copiedElement.element = clone.wrapAll('<div />').parent()[0];
+			w.editor.copiedElement.selectionType = tree.selectionType;
+		}
+	});
+	w.event('contentPasted').subscribe(function() {
+		tree.update();
+	});
 	w.event('entityAdded').subscribe(function(entityId) {
 		tree.update();
 	});
