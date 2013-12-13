@@ -32,6 +32,13 @@ function Relations(config) {
 		}
 	});
 	
+	w.event('documentLoaded').subscribe(function() {
+		pm.update();
+	});
+	w.event('schemaLoaded').subscribe(function() {
+		pm.update();
+	});
+	
 	var pm = {
 		currentlySelectedNode: null
 	};

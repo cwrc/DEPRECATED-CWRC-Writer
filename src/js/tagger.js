@@ -245,13 +245,13 @@ function Tagger(config) {
 	tagger.removeTag = function(id) {
 		if (id != null) {
 			if (w.entities[id]) {
-				w.removeEntity(id);
+				tagger.removeEntity(id);
 			} else if (w.structs[id]) {
 				tagger.removeStructureTag(id);
 			}
 		} else {
 			if (w.editor.currentEntity != null) {
-				w.removeEntity(w.editor.currentEntity);
+				tagger.removeEntity(w.editor.currentEntity);
 			} else if (w.editor.currentStruct != null) {
 				tagger.removeStructureTag(w.editor.currentStruct);
 			}
@@ -269,6 +269,92 @@ function Tagger(config) {
 			this.onAdd.listeners.splice(0, 1); // remove this listener
 		}, w.editor.undoManager);
 	}
+	
+	tagger.addEntity = function(type) {
+		var result = w.u.isSelectionValid();
+		if (result == w.VALID) {
+			w.editor.currentBookmark = w.editor.selection.getBookmark(1);
+			w.dialogs.show(type, {type: type, title: w.em.getTitle(type), pos: w.editor.contextMenuPos});
+		} else {
+			w.showError(result);
+		}
+	};
+	
+	tagger.finalizeEntity = function(type, info) {
+		w.editor.selection.moveToBookmark(w.editor.currentBookmark);
+		if (info != null) {
+//			var startTag = w.editor.$('[name='+id+'][class~=start]');
+//			for (var key in info) {
+//				startTag.attr(key, w.u.escapeHTMLString(info[key]));
+//			}
+			var id = tagger.addEntityTag(type);
+			w.entities[id].info = info;
+			w.event('entityAdded').publish(id);
+		}
+		w.editor.currentBookmark = null;
+		w.editor.focus();
+	};
+	
+	tagger.editEntity = function(id, info) {
+		w.entities[id].info = info;
+		w.event('entityEdited').publish(id);
+	};
+	
+	tagger.copyEntity = function(id, pos) {
+		var tag = tagger.getCurrentTag(id);
+		if (tag.entity) {
+			w.editor.entityCopy = tag.entity;
+			w.event('entityCopied').publish(id);
+		} else {
+			w.dialogs.show('message', {
+				title: 'Error',
+				msg: 'Cannot copy structural tags.',
+				type: 'error'
+			});
+		}
+	};
+	
+	tagger.pasteEntity = function(pos) {
+		if (w.editor.entityCopy == null) {
+			w.dialogs.show('message', {
+				title: 'Error',
+				msg: 'No entity to copy!',
+				type: 'error'
+			});
+		} else {
+			var newEntity = jQuery.extend(true, {}, w.editor.entityCopy);
+			newEntity.props.id = tinymce.DOM.uniqueId('ent_');
+			
+			w.editor.selection.moveToBookmark(w.editor.currentBookmark);
+			var sel = w.editor.selection;
+			sel.collapse();
+			var rng = sel.getRng(true);
+			var text = w.editor.getDoc().createTextNode(newEntity.props.content);
+			rng.insertNode(text);
+			sel.select(text);
+			
+			rng = sel.getRng(true);
+			tagger.insertBoundaryTags(newEntity.props.id, newEntity.props.type, rng);
+			
+			w.entities[newEntity.props.id] = newEntity;
+			
+			w.event('entityPasted').publish(newEntity.props.id);
+		}
+	};
+	
+	tagger.removeEntity = function(id) {
+		id = id || w.editor.currentEntity;
+		
+		delete w.entities[id];
+		var node = $('span[name="'+id+'"]', w.editor.getBody());
+		var parent = node[0].parentNode;
+		node.remove();
+		parent.normalize();
+		
+		w.event('entityRemoved').publish(id);
+		
+		w.editor.currentEntity = null;
+	};
 	
 	tagger.addEntityTag = function(type) {
 		_doCustomTaggerUndo();
@@ -387,7 +473,7 @@ function Tagger(config) {
 			tempNode.replaceWith(content);
 		}
 		
-		w.tree.update();
+		w.event('tagAdded').publish(id);
 		
 		if (selection == '\uFEFF') {
 			w.selectStructureTag(id, true);
@@ -423,7 +509,8 @@ function Tagger(config) {
 			}
 		}
 		w.structs[id] = attributes;
-		w.tree.update();
+		
+		w.event('tagEdited').publish(id);
 	};
 	
 	tagger.removeStructureTag = function(id, removeContents) {
@@ -451,8 +538,8 @@ function Tagger(config) {
 			parent.normalize();
 		}
 		
-		w.tagger.findNewAndDeletedTags();
-		w.tree.update();
+		w.event('tagRemoved').publish(id);
+		
 		w.editor.currentStruct = null;
 	};
 	
@@ -461,9 +548,12 @@ function Tagger(config) {
 		
 		var node = $('#'+id, w.editor.getBody());
 		node.contents().remove();
-		w.tagger.findNewAndDeletedTags();
-		w.tree.update();
+		
+		w.event('tagContentsRemoved').publish(id);
 	};
+	
+	w.event('tagRemoved').subscribe(tagger.findNewAndDeletedTags);
+	w.event('tagContentsRemoved').subscribe(tagger.findNewAndDeletedTags);
 	
 	return tagger;
 }

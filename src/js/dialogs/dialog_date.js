@@ -166,9 +166,9 @@ var DateDialog = function(config) {
 			data = null;
 		}
 		if (mode == EDIT && data != null) {
-			w.editEntity(w.editor.currentEntity, data);
+			w.tagger.editEntity(w.editor.currentEntity, data);
 		} else {
-			w.finalizeEntity('date', data);
+			w.tagger.finalizeEntity('date', data);
 		}
 		date.dialog('close');
 	};

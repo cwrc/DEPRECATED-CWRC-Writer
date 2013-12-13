@@ -187,9 +187,9 @@ var SearchDialog = function(config) {
 			if (data) data.certainty = $('#certainty input:checked').val();
 		}
 		if (mode == EDIT && data != null) {
-			w.editEntity(currentId, data);
+			w.tagger.editEntity(currentId, data);
 		} else {
-			w.finalizeEntity(currentType, data);
+			w.tagger.finalizeEntity(currentType, data);
 		}
 		search.dialog('close');
 		currentType = null;

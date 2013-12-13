@@ -50,6 +50,37 @@ var EntitiesList = function(config) {
 		}
 	});
 	
+	w.event('documentLoaded').subscribe(function() {
+		pm.update();
+	});
+	w.event('schemaLoaded').subscribe(function() {
+		pm.update();
+	});
+	w.event('contentChanged').subscribe(function() {
+		pm.update();
+	});
+	w.event('entityAdded').subscribe(function(entityId) {
+		pm.update();
+	});
+	w.event('entityEdited').subscribe(function(entityId) {
+		pm.update();
+	});
+	w.event('entityRemoved').subscribe(function(entityId) {
+		pm.remove(entityId);
+	});
+	w.event('entityFocused').subscribe(function(entityId) {
+		$('#entities > ul > li[name="'+entityId+'"]').addClass('selected').find('div[class="info"]').show();
+	});
+	w.event('entityUnfocused').subscribe(function(entityId) {
+		$('#entities > ul > li').each(function(index, el) {
+			$(this).removeClass('selected').css('background-color', '').find('div[class="info"]').hide();
+			w.delegator.editorCallback('highlightEntity_looseFocus', $(this));
+		});
+	});
+	w.event('entityPasted').subscribe(function(entityId) {
+		pm.update();
+	});
+	
 	/**
 	 * @memberOf pm
 	 * @param sort
@@ -80,7 +111,7 @@ var EntitiesList = function(config) {
 						entry = deleted;
 						delete w.deletedEntities[id];
 					} else {
-						w.removeEntity(id);
+						w.tagger.removeEntity(id);
 						return;
 					}
 				} else {
@@ -109,7 +140,7 @@ var EntitiesList = function(config) {
 						entry = deleted;
 						delete w.deletedEntities[id];
 					} else {
-						w.removeEntity(id);
+						w.tagger.removeEntity(id);
 						return;
 					}
 				} else {
@@ -139,10 +170,10 @@ var EntitiesList = function(config) {
 					w.tagger.editTag($(tag).attr('name'));
 				},
 				'removeEntity': function(tag) {
-					w.removeEntity($(tag).attr('name'));
+					w.tagger.removeEntity($(tag).attr('name'));
 				},
 				'copyEntity': function(tag) {
-					w.copyEntity($(tag).attr('name'));
+					w.tagger.copyEntity($(tag).attr('name'));
 				}
 			},
 			shadow: false,

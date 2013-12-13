@@ -145,9 +145,9 @@ var KeywordDialog = function(config) {
 			}
 		}
 		if (mode == EDIT && data != null) {
-			w.editEntity(w.editor.currentEntity, data);
+			w.tagger.editEntity(w.editor.currentEntity, data);
 		} else {
-			w.finalizeEntity(currentType, data);
+			w.tagger.finalizeEntity(currentType, data);
 		}
 		keyword.dialog('close');
 		currentType = null;

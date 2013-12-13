@@ -146,11 +146,11 @@ function Delegator(config) {
 				content: docText
 			},
 			success: function(data, status, xhr) {
+				var valid = $('status', data).text() == 'pass';
 				if (callback) {
-					var valid = $('status', data).text() == 'pass';
 					callback.call(w, valid);
 				} else {
-					w.validation.showValidationResult(data, docText);
+					w.event('documentValidated').publish(valid, data, docText);
 				}
 			},
 			error: function() {
@@ -220,6 +220,8 @@ function Delegator(config) {
 				if (callback) {
 					callback.call(w, true);
 				}
+				
+				w.event('documentSaved').publish();
 			},
 			error: function() {
 				w.dialogs.show('message', {

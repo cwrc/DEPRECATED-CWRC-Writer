@@ -42,9 +42,9 @@ var CitationDialog = function(config) {
 			data[currentType] = citationInput.value;
 		}
 		if (mode == EDIT && data != null) {
-			w.editEntity(w.editor.currentEntity, data);
+			w.tagger.editEntity(w.editor.currentEntity, data);
 		} else {
-			w.finalizeEntity(currentType, data);
+			w.tagger.finalizeEntity(currentType, data);
 		}
 		citation.dialog('close');
 		currentType = null;

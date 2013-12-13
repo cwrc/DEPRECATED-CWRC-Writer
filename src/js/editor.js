@@ -61,6 +61,7 @@ function Writer(config) {
 	
 	w.emptyTagId = null; // stores the id of the entities tag to be added
 	
+	w.eventmanager = null; // event manager;
 	w.u = null; // utilities
 	w.tagger = null; // tagger
 	w.fm = null; // filemanager
@@ -70,21 +71,18 @@ function Writer(config) {
 	w.dialogs = null; // dialogs manager
 	w.settings = null; // settings dialog
 	w.delegator = null;	
-
+	
 	w.highlightEntity = function(id, bm, doScroll) {
-		w.editor.currentEntity = null;
-		
 		var prevHighlight = $('#entityHighlight', w.editor.getBody());
 		if (prevHighlight.length == 1) {
 			var parent = prevHighlight.parent()[0];
 			prevHighlight.contents().unwrap();
 			parent.normalize();
 			
-			$('#entities > ul > li').each(function(index, el) {
-				$(this).removeClass('selected').css('background-color', '').find('div[class="info"]').hide();
-				w.delegator.editorCallback('highlightEntity_looseFocus', $(this));
-			});
+			w.event('entityUnfocused').publish(w.editor.currentEntity);
 		}
+		
+		w.editor.currentEntity = null;
 		
 		if (id) {
 			w.editor.currentEntity = id;
@@ -111,8 +109,10 @@ function Writer(config) {
 				var val = $(start).offset().top;
 				$(w.editor.dom.doc.body).scrollTop(val);
 			}
-			w.tree.highlightNode($('#entityHighlight', w.editor.getBody())[0]);
-			$('#entities > ul > li[name="'+id+'"]').addClass('selected').find('div[class="info"]').show();
+			
+			w.event('entityFocused').publish(id);
+			
+			// TODO remove
 			w.delegator.editorCallback('highlightEntity_gainFocus', $('#entities > ul > li[name="'+id+'"]'));
 		}
 	};
@@ -133,95 +133,6 @@ function Writer(config) {
 				type: 'error'
 			});
 		}
-	};
-	
-	w.addEntity = function(type) {
-		var result = w.u.isSelectionValid();
-		if (result == w.VALID) {
-			w.editor.currentBookmark = w.editor.selection.getBookmark(1);
-			w.dialogs.show(type, {type: type, title: w.em.getTitle(type), pos: w.editor.contextMenuPos});
-		} else {
-			w.showError(result);
-		}
-	};
-	
-	w.finalizeEntity = function(type, info) {
-		w.editor.selection.moveToBookmark(w.editor.currentBookmark);
-		if (info != null) {
-//			var startTag = w.editor.$('[name='+id+'][class~=start]');
-//			for (var key in info) {
-//				startTag.attr(key, w.u.escapeHTMLString(info[key]));
-//			}
-			var id = w.tagger.addEntityTag(type);
-			w.entities[id].info = info;
-			w.entitiesList.update();
-			w.tree.update();
-			w.highlightEntity(id);
-		}
-		w.editor.currentBookmark = null;
-		w.editor.focus();
-	};
-	
-	w.editEntity = function(id, info) {
-		w.entities[id].info = info;
-		w.entitiesList.update();
-		w.highlightEntity(id);
-	};
-	
-	w.copyEntity = function(id, pos) {
-		var tag = w.tagger.getCurrentTag(id);
-		if (tag.entity) {
-			w.editor.entityCopy = tag.entity;
-		} else {
-			w.dialogs.show('message', {
-				title: 'Error',
-				msg: 'Cannot copy structural tags.',
-				type: 'error'
-			});
-		}
-	};
-	
-	w.pasteEntity = function(pos) {
-		if (w.editor.entityCopy == null) {
-			w.dialogs.show('message', {
-				title: 'Error',
-				msg: 'No entity to copy!',
-				type: 'error'
-			});
-		} else {
-			var newEntity = jQuery.extend(true, {}, w.editor.entityCopy);
-			newEntity.props.id = tinymce.DOM.uniqueId('ent_');
-			
-			w.editor.selection.moveToBookmark(w.editor.currentBookmark);
-			var sel = w.editor.selection;
-			sel.collapse();
-			var rng = sel.getRng(true);
-			var text = w.editor.getDoc().createTextNode(newEntity.props.content);
-			rng.insertNode(text);
-			sel.select(text);
-			
-			rng = sel.getRng(true);
-			w.tagger.insertBoundaryTags(newEntity.props.id, newEntity.props.type, rng);
-			
-			w.entities[newEntity.props.id] = newEntity;
-			w.entitiesList.update();
-			w.tree.update();
-			w.highlightEntity(newEntity.props.id);
-		}
-	};
-	
-	w.removeEntity = function(id) {
-		id = id || w.editor.currentEntity;
-		
-		delete w.entities[id];
-		var node = $('span[name="'+id+'"]', w.editor.getBody());
-		var parent = node[0].parentNode;
-		node.remove();
-		parent.normalize();
-		w.highlightEntity();
-		w.entitiesList.remove(id);
-		w.tree.update();
-		w.editor.currentEntity = null;
 	};
 	
 	/**
@@ -270,6 +181,8 @@ function Writer(config) {
 		w._fireNodeChange(nodeEl);
 		
 		w.editor.focus();
+		
+		w.event('tagSelected').publish(id, selectContentsOnly);
 	};
 	
 	w.removeHighlights = function() {
@@ -365,8 +278,7 @@ function Writer(config) {
 		// TODO move to keyup
 		// redo/undo listener
 		if ((evt.which == 89 || evt.which == 90) && evt.ctrlKey) {
-			w.entitiesList.update();
-			w.tree.update();
+			w.event('contentChanged').publish(ed);
 		}
 	};
 	
@@ -382,7 +294,7 @@ function Writer(config) {
 			var entity = w.entities[ed.currentEntity];
 			entity.props.content = content;
 			entity.props.title = w.u.getTitleFromContent(content);
-			w.entitiesList.update();
+			w.event('entityEdited').publish(ed.currentEntity);
 		}
 		
 		if (w.emptyTagId) {
@@ -400,7 +312,7 @@ function Writer(config) {
 				range.setEndBefore(tags[1]);
 				range.collapse(false);
 				
-				w.entitiesList.update();
+				w.event('entityEdited').publish(w.emptyTagId);
 			} else {
 				delete w.entities[w.emptyTagId];
 			}
@@ -444,7 +356,9 @@ function Writer(config) {
 		// need to do this here instead of in onchangehandler because that one doesn't update often enough
 		if (evt.which == 8 || evt.which == 46) {
 			var doUpdate = w.tagger.findNewAndDeletedTags();
-			if (doUpdate) w.tree.update();
+			if (doUpdate) {
+				w.event('contentChanged').publish(ed);
+			}
 		}
 		
 		// enter key
@@ -464,6 +378,7 @@ function Writer(config) {
 		// calling highlightNode will clear currentlySelectedNode
 		if (w.tree.currentlySelectedNode != null) {
 			var currNode = $('#'+w.tree.currentlySelectedNode, w.editor.getBody())[0];
+			console.debug(currNode);
 			w.tree.highlightNode(currNode);
 		}
 	};
@@ -471,8 +386,12 @@ function Writer(config) {
 	function _onChangeHandler(ed, event) {
 		if (ed.isDirty()) {
 			$('br', ed.getBody()).remove();
+			
 			var doUpdate = w.tagger.findNewAndDeletedTags();
-			if (doUpdate) w.tree.update();
+			if (doUpdate) {
+				// TODO seemingly never getting fired
+				w.event('contentChanged').publish(ed);
+			}
 		}
 	};
 	
@@ -525,14 +444,13 @@ function Writer(config) {
 					ed.currentNode = e;
 				}
 			}
-			if (ed.currentNode) {
-				w.tree.highlightNode(ed.currentNode);
-			}
+			
+			w.event('nodeChanged').publish(ed.currentNode);
+			
 			if (w.emptyTagId) {
 				delete w.entities[w.emptyTagId];
 				w.emptyTagId = null;
 			}
-				console.timeEnd('nodechange');
 		}
 	};
 	
@@ -691,6 +609,7 @@ function Writer(config) {
 			w.mode = w.XMLRDF;
 		}
 		
+		w.eventmanager = new EventManager({writer: w});
 		w.dialogs = new DialogManager({writer: w});
 		w.u = new Utilities({writer: w});
 		w.tagger = new Tagger({writer: w});
@@ -747,6 +666,22 @@ function Writer(config) {
 			// clear the editor first (large docs can cause the browser to freeze)
 			w.u.getRootTag().remove();
 		});
+		
+		
+		// event subscriptions for editor methods
+		w.event('entityAdded').subscribe(function(entityId) {
+			w.highlightEntity(entityId);
+		});
+		w.event('entityEdited').subscribe(function(entityId) {
+			w.highlightEntity(entityId);
+		});
+		w.event('entityRemoved').subscribe(function(entityId) {
+			w.highlightEntity();
+		});
+		w.event('entityPasted').subscribe(function(entityId) {
+			w.highlightEntity(entityId);
+		});
+		
 		
 		/**
 		 * Init tinymce
@@ -850,17 +785,16 @@ function Writer(config) {
 					
 					ed.addCommand('isSelectionValid', w.u.isSelectionValid);
 					ed.addCommand('showError', w.showError);
-					ed.addCommand('addEntity', w.addEntity);
+					ed.addCommand('addEntity', w.tagger.addEntity);
 					ed.addCommand('editTag', w.tagger.editTag);
 					ed.addCommand('changeTag', w.tagger.changeTag);
 					ed.addCommand('removeTag', w.tagger.removeTag);
-					ed.addCommand('copyEntity', w.copyEntity);
-					ed.addCommand('pasteEntity', w.pasteEntity);
-					ed.addCommand('removeEntity', w.removeEntity);
+					ed.addCommand('copyEntity', w.tagger.copyEntity);
+					ed.addCommand('pasteEntity', w.tagger.pasteEntity);
+					ed.addCommand('removeEntity', w.tagger.removeEntity);
 					ed.addCommand('addStructureTag', w.tagger.addStructureTag);
 					ed.addCommand('editStructureTag', w.tagger.editStructureTag);
 					ed.addCommand('changeStructureTag', w.changeStructureTag);
-					ed.addCommand('updateStructureTree', w.tree.update);
 					ed.addCommand('removeHighlights', w.removeHighlights);
 					ed.addCommand('exportDocument', w.fm.exportDocument);
 					ed.addCommand('loadDocument', w.fm.loadDocument);

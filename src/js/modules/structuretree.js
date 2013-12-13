@@ -15,6 +15,43 @@ function StructureTree(config) {
 	
 	var $tree; // tree reference
 	
+	w.event('documentLoaded').subscribe(function() {
+		tree.update();
+	});
+	w.event('schemaLoaded').subscribe(function() {
+		tree.update();
+	});
+	w.event('nodeChanged').subscribe(function(currentNode) {
+		tree.highlightNode(currentNode);
+	});
+	w.event('contentChanged').subscribe(function() {
+		tree.update();
+	});
+	w.event('entityAdded').subscribe(function(entityId) {
+		tree.update();
+	});
+	w.event('entityRemoved').subscribe(function(entityId) {
+		tree.update();
+	});
+	w.event('entityFocused').subscribe(function(entityId) {
+		tree.highlightNode($('#entityHighlight', w.editor.getBody())[0]);
+	});
+	w.event('entityPasted').subscribe(function(entityId) {
+		tree.update();
+	});
+	w.event('tagAdded').subscribe(function(tagId) {
+		tree.update();
+	});
+	w.event('tagEdited').subscribe(function(tagId) {
+		tree.update();
+	});
+	w.event('tagRemoved').subscribe(function(tagId) {
+		tree.update();
+	});
+	w.event('tagContentsRemoved').subscribe(function(tagId) {
+		tree.update();
+	});
+	
 	/**
 	 * @memberOf tree
 	 */
@@ -387,7 +424,7 @@ function StructureTree(config) {
 					};
 					if (actionType == 'change') {
 						var id = $('#tree a.ui-state-active').closest('li').attr('name');
-						w.editor.execCommand('changeTag', {key: key, pos: pos, id: id});
+						w.tagger.changeTag({key: key, pos: pos, id: id});
 					} else {
 						w.editor.currentBookmark = w.editor.selection.getBookmark(1);
 						w.editor.currentBookmark.tagId = tagInfo.id;
@@ -519,7 +556,7 @@ function StructureTree(config) {
 									x: offset.left,
 									y: offset.top
 								};
-								w.editor.execCommand('editTag', obj.attr('name'), pos);
+								w.tagger.editTag(obj.attr('name'), pos);
 							}
 						},
 						'delete': {
@@ -558,14 +595,14 @@ function StructureTree(config) {
 									x: offset.left,
 									y: offset.top
 								};
-								w.editor.execCommand('editTag', obj.attr('name'), pos);
+								w.tagger.editTag(obj.attr('name'), pos);
 							}
 						},
 						'copyEntity': {
 							label: 'Copy Entity',
 							icon: w.cwrcRootUrl+'img/tag_blue_copy.png',
 							action: function(obj) {
-								w.copyEntity(obj.attr('name'));
+								w.tagger.copyEntity(obj.attr('name'));
 							}
 						}
 					};
@@ -619,7 +656,7 @@ function StructureTree(config) {
 	
 //	$('#structureTreeActions button:eq(0)').button().click(function() {
 //		if (tree.currentlySelectedNode != null || tree.currentlySelectedEntity != null) {
-//			w.editor.execCommand('editTag', tree.currentlySelectedNode || tree.currentlySelectedEntity);
+//			w.tagger.editTag(tree.currentlySelectedNode || tree.currentlySelectedEntity);
 //		} else {
 //			w.dialogs.show('message', {
 //				title: 'No Tag Selected',
@@ -633,7 +670,7 @@ function StructureTree(config) {
 //			w.tagger.removeStructureTag(tree.currentlySelectedNode, false);
 //			_onNodeDeselect();
 //		} else if (tree.currentlySelectedEntity != null) {
-//			w.removeEntity(tree.currentlySelectedEntity);
+//			w.tagger.removeEntity(tree.currentlySelectedEntity);
 //			_onNodeDeselect();
 //		} else {
 //			w.dialogs.show('message', {
@@ -648,7 +685,7 @@ function StructureTree(config) {
 //			w.tagger.removeStructureTag(tree.currentlySelectedNode, true);
 //			_onNodeDeselect();
 //		} else if (tree.currentlySelectedEntity != null) {
-//			w.removeEntity(tree.currentlySelectedEntity);
+//			w.tagger.removeEntity(tree.currentlySelectedEntity);
 //			_onNodeDeselect();
 //		} else {
 //			w.dialogs.show('message', {

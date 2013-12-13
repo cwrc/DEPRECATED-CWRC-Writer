@@ -1,0 +1,140 @@
+// a wrapper for the pub/sub pattern described here: http://api.jquery.com/jQuery.Callbacks/
+
+function EventManager(config) {
+	var w = config.writer;
+	
+	var events = {};
+	
+	// add event method directly to the writer
+	w.event = function(id) {
+		var callbacks, method, event = id && events[id];
+		
+		if (!event) {
+			callbacks = $.Callbacks();
+			event = {
+				publish: function() {
+					if (window.console) {
+						console.debug('CWRC-Writer "'+this.event+'":', arguments);
+					}
+					callbacks.fire.apply(this, arguments);
+				},
+				subscribe: callbacks.add,
+				unsubscribe: callbacks.remove,
+				event: id
+			};
+		}
+		
+		if (id) {
+			events[id] = event;
+		}
+		
+		return event;
+	};
+	
+	/**
+	 * CWRC-Writer events
+	 */
+	
+	/**
+	 * The current node was changed.
+	 * @returns {Element} The current node.
+	 */
+	w.event('nodeChanged');
+	/**
+	 * Content was changed in the editor.
+	 * @returns {Object} The editor.
+	 */
+	w.event('contentChanged');
+	
+	/**
+	 * A document was loaded into the editor.
+	 */
+	w.event('documentLoaded');
+	/**
+	 * A document was saved.
+	 */
+	w.event('documentSaved');
+	
+	/**
+	 * A schema was loaded into the editor.
+	 */
+	w.event('schemaLoaded');
+	
+	/**
+	 * A document was validated.
+	 * @returns {Boolean} True if the doc is valid.
+	 * @returns {Document} Validation results.
+	 * @returns {String} The string sent to the validator.
+	 */
+	w.event('documentValidated');
+	
+	/**
+	 * An entity was added to the document.
+	 * @returns {String} The entity ID.
+	 */
+	w.event('entityAdded');
+	/**
+	 * An entity was edited in the document.
+	 * @returns {String} The entity ID.
+	 */
+	w.event('entityEdited');
+	/**
+	 * An entity was removed from the document.
+	 * @returns {String} The entity ID.
+	 */
+	w.event('entityRemoved');
+	/**
+	 * An entity was focused on in the document.
+	 * @returns {String} The entity ID.
+	 */
+	w.event('entityFocused');
+	/**
+	 * An entity was unfocused on in the document.
+	 * @returns {String} The entity ID.
+	 */
+	w.event('entityUnfocused');
+	/**
+	 * An entity was copied to the internal clipboard.
+	 * @returns {String} The entity ID.
+	 */
+	w.event('entityCopied');
+	/**
+	 * An entity was pasted to the document.
+	 * @returns {String} The entity ID.
+	 */
+	w.event('entityPasted');
+	
+	
+	/**
+	 * A structure tag was added.
+	 * @returns {String} The tag ID.
+	 */
+	w.event('tagAdded');
+	/**
+	 * A structure tag was edited.
+	 * @returns {String} The tag ID.
+	 */
+	w.event('tagEdited');
+	/**
+	 * A structure tag was removed.
+	 * @returns {String} The tag ID.
+	 */
+	w.event('tagRemoved');
+	/**
+	 * A structure tag's contents were removed.
+	 * @returns {String} The tag ID.
+	 */
+	w.event('tagContentsRemoved');
+	/**
+	 * A structure tag was selected.
+	 * @returns {String} The tag ID.
+	 * @returns {Boolean} True if only tag contents were selected.
+	 */
+	w.event('tagSelected');
+	
+	return {
+		getEvents: function() {
+			return events;
+		}
+	};
+};

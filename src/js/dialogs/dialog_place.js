@@ -108,9 +108,9 @@ var PlaceDialog = function(config) {
 		}
 		
 		if (mode == EDIT && currentData != null) {
-			w.editEntity(currentId, currentData);
+			w.tagger.editEntity(currentId, currentData);
 		} else {
-			w.finalizeEntity('person', currentData);
+			w.tagger.finalizeEntity('person', currentData);
 		}
 		currentId = null;
 		currentData = null;

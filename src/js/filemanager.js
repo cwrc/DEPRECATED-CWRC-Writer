@@ -772,10 +772,7 @@ function FileManager(config) {
 				}
 			}
 			
-			w.entitiesList.update();
-			w.tree.update(true);
-			w.relations.update();
-			w.validation.clearResult();
+			w.event('documentLoaded').publish();
 			
 			// try putting the cursor in the body
 			window.setTimeout(function() {
@@ -890,10 +887,6 @@ function FileManager(config) {
 						w.editor.setContent('<'+tag+' _tag="'+w.root+'">'+text+'</'+tag+'>');
 					}
 					
-					w.entitiesList.update();
-					w.tree.update(true);
-					w.relations.update();
-					
 					w.schemaJSON = w.u.xmlToJSON($('grammar', w.schemaXML)[0]);
 					
 					// update the schema for schematags.js
@@ -901,6 +894,8 @@ function FileManager(config) {
 					if (stb.menu) {
 						stb.parentControl.buildMenu(stb.menu, null, {disabled: false, mode: 'add'});
 					}
+					
+					w.event('schemaLoaded').publish();
 					
 					if (callback) callback();
 				}
