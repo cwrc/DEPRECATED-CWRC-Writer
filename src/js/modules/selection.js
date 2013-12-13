@@ -5,9 +5,13 @@ function Selection(config) {
 	$(config.parentId).append('<div id="selection" style="margin-left: 10px;"></div>');
 	$(document.body).append('<div id="selectionContents" style="display: none;"></div>');
 	
+	w.event('nodeChanged').subscribe(function() {
+		updateSelection(w.editor);
+	});
+	
 	var selection = {};
 	
-	function updateSelection(ed, evt) {
+	function updateSelection(ed) {
 		var range = ed.selection.getRng(true);
 		var contents = range.cloneContents();
 		$('#selectionContents').html(contents);
@@ -25,10 +29,6 @@ function Selection(config) {
 			$('#selection').html('<pre>The selection is too large to display.</pre>');
 		}
 	}
-	
-	selection.init = function() {
-		w.editor.onNodeChange.add(updateSelection);
-	};
 	
 	return selection;
 }

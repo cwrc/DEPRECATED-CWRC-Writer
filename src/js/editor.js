@@ -781,8 +781,6 @@ function Writer(config) {
 					if (settings.showEntityBrackets) body.addClass('showEntityBrackets');
 					if (settings.showStructBrackets) body.addClass('showStructBrackets');
 					
-					w.selection.init();
-					
 					ed.addCommand('isSelectionValid', w.u.isSelectionValid);
 					ed.addCommand('showError', w.showError);
 					ed.addCommand('addEntity', w.tagger.addEntity);
