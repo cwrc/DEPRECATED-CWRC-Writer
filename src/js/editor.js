@@ -40,9 +40,6 @@ function Writer(config) {
 	
 	w.currentDocId = null;
 	
-	// editor mode
-	w.mode = config.mode;
-	
 	// root block element, should come from schema
 	w.root = '';
 	// header element: hidden in editor view, can only edit from structure tree
@@ -53,6 +50,14 @@ function Writer(config) {
 	// possible editor modes
 	w.XMLRDF = 0; // allows for overlapping elements, i.e. entities
 	w.XML = 1; // standard xml, no overlapping elements
+	
+	// editor mode
+	w.mode = config.mode;
+	if (w.mode != null && w.mode == 'xml') {
+		w.mode = w.XML;
+	} else {
+		w.mode = w.XMLRDF;
+	}
 	
 	// possible results when trying to add entity
 	w.NO_SELECTION = 0;
@@ -65,9 +70,6 @@ function Writer(config) {
 	w.u = null; // utilities
 	w.tagger = null; // tagger
 	w.fm = null; // filemanager
-	w.entitiesList = null; // entities list
-	w.tree = null; // structure tree
-	w.relations = null; // relations list
 	w.dialogs = null; // dialogs manager
 	w.settings = null; // settings dialog
 	w.delegator = null;	
@@ -526,94 +528,13 @@ function Writer(config) {
 	 * Begin init functions
 	 */
 	w.init = function() {
-		w.layout = $('#'+w.containerId).layout({
-			defaults: {
-				maskIframesOnResize: true,
-				resizable: true,
-				slidable: false,
-				maskIframesOnResize: true,
-			},
-//			east: {
-//				onresize: function() {
-//					// TODO: Move this out of the editor somehow.
-//					// Accessing 'writer.layout.east.onresize does no
-//					// work.
-//					resizeCanvas();
-//				},
-//			},
-			north: {
-				size: 35,
-				minSize: 35,
-				maxSize: 60
-			},
-			south: {
-				size: 34,
-				spacing_open: 0,
-				spacing_closed: 0
-			},
-			west: {
-				size: 'auto',
-				minSize: 325,
-				onresize: function(region, pane, state, options) {
-					var tabsHeight = $('#westTabs > ul').outerHeight();
-					$('#westTabsContent').height(state.layoutHeight - tabsHeight);
-//					$.layout.callbacks.resizeTabLayout(region, pane);
-				}
-			}
-		});
-		w.layout.panes.center.layout({
-			defaults: {
-				maskIframesOnResize: true,
-				resizable: true,
-				slidable: false
-			},
-			center: {
-				onresize: function(region, pane, state, options) {
-					var uiHeight = $('#'+w.editor.id+'_tbl tr.mceFirst').outerHeight() + 2;
-					$('#'+w.editor.id+'_ifr').height(state.layoutHeight - uiHeight);
-				}
-			},
-			south: {
-				size: 250,
-				resizable: true,
-				initClosed: true,
-				activate: function(event, ui) {
-					$.layout.callbacks.resizeTabLayout(event, ui);
-				},
-//				onopen_start: function(region, pane, state, options) {
-//					var southTabs = $('#southTabs');
-//					if (!southTabs.hasClass('ui-tabs')) {
-//						
-//					}
-//				},
-				onresize: function(region, pane, state, options) {
-					var tabsHeight = $('#southTabs > ul').outerHeight();
-					$('#southTabsContent').height(state.layoutHeight - tabsHeight);
-				}
-			}
-		});
-		
-		$('#cwrc_header h1').click(function() {
-			window.location = 'http://www.cwrc.ca';
-		});
-		
-		if (w.mode != null && w.mode == 'xml') {
-			w.mode = w.XML;
-		} else {
-			w.mode = w.XMLRDF;
-		}
-		
+
 		w.eventmanager = new EventManager({writer: w});
 		w.dialogs = new DialogManager({writer: w});
 		w.u = new Utilities({writer: w});
 		w.tagger = new Tagger({writer: w});
 		w.fm = new FileManager({writer: w});
-		w.tree = new StructureTree({writer: w, parentId: '#westTabsContent'});
-		w.entitiesList = new EntitiesList({writer: w, parentId: '#westTabsContent'});
 		w.em = new EntitiesModel();
-		w.relations = new Relations({writer: w, parentId: '#westTabsContent'});
-		w.validation = new Validation({writer: w, parentId: '#southTabsContent'});
-		w.selection = new Selection({writer: w, parentId: '#southTabsContent'});
 		w.settings = new SettingsDialog(w, {
 			showEntityBrackets: true,
 			showStructBrackets: false
@@ -627,24 +548,6 @@ function Writer(config) {
 		$(document.body).mousedown(function(e) {
 			_hideContextMenus(e);
 		});
-		$('#westTabs').tabs({
-			active: 1,
-			activate: function(event, ui) {
-				$.layout.callbacks.resizeTabLayout(event, ui);
-			},
-			create: function(event, ui) {
-				$('#westTabs').parent().find('.ui-corner-all').removeClass('ui-corner-all');
-			}
-		});
-		$('#southTabs').tabs({
-			active: 1,
-			activate: function(event, ui) {
-				$.layout.callbacks.resizeTabLayout(event, ui);
-			},
-			create: function(event, ui) {
-				$('#southTabs').parent().find('.ui-corner-all').removeClass('ui-corner-all');
-			}
-		});
 		
 		if (window.location.hostname != 'localhost') {
 			window.addEventListener('beforeunload', function(e) {
@@ -655,13 +558,13 @@ function Writer(config) {
 				}
 			});
 		}
-		
+
 		$(window).unload(function(e) {
 			// clear the editor first (large docs can cause the browser to freeze)
 			w.u.getRootTag().remove();
 		});
-		
-		
+
+
 		// event subscriptions for editor methods
 		w.event('entityAdded').subscribe(function(entityId) {
 			w.highlightEntity(entityId);
@@ -675,13 +578,12 @@ function Writer(config) {
 		w.event('entityPasted').subscribe(function(entityId) {
 			w.highlightEntity(entityId);
 		});
-		
-		
+
 		/**
 		 * Init tinymce
 		 */
-//		$('#editor').tinymce({
-//			script_url : 'js/tinymce/jscripts/tiny_mce/tiny_mce.js',
+//				$('#editor').tinymce({
+//					script_url : 'js/tinymce/jscripts/tiny_mce/tiny_mce.js',
 		tinyMCE.init({
 			mode: 'exact',
 			elements: 'editor',
@@ -762,7 +664,7 @@ function Writer(config) {
 						if (type) {
 							if (type === 1) {
 								var tag = node.getAttribute('_tag') || node.nodeName;
-//								return true;
+//										return true;
 								return !!(ed.schema.getBlockElements()[tag]);
 							}
 						}
@@ -804,14 +706,10 @@ function Writer(config) {
 					ed.onKeyDown.addToTop(_onKeyDownDeleteHandler);
 					ed.onKeyUp.add(_onKeyUpHandler);
 					
-					setTimeout(function() {
-						w.layout.resizeAll(); // now that the editor is loaded, set proper sizing
-					}, 250);
+					w.event('writerInitialized').publish(w);
 					
 					// load a starting document
 					w.fm.loadInitialDocument(window.location.hash);
-					
-					$('#'+w.containerId).trigger('writerInitialized');
 				});
 				ed.onChange.add(_onChangeHandler);
 				ed.onNodeChange.add(_onNodeChangeHandler);
@@ -934,13 +832,15 @@ function Writer(config) {
 				});
 				
 				
-//				ed.addButton('toggleeditor', {
-//					title: 'Show Advanced Mode',
-//					image: 'img/html.png',
-//					'class': 'entityButton',
-//					cmd: 'toggle_editor'
-//				});
+//						ed.addButton('toggleeditor', {
+//							title: 'Show Advanced Mode',
+//							image: 'img/html.png',
+//							'class': 'entityButton',
+//							cmd: 'toggle_editor'
+//						});
 			}
 		});
 	};
+	
+	w.init();
 }

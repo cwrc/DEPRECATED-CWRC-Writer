@@ -32,8 +32,14 @@ function EventManager(config) {
 	};
 	
 	/**
-	 * CWRC-Writer events
+	 * CWRCWriter events
 	 */
+	
+	/**
+	 * The writer has been initialized.
+	 * @returns {Object} The CWRCWriter.
+	 */
+	w.event('writerInitialized');
 	
 	/**
 	 * The current node was changed.

@@ -46,6 +46,7 @@
 		<script type="text/javascript" src="js/dialogs/dialog_place.js"></script>
 		<script type="text/javascript" src="js/editor.js"></script>
 		<script type="text/javascript" src="js/eventmanager.js"></script>
+		<script type="text/javascript" src="js/layout.js"></script>
 		<script type="text/javascript" src="js/tagger.js"></script>
 		<script type="text/javascript" src="js/dialog.js"></script>
 		<script type="text/javascript" src="js/utilities.js"></script>
@@ -168,7 +169,9 @@
 							}
 						};
 						writer = new Writer(config);
-						writer.init();
+						writer.event('writerInitialized').subscribe(function(w) {
+							setupLayoutAndModules(w);
+						});
 					}
 				});
 			});
