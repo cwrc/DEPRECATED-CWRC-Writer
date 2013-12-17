@@ -84,6 +84,17 @@ function EventManager(config) {
 	w.event('contentPasted');
 	
 	/**
+	 * The user triggered a keydown event in the editor.
+	 * @returns {Object} Event object.
+	 */
+	w.event('writerKeydown');
+	/**
+	 * The user triggered a keyup event in the editor.
+	 * @returns {Object} Event object.
+	 */
+	w.event('writerKeyup');
+	
+	/**
 	 * An entity was added to the document.
 	 * @returns {String} The entity ID.
 	 */

@@ -37,6 +37,52 @@ function StructureTree(config) {
 	w.event('contentPasted').subscribe(function() {
 		tree.update();
 	});
+	w.event('writerKeydown').subscribe(function(evt) {
+		if (tree.currentlySelectedNode != null) {
+			// browsers have trouble deleting divs, so use the tree and jquery as a workaround
+			if (evt.which == 8 || evt.which == 46) {
+					// cancel keyboard delete
+					tinymce.dom.Event.cancel(evt);
+					if (tree.selectionType == tree.NODE_SELECTED) {
+						w.tagger.removeStructureTag(tree.currentlySelectedNode, true);
+					} else {
+						var id = tree.currentlySelectedNode;
+						w.tagger.removeStructureTagContents(tree.currentlySelectedNode);
+						w.selectStructureTag(id, true);
+					}
+			} else if (evt.ctrlKey == false && evt.metaKey == false && evt.which >= 48 && evt.which <= 90) {
+				// handle alphanumeric characters when whole tree node is selected
+				// remove the selected node and set the focus to the closest node
+				if (tree.selectionType == tree.NODE_SELECTED) {
+					var currNode = $('#'+tree.currentlySelectedNode, w.editor.getBody());
+					var closestNode = currNode.prev();
+					if (closestNode.length == 0) {
+						closestNode = currNode.next();
+					}
+					var rng = w.editor.selection.getRng(true);
+					if (closestNode.length == 0) {
+						closestNode = currNode.parent();
+						w.tagger.removeStructureTag(tree.currentlySelectedNode, true);
+						rng.selectNodeContents(closestNode[0]);
+					} else {
+						w.tagger.removeStructureTag(tree.currentlySelectedNode, true);
+						rng.selectNode(closestNode[0]);
+					}
+					rng.collapse(true);
+					w.editor.selection.setRng(rng);
+				}
+			}
+		}
+	});
+	w.event('writerKeyup').subscribe(function(evt) {
+		// if the user's typing we don't want the currentlySelectedNode to be set
+		// calling highlightNode will clear currentlySelectedNode
+		if (tree.currentlySelectedNode != null) {
+			var currNode = $('#'+tree.currentlySelectedNode, w.editor.getBody())[0];
+			tree.highlightNode(currNode);
+		}
+	});
+	
 	w.event('entityAdded').subscribe(function(entityId) {
 		tree.update();
 	});
