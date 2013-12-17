@@ -591,9 +591,9 @@ function Writer(config) {
 			valid_elements: '*[*]', // allow everything
 			
 			plugins: '-treepaste,-entitycontextmenu,-schematags,-currenttag,-viewsource',
-			theme_advanced_buttons1: 'schematags,|,addperson,addplace,adddate,addevent,addorg,addcitation,addnote,addtitle,addcorrection,addkeyword,addlink,|,editTag,removeTag,|,addtriple,|,viewsource,editsource,|,validate,savebutton,loadbutton',
-			theme_advanced_buttons2: 'currenttag',
-			theme_advanced_buttons3: '',
+			theme_advanced_buttons1: config.buttons1 || 'schematags,|,addperson,addplace,adddate,addevent,addorg,addcitation,addnote,addtitle,addcorrection,addkeyword,addlink,|,editTag,removeTag,|,addtriple,|,viewsource,editsource,|,validate,savebutton,loadbutton',
+			theme_advanced_buttons2: config.buttons2 || 'currenttag',
+			theme_advanced_buttons3: config.buttons3 || '',
 			theme_advanced_toolbar_location: 'top',
 			theme_advanced_toolbar_align: 'left',
 			theme_advanced_path: false,
