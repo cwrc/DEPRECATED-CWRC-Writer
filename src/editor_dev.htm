@@ -142,7 +142,9 @@
 					success: function(data, status, xhr) {
 						config.project = data;
 						writer = new Writer(config);
-						writer.init();
+						writer.event('writerInitialized').subscribe(function(w) {
+							setupLayoutAndModules(w);
+						});
 					},
 					error: function() {
 						config.cwrcRootUrl = baseUrl+'/cwrc/src/';
