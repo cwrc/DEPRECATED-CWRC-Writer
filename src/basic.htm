@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+		<title>CWRCWriter</title>
+		<script type="text/javascript" src="js/lib/jquery/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="js/lib/jquery/jquery-ui-1.10.3.custom.js"></script>
+		<script type="text/javascript" src="js/lib/jquery/jquery.contextmenu.js"></script>
+		<script type="text/javascript" src="js/lib/jquery/jquery.tmpl.min.js"></script>
+		<script type="text/javascript" src="js/lib/jquery/jquery.watermark.min.js"></script>
+		
+		<script type="text/javascript" src="js/lib/tinymce/tiny_mce_src.js"></script>
+		<script type="text/javascript" src="js/lib/tinymce/copy_event.js"></script>
+		
+		<script type="text/javascript" src="js/lib/tinymce/jquery.tinymce.js"></script>
+		<script type="text/javascript" src="js/lib/jstree/jquery.hotkeys.js"></script>
+		<!-- can't use jquery.jtree.min.js due to modification -->
+		<script type="text/javascript" src="js/lib/jstree/jquery.jstree.js"></script>
+		<script type="text/javascript" src="js/lib/snippet/jquery.snippet.min.js"></script>
+		<script type="text/javascript" src="js/lib/moment/moment.min.js"></script>
+		<script type="text/javascript" src="js/lib/objtree/ObjTree.js"></script>
+		
+		<script type="text/javascript" src="js/dialogs/dialog_addevent.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_addorg.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_addperson.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_addplace.js"></script>
+		<script type="text/javascript" src="js/dialogs/search_widget.js"></script>
+		<script type="text/javascript" src="js/dialogs/attribute_widget.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_citation.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_correction.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_date.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_header.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_keyword.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_link.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_message.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_note.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_search.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_settings.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_title.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_triple.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_filemanager.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_person.js"></script>
+		<script type="text/javascript" src="js/dialogs/dialog_place.js"></script>
+		<script type="text/javascript" src="js/editor.js"></script>
+		<script type="text/javascript" src="js/eventmanager.js"></script>
+		<script type="text/javascript" src="js/layout.js"></script>
+		<script type="text/javascript" src="js/tagger.js"></script>
+		<script type="text/javascript" src="js/dialog.js"></script>
+		<script type="text/javascript" src="js/utilities.js"></script>
+		<script type="text/javascript" src="js/filemanager.js"></script>
+		<script type="text/javascript" src="js/entities_model.js"></script>
+		<script type="text/javascript" src="js/delegator.js"></script>
+
+		<link type="text/css" rel="stylesheet" href="css/style.css" />
+		<link type="text/css" rel="stylesheet" href="css/islandora_style.css" />
+		
+		<link type="text/css" rel="stylesheet" href="smoothness/jquery-ui-1.10.3.custom.css" />
+		<link type="text/css" rel="stylesheet" href="js/lib/snippet/jquery.snippet.css" />
+
+		<style type="text/css">
+			#cwrc_main {
+				height: 100%;
+				width: 100%;
+			}
+		</style>
+
+		<script type="text/javascript">
+			$(function() {
+				cwrc_params = {};
+				
+				writer = null;
+				
+				function doResize() {
+					var uiHeight = $('#'+writer.editor.id+'_tbl tr.mceFirst').outerHeight() + 2;
+					writer.editor.theme.resizeTo($(window).width(), $(window).height() - uiHeight);
+				}
+				
+				var baseUrl = window.location.protocol+'//'+window.location.host;
+				var config = {
+					containerId: 'cwrc_wrapper',
+					delegator: Delegator,
+					cwrcRootUrl: baseUrl+'/editor/test/',
+					schemas: {
+						tei: {
+							name: 'CWRC Basic TEI Schema',
+							url: baseUrl+'/schema/CWRC-TEIBasic.rng',
+							cssUrl: baseUrl+'/editor/test/css/tei_converted.css'
+						},
+						events: {
+							name: 'Events Schema',
+							url: baseUrl+'/schema/events.rng',
+							cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
+						},
+						biography: {
+							name: 'Biography Schema',
+							url: baseUrl+'/schema/biography.rng',
+							cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
+						},
+						writing: {
+							name: 'Writing Schema',
+							url: baseUrl+'/schema/writing.rng',
+							cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
+						}
+					}
+				};
+				
+				$.ajax({
+					url: 'http://apps.testing.cwrc.ca/editor/documents/info/projectname',
+					timeout: 3000,
+					success: function(data, status, xhr) {
+						config.project = data;
+						writer = new Writer(config);
+						writer.event('writerInitialized').subscribe(doResize);
+						$(window).on('resize', doResize);
+					},
+					error: function() {
+						config.cwrcRootUrl = baseUrl+'/cwrc/src/';
+						config.schemas = {
+							tei: {
+								name: 'CWRC Basic TEI Schema',
+								url: baseUrl+'/cwrc/src/schema/CWRC-TEIBasic.rng',
+								cssUrl: baseUrl+'/cwrc/src/css/tei_converted.css'
+							},
+							events: {
+								name: 'Events Schema',
+								url: baseUrl+'/cwrc/src/schema/events.rng',
+								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
+							},
+							biography: {
+								name: 'Biography Schema',
+								url: baseUrl+'/cwrc/src/schema/biography.rng',
+								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
+							},
+							writing: {
+								name: 'Writing Schema',
+								url: baseUrl+'/cwrc/src/schema/writing.rng',
+								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
+							}
+						};
+						writer = new Writer(config);
+						writer.event('writerInitialized').subscribe(doResize);
+						$(window).on('resize', doResize);
+					}
+				});
+			});
+		</script>
+	</head>
+<body>
+<div id="cwrc_wrapper">
+	<div id="cwrc_main">
+		<form method="post" action="">
+			<textarea id="editor" name="editor" class="tinymce"></textarea>
+		</form>
+	</div>
+</div>
+</body>
+</html>
