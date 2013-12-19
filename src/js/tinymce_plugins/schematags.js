@@ -238,7 +238,10 @@
 			var w = t.editor.writer;
 			
 			t.editor.getBody().blur(); // lose keyboard focus in editor
-			w.tree.disableHotkeys();
+			// TODO move this to an event
+			if (w.tree) {
+				w.tree.disableHotkeys();
+			}
 			
 			var structsEntry = null;
 			if (t.mode == t.EDIT) {
