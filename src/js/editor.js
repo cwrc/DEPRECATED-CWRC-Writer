@@ -12,21 +12,6 @@ function Writer(config) {
 	// TODO add garbage collection for this
 	w.deletedEntities = {};
 	w.deletedStructs = {};
-
-	/**
-	 * A map of schema objects. The key represents the schema ID, the "value" should have the following properties:
-	 * @param name A name/label for the schema
-	 * @param url The URL where the schema is located
-	 * @param cssUrl The URL where the schema's CSS is located
-	 */
-	w.schemas = config.schemas || {};
-	
-	// the ID of the current validation schema, according to config.schemas
-	w.schemaId = null;
-	
-	w.schemaXML = null; // a cached copy of the loaded schema
-	w.schemaJSON = null; // a json version of the schema
-	w.schema = {elements: []}; // stores a list of all the elements of the loaded schema
 	
 	w.project = config.project || {}; // the current project (cwrc or russell)
 	
@@ -66,7 +51,8 @@ function Writer(config) {
 	
 	w.emptyTagId = null; // stores the id of the entities tag to be added
 	
-	w.eventmanager = null; // event manager;
+	w.eventmanager = null; // event manager
+	w.schemamanager = null; // schema manager
 	w.u = null; // utilities
 	w.tagger = null; // tagger
 	w.fm = null; // filemanager
@@ -488,6 +474,7 @@ function Writer(config) {
 	w.init = function() {
 
 		w.eventmanager = new EventManager({writer: w});
+		w.schemamanager = new SchemaManager({writer: w, schemas: config.schemas});
 		w.dialogs = new DialogManager({writer: w});
 		w.u = new Utilities({writer: w});
 		w.tagger = new Tagger({writer: w});
@@ -675,7 +662,7 @@ function Writer(config) {
 				
 				// add schema file and method
 				ed.addCommand('getSchema', function(){
-					return w.schema;
+					return w.schemamanager.schema;
 				});
 				
 				// add custom plugins and buttons

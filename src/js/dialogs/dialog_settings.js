@@ -12,7 +12,7 @@ var SettingsDialog = function(writer, config) {
 	
 	var defaultSettings = {
 		mode: w.mode,
-		validationSchema: w.schemaId
+		validationSchema: w.schemamanager.schemaId
 	};
 	jQuery.extend(defaultSettings, settings);
 	
@@ -20,8 +20,8 @@ var SettingsDialog = function(writer, config) {
 	'<div id="helpLink"><h2>Help</h2></div>'+
 	'<div id="settingsLink"><h2>Settings</h2></div>');
 	var schemasHTML;
-	for(var schema in w.schemas){
-		schemasHTML += '<option value="' + schema + '">"' + w.schemas[schema]['name'] + '"</option>';
+	for(var schema in w.schemamanager.schemas){
+		schemasHTML += '<option value="' + schema + '">"' + w.schemamanager.schemas[schema]['name'] + '"</option>';
 	}
 	
 	$(document.body).append(''+
@@ -80,7 +80,7 @@ var SettingsDialog = function(writer, config) {
 		$('#showentitybrackets').prop('checked', settings.showEntityBrackets);
 		$('#showstructbrackets').prop('checked', settings.showStructBrackets);
 		$('select[name="editormode"] > option[value="'+w.mode+'"]', $('#settingsDialog')).attr('selected', true);
-		$('select[name="schema"] > option[value="'+w.schemaId+'"]', $('#settingsDialog')).attr('selected', true);
+		$('select[name="schema"] > option[value="'+w.schemamanager.schemaId+'"]', $('#settingsDialog')).attr('selected', true);
 		$('#settingsDialog').dialog('open');
 	});
 	
@@ -170,7 +170,9 @@ var SettingsDialog = function(writer, config) {
 		}
 		settings.showStructBrackets = $('#showstructbrackets').prop('checked');
 		
-		w.schemaId = $('select[name="schema"]', $('#settingsDialog')).val();
+		// TODO schema changed event and handling
+		w.schemamanager.schemaId = $('select[name="schema"]', $('#settingsDialog')).val();
+		
 		var styles = {
 			fontSize: settings.fontSize,
 			fontFamily: settings.fontFamily

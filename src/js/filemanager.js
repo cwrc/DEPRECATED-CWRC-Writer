@@ -98,7 +98,7 @@ function FileManager(config) {
 			array.push(openingTag);
 			array.push('</'+tag+'>');
 		} else if (entityEntry) {
-			array = w.em.getMappingTags(entityEntry, w.schemaId);
+			array = w.em.getMappingTags(entityEntry, w.schemamanager.schemaId);
 		} else {
 			// not a valid tag so return empty strings
 			array = ['', ''];
@@ -495,12 +495,12 @@ function FileManager(config) {
 				schemaId = 'tei';
 			} else {
 				schemaId = 'customSchema';
-				w.schemas.customSchema = {
+				w.schemamanager.schemas.customSchema = {
 					name: 'Custom Schema',
 					url: schemaUrl
 				};
 			}
-			fm.loadSchema(schemaId, false, doProcessing);
+			w.schemamanager.loadSchema(schemaId, false, doProcessing);
 		// determine the schema based on the root element
 		} else {
 			rootName = rootName.toLowerCase();
@@ -514,7 +514,7 @@ function FileManager(config) {
 				} else if (rootName == 'writing') {
 					schemaId = 'writing';
 				}
-				fm.loadSchema(schemaId, false, doProcessing);
+				w.schemamanager.loadSchema(schemaId, false, doProcessing);
 			} else {
 				doProcessing();
 			}
@@ -802,215 +802,6 @@ function FileManager(config) {
 				}
 			}
 		});
-	};
-	
-	/**
-	 * Load a new schema.
-	 * @param {String} schemaId The ID of the schema to load (from the config)
-	 * @param {Boolean} startText Whether to include the default starting text
-	 * @param {Function} callback Callback for when the load is complete
-	 */
-	fm.loadSchema = function(schemaId, startText, callback) {
-		var baseUrl = ''; //w.project == null ? '' : w.baseUrl; // handling difference between local and server urls
-		w.schemaId = schemaId;
-		var schemaUrl = w.schemas[w.schemaId].url;
-		
-		$.ajax({
-			url: schemaUrl,
-			dataType: 'xml',
-			success: function(data, status, xhr) {
-				w.schemaXML = data;
-				// get root element
-				var startName = $('start ref:first', w.schemaXML).attr('name');
-				var startEl = $('define[name="'+startName+'"] element', w.schemaXML).attr('name');
-				w.root = startEl;
-//				w.editor.settings.forced_root_block = w.root;
-//				w.editor.schema.addCustomElements(w.root);
-//			    w.editor.schema.addCustomElements(w.root.toLowerCase());
-				
-				var additionalBlockElements;
-			    if (w.root == 'TEI') {
-			    	additionalBlockElements = ['argument', 'back', 'bibl', 'biblFull', 'biblScope', 'body', 'byline', 'category', 'change', 'cit', 'classCode', 'elementSpec', 'macroSpec', 'classSpec', 'closer', 'creation', 'date', 'distributor', 'div', 'div1', 'div2', 'div3', 'div4', 'div5', 'div6', 'div7', 'docAuthor', 'edition', 'editionStmt', 'editor', 'eg', 'epigraph', 'extent', 'figure', 'front', 'funder', 'group', 'head', 'dateline', 'idno', 'item', 'keywords', 'l', 'label', 'langUsage', 'lb', 'lg', 'list', 'listBibl', 'note', 'noteStmt', 'opener', 'p', 'principal', 'publicationStmt', 'publisher', 'pubPlace', 'q', 'rendition', 'resp', 'respStmt', 'salute', 'samplingDecl', 'seriesStmt', 'signed', 'sp', 'sponsor', 'tagUsage', 'taxonomy', 'textClass', 'titlePage', 'titlePart', 'trailer', 'TEI', 'teiHeader', 'text', 'authority', 'availability', 'fileDesc', 'sourceDesc', 'revisionDesc', 'catDesc', 'encodingDesc', 'profileDesc', 'projectDesc', 'docDate', 'docEdition', 'docImprint', 'docTitle'];
-			    	
-			    	w.header = 'teiHeader';
-			    	// FIXME temp fix for doc structure
-			    	w.idName = 'xml:id';
-			    } else {					
-			    	additionalBlockElements = ['DIV0', 'DIV1', 'EVENTS', 'ORLANDOHEADER', 'DOCAUTHOR', 'DOCEDITOR', 'DOCEXTENT', 'PUBLICATIONSTMT', 'TITLESTMT', 'PUBPLACE', 'L', 'P', 'HEADING', 'CHRONEVENT', 'CHRONSTRUCT'];
-					
-					w.header = 'ORLANDOHEADER';
-					w.idName = 'ID';
-			    }
-			    var blockElements = w.editor.schema.getBlockElements();
-			    for (var i = 0; i < additionalBlockElements.length; i++) {
-		    		blockElements[additionalBlockElements[i]] = {};
-		    	}
-				
-				function processSchema() {
-					// remove old schema elements
-				    $('#schemaTags', w.editor.dom.doc).remove();
-				    $('#schemaRules', w.editor.dom.doc).remove();
-				    
-				    var cssUrl = w.schemas[w.schemaId].cssUrl;
-				    if (cssUrl) {
-				    	fm.loadSchemaCSS(cssUrl);
-				    }
-				    
-				    // create css to display schema tags
-					$('head', w.editor.getDoc()).append('<style id="schemaTags" type="text/css" />');
-					
-					var schemaTags = '';
-					var elements = [];
-					$('element', w.schemaXML).each(function(index, el) {
-						var tag = $(el).attr('name');
-						if (tag != null && elements.indexOf(tag) == -1) {
-							elements.push(tag);
-							var tagName = w.u.getTagForEditor(tag);
-							schemaTags += '.showStructBrackets '+tagName+'[_tag='+tag+']:before { color: #aaa; font-weight: normal; font-style: normal; font-family: monospace; content: "<'+tag+'>"; }';
-							schemaTags += '.showStructBrackets '+tagName+'[_tag='+tag+']:after { color: #aaa; font-weight: normal; font-style: normal; font-family: monospace; content: "</'+tag+'>"; }';
-						}
-					});
-					elements.sort();
-					
-					// hide the header
-					var tagName = w.u.getTagForEditor(w.header);
-					schemaTags += tagName+'[_tag='+w.header+'] { display: none !important; }';
-					
-					$('#schemaTags', w.editor.getDoc()).text(schemaTags);
-				    
-					w.schema.elements = elements;
-					
-					if (callback == null) {
-						var text = '';
-						if (startText) text = 'Paste or type your text here.';
-						var tag = w.u.getTagForEditor(w.root);
-						w.editor.setContent('<'+tag+' _tag="'+w.root+'">'+text+'</'+tag+'>');
-					}
-					
-					w.schemaJSON = w.u.xmlToJSON($('grammar', w.schemaXML)[0]);
-					
-					// update the schema for schematags.js
-					var stb = w.editor.controlManager.controls.editor_schemaTagsButton;
-					if (stb.menu) {
-						stb.parentControl.buildMenu(stb.menu, null, {disabled: false, mode: 'add'});
-					}
-					
-					w.event('schemaLoaded').publish();
-					
-					if (callback) callback();
-				}
-			    
-				// handle includes
-				var include = $('include:first', w.schemaXML); // TODO add handling for multiple includes
-				if (include.length == 1) {
-					var url = '';
-					var includeHref = include.attr('href');
-					var schemaFile;
-					if (includeHref.indexOf('/') != -1) {
-						schemaFile = includeHref.match(/(.*\/)(.*)/)[2]; // grab the filename
-					} else {
-						schemaFile = includeHref;
-					}
-					var schemaBase = schemaUrl.match(/(.*\/)(.*)/)[1];
-					if (schemaBase != null) {
-						url = schemaBase + schemaFile;
-					} else {
-						url = baseUrl + 'schema/'+schemaFile;
-					}
-					
-					$.ajax({
-						url: url,
-						dataType: 'xml',
-						success: function(data, status, xhr) {
-							// handle redefinitions
-							include.children().each(function(index, el) {
-								if (el.nodeName == 'start') {
-									$('start', data).replaceWith(el);
-								} else if (el.nodeName == 'define') {
-									var name = $(el).attr('name');
-									var match = $('define[name="'+name+'"]', data);
-									if (match.length == 1) {
-										match.replaceWith(el);
-									} else {
-										$('grammar', data).append(el);
-									}
-								}
-							});
-							
-							include.replaceWith($('grammar', data).children());
-							
-							processSchema();
-						}
-					});
-				} else {
-					processSchema();
-				}
-			},
-			error: function(xhr, status, error) {
-				w.dialogs.show('message', {title: 'Error', msg: 'Error loading schema: '+status, type: 'error'});
-			}
-		});
-	};
-	
-	fm.loadSchemaCSS = function(url) {
-		w.editor.dom.loadCSS(url);
-		if (url.match('converted') != null) {
-			// already converted so exit
-			return;
-		}
-		var name = url.split('/');
-		name = name[name.length-1];
-		var numCss = w.editor.getDoc().styleSheets.length;
-		var cssInt = null;
-		function parseCss() {
-			var stylesheet = null;
-			var stylesheets = w.editor.getDoc().styleSheets;
-			for (var i = 0; i < stylesheets.length; i++) {
-				var s = stylesheets[i];
-				if (s.href && s.href.indexOf(name) != -1) {
-					stylesheet = s;
-					break;
-				}
-			}
-			if (stylesheet) {
-				try {
-					$('#schemaRules', w.editor.dom.doc).remove();
-					
-					var rules = stylesheet.cssRules;
-					var newRules = '';
-					// adapt the rules to our format, should only modify element names in selectors
-					for (var i = 0; i < rules.length; i++) {
-						// chrome won't get proper selector, see: https://code.google.com/p/chromium/issues/detail?id=67782
-						var selector = rules[i].selectorText;
-						var newSelector = selector.replace(/(^|,|\s)(\w+)/g, function(str, p1, p2, offset, s) {
-							var tagName = w.u.getTagForEditor(p2);
-							return p1+tagName+'[_tag="'+p2+'"]';
-						});
-						var css = rules[i].cssText;
-						var newCss = css.replace(selector, newSelector);
-						newRules += newCss+'\n';
-					}
-					$('head', w.editor.dom.doc).append('<style id="schemaRules" type="text/css" />');
-					$('#schemaRules', w.editor.dom.doc).text(newRules);
-					stylesheet.disabled = true;
-				} catch (e) {
-					setTimeout(parseCss, 25);
-				}
-			} else {
-				setTimeout(parseCss, 25);
-			}
-		};
-		if (numCss > 0) {
-			parseCss();
-		} else {
-			cssInt = setInterval(function() {
-				var len = w.editor.getDoc().styleSheets.length;
-				if (len > numCss) {
-					clearInterval(cssInt);
-					parseCss();
-				}
-			}, 25);
-		}
 	};
 	
 	fm.loadInitialDocument = function(start) {

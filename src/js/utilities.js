@@ -296,7 +296,7 @@ function Utilities(config) {
 	};
 	
 	u.getDocumentationForTag = function(tag) {
-		var element = $('element[name="'+tag+'"]', w.schemaXML);
+		var element = $('element[name="'+tag+'"]', w.schemamanager.schemaXML);
 		var doc = $('a\\:documentation, documentation', element).first().text();
 		return doc;
 	};
@@ -347,7 +347,7 @@ function Utilities(config) {
 	}
 
 	function _getDefinition(name) {
-		var defs = w.schemaJSON.grammar.define;
+		var defs = w.schemamanager.schemaJSON.grammar.define;
 		for (var i = 0, len = defs.length; i < len; i++) {
 			var d = defs[i];
 			if (d['@name'] == name) return d;
@@ -356,7 +356,7 @@ function Utilities(config) {
 	}
 
 	function _getElement(name) {
-		var defs = w.schemaJSON.grammar.define;
+		var defs = w.schemamanager.schemaJSON.grammar.define;
 		for (var i = 0, len = defs.length; i < len; i++) {
 			var d = defs[i];
 			if (d.element != null) {
@@ -592,8 +592,8 @@ function Utilities(config) {
 			if (children.indexOf('anyName') != -1) {
 				children = [];
 				// anyName means include all elements
-				for (var i = 0; i < w.schema.elements.length; i++) {
-					var el = w.schema.elements[i];
+				for (var i = 0; i < w.schemamanager.schema.elements.length; i++) {
+					var el = w.schemamanager.schema.elements[i];
 					children.push({
 						name: el
 					});

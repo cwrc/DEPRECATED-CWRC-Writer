@@ -134,7 +134,7 @@ function Delegator(config) {
 	
 	del.validate = function(callback) {
 		var docText = w.fm.getDocumentContent(false);
-		var schemaUrl = w.schemas[w.schemaId].url;
+		var schemaUrl = w.schemamanager.schemas[w.schemamanager.schemaId].url;
 		
 		$.ajax({
 			url: w.baseUrl+'services/validator/validate.html',

@@ -278,7 +278,7 @@ function StructureTree(config) {
 			// new struct check
 			if (id == '' || id == null) {
 				id = tinymce.DOM.uniqueId('struct_');
-				if (w.schema.elements.indexOf(tag) != -1) {
+				if (w.schemamanager.schema.elements.indexOf(tag) != -1) {
 					node.attr('id', id).attr('_tag', tag);
 					w.structs[id] = {
 						id: id,
