@@ -240,27 +240,5 @@ function Delegator(config) {
 		return w.u.getDocumentationForTag(tagName);
 	};
 	
-	/**
-	 * Editor based event system.
-	 * @param name: The name of the editor event. Possible values
-	 *   are highlightEntity_looseFocus,
-	 *       highlightEntity_gainFocus
-	 * @param data: Editor data associated with the event.
-	 */
-	del.editorCallback = function(name,data) {
-		switch (name) {
-			case 'highlightEntity_looseFocus':
-				if($(data).hasClass('person')) {
-					
-				}
-				break;
-			case 'highlightEntity_gainFocus':
-				if($(data).hasClass('place')) {
-					
-				}
-				break;
-			}
-	};
-	
 	return del;
 }

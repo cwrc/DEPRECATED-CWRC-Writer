@@ -77,7 +77,6 @@ var EntitiesList = function(config) {
 	w.event('entityUnfocused').subscribe(function(entityId) {
 		$('#entities > ul > li').each(function(index, el) {
 			$(this).removeClass('selected').css('background-color', '').find('div[class="info"]').hide();
-			w.delegator.editorCallback('highlightEntity_looseFocus', $(this));
 		});
 	});
 	w.event('entityPasted').subscribe(function(entityId) {

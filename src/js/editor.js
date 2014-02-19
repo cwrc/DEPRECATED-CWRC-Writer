@@ -99,9 +99,6 @@ function Writer(config) {
 			}
 			
 			w.event('entityFocused').publish(id);
-			
-			// TODO remove
-			w.delegator.editorCallback('highlightEntity_gainFocus', $('#entities > ul > li[name="'+id+'"]'));
 		}
 	};
 	
