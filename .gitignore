@@ -4,3 +4,4 @@
 /.tomcatplugin
 /WebContent
 .externalToolBuilders
+/src/js/lib/tinymce_src
