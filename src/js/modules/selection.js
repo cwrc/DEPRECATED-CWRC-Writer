@@ -30,5 +30,8 @@ function Selection(config) {
 		}
 	}
 	
+	// add to writer
+	w.selection = selection;
+	
 	return selection;
 }

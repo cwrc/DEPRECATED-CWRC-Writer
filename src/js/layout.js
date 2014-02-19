@@ -70,11 +70,11 @@ function setupLayoutAndModules(w) {
 		window.location = 'http://www.cwrc.ca';
 	});
 	
-	w.tree = new StructureTree({writer: w, parentId: 'westTabsContent'});
-	w.entitiesList = new EntitiesList({writer: w, parentId: 'westTabsContent'});
-	w.relations = new Relations({writer: w, parentId: 'westTabsContent'});
-	w.validation = new Validation({writer: w, parentId: 'southTabsContent'});
-	w.selection = new Selection({writer: w, parentId: 'southTabsContent'});
+	new StructureTree({writer: w, parentId: 'westTabsContent'});
+	new EntitiesList({writer: w, parentId: 'westTabsContent'});
+	new Relations({writer: w, parentId: 'westTabsContent'});
+	new Validation({writer: w, parentId: 'southTabsContent'});
+	new Selection({writer: w, parentId: 'southTabsContent'});
 	
 	$('#westTabs').tabs({
 		active: 1,

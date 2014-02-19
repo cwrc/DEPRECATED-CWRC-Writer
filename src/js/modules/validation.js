@@ -121,5 +121,8 @@ function Validation(config) {
 		validation.clearResult();
 	});
 	
+	// add to writer
+	w.validation = validation;
+	
 	return validation;
 };

@@ -108,5 +108,8 @@ function Relations(config) {
 		});
 	};
 	
+	// add to writer
+	w.relations = pm;
+	
 	return pm;
 };

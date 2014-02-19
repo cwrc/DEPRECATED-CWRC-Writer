@@ -752,5 +752,8 @@ function StructureTree(config) {
 //		}
 //	});
 	
+	// add to writer
+	w.tree = tree;
+	
 	return tree;
 };

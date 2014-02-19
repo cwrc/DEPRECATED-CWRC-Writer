@@ -232,5 +232,8 @@ var EntitiesList = function(config) {
 		$('#entities li[name="'+id+'"]').remove();
 	};
 	
+	// add to writer
+	w.entitiesList = pm;
+	
 	return pm;
 };
