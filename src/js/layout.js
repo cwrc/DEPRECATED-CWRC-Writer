@@ -1,5 +1,5 @@
 function setupLayoutAndModules(w) {
-	w.layout = $('#'+w.containerId).layout({
+	w.layout = $('#cwrc_wrapper').layout({
 		defaults: {
 			maskIframesOnResize: true,
 			resizable: true,

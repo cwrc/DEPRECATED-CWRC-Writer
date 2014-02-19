@@ -489,6 +489,9 @@ function Writer(config) {
 		} else {
 			alert('Error: you must specify a delegator in the CWRCWriter config for full functionality!');
 		}
+		if (config.id == null) {
+			alert('Error: no ID supplied for CWRCWriter!');
+		}
 		
 		$(document.body).mousedown(function(e) {
 			_hideContextMenus(e);
@@ -531,7 +534,7 @@ function Writer(config) {
 //					script_url : 'js/tinymce/jscripts/tiny_mce/tiny_mce.js',
 		tinyMCE.init({
 			mode: 'exact',
-			elements: 'editor',
+			elements: config.id,
 			theme: 'advanced',
 			content_css: w.cwrcRootUrl+'css/editor.css',
 			
