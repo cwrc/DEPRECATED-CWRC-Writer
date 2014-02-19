@@ -2,7 +2,7 @@ function Relations(config) {
 	
 	var w = config.writer;
 	
-	$(config.parentId).append('<div id="relations" class="tabWithLayout" style="height: 100% !important;">'+
+	$('#'+config.parentId).append('<div id="relations" class="tabWithLayout" style="height: 100% !important;">'+
 			'<div id="relation_alter" class="ui-layout-center"><ul class="relationsList"></ul></div>'+
 			'<div class="ui-layout-south tabButtons">'+
 			'<button>Add Relation</button><button>Remove Relation</button>'+

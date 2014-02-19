@@ -2,7 +2,7 @@ function Selection(config) {
 	
 	var w = config.writer;
 	
-	$(config.parentId).append('<div id="selection" style="margin-left: 10px;"></div>');
+	$('#'+config.parentId).append('<div id="selection" style="margin-left: 10px;"></div>');
 	$(document.body).append('<div id="selectionContents" style="display: none;"></div>');
 	
 	w.event('nodeChanged').subscribe(function() {

@@ -499,7 +499,7 @@ function StructureTree(config) {
 		return inserts;
 	}
 	
-	$(config.parentId).append('<div id="structure" class="tabWithLayout">'+
+	$('#'+config.parentId).append('<div id="structure" class="tabWithLayout">'+
 			'<div id="tree" class="ui-layout-center"></div>'+
 //			'<div id="structureTreeActions" class="ui-layout-south tabButtons">'+
 //			'<button>Edit Tag</button><button>Remove Tag</button><button>Remove Tag and All Content</button>'+

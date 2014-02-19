@@ -2,7 +2,9 @@ function Validation(config) {
 	
 	var w = config.writer;
 	
-	$(config.parentId).append('<div id="validation"><button>Validate</button><button>Clear</button><ul class="validationList"></ul></div>');
+	$('#'+config.parentId).append('<div id="validation">'+
+			'<button>Validate</button><button>Clear</button><ul class="validationList"></ul>'+
+		'</div>');
 	
 	w.event('documentLoaded').subscribe(function() {
 		validation.clearResult();
