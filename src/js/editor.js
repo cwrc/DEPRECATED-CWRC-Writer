@@ -476,7 +476,7 @@ function Writer(config) {
 		w.u = new Utilities({writer: w});
 		w.tagger = new Tagger({writer: w});
 		w.fm = new FileManager({writer: w});
-		w.em = new EntitiesModel();
+		w.em = new EntitiesModel({writer: w});
 		w.settings = new SettingsDialog(w, {
 			showEntityBrackets: true,
 			showStructBrackets: false

@@ -1,39 +1,106 @@
 // TODO add IDs
 
-var EntitiesModel = function() {
+var EntitiesModel = function(config) {
+	
+	var w = config.writer;
+	
 	var entities = {
 		person: {
 			title: 'Person',
 			mapping: {
-				tei: ''+
-				'<person cert="${info.certainty}"'+
-				'{{if info.gender}}'+
-					' sex="${info.gender}"'+
-				'{{/if}}'+
-				'{{if info.role}}'+
-					' role="${info.role}"'+
-				'{{/if}}'+
-				'><persName>[[[editorText]]]</persName></person>',
-				events: '<NAME>[[[editorText]]]</NAME>'
+				tei: function(info) {
+					var xml = '<person';
+					if (info.certainty) xml += ' cert="'+info.certainty+'"';
+					if (info.gender) xml += ' sex="'+info.gender+'"';
+					if (info.role) xml += ' role="'+info.role+'"';
+					xml += '>';
+					xml += '<persName>';
+					if (info.firstName || info.lastName) {
+						if (info.firstName) xml += '<forename>'+info.firstName+'</forename>';
+						if (info.lastName) xml += '<surname>'+info.lastName+'</surname>';
+					} else {
+						xml += '[[[editorText]]]';
+					}
+					xml += '</persName></person>';
+					return xml;
+				},
+				events: function(info) {
+					return '<NAME>[[[editorText]]]</NAME>';
+				}
+			},
+			annotation: function(entity) {
+				var date = new Date().toISOString();
+				var contextUri = 'http://www.w3.org/ns/oa-context-20130208.json';
+				var annotationId = '';
+				var body = '';
+				var annotatedById = '';
+				var userName = '';
+				var userMbox = '';
+				var targetId = '';
+				var personId = '';
+				var docId = '';
+				var selectorId = '';
+				var offsetStart = '';
+				var offsetEnd = '';
+				
+				var annotation = {
+					'@context': contextUri, 
+					'@id': annotationId, 
+					'@type': 'oa:Annotation',
+					'motivation':['oa:identifying', 'oa:tagging'],
+					'annotatedAt': date, 
+					'annotatedBy': {
+						'@id': annotatedById, 
+						'@type': 'foaf:Person', 
+						'mbox': {
+							'@id': userMbox
+						}, 
+						'name': userName
+					},
+					'hasBody': {
+						'@id': personId, 
+						'@type': ['oa:SemanticTag', 'foaf:Person']		
+					}, 
+					'hasTarget': {
+						'@id': targetId, 
+						'@type': 'oa:SpecificResource', 
+						'hasSelector': {
+							'@id': selectorId, 
+							'@type': 'oa:TextPositionSelector', 
+							'start': offsetStart,
+							'end': offsetEnd
+						}, 
+						'hasSource': {
+							'@id': docId, 
+							'@type':'dctypes:Text',
+					  		'format':'text/xml'
+						}
+					}
+				};
 			}
 		},
 		date: {
 			title: 'Date',
 			mapping: {
-				tei: ''+
-				'<date '+
-				'{{if info.date}}'+
-					'when="${info.date}"'+
-				'{{else info.startDate}}'+
-					'from="${info.startDate}" to="${info.endDate}"'+
-				'{{/if}}'+
-				'>[[[editorText]]]</date>',
-				events: ''+
-				'{{if info.date}}'+
-					'<DATE VALUE="${info.date}">[[[editorText]]]</DATE>'+
-				'{{else info.startDate}}'+
-					'<DATERANGE FROM="${info.startDate}" TO="${info.endDate}">[[[editorText]]]</DATERANGE>'+
-				'{{/if}}'
+				tei: function(info) {
+					var xml = '<date';
+					if (info.date) {
+						xml += ' when="'+info.date+'"';
+					} else if (info.startDate) {
+						xml += ' from="'+info.startDate+'" to="'+info.endDate+'"';
+					}
+					xml += '[[[editorText]]]</date>';
+					return xml;
+				},
+				events: function(info) {
+					var xml = '';
+					if (info.date) {
+						xml += '<DATE VALUE="'+info.date+'">[[[editorText]]]</DATE>';
+					} else if (info.startDate) {
+						xml += '<DATERANGE FROM="'+info.startDate+'" TO="'+info.endDate+'">[[[editorText]]]</DATERANGE>';
+					}
+					return xml;
+				}
 			}
 		},
 		place: {
@@ -107,40 +174,30 @@ var EntitiesModel = function() {
 		}
 	};
 	
-	function doMapping(entity, map) {		
-		var result = $.tmpl(map, entity);
-		if (result[0]) return result[0].outerHTML;
-		else return '';
-	}
-	
-	var pm = {};
+	var entmod = {};
 	/**
-	 * @memberOf pm
+	 * @memberOf entmod
 	 * @param type
 	 * @returns {Boolean}
 	 */
-	pm.isEntity = function(type) {
+	entmod.isEntity = function(type) {
 		return entities[type] != null;
 	};
-	pm.getTitle = function(type) {
+	entmod.getTitle = function(type) {
 		var e = entities[type];
 		if (e) {
 			return e.title;
 		}
 		return null;
 	};
-	pm.getMapping = function(entity, schema) {
-		var e = entities[entity.props.type];
-		if (e) {
-			if (e.mapping && e.mapping[schema]) {
-				var mappedString = doMapping(entity, e.mapping[schema]);
-				return mappedString;
-			}
-		}
-		return null;
-	};
-	// returns the mapping as an array of opening and closing tags
-	pm.getMappingTags = function(entity, schema) {
+	
+	/**
+	 * Returns the mapping as an array of opening and closing tags.
+	 * @param entity The entity object.
+	 * @param schema The schema to use for the mapping.
+	 * @returns {Array}
+	 */
+	entmod.getMappingTags = function(entity, schema) {
 		var e = entities[entity.props.type];
 		if (e) {
 			if (schema.indexOf('tei') != -1) {
@@ -150,12 +207,21 @@ var EntitiesModel = function() {
 			}
 			
 			if (e.mapping && e.mapping[schema]) {
-				var result = doMapping(entity, e.mapping[schema]);
-				return result.split('[[[editorText]]]');
+				var mapping = e.mapping[schema];
+				var mappedString = '';
+				if (typeof mapping == 'string') {
+					var result = $.tmpl(mapping, entity);
+					if (result[0]) {
+						mappedString = result[0].outerHTML;
+					}
+				} else if (typeof mapping == 'function') {
+					mappedString = mapping(entity.info);
+				}
+				return mappedString.split('[[[editorText]]]');
 			}
 		}
 		return ['', '']; // return array of empty strings if there is no mapping
 	};
 	
-	return pm;
+	return entmod;
 };
