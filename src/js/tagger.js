@@ -143,14 +143,19 @@ function Tagger(config) {
 			switch (nodes.length) {
 				case 0:
 					updateRequired = true;
-					w.entitiesList.remove(id);
+					// TODO find better way to do this
+					if (w.entitiesList) {
+						w.entitiesList.remove(id);
+					}
 					w.deletedEntities[id] = w.entities[id];
 					delete w.entities[id];
 					break;
 				case 1:
 					updateRequired = true;
 					w.editor.dom.remove(nodes[0]);
-					w.entitiesList.remove(id);
+					if (w.entitiesList) {
+						w.entitiesList.remove(id);
+					}
 					w.deletedEntities[id] = w.entities[id];
 					delete w.entities[id];
 			}
@@ -263,11 +268,12 @@ function Tagger(config) {
 	 * Add our own undo level, then erase the next one that gets added by tinymce
 	 */
 	function _doCustomTaggerUndo() {
-		w.editor.undoManager.add();
-		w.editor.undoManager.onAdd.addToTop(function() {
-			this.data.splice(this.data.length-1, 1); // remove last undo level
-			this.onAdd.listeners.splice(0, 1); // remove this listener
-		}, w.editor.undoManager);
+		// TODO update for 4
+//		w.editor.undoManager.add();
+//		w.editor.undoManager.onAdd.addToTop(function() {
+//			this.data.splice(this.data.length-1, 1); // remove last undo level
+//			this.onAdd.listeners.splice(0, 1); // remove this listener
+//		}, w.editor.undoManager);
 	}
 	
 	tagger.addEntity = function(type) {
@@ -519,7 +525,7 @@ function Tagger(config) {
 		id = id || w.editor.currentStruct;
 		
 		if (removeContents == undefined) {
-			if (w.tree.currentlySelectedNode != null && w.tree.selectionType != null) {
+			if (w.tree && w.tree.currentlySelectedNode != null && w.tree.selectionType != null) {
 				removeContents = true;
 			}
 		}
