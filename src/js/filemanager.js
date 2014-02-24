@@ -107,23 +107,34 @@ function FileManager(config) {
 		return array;
 	}
 	
+	/**
+	 * Converts the opening and closing entity tag pairs to a matched set of opening and closing tags.
+	 * @param id The entity id.
+	 * @param [el] The element within which to look for the entity. Defaults to the editor dom. 
+	 */
+	function convertEntityToTag(id, el) {
+		el = el || w.editor.getBody();
+		var markers = $('[name="' + id + '"]', el);
+		var start = markers[0];
+		var end = markers[1];
+
+		var nodes = [ start ];
+		var currentNode = start;
+		while (currentNode != end && currentNode != null) {
+			currentNode = currentNode.nextSibling;
+			nodes.push(currentNode);
+		}
+		
+		var entString = '<entity id="'+id+'" _type="'+w.entities[id].props.type+'" />';
+		$(nodes, el).wrapAll(entString);			
+		$(markers, el).remove();
+	}
+	
 	// converts the opening and closing entity tag pairs to a matched set of opening and closing tags
 	function convertEntitiesToTags() {
+		var body = w.editor.getBody();
 		for (var id in w.entities) {
-			var markers = w.editor.dom.select('[name="' + id + '"]');
-			var start = markers[0];
-			var end = markers[1];
-
-			var nodes = [ start ];
-			var currentNode = start;
-			while (currentNode != end && currentNode != null) {
-				currentNode = currentNode.nextSibling;
-				nodes.push(currentNode);
-			}
-			
-			var entString = '<entity id="'+id+'" _type="'+w.entities[id].props.type+'" />';
-			w.editor.$(nodes).wrapAll(entString);			
-			w.editor.$(markers).remove();
+			convertEntityToTag(id, body);
 		}
 	}
 	
