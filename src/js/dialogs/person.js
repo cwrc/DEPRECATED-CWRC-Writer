@@ -1,5 +1,12 @@
-var PersonDialog = function(config) {
-	var w = config.writer;
+define([
+    'jquery',
+    'jquery-ui',
+    'searchWidget',
+    'attributeWidget'
+], function($, jqueryUi, SearchWidget, AttributeWidget) {
+	
+return function(writer) {
+	var w = writer;
 	
 	var attWidgetInit = false;
 	
@@ -100,11 +107,11 @@ var PersonDialog = function(config) {
 			case SAVE_ADD_LABEL:
 				processData();
 				dialog.dialog('close');
-				w.dialogs.show('addperson', {writer: w, data: currentData});
+				w.dialogManager.show('addperson', {writer: w, data: currentData});
 				break;
 			case ADD_LABEL:
 				dialog.dialog('close');
-				w.dialogs.show('addperson', {writer: w});
+				w.dialogManager.show('addperson', {writer: w});
 				break;
 		}
 		
@@ -118,11 +125,11 @@ var PersonDialog = function(config) {
 	};
 	
 	var initAttributeWidget = function() {
-		var personAtts = w.u.getChildrenForTag({tag: 'person', type: 'attribute', returnType: 'object'});
+		var personAtts = w.utilities.getChildrenForTag({tag: 'person', type: 'attribute', returnType: 'object'});
 		$.map(personAtts, function(val, key) {
 			personAtts[key].parent = 'person';
 		});
-		var persNameAtts = w.u.getChildrenForTag({tag: 'persName', type: 'attribute', returnType: 'object'});
+		var persNameAtts = w.utilities.getChildrenForTag({tag: 'persName', type: 'attribute', returnType: 'object'});
 		$.map(persNameAtts, function(val, key) {
 			persNameAtts[key].parent = 'persName';
 		});
@@ -282,3 +289,5 @@ var PersonDialog = function(config) {
 		}
 	};
 };
+
+});

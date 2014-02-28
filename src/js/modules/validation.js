@@ -1,4 +1,6 @@
-function Validation(config) {
+define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+	
+return function(config) {
 	
 	var w = config.writer;
 	
@@ -126,3 +128,5 @@ function Validation(config) {
 	
 	return validation;
 };
+
+});

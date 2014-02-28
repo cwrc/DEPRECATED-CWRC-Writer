@@ -1,5 +1,7 @@
-function Delegator(config) {
-	var w = config.writer;
+define(['jquery'], function($) {
+	
+return function(writer) {
+	var w = writer;
 	
 	var del = {};
 	
@@ -132,9 +134,21 @@ function Delegator(config) {
 		}
 	};
 	
+	// TODO placeholder
+	del.getUriForEntity = function(entity, callback) {
+		var uri = 'http://id.cwrc.ca/'+entity.props.type+'/'+entity.props.id;
+		callback.call(this, uri);
+	};
+	
+	// TODO placeholder
+	del.getUriForAnnotation = function(callback) {
+		var uri = 'http://id.cwrc.ca/annotation/'+Math.round(Math.random() * 100000);
+		callback.call(this, uri);
+	};
+	
 	del.validate = function(callback) {
-		var docText = w.fm.getDocumentContent(false);
-		var schemaUrl = w.schemamanager.schemas[w.schemamanager.schemaId].url;
+		var docText = w.fileManager.getDocumentContent(false);
+		var schemaUrl = w.schemaManager.schemas[w.schemaManager.schemaId].url;
 		
 		$.ajax({
 			url: w.baseUrl+'services/validator/validate.html',
@@ -165,7 +179,7 @@ function Delegator(config) {
 //						}
 //					}
 //				}); 
-				w.dialogs.show('message', {
+				w.dialogManager.show('message', {
 					title: 'Error',
 					msg: 'An error occurred while trying to validate the document.',
 					type: 'error'
@@ -188,7 +202,7 @@ function Delegator(config) {
 				callback.call(w, doc);
 			},
 			error: function(xhr, status, error) {
-				w.dialogs.show('message', {
+				w.dialogManager.show('message', {
 					title: 'Error',
 					msg: 'An error ('+status+') occurred and '+w.currentDocId+' was not loaded.',
 					type: 'error'
@@ -204,7 +218,7 @@ function Delegator(config) {
 	 * @param callback Called with one boolean parameter: true for successful save, false otherwise
 	 */
 	del.saveDocument = function(callback) {
-		var docText = w.fm.getDocumentContent(true);
+		var docText = w.fileManager.getDocumentContent(true);
 		$.ajax({
 			url : w.baseUrl+'editor/documents/'+w.currentDocId,
 			type: 'PUT',
@@ -212,7 +226,7 @@ function Delegator(config) {
 			data: docText,
 			success: function(data, status, xhr) {
 				w.editor.isNotDirty = 1; // force clean state
-				w.dialogs.show('message', {
+				w.dialogManager.show('message', {
 					title: 'Document Saved',
 					msg: w.currentDocId+' was saved successfully.'
 				});
@@ -224,7 +238,7 @@ function Delegator(config) {
 				w.event('documentSaved').publish();
 			},
 			error: function() {
-				w.dialogs.show('message', {
+				w.dialogManager.show('message', {
 					title: 'Error',
 					msg: 'An error occurred and '+w.currentDocId+' was not saved.',
 					type: 'error'
@@ -237,8 +251,10 @@ function Delegator(config) {
 	};
 	
 	del.getHelp = function(tagName) {
-		return w.u.getDocumentationForTag(tagName);
+		return w.utilities.getDocumentationForTag(tagName);
 	};
 	
 	return del;
-}
+};
+
+});

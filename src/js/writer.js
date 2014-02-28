@@ -1,7 +1,16 @@
-function Writer(config) {
+define([
+    'jquery',
+    'tinymce',
+    'tinymce-copyevent',
+    'eventManager','schemaManager','dialogManager','utilities',
+    'tagger','fileManager','entitiesModel','dialogs/settings'
+], function($, tinymce, tinymceCopyEvent,
+		EventManager, SchemaManager, DialogManager, Utilities, Tagger, FileManager, EntitiesModel, SettingsDialog) {
+	
+return function(config) {
 	config = config || {};
 	
-	var w = this;
+	var w = {};
 	
 	w.layout = null; // jquery ui layout object
 	w.editor = null; // reference to the tinyMCE instance we're creating, set in setup
@@ -51,15 +60,6 @@ function Writer(config) {
 	
 	w.emptyTagId = null; // stores the id of the entities tag to be added
 	
-	w.eventmanager = null; // event manager
-	w.schemamanager = null; // schema manager
-	w.u = null; // utilities
-	w.tagger = null; // tagger
-	w.fm = null; // filemanager
-	w.dialogs = null; // dialogs manager
-	w.settings = null; // settings dialog
-	w.delegator = null;	
-	
 	w.highlightEntity = function(id, bm, doScroll) {
 		var prevHighlight = $('#entityHighlight', w.editor.getBody());
 		if (prevHighlight.length == 1) {
@@ -99,24 +99,6 @@ function Writer(config) {
 			}
 			
 			w.event('entityFocused').publish(id);
-		}
-	};
-	
-	w.showError = function(errorType) {
-		switch(errorType) {
-		case w.NO_SELECTION:
-			w.dialogs.show('message', {
-				title: 'Error',
-				msg: 'Please select some text before adding an entity or tag.',
-				type: 'error'
-			});
-			break;
-		case w.NO_COMMON_PARENT:
-			w.dialogs.show('message', {
-				title: 'Error',
-				msg: 'Please ensure that the beginning and end of your selection have a common parent.<br/>For example, your selection cannot begin in one paragraph and end in another, or begin in bolded text and end outside of that text.',
-				type: 'error'
-			});
 		}
 	};
 	
@@ -180,7 +162,7 @@ function Writer(config) {
 	 * @param schemaURI The URI for the corresponding schema
 	 */
 	w.loadDocument = function(docXml, schemaURI) {
-		w.fm.loadDocumentFromXml(docXml);
+		w.fileManager.loadDocumentFromXml(docXml);
 	};
 	
 	/**
@@ -188,13 +170,13 @@ function Writer(config) {
 	 * @returns Element The XML document serialized to a string
 	 */
 	w.getDocument = function() {
-		var docString = w.fm.getDocumentContent(true);
+		var docString = w.fileManager.getDocumentContent(true);
 		var doc = null;
 		try {
 			var parser = new DOMParser();
 			doc = parser.parseFromString(docString, 'application/xml');
 		} catch(e) {
-			w.dialogs.show('message', {
+			w.dialogManager.show('message', {
 				title: 'Error',
 				msg: 'There was an error getting the document:'+e,
 				type: 'error'
@@ -242,7 +224,7 @@ function Writer(config) {
 			var content = $('#entityHighlight', ed.getBody()).text();
 			var entity = w.entities[ed.currentEntity];
 			entity.props.content = content;
-			entity.props.title = w.u.getTitleFromContent(content);
+			entity.props.title = w.utilities.getTitleFromContent(content);
 			w.event('entityEdited').publish(ed.currentEntity);
 		}
 		
@@ -279,7 +261,7 @@ function Writer(config) {
 					rng.collapse(true);
 					w.editor.selection.setRng(rng);
 				} else {
-					w.dialogs.show('message', {
+					w.dialogManager.show('message', {
 						title: 'No Text Allowed',
 						msg: 'Text is not allowed in the current tag: '+ed.currentNode.getAttribute('_tag')+'.',
 						type: 'error'
@@ -296,7 +278,7 @@ function Writer(config) {
 			if (evt.shiftKey && evt.which == 13) {
 				var node = ed.currentNode;
 				if ($(node).attr('_tag') == 'lb') node = node.parentNode;
-				var tagName = w.u.getTagForEditor('lb');
+				var tagName = w.utilities.getTagForEditor('lb');
 				$(node).find('br').replaceWith('<'+tagName+' _tag="lb"></'+tagName+'>');
 			}
 		}
@@ -318,7 +300,7 @@ function Writer(config) {
 			if (newTag.text() == '') {
 				newTag.text('\uFEFF'); // insert zero-width non-breaking space so empty tag takes up space
 			}
-//			if (!w.u.isTagBlockLevel(newTag.attr('_tag'))) {
+//			if (!w.utilities.isTagBlockLevel(newTag.attr('_tag'))) {
 //				w.selectStructureTag(newTag.attr('id'), true);
 //			}
 		}
@@ -341,7 +323,7 @@ function Writer(config) {
 	function _onNodeChangeHandler(ed, cm, e) {
 		if (e != null) {
 			if (e.nodeType != 1) {
-				ed.currentNode = w.u.getRootTag()[0];
+				ed.currentNode = w.utilities.getRootTag()[0];
 			} else {
 				if (e.getAttribute('_tag') == null) {
 					if (e.getAttribute('data-mce-bogus') != null) {
@@ -415,7 +397,8 @@ function Writer(config) {
 	function _hideContextMenus(evt) {
 		var target = $(evt.target);
 		// hide structure tree menu
-		if ($.vakata.context.vis && target.parents('#vakata-contextmenu').length == 0) {
+		// TODO move to structure tree
+		if ($.vakata && $.vakata.context.vis && target.parents('#vakata-contextmenu').length == 0) {
 			$.vakata.context.hide();
 		}
 		// hide editor menu
@@ -433,11 +416,11 @@ function Writer(config) {
 			w.highlightEntity(); // remove highlight
 			if ((w.editor.dom.hasClass(parent, 'start') && evt.which == 37) || 
 				(w.editor.dom.hasClass(parent, 'end') && evt.which != 39)) {
-				var prevNode = w.u.getPreviousTextNode(parent);
+				var prevNode = w.utilities.getPreviousTextNode(parent);
 				range.setStart(prevNode, prevNode.length);
 				range.setEnd(prevNode, prevNode.length);
 			} else {
-				var nextNode = w.u.getNextTextNode(parent);
+				var nextNode = w.utilities.getNextTextNode(parent);
 				range.setStart(nextNode, 0);
 				range.setEnd(nextNode, 0);
 			}
@@ -468,21 +451,21 @@ function Writer(config) {
 	/**
 	 * Begin init functions
 	 */
-	w.init = function() {
+	function init() {
 
-		w.eventmanager = new EventManager({writer: w});
-		w.schemamanager = new SchemaManager({writer: w, schemas: config.schemas});
-		w.dialogs = new DialogManager({writer: w});
-		w.u = new Utilities({writer: w});
-		w.tagger = new Tagger({writer: w});
-		w.fm = new FileManager({writer: w});
-		w.em = new EntitiesModel({writer: w});
+		w.eventManager = new EventManager(w);
+		w.schemaManager = new SchemaManager(w, {schemas: config.schemas});
+		w.dialogManager = new DialogManager(w);
+		w.utilities = new Utilities(w);
+		w.tagger = new Tagger(w);
+		w.fileManager = new FileManager(w);
+		w.entitiesModel = EntitiesModel;
 		w.settings = new SettingsDialog(w, {
 			showEntityBrackets: true,
 			showStructBrackets: false
 		});
 		if (config.delegator != null) {
-			w.delegator = new config.delegator({writer: w});
+			w.delegator = new config.delegator(w);
 		} else {
 			alert('Error: you must specify a delegator in the CWRCWriter config for full functionality!');
 		}
@@ -506,7 +489,7 @@ function Writer(config) {
 
 		$(window).unload(function(e) {
 			// clear the editor first (large docs can cause the browser to freeze)
-			w.u.getRootTag().remove();
+			w.utilities.getRootTag().remove();
 		});
 
 
@@ -529,7 +512,7 @@ function Writer(config) {
 		 */
 //				$('#editor').tinymce({
 //					script_url : 'js/tinymce/jscripts/tiny_mce/tiny_mce.js',
-		tinyMCE.init({
+		tinymce.init({
 			mode: 'exact',
 			elements: config.id,
 			theme: 'advanced',
@@ -542,7 +525,7 @@ function Writer(config) {
 			doctype: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
 			element_format: 'xhtml',
 			
-			forced_root_block: w.u.BLOCK_TAG,
+			forced_root_block: w.utilities.BLOCK_TAG,
 			keep_styles: false, // false, otherwise tinymce interprets our spans as style elements
 			
 			paste_auto_cleanup_on_paste: true, // true, otherwise paste_postprocess isn't called
@@ -563,10 +546,10 @@ function Writer(config) {
 				
 				function replaceTags(index, node) {
 					if (node.nodeName.toLowerCase() == 'p') {
-						var tagName = w.u.getTagForEditor('p');
+						var tagName = w.utilities.getTagForEditor('p');
 						$(node).contents().unwrap().wrapAll('<'+tagName+' _tag="p"></'+tagName+'>').not(':text').each(replaceTags);
 					} else if (node.nodeName.toLowerCase() == 'br') {
-						var tagName = w.u.getTagForEditor('br');
+						var tagName = w.utilities.getTagForEditor('br');
 						$(node).replaceWith('<'+tagName+' _tag="lb"></'+tagName+'>');
 					}
 				}
@@ -622,8 +605,7 @@ function Writer(config) {
 					if (settings.showEntityBrackets) body.addClass('showEntityBrackets');
 					if (settings.showStructBrackets) body.addClass('showStructBrackets');
 					
-					ed.addCommand('isSelectionValid', w.u.isSelectionValid);
-					ed.addCommand('showError', w.showError);
+					ed.addCommand('isSelectionValid', w.utilities.isSelectionValid);
 					ed.addCommand('addEntity', w.tagger.addEntity);
 					ed.addCommand('editTag', w.tagger.editTag);
 					ed.addCommand('changeTag', w.tagger.changeTag);
@@ -635,9 +617,9 @@ function Writer(config) {
 					ed.addCommand('editStructureTag', w.tagger.editStructureTag);
 					ed.addCommand('changeStructureTag', w.changeStructureTag);
 					ed.addCommand('removeHighlights', w.removeHighlights);
-					ed.addCommand('exportDocument', w.fm.exportDocument);
-					ed.addCommand('loadDocument', w.fm.loadDocument);
-					ed.addCommand('getParentsForTag', w.u.getParentsForTag);
+					ed.addCommand('exportDocument', w.fileManager.exportDocument);
+					ed.addCommand('loadDocument', w.fileManager.loadDocument);
+					ed.addCommand('getParentsForTag', w.utilities.getParentsForTag);
 					ed.addCommand('getDocumentationForTag', w.delegator.getHelp);
 					
 					// used in conjunction with the paste plugin
@@ -651,9 +633,6 @@ function Writer(config) {
 					ed.onKeyUp.add(_onKeyUpHandler);
 					
 					w.event('writerInitialized').publish(w);
-					
-					// load a starting document
-					w.fm.loadInitialDocument(window.location.hash);
 				});
 				ed.onChange.add(_onChangeHandler);
 				ed.onNodeChange.add(_onNodeChangeHandler);
@@ -662,7 +641,7 @@ function Writer(config) {
 				
 				// add schema file and method
 				ed.addCommand('getSchema', function(){
-					return w.schemamanager.schema;
+					return w.schemaManager.schema;
 				});
 				
 				// add custom plugins and buttons
@@ -740,27 +719,27 @@ function Writer(config) {
 				});
 				ed.addButton('newbutton', {title: 'New', image: w.cwrcRootUrl+'img/page_white_text.png', 'class': 'entityButton',
 					onclick: function() {
-						w.fm.newDocument();
+						w.fileManager.newDocument();
 					}
 				});
 				ed.addButton('savebutton', {title: 'Save', image: w.cwrcRootUrl+'img/save.png',
 					onclick: function() {
-						w.fm.saveDocument();
+						w.fileManager.saveDocument();
 					}
 				});
 				ed.addButton('saveasbutton', {title: 'Save As', image: w.cwrcRootUrl+'img/save_as.png',
 					onclick: function() {
-						w.dialogs.filemanager.showSaver();
+						w.dialogManager.filemanager.showSaver();
 					}
 				});
 				ed.addButton('loadbutton', {title: 'Load', image: w.cwrcRootUrl+'img/folder_page.png', 'class': 'entityButton',
 					onclick: function() {
-						w.dialogs.filemanager.showLoader();
+						w.dialogManager.filemanager.showLoader();
 					}
 				});
 				ed.addButton('editsource', {title: 'Edit Source', image: w.cwrcRootUrl+'img/editsource.gif', 'class': 'wideButton',
 					onclick: function() {
-						w.fm.editSource();
+						w.fileManager.editSource();
 					}
 				});
 				ed.addButton('validate', {title: 'Validate', image: w.cwrcRootUrl+'img/validate.png', 'class': 'entityButton',
@@ -771,7 +750,7 @@ function Writer(config) {
 				ed.addButton('addtriple', {title: 'Add Relation', image: w.cwrcRootUrl+'img/chart_org.png', 'class': 'entityButton',
 					onclick: function() {
 						$('#westTabs').tabs('option', 'active', 2);
-						w.dialogs.show('triple');
+						w.dialogManager.show('triple');
 					}
 				});
 				
@@ -785,6 +764,9 @@ function Writer(config) {
 			}
 		});
 	};
+	init();
 	
-	w.init();
-}
+	return w;
+};
+
+});

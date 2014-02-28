@@ -1,5 +1,7 @@
-var LinkDialog = function(config) {
-	var w = config.writer;
+define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+	
+return function(writer) {
+	var w = writer;
 	
 	var currentType = null;
 	
@@ -39,7 +41,11 @@ var LinkDialog = function(config) {
 			if (src.match(/^https?:\/\//) == null) {
 				src = 'http://'+src;
 			}
-			window.open(src, 'linkTestWindow');
+			try {
+				window.open(src, 'linkTestWindow');
+			} catch(e) {
+				alert(e);
+			}
 		}
 	});
 	
@@ -86,3 +92,5 @@ var LinkDialog = function(config) {
 		}
 	};
 };
+
+});

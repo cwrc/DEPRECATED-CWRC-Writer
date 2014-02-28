@@ -1,5 +1,7 @@
-var AddPersonDialog = function(config) {
-	var w = config.writer;
+define(['jquery', 'jquery-ui', 'jquery.watermark'], function($, jqueryUi, watermark) {
+	
+return function(writer) {
+	var w = writer;
 	
 	$(document.body).append(''+
 	'<div id="addPersonDialog" class="annotationDialog">'+
@@ -96,3 +98,5 @@ var AddPersonDialog = function(config) {
 		}
 	};
 };
+
+});

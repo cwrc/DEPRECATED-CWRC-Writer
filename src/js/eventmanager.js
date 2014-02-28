@@ -1,7 +1,8 @@
 // a wrapper for the pub/sub pattern described here: http://api.jquery.com/jQuery.Callbacks/
+define(['jquery'], function($) {
 
-function EventManager(config) {
-	var w = config.writer;
+return function(writer) {
+	var w = writer;
 	
 	var events = {};
 	
@@ -164,3 +165,5 @@ function EventManager(config) {
 		}
 	};
 };
+
+});

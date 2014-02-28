@@ -4,54 +4,9 @@
 		<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 		<title>CWRCWriter</title>
-		<script type="text/javascript" src="js/lib/jquery/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="js/lib/jquery/jquery-ui-1.10.3.custom.js"></script>
-		<script type="text/javascript" src="js/lib/jquery/jquery.contextmenu.js"></script>
-		<script type="text/javascript" src="js/lib/jquery/jquery.tmpl.min.js"></script>
-		<script type="text/javascript" src="js/lib/jquery/jquery.watermark.min.js"></script>
 		
-		<script type="text/javascript" src="js/lib/tinymce/tiny_mce_src.js"></script>
-		<script type="text/javascript" src="js/lib/tinymce/copy_event.js"></script>
-		
-		<script type="text/javascript" src="js/lib/tinymce/jquery.tinymce.js"></script>
-		<script type="text/javascript" src="js/lib/jstree/jquery.hotkeys.js"></script>
-		<!-- can't use jquery.jtree.min.js due to modification -->
-		<script type="text/javascript" src="js/lib/jstree/jquery.jstree.js"></script>
-		<script type="text/javascript" src="js/lib/snippet/jquery.snippet.min.js"></script>
-		<script type="text/javascript" src="js/lib/moment/moment.min.js"></script>
-		<script type="text/javascript" src="js/lib/objtree/ObjTree.js"></script>
-		
-		<script type="text/javascript" src="js/dialogs/dialog_addevent.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_addorg.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_addperson.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_addplace.js"></script>
-		<script type="text/javascript" src="js/dialogs/search_widget.js"></script>
-		<script type="text/javascript" src="js/dialogs/attribute_widget.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_citation.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_correction.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_date.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_header.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_keyword.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_link.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_message.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_note.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_search.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_settings.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_title.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_triple.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_filemanager.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_person.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_place.js"></script>
-		<script type="text/javascript" src="js/editor.js"></script>
-		<script type="text/javascript" src="js/eventmanager.js"></script>
-		<script type="text/javascript" src="js/schemamanager.js"></script>
-		<script type="text/javascript" src="js/layout.js"></script>
-		<script type="text/javascript" src="js/tagger.js"></script>
-		<script type="text/javascript" src="js/dialog.js"></script>
-		<script type="text/javascript" src="js/utilities.js"></script>
-		<script type="text/javascript" src="js/filemanager.js"></script>
-		<script type="text/javascript" src="js/entities_model.js"></script>
-		<script type="text/javascript" src="js/delegator.js"></script>
+		<script type="text/javascript" src="js/config.js"></script>
+		<script type="text/javascript" src="js/lib/require/require.js"></script>
 
 		<link type="text/css" rel="stylesheet" href="css/style.css" />
 		<link type="text/css" rel="stylesheet" href="css/islandora_style.css" />
@@ -67,7 +22,7 @@
 		</style>
 
 		<script type="text/javascript">
-			$(function() {
+			function cwrcWriterInit(Writer, Delegator) {
 				cwrc_params = {};
 				
 				writer = null;
@@ -82,7 +37,7 @@
 					id: 'editor',
 					delegator: Delegator,
 					cwrcRootUrl: baseUrl+'/editor/test/',
-					buttons1: 'schematags,|,addperson,addplace,|,viewsource',
+					buttons1: 'schematags,removeTag,|,addperson,addplace,|,viewsource',
 					schemas: {
 						tei: {
 							name: 'CWRC Basic TEI Schema',
@@ -145,7 +100,7 @@
 						$(window).on('resize', doResize);
 					}
 				});
-			});
+			};
 		</script>
 	</head>
 <body>

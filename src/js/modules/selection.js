@@ -1,4 +1,6 @@
-function Selection(config) {
+define(['jquery'], function($) {
+	
+return function(config) {
 	
 	var w = config.writer;
 	
@@ -15,8 +17,8 @@ function Selection(config) {
 		var range = ed.selection.getRng(true);
 		var contents = range.cloneContents();
 		$('#selectionContents').html(contents);
-		var xmlString = w.fm.buildXMLString($('#selectionContents'));
-		var escapedContents = w.u.escapeHTMLString(xmlString);   //$('#selectionContents')[0].innerHTML
+		var xmlString = w.fileManager.buildXMLString($('#selectionContents'));
+		var escapedContents = w.utilities.escapeHTMLString(xmlString);   //$('#selectionContents')[0].innerHTML
 		if (escapedContents.length < 100000 && escapedContents != '\uFEFF') {
 			$('#selection').html('<pre>'+escapedContents+'</pre>');
 			$('#selection > pre').snippet('html', {
@@ -34,4 +36,6 @@ function Selection(config) {
 	w.selection = selection;
 	
 	return selection;
-}
+};
+
+});

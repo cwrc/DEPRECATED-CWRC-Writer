@@ -1,5 +1,7 @@
-var AddPlaceDialog = function(config) {
-	var w = config.writer;
+define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+	
+return function(writer) {
+	var w = writer;
 	
 	$(document.body).append(''+
 	'<div id="addPlaceDialog">'+
@@ -50,3 +52,5 @@ var AddPlaceDialog = function(config) {
 		}
 	};
 };
+
+});

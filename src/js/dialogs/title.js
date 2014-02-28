@@ -1,5 +1,7 @@
-var TitleDialog = function(config) {
-	var w = config.writer;
+define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+	
+return function(writer) {
+	var w = writer;
 	
 	var mode = null;
 	var ADD = 0;
@@ -122,3 +124,5 @@ var TitleDialog = function(config) {
 		}
 	};
 };
+
+});

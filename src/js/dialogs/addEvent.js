@@ -1,65 +1,73 @@
-var DateDialog = function(config) {
-	var w = config.writer;
+define(['jquery', 'jquery-ui'], function($, jqueryUi) {
 	
-	var mode = null;
-	var ADD = 0;
-	var EDIT = 1;
+return function(writer) {
+	var w = writer;
 	
 	$(document.body).append(''+
-	'<div id="dateDialog">'+
+	'<div id="addEventDialog">'+
+		'<div>'+
+		'<label>Event Name</label>'+
+		'<input type="text" name="eventname" value=""/>'+
+		'</div>'+
 		'<div style="float: right; width: 100px;">'+
-		'<input type="radio" name="dateType" value="date" id="type_date" checked="checked"/><label for="type_date">Date</label><br/>'+
-		'<input type="radio" name="dateType" value="range" id="type_range"/><label for="type_range">Date Range</label>'+
+		'<input type="radio" name="addDateType" value="date" id="add_type_date" checked="checked"/><label for="add_type_date">Date</label><br/>'+
+		'<input type="radio" name="addDateType" value="range" id="add_type_range"/><label for="add_type_range">Date Range</label>'+
 		'</div>'+
-		'<div id="date">'+
-		'<label for="datePicker">Date</label><input type="text" id="datePicker" />'+
+		'<div id="addDate">'+
+		'<label for="addDatePicker">Date</label><input type="text" id="addDatePicker" />'+
 		'</div>'+
-		'<div id="range">'+
-		'<label for="startDate">Start Date</label><input type="text" id="startDate" style="margin-bottom: 5px;"/><br />'+
-	    '<label for="endDate">End Date</label><input type="text" id="endDate" />'+
+		'<div id="addRange">'+
+		'<label for="addStartDate">Start Date</label><input type="text" id="addStartDate" style="margin-bottom: 5px;"/><br />'+
+	    '<label for="addEndDate">End Date</label><input type="text" id="addEndDate" />'+
 	    '</div>'+
 	    '<p>Format: yyyy or yyyy-mm-dd<br/>e.g. 2010, 2010-10-05</p>'+
+	    '<button>Add Further Information</button>'+
+	    '<p>Note: for DEMO purposes only. Saves are NOT permanent.'+
 	'</div>');
 	
-	var date = $('#dateDialog');
-	date.dialog({
+	var d = $('#addEventDialog');
+	d.dialog({
 		modal: true,
 		resizable: false,
 		closeOnEscape: false,
 		open: function(event, ui) {
-			$('#dateDialog').parent().find('.ui-dialog-titlebar-close').hide();
+			$('#addEventDialog').parent().find('.ui-dialog-titlebar-close').hide();
 		},
-		height: 200,
-		width: 375,
+		title: 'Create New Event',
+		height: 300,
+		width: 400,
 		autoOpen: false,
 		buttons: {
-			'Tag Date': function() {
-				dateResult();
+			'Submit for Review': function() {
+				alert('New records can\'t be added yet. The popup is here only to solicit feedback.');
+				d.dialog('close');
 			},
 			'Cancel': function() {
-				dateResult(true);
+				d.dialog('close');
 			}
 		}
 	});
 	
-	var dateInput = $('#datePicker')[0];
+	$('#addEventDialog > button').button();
+	
+	var dateInput = $('#addDatePicker')[0];
 	$(dateInput).focus(function() {
 		$(this).css({borderBottom: ''});
 	});
 	
-	$('#dateDialog input[name="dateType"]').change(function() {
-		var type = this.id.split('_')[1];
+	$('#addEventDialog input[name="addDateType"]').change(function() {
+		var type = this.id.split('_')[2];
 		toggleDate(type);
 	});
 	
-	$('#dateDialog input').keyup(function(event) {
+	$('#addEventDialog input').keyup(function(event) {
 		if (event.keyCode == '13') {
 			event.preventDefault();
-			dateResult();
+//			dateResult();
 		}
 	});
 	
-	$('#datePicker').datepicker({
+	$('#addDatePicker').datepicker({
 		dateFormat: 'yy-mm-dd',
 		constrainInput: false,
 		changeMonth: true,
@@ -73,16 +81,16 @@ var DateDialog = function(config) {
 		buttonImageOnly: true
 	});
 	
-	var startDate = $('#startDate')[0];
+	var startDate = $('#addStartDate')[0];
 	$(startDate).focus(function() {
 		$(this).css({borderBottom: ''});
 	});
-	var endDate = $('#endDate')[0];
+	var endDate = $('#addEndDate')[0];
 	$(endDate).focus(function() {
 		$(this).css({borderBottom: ''});
 	});
 	
-	var dateRange = $('#startDate, #endDate').datepicker({
+	var dateRange = $('#addStartDate, #addEndDate').datepicker({
 		dateFormat: 'yy-mm-dd',
 		constrainInput: false,
 		changeMonth: true,
@@ -92,7 +100,7 @@ var DateDialog = function(config) {
 		maxDate: new Date(2020, 11, 31),
 		showOn: 'button',
 		buttonText: 'Date Picker',
-		buttonImage:  w.cwrcRootUrl+'img/calendar.png',
+		buttonImage: w.cwrcRootUrl+'img/calendar.png',
 		buttonImageOnly: true,
 		onSelect: function(selectedDate) {
 			var option = this.id == "startDate" ? "minDate" : "maxDate";
@@ -104,18 +112,18 @@ var DateDialog = function(config) {
 	
 	var toggleDate = function(type) {
 		if (type == 'date') {
-			$('#date').show();
-			$('#range').hide();
+			$('#addDate').show();
+			$('#addRange').hide();
 		} else {
-			$('#date').hide();
-			$('#range').show();
+			$('#addDate').hide();
+			$('#addRange').show();
 		}
 	};
 	
 	var dateResult = function(cancelled) {
 		var data = {};
 		if (!cancelled) {
-			var type = $('#type_date:checked').val();
+			var type = $('#addEventDialog input[name="addDateType"]:checked', date).val();
 			if (type == 'date') {
 				var dateString = dateInput.value;
 				if (dateString.match(/^\d{4}-\d{2}-\d{2}$/) || dateString.match(/^\d{4}$/)) {
@@ -165,76 +173,26 @@ var DateDialog = function(config) {
 		} else {
 			data = null;
 		}
-		if (mode == EDIT && data != null) {
-			w.tagger.editEntity(w.editor.currentEntity, data);
-		} else {
-			w.tagger.finalizeEntity('date', data);
-		}
-		date.dialog('close');
+		
+		d.dialog('close');
 	};
 	
 	return {
 		show: function(config) {
-			mode = config.entry ? EDIT : ADD;
-			var prefix = 'Tag ';
-			
-			if (mode == ADD) {
-				var dateValue = '';
-				var dateString = w.editor.currentBookmark.rng.toString();
-				var dateObj = moment(dateString).toDate(); // use moment library to parse date string properly
-				var year = dateObj.getFullYear();
-				if (!isNaN(year)) {
-					if (dateString.length > 4) {
-						var month = dateObj.getMonth();
-						month++; // month is zero based index
-						if (month < 10) month = '0'+month;
-						var day = dateObj.getDate();
-						if (day < 10) day = '0'+day;
-						dateValue = year+'-'+month+'-'+day;
-					} else {
-						year++; // if just the year, Date makes it dec 31st at midnight of the prior year
-						dateValue = year;
-					}
-				}
-
-				toggleDate('date');
-				$('#type_date').attr('checked', true);
-				dateInput.value = dateValue;
-				startDate.value = '';
-				endDate.value = '';
-			} else {
-				prefix = 'Edit ';
-				var info = config.entry.info;
-				if (info.date) {
-					toggleDate('date');
-					$('#type_date').attr('checked', true);
-					dateInput.value = info.date;
-					startDate.value = '';
-					endDate.value = '';
-				} else {
-					toggleDate('range');
-					$('#type_date').attr('checked', false);
-					dateInput.value = '';
-					startDate.value = info.startDate;
-					endDate.value = info.endDate;
-				}
-			}
+			toggleDate('date');
+			$('#add_type_date').attr('checked', true);
 			
 			$(dateInput).css({borderBottom: ''});
 			$(startDate).css({borderBottom: ''});
 			$(endDate).css({borderBottom: ''});
-			var title = prefix+config.title;
-			date.dialog('option', 'title', title);
-			if (config.pos) {
-				date.dialog('option', 'position', [config.pos.x, config.pos.y]);
-			} else {
-				date.dialog('option', 'position', 'center');
-			}
-			date.dialog('open');
-			$(dateInput).focus();
+			
+			$('#addEventDialog input').val('');
+			d.dialog('open');
 		},
 		hide: function() {
-			date.dialog('close');
+			d.dialog('close');
 		}
 	};
 };
+
+});

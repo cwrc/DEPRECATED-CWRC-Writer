@@ -1,5 +1,7 @@
-var TripleDialog = function(config) {
-	var w = config.writer;
+define(['jquery', 'jquery-ui', 'jquery.watermark'], function($, jqueryUi, watermark) {
+
+return function(writer) {
+	var w = writer;
 	
 	var precidateList = {
 		person: ['is a child of', 'is a parent of', 'is related to', 'was born on', 'died on'],
@@ -100,12 +102,12 @@ var TripleDialog = function(config) {
 		$('#tripleColumnsParent ul').each(function(index, el) {
 			var s = $(this).find('.selected');
 			if (s.length == 1) {
-				components[index] = {text: w.u.escapeHTMLString(s.text()), uri: s.attr('name'), external: false};
+				components[index] = {text: w.utilities.escapeHTMLString(s.text()), uri: s.attr('name'), external: false};
 			}
 		});
 		$('#tripleColumnsParent input').each(function(index, el) {
 			var val = $(this).val();
-			if (val != '') components[index] = {text: w.u.escapeHTMLString(val), uri: w.u.escapeHTMLString(val), external: true};
+			if (val != '') components[index] = {text: w.utilities.escapeHTMLString(val), uri: w.utilities.escapeHTMLString(val), external: true};
 		});
 		
 		return components;
@@ -197,3 +199,5 @@ var TripleDialog = function(config) {
 		}
 	};
 };
+
+});

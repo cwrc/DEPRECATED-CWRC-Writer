@@ -1,4 +1,6 @@
-var SettingsDialog = function(writer, config) {
+define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+	
+return function(writer, config) {
 	var w = writer;
 	
 	var settings = {
@@ -8,20 +10,20 @@ var SettingsDialog = function(writer, config) {
 		showStructBrackets: false
 	};
 	
-	jQuery.extend(settings, config);
+	$.extend(settings, config);
 	
 	var defaultSettings = {
 		mode: w.mode,
-		validationSchema: w.schemamanager.schemaId
+		validationSchema: w.schemaManager.schemaId
 	};
-	jQuery.extend(defaultSettings, settings);
+	$.extend(defaultSettings, settings);
 	
 	$('#headerButtons').append(''+
 	'<div id="helpLink"><h2>Help</h2></div>'+
 	'<div id="settingsLink"><h2>Settings</h2></div>');
 	var schemasHTML;
-	for(var schema in w.schemamanager.schemas){
-		schemasHTML += '<option value="' + schema + '">"' + w.schemamanager.schemas[schema]['name'] + '"</option>';
+	for(var schema in w.schemaManager.schemas){
+		schemasHTML += '<option value="' + schema + '">"' + w.schemaManager.schemas[schema]['name'] + '"</option>';
 	}
 	
 	$(document.body).append(''+
@@ -80,7 +82,7 @@ var SettingsDialog = function(writer, config) {
 		$('#showentitybrackets').prop('checked', settings.showEntityBrackets);
 		$('#showstructbrackets').prop('checked', settings.showStructBrackets);
 		$('select[name="editormode"] > option[value="'+w.mode+'"]', $('#settingsDialog')).attr('selected', true);
-		$('select[name="schema"] > option[value="'+w.schemamanager.schemaId+'"]', $('#settingsDialog')).attr('selected', true);
+		$('select[name="schema"] > option[value="'+w.schemaManager.schemaId+'"]', $('#settingsDialog')).attr('selected', true);
 		$('#settingsDialog').dialog('open');
 	});
 	
@@ -145,7 +147,7 @@ var SettingsDialog = function(writer, config) {
 				var overlaps = _doEntitiesOverlap();
 				if (overlaps) {
 					doModeChange = false;
-					w.dialogs.show('message', {
+					w.dialogManager.show('message', {
 						title: 'Error',
 						msg: 'You have overlapping entities and are trying to change to XML mode (which doesn\'t permit overlaps).  Please remove the overlapping entities and try again.',
 						type: 'error'
@@ -171,7 +173,7 @@ var SettingsDialog = function(writer, config) {
 		settings.showStructBrackets = $('#showstructbrackets').prop('checked');
 		
 		// TODO schema changed event and handling
-		w.schemamanager.schemaId = $('select[name="schema"]', $('#settingsDialog')).val();
+		w.schemaManager.schemaId = $('select[name="schema"]', $('#settingsDialog')).val();
 		
 		var styles = {
 			fontSize: settings.fontSize,
@@ -215,3 +217,5 @@ var SettingsDialog = function(writer, config) {
 		}
 	};
 };
+
+});

@@ -1,5 +1,7 @@
-function Tagger(config) {
-	var w = config.writer;
+define(['jquery'], function($) {
+	
+return function(writer) {
+	var w = writer;
 	
 	var tagger = {};
 	
@@ -231,7 +233,7 @@ function Tagger(config) {
 			}
 		} else if (tag.entity) {
 			var type = tag.entity.props.type;
-			w.dialogs.show(type, {type: type, title: w.em.getTitle(type), pos: pos, entry: tag.entity});
+			w.dialogManager.show(type, {type: type, title: w.entitiesModel.getTitle(type), pos: pos, entry: tag.entity});
 		}
 	};
 	
@@ -277,12 +279,22 @@ function Tagger(config) {
 	}
 	
 	tagger.addEntity = function(type) {
-		var result = w.u.isSelectionValid();
+		var result = w.utilities.isSelectionValid();
 		if (result == w.VALID) {
 			w.editor.currentBookmark = w.editor.selection.getBookmark(1);
-			w.dialogs.show(type, {type: type, title: w.em.getTitle(type), pos: w.editor.contextMenuPos});
-		} else {
-			w.showError(result);
+			w.dialogManager.show(type, {type: type, title: w.entitiesModel.getTitle(type), pos: w.editor.contextMenuPos});
+		} else if (result == w.NO_SELECTION) {
+			w.dialogManager.show('message', {
+				title: 'Error',
+				msg: 'Please select some text before adding an entity or tag.',
+				type: 'error'
+			});
+		} else if (result == w.NO_COMMON_PARENT) {
+			w.dialogManager.show('message', {
+				title: 'Error',
+				msg: 'Please ensure that the beginning and end of your selection have a common parent.<br/>For example, your selection cannot begin in one paragraph and end in another, or begin in bolded text and end outside of that text.',
+				type: 'error'
+			});
 		}
 	};
 	
@@ -291,7 +303,7 @@ function Tagger(config) {
 		if (info != null) {
 //			var startTag = w.editor.$('[name='+id+'][class~=start]');
 //			for (var key in info) {
-//				startTag.attr(key, w.u.escapeHTMLString(info[key]));
+//				startTag.attr(key, w.utilities.escapeHTMLString(info[key]));
 //			}
 			var id = tagger.addEntityTag(type);
 			w.entities[id].info = info;
@@ -312,7 +324,7 @@ function Tagger(config) {
 			w.editor.entityCopy = tag.entity;
 			w.event('entityCopied').publish(id);
 		} else {
-			w.dialogs.show('message', {
+			w.dialogManager.show('message', {
 				title: 'Error',
 				msg: 'Cannot copy structural tags.',
 				type: 'error'
@@ -322,7 +334,7 @@ function Tagger(config) {
 	
 	tagger.pasteEntity = function(pos) {
 		if (w.editor.entityCopy == null) {
-			w.dialogs.show('message', {
+			w.dialogManager.show('message', {
 				title: 'Error',
 				msg: 'No entity to copy!',
 				type: 'error'
@@ -382,7 +394,7 @@ function Tagger(config) {
 			content = content.replace(/^\s+|\s+$/g, '');
 		}
 		
-		var title = w.u.getTitleFromContent(content);
+		var title = w.utilities.getTitleFromContent(content);
 		
 		var id = tinymce.DOM.uniqueId('ent_');
 		w.editor.currentEntity = id;
@@ -421,7 +433,7 @@ function Tagger(config) {
 		
 		var id = tinymce.DOM.uniqueId('struct_');
 		attributes.id = id;
-		attributes._textallowed = w.u.canTagContainText(attributes._tag);
+		attributes._textallowed = w.utilities.canTagContainText(attributes._tag);
 		w.structs[id] = attributes;
 		w.editor.currentStruct = id;
 		
@@ -437,7 +449,7 @@ function Tagger(config) {
 			}
 		}
 		
-		var tagName = w.u.getTagForEditor(attributes._tag);
+		var tagName = w.utilities.getTagForEditor(attributes._tag);
 		var open_tag = '<'+tagName;
 		for (var key in attributes) {
 			if (key == 'id' || key.match(/^_/) != null) {
@@ -563,4 +575,6 @@ function Tagger(config) {
 	w.event('contentPasted').subscribe(tagger.findDuplicateTags);
 	
 	return tagger;
-}
+};
+
+});

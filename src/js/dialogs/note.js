@@ -1,5 +1,7 @@
-var NoteDialog = function(config) {
-	var w = config.writer;
+define(['jquery', 'jquery-ui', 'tinymce'], function($, jqueryUi, tinymce) {
+	
+return function(writer) {
+	var w = writer;
 	
 	var noteEditor = null;
 	
@@ -50,7 +52,7 @@ var NoteDialog = function(config) {
 	function noteResult(cancelled) {
 		var data = null;
 		if (!cancelled) {
-			var content = w.u.escapeHTMLString(noteEditor.getContent());
+			var content = w.utilities.escapeHTMLString(noteEditor.getContent());
 			var data = {
 				content: content,
 				type: $('#note_type input:checked').val(),
@@ -98,13 +100,13 @@ var NoteDialog = function(config) {
 					prefix = 'Edit ';
 					$('#note_type input[value="'+config.entry.info.type+'"]').click();
 					$('#note_access input[value="'+config.entry.info.access+'"]').click();
-					var content = w.u.unescapeHTMLString(config.entry.info.content);
+					var content = w.utilities.unescapeHTMLString(config.entry.info.content);
 					noteEditor.setContent(content);
 				}
 			}
 			
 			if (noteEditor == null) {
-				tinyMCE.init({
+				tinymce.init({
 					mode: 'exact',
 					elements: 'note_textarea',
 					height: '225',
@@ -134,3 +136,5 @@ var NoteDialog = function(config) {
 		}
 	};
 };
+
+});

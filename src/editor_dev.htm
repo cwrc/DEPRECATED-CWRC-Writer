@@ -4,61 +4,10 @@
 		<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 		<title>CWRCWriter</title>
-		<script type="text/javascript" src="js/lib/jquery/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="js/lib/jquery/jquery-ui-1.10.3.custom.js"></script>
-		<script type="text/javascript" src="js/lib/jquery/jquery.layout-latest.min.js"></script>
-		<script type="text/javascript" src="js/lib/jquery/jquery.layout.resizeTabLayout-1.3.js"></script>
-		<script type="text/javascript" src="js/lib/jquery/jquery.contextmenu.js"></script>
-		<script type="text/javascript" src="js/lib/jquery/jquery.tmpl.min.js"></script>
-		<script type="text/javascript" src="js/lib/jquery/jquery.watermark.min.js"></script>
 		
-		<script type="text/javascript" src="js/lib/tinymce/tiny_mce_src.js"></script>
-		<script type="text/javascript" src="js/lib/tinymce/copy_event.js"></script>
-		
-		<script type="text/javascript" src="js/lib/tinymce/jquery.tinymce.js"></script>
-		<script type="text/javascript" src="js/lib/jstree/jquery.hotkeys.js"></script>
-		<!-- can't use jquery.jtree.min.js due to modification -->
-		<script type="text/javascript" src="js/lib/jstree/jquery.jstree.js"></script>
-		<script type="text/javascript" src="js/lib/snippet/jquery.snippet.min.js"></script>
-		<script type="text/javascript" src="js/lib/moment/moment.min.js"></script>
-		<script type="text/javascript" src="js/lib/objtree/ObjTree.js"></script>
-		
-		<script type="text/javascript" src="js/dialogs/dialog_addevent.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_addorg.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_addperson.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_addplace.js"></script>
-		<script type="text/javascript" src="js/dialogs/search_widget.js"></script>
-		<script type="text/javascript" src="js/dialogs/attribute_widget.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_citation.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_correction.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_date.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_header.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_keyword.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_link.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_message.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_note.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_search.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_settings.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_title.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_triple.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_filemanager.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_person.js"></script>
-		<script type="text/javascript" src="js/dialogs/dialog_place.js"></script>
-		<script type="text/javascript" src="js/editor.js"></script>
-		<script type="text/javascript" src="js/eventmanager.js"></script>
-		<script type="text/javascript" src="js/schemamanager.js"></script>
+		<script type="text/javascript" src="js/config.js"></script>
+		<script type="text/javascript" src="js/lib/require/require.js"></script>
 		<script type="text/javascript" src="js/layout.js"></script>
-		<script type="text/javascript" src="js/tagger.js"></script>
-		<script type="text/javascript" src="js/dialog.js"></script>
-		<script type="text/javascript" src="js/utilities.js"></script>
-		<script type="text/javascript" src="js/filemanager.js"></script>
-		<script type="text/javascript" src="js/entities_model.js"></script>
-		<script type="text/javascript" src="js/modules/structuretree.js"></script>
-		<script type="text/javascript" src="js/modules/entitieslist.js"></script>
-		<script type="text/javascript" src="js/modules/relations.js"></script>
-		<script type="text/javascript" src="js/modules/validation.js"></script>
-		<script type="text/javascript" src="js/modules/selection.js"></script>
-		<script type="text/javascript" src="js/delegator.js"></script>
 
 		<link type="text/css" rel="stylesheet" href="css/style.css" />
 		<link type="text/css" rel="stylesheet" href="css/islandora_style.css" />
@@ -67,46 +16,17 @@
 		<link type="text/css" rel="stylesheet" href="css/layout-default-latest.css" />
 		<link type="text/css" rel="stylesheet" href="js/lib/snippet/jquery.snippet.css" />
 
-		<!-- include all test pages, one for each js file listed above -->
-		<!-- script type="text/javascript" src="delegator_tests.js"></script>
-		<script type="text/javascript" src="dialog_tests.js"></script>
-		<script type="text/javascript" src="editor_tests.js"></script>
-		<script type="text/javascript" src="entities_model_tests.js"></script>
-		<script type="text/javascript" src="entitieslist_tests.js"></script>
-		<script type="text/javascript" src="filemanager_tests.js"></script>
-		<script type="text/javascript" src="relations_tests.js"></script>
-		<script type="text/javascript" src="selection_tests.js"></script>
-		<script type="text/javascript" src="structuretree_tests.js"></script>
-		<script type="text/javascript" src="tagger_tests.js"></script>
-		<script type="text/javascript" src="utilities_tests.js"></script>
-		<script type="text/javascript" src="valiation_tests.js"></script>
-
-		<script type="text/javascript" src="dialogs/dialog_addevent_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_addorg_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_addperson_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_addplace_tests.js"></script>
-		<script type="text/javascript" src="dialogs/search_widget_tests.js"></script>
-		<script type="text/javascript" src="dialogs/attribute_widget_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_citation_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_correction_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_date_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_header_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_keyword_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_link_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_message_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_note_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_search_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_settings_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_title_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_triple_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_filemanager_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_person_tests.js"></script -->
-
 		<script type="text/javascript">
-			$(function() {
+			function cwrcWriterInit(Writer, Delegator) {
 				cwrc_params = {};
 				
 				writer = null;
+				
+				var EntitiesList = EntitiesList;
+				var Relations = Relations;
+				var Selection = Selection;
+				var StructureTree = StructureTree;
+				var Validation = Validation;
 				
 				var baseUrl = window.location.protocol+'//'+window.location.host;
 				var config = {
@@ -143,8 +63,14 @@
 					success: function(data, status, xhr) {
 						config.project = data;
 						writer = new Writer(config);
-						writer.event('writerInitialized').subscribe(function(w) {
-							setupLayoutAndModules(w);
+						writer.event('writerInitialized').subscribe(function(writer) {
+							// load modules then do the setup
+							require(['modules/entitiesList', 'modules/relations',
+							         'modules/selection', 'modules/structureTree', 'modules/validation'
+							], function(EntitiesList, Relations, Selection, StructureTree, Validation) {
+								setupLayoutAndModules(writer, EntitiesList, Relations, Selection, StructureTree, Validation);
+								writer.fileManager.loadInitialDocument(window.location.hash);
+							});
 						});
 					},
 					error: function() {
@@ -172,12 +98,18 @@
 							}
 						};
 						writer = new Writer(config);
-						writer.event('writerInitialized').subscribe(function(w) {
-							setupLayoutAndModules(w);
+						writer.event('writerInitialized').subscribe(function(writer) {
+							// load modules then do the setup
+							require(['modules/entitiesList', 'modules/relations',
+							         'modules/selection', 'modules/structureTree', 'modules/validation'
+							], function(EntitiesList, Relations, Selection, StructureTree, Validation) {
+								setupLayoutAndModules(writer, EntitiesList, Relations, Selection, StructureTree, Validation);
+								writer.fileManager.loadInitialDocument(window.location.hash);
+							});
 						});
 					}
 				});
-			});
+			};
 		</script>
 	</head>
 <body>

@@ -1,4 +1,6 @@
-var AttributeWidget = function(config) {
+define(['jquery'], function($) {
+
+return function(config) {
 	var w = config.writer;
 	var parentId = config.parentId;
 	
@@ -198,3 +200,5 @@ var AttributeWidget = function(config) {
 		}
 	};
 };
+
+});

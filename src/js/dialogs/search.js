@@ -1,5 +1,7 @@
-var SearchDialog = function(config) {
-	var w = config.writer;
+define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+	
+return function(writer) {
+	var w = writer;
 	
 	var currentType = null;
 	var currentId = null;
@@ -7,6 +9,8 @@ var SearchDialog = function(config) {
 	var mode = null;
 	var ADD = 0;
 	var EDIT = 1;
+	
+	var projectTitle = w.project != null ? w.project.title : '';
 	
 	$(document.body).append(''+
 	'<div id="searchDialog" class="annotationDialog">'+
@@ -18,7 +22,7 @@ var SearchDialog = function(config) {
 	    '<div style="position: absolute; top: 55px; left: 10px; right: 10px; bottom: 70px;">'+
 		    '<div id="lookupServices">'+
 		    	'<div id="lookup_project">'+
-			    '<h3>Results from '+w.project.title+' Project</h3>'+
+			    '<h3>Results from '+projectTitle+' Project</h3>'+
 			    '<div><div class="searchResultsParent"><ul class="searchResults"></ul></div></div>'+
 			    '</div>'+
 			    '<div id="lookup_viaf">'+
@@ -81,7 +85,7 @@ var SearchDialog = function(config) {
 		} else if (type == 'uri') {
 			msg = 'Enter a resolvable URI that identifies this person, e.g. their VIAF URI, LOC URI, etc.';
 		}
-		w.dialogs.show('message', {
+		w.dialogManager.show('message', {
 			title: 'Help',
 			msg: msg,
 			modal: false
@@ -197,7 +201,7 @@ var SearchDialog = function(config) {
 	};
 	
 	var createNew = function() {
-		w.dialogs.show('add'+currentType, {});
+		w.dialogManager.show('add'+currentType, {});
 	};
 	
 	return {
@@ -281,3 +285,5 @@ var SearchDialog = function(config) {
 		}
 	};
 };
+
+});

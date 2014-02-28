@@ -1,4 +1,6 @@
-function Relations(config) {
+define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+	
+return function(config) {
 	
 	var w = config.writer;
 	
@@ -15,7 +17,7 @@ function Relations(config) {
 	);
 	
 	$('#relations div.ui-layout-south button:eq(0)').button().click(function() {
-		w.dialogs.show('triple');
+		w.dialogManager.show('triple');
 	});
 	$('#relations div.ui-layout-south button:eq(1)').button().click(function() {
 		var selected = $('#relations ul li.selected');
@@ -24,7 +26,7 @@ function Relations(config) {
 			w.triples.splice(i, 1);
 			pm.update();
 		} else {
-			w.dialogs.show('message', {
+			w.dialogManager.show('message', {
 				title: 'No Relation Selected',
 				msg: 'You must first select a relation to remove.',
 				type: 'error'
@@ -113,3 +115,5 @@ function Relations(config) {
 	
 	return pm;
 };
+
+});

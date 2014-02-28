@@ -1,9 +1,5 @@
 // TODO add IDs
-
-var EntitiesModel = function(config) {
-	
-	var w = config.writer;
-	
+define(['jquery'], function($) {
 	var entities = {
 		person: {
 			title: 'Person',
@@ -224,4 +220,4 @@ var EntitiesModel = function(config) {
 	};
 	
 	return entmod;
-};
+});

@@ -1,4 +1,6 @@
-var SearchWidget = function(config) {
+define(['jquery', 'jquery-ui', 'jquery.tmpl'], function($, jqueryUi, tmpl) {
+
+return function(config) {
 	var w = config.writer;
 	
 	var parentId = config.parentId;
@@ -132,3 +134,5 @@ var SearchWidget = function(config) {
 		}
 	};
 };
+
+});

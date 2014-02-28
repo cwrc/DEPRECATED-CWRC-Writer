@@ -1,5 +1,7 @@
-var FileManagerDialogs = function(config) {
-	var w = config.writer;
+define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+	
+return function(writer) {
+	var w = writer;
 	
 	var dfm = {};
 	
@@ -51,10 +53,10 @@ var FileManagerDialogs = function(config) {
 				var data = selected.data();
 				var isDoc = selected.parent('ul')[0] == $('#files ul:eq(0)')[0];
 				if (isDoc && data) {
-					w.fm.loadDocument(data.name);
+					w.fileManager.loadDocument(data.name);
 					loader.dialog('close');
 				} else if (data) {
-					w.fm.loadInitialDocument(data.name);
+					w.fileManager.loadInitialDocument(data.name);
 					loader.dialog('close');
 				} else {
 					$('#files ul').css({borderColor: 'red'});
@@ -78,7 +80,7 @@ var FileManagerDialogs = function(config) {
 	}).dblclick(function(event) {
 		$('#files li').removeClass('selected');
 		$(this).addClass('selected');
-		w.fm.loadInitialDocument($(this).data('name'));
+		w.fileManager.loadInitialDocument($(this).data('name'));
 		loader.dialog('close');
 	});
 	
@@ -95,14 +97,14 @@ var FileManagerDialogs = function(config) {
 				var name = $('input', saver).val();
 				
 				if (!_isNameValid(name)) {
-					w.dialogs.show('message', {
+					w.dialogManager.show('message', {
 						title: 'Invalid Name',
 						msg: 'You may only enter upper or lowercase letters; no numbers, spaces, or punctuation.',
 						type: 'error'
 					});
 					return;
 				} else if (name == 'info') {
-					w.dialogs.show('message', {
+					w.dialogManager.show('message', {
 						title: 'Invalid Name',
 						msg: 'This name is reserved, please choose a different one.',
 						type: 'error'
@@ -112,7 +114,7 @@ var FileManagerDialogs = function(config) {
 				
 				if ($.inArray(name, docNames) != -1) {
 					// TODO add overwrite confirmation
-					w.dialogs.show('message', {
+					w.dialogManager.show('message', {
 						title: 'Invalid Name',
 						msg: 'This name already exists, please choose a different one.',
 						type: 'error'
@@ -120,7 +122,7 @@ var FileManagerDialogs = function(config) {
 					return;
 				} else {
 					w.currentDocId = name;
-					w.fm.saveDocument();
+					w.fileManager.saveDocument();
 					saver.dialog('close');
 				}
 			},
@@ -141,7 +143,7 @@ var FileManagerDialogs = function(config) {
 		buttons: {
 			'Save': function() {
 				unsaved.dialog('close');
-				w.fm.saveDocument();
+				w.fileManager.saveDocument();
 			},
 			'New Document': function() {
 				window.location = 'index.htm';
@@ -179,7 +181,7 @@ var FileManagerDialogs = function(config) {
 				docNames = data;
 			}, callback],
 			error: function() {
-//				w.dialogs.show('message', {
+//				w.dialogManager.show('message', {
 //					title: 'Error',
 //					msg: 'Error getting documents.',
 //					type: 'error'
@@ -217,7 +219,7 @@ var FileManagerDialogs = function(config) {
 		}).dblclick(function(event) {
 			$('#files li').removeClass('selected');
 			$(this).addClass('selected');
-			w.fm.loadDocument($(this).data('name'));
+			w.fileManager.loadDocument($(this).data('name'));
 			loader.dialog('close');
 		});
 	};
@@ -228,3 +230,5 @@ var FileManagerDialogs = function(config) {
 	
 	return dfm;
 };
+
+});

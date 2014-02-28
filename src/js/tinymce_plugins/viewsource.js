@@ -6,7 +6,7 @@
 			t.editor = ed;
 			
 			ed.addCommand('viewSource', function() {
-				var content = ed.writer.fm.getDocumentContent(false);
+				var content = ed.writer.fileManager.getDocumentContent(false);
 				var source = '<pre>'+t.htmlEncode(content)+'</pre>';
 				$('#viewSourceDialog').html(source);
 				$('#viewSourceDialog > pre').snippet('html', {

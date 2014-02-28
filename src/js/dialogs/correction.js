@@ -1,5 +1,7 @@
-var CorrectionDialog = function(config) {
-	var w = config.writer;
+define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+	
+return function(writer) {
+	var w = writer;
 	
 	var currentType = null;
 	
@@ -95,3 +97,5 @@ var CorrectionDialog = function(config) {
 		}
 	};
 };
+
+});

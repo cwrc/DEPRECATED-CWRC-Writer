@@ -1,5 +1,7 @@
-var HeaderDialog = function(config) {
-	var w = config.writer;
+define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+	
+return function(writer) {
+	var w = writer;
 	
 	$('#headerButtons').append(''+
 	'<div id="headerLink"><h2>Edit Header</h2></div>');
@@ -24,7 +26,7 @@ var HeaderDialog = function(config) {
 				try {
 					xml = $.parseXML(editorString);
 				} catch(e) {
-					w.dialogs.show('message', {
+					w.dialogManager.show('message', {
 						title: 'Invalid XML',
 						msg: 'There was an error parsing the XML.',
 						type: 'error'
@@ -34,7 +36,7 @@ var HeaderDialog = function(config) {
 				
 				var headerString = '';
 				$(xml).find('head').children().each(function(index, el) {
-					headerString += w.fm.buildEditorString(el);
+					headerString += w.fileManager.buildEditorString(el);
 				});
 				$('[_tag="'+w.header+'"]', w.editor.getBody()).html(headerString);
 				
@@ -50,7 +52,7 @@ var HeaderDialog = function(config) {
 		var headerString = '';
 		var headerEl = $('[_tag="'+w.header+'"]', w.editor.getBody());
 		headerEl.children().each(function(index, el) {
-			headerString += w.fm.buildXMLString($(el));
+			headerString += w.fileManager.buildXMLString($(el));
 		});
 		$('#headerDialog textarea').val(headerString);
 		header.dialog('open');
@@ -69,3 +71,5 @@ var HeaderDialog = function(config) {
 		}
 	};
 };
+
+});

@@ -1,4 +1,6 @@
-var EntitiesList = function(config) {
+define(['jquery', 'jquery-ui', 'jquery.contextmenu'], function($, jqueryUi, jqueryContextMenu) {
+	
+return function(config) {
 	
 	var w = config.writer;
 	
@@ -237,3 +239,5 @@ var EntitiesList = function(config) {
 	
 	return pm;
 };
+
+});

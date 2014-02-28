@@ -1,5 +1,7 @@
-function Utilities(config) {
-	var w = config.writer;
+define(['jquery', 'objtree'], function($, objTree) {
+	
+return function(writer) {
+	var w = writer;
 	
 	var useLocalStorage = false;//supportsLocalStorage();
 	
@@ -296,7 +298,7 @@ function Utilities(config) {
 	};
 	
 	u.getDocumentationForTag = function(tag) {
-		var element = $('element[name="'+tag+'"]', w.schemamanager.schemaXML);
+		var element = $('element[name="'+tag+'"]', w.schemaManager.schemaXML);
 		var doc = $('a\\:documentation, documentation', element).first().text();
 		return doc;
 	};
@@ -347,7 +349,7 @@ function Utilities(config) {
 	}
 
 	function _getDefinition(name) {
-		var defs = w.schemamanager.schemaJSON.grammar.define;
+		var defs = w.schemaManager.schemaJSON.grammar.define;
 		for (var i = 0, len = defs.length; i < len; i++) {
 			var d = defs[i];
 			if (d['@name'] == name) return d;
@@ -356,7 +358,7 @@ function Utilities(config) {
 	}
 
 	function _getElement(name) {
-		var defs = w.schemamanager.schemaJSON.grammar.define;
+		var defs = w.schemaManager.schemaJSON.grammar.define;
 		for (var i = 0, len = defs.length; i < len; i++) {
 			var d = defs[i];
 			if (d.element != null) {
@@ -416,7 +418,7 @@ function Utilities(config) {
 			}
 			if (!defHits[name]) {
 				defHits[name] = true;
-				var def = $('define[name="'+name+'"]', writer.schemaXML);
+				var def = $('define[name="'+name+'"]', w.schemaManager.schemaXML);
 				_getChildren(def, defHits, level+1, type, children);
 			}
 		});
@@ -592,8 +594,8 @@ function Utilities(config) {
 			if (children.indexOf('anyName') != -1) {
 				children = [];
 				// anyName means include all elements
-				for (var i = 0; i < w.schemamanager.schema.elements.length; i++) {
-					var el = w.schemamanager.schema.elements[i];
+				for (var i = 0; i < w.schemaManager.schema.elements.length; i++) {
+					var el = w.schemaManager.schema.elements[i];
 					children.push({
 						name: el
 					});
@@ -601,7 +603,7 @@ function Utilities(config) {
 			}
 			
 			// get from XML, slower
-//			var element = $('element[name="'+config.tag+'"]', writer.schemaXML);
+//			var element = $('element[name="'+config.tag+'"]', w.schemaManager.schemaXML);
 //			_getChildrenXML(element, defHits, level, config.type, children);
 			
 			children.sort(function(a, b) {
@@ -634,7 +636,7 @@ function Utilities(config) {
 	};
 	
 	function _getParentElementsFromDef(defName, defHits, level, parents) {
-		$('define:has(ref[name="'+defName+'"])', writer.schemaXML).each(function(index, el) {
+		$('define:has(ref[name="'+defName+'"])', w.schemaManager.schemaXML).each(function(index, el) {
 			var name = $(el).attr('name');
 			if (!defHits[name]) {
 				defHits[name] = true;
@@ -663,7 +665,7 @@ function Utilities(config) {
 			}
 		}
 		if (parents.length == 0) {
-			var element = $('element[name="'+tag+'"]', writer.schemaXML);
+			var element = $('element[name="'+tag+'"]', w.schemaManager.schemaXML);
 			var defName = element.parents('define').attr('name');
 			var defHits = {};
 			var level = 0;
@@ -723,7 +725,7 @@ function Utilities(config) {
 			}
 			if (!defHits[name]) {
 				defHits[name] = true;
-				var def = $('define[name="'+name+'"]', writer.schemaXML);
+				var def = $('define[name="'+name+'"]', w.schemaManager.schemaXML);
 				return checkForText(def, defHits, level+1, canContainText);
 			}
 		});
@@ -735,14 +737,14 @@ function Utilities(config) {
 	 * @returns boolean
 	 */
 	u.canTagContainText = function(tag) {
-		if (tag == writer.root) return false;
+		if (tag == w.root) return false;
 		
 		if (useLocalStorage) {
 			var localData = localStorage['cwrc.'+tag+'.text'];
 			if (localData) return localData == 'true';
 		}
 		
-		var element = $('element[name="'+tag+'"]', writer.schemaXML);
+		var element = $('element[name="'+tag+'"]', w.schemaManager.schemaXML);
 		var defHits = {};
 		var level = 0;
 		var canContainText = {isTrue: false}; // needs to be an object so change is visible outside of checkForText
@@ -767,3 +769,5 @@ function Utilities(config) {
 	
 	return u;
 };
+
+});

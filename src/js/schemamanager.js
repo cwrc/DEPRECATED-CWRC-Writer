@@ -1,5 +1,7 @@
-function SchemaManager(config) {
-	var w = config.writer;
+define(['jquery'], function($) {
+	
+return function(writer, config) {
+	var w = writer;
 	
 	var sm = {};
 	
@@ -79,7 +81,7 @@ function SchemaManager(config) {
 						var tag = $(el).attr('name');
 						if (tag != null && elements.indexOf(tag) == -1) {
 							elements.push(tag);
-							var tagName = w.u.getTagForEditor(tag);
+							var tagName = w.utilities.getTagForEditor(tag);
 							schemaTags += '.showStructBrackets '+tagName+'[_tag='+tag+']:before { color: #aaa; font-weight: normal; font-style: normal; font-family: monospace; content: "<'+tag+'>"; }';
 							schemaTags += '.showStructBrackets '+tagName+'[_tag='+tag+']:after { color: #aaa; font-weight: normal; font-style: normal; font-family: monospace; content: "</'+tag+'>"; }';
 						}
@@ -87,7 +89,7 @@ function SchemaManager(config) {
 					elements.sort();
 					
 					// hide the header
-					var tagName = w.u.getTagForEditor(w.header);
+					var tagName = w.utilities.getTagForEditor(w.header);
 					schemaTags += tagName+'[_tag='+w.header+'] { display: none !important; }';
 					
 					$('#schemaTags', w.editor.getDoc()).text(schemaTags);
@@ -97,11 +99,11 @@ function SchemaManager(config) {
 					if (callback == null) {
 						var text = '';
 						if (startText) text = 'Paste or type your text here.';
-						var tag = w.u.getTagForEditor(w.root);
+						var tag = w.utilities.getTagForEditor(w.root);
 						w.editor.setContent('<'+tag+' _tag="'+w.root+'">'+text+'</'+tag+'>');
 					}
 					
-					sm.schemaJSON = w.u.xmlToJSON($('grammar', sm.schemaXML)[0]);
+					sm.schemaJSON = w.utilities.xmlToJSON($('grammar', sm.schemaXML)[0]);
 					
 					// update the schema for schematags.js
 					// TODO migrate to 4
@@ -162,7 +164,7 @@ function SchemaManager(config) {
 				}
 			},
 			error: function(xhr, status, error) {
-				w.dialogs.show('message', {title: 'Error', msg: 'Error loading schema: '+status, type: 'error'});
+				w.dialogManager.show('message', {title: 'Error', msg: 'Error loading schema: '+status, type: 'error'});
 			}
 		});
 	};
@@ -198,7 +200,7 @@ function SchemaManager(config) {
 						// chrome won't get proper selector, see: https://code.google.com/p/chromium/issues/detail?id=67782
 						var selector = rules[i].selectorText;
 						var newSelector = selector.replace(/(^|,|\s)(\w+)/g, function(str, p1, p2, offset, s) {
-							var tagName = w.u.getTagForEditor(p2);
+							var tagName = w.utilities.getTagForEditor(p2);
 							return p1+tagName+'[_tag="'+p2+'"]';
 						});
 						var css = rules[i].cssText;
@@ -229,4 +231,6 @@ function SchemaManager(config) {
 	};
 	
 	return sm;
-}
+};
+
+});

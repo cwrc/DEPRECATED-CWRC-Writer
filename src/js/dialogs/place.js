@@ -1,5 +1,7 @@
-var PlaceDialog = function(config) {
-	var w = config.writer;
+define(['jquery', 'jquery-ui', 'searchWidget'], function($, jqueryUi, SearchWidget) {
+	
+return function(writer) {
+	var w = writer;
 	
 	var id = 'place';
 	
@@ -99,18 +101,18 @@ var PlaceDialog = function(config) {
 			case SAVE_ADD_LABEL:
 				processData();
 				dialog.dialog('close');
-				w.dialogs.show('addplace', {writer: w, data: currentData});
+				w.dialogManager.show('addplace', {writer: w, data: currentData});
 				break;
 			case ADD_LABEL:
 				dialog.dialog('close');
-				w.dialogs.show('addplace', {writer: w});
+				w.dialogManager.show('addplace', {writer: w});
 				break;
 		}
 		
 		if (mode == EDIT && currentData != null) {
 			w.tagger.editEntity(currentId, currentData);
 		} else {
-			w.tagger.finalizeEntity('person', currentData);
+			w.tagger.finalizeEntity('place', currentData);
 		}
 		currentId = null;
 		currentData = null;
@@ -140,7 +142,7 @@ var PlaceDialog = function(config) {
 		    '</div>'+
 	    '</div>'+
 	'</div>'+
-	'<script src="http://maps.googleapis.com/maps/api/js?sensor=false&callback=writer.dialogs.place.initMap"></script>'+
+	'<script src="http://maps.googleapis.com/maps/api/js?sensor=false&callback=writer.dialogManager.place.initMap"></script>'+
 	'');
 	
 	var dialog = $('#'+id+'Dialog');
@@ -222,3 +224,5 @@ var PlaceDialog = function(config) {
 		}
 	};
 };
+
+});

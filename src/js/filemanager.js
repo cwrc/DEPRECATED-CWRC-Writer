@@ -1,9 +1,19 @@
 /**
  * Contains the load and save dialogs, as well as file related functions.
  */
-function FileManager(config) {
+define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+
+//cross browser xml node finder
+//http://www.steveworkman.com/html5-2/javascript/2011/improving-javascript-xml-node-finding-performance-by-2000/
+$.fn.filterNode = function(name) {
+	return this.find('*').filter(function() {
+		return this.nodeName === name;
+	});
+};
 	
-	var w = config.writer;
+return function(writer) {
+	
+	var w = writer;
 	
 	$(document.body).append(''+
 		'<div id="entitiesConverter"></div>'+
@@ -25,7 +35,7 @@ function FileManager(config) {
 		buttons: {
 			'Ok': function() {
 				var newDocString = $('textarea', edit).val();
-				var xmlDoc = w.u.stringToXML(newDocString);
+				var xmlDoc = w.utilities.stringToXML(newDocString);
 				fm.loadDocumentFromXml(xmlDoc);
 				edit.dialog('close');
 			},
@@ -42,7 +52,7 @@ function FileManager(config) {
 	 */
 	fm.newDocument = function() {
 		if (w.editor.isDirty()) {
-			w.dialogs.filemanager.showUnsaved();
+			w.dialogManager.filemanager.showUnsaved();
 		} else {
 			window.location = 'index.htm';
 		}
@@ -50,7 +60,7 @@ function FileManager(config) {
 	
 	fm.saveDocument = function() {
 		if (w.currentDocId == null) {
-			w.dialogs.filemanager.showSaver();
+			w.dialogManager.filemanager.showSaver();
 		} else {
 			w.delegator.validate(function (valid) {
 				if (valid) {
@@ -58,7 +68,7 @@ function FileManager(config) {
 				} else {
 					var doc = w.currentDocId;
 					if (doc == null) doc = 'The current document';
-					w.dialogs.confirm({
+					w.dialogManager.confirm({
 						title: 'Document Invalid',
 						msg: doc+' is not valid. <b>Save anyways?</b>',
 						callback: function(yes) {
@@ -98,7 +108,7 @@ function FileManager(config) {
 			array.push(openingTag);
 			array.push('</'+tag+'>');
 		} else if (entityEntry) {
-			array = w.em.getMappingTags(entityEntry, w.schemamanager.schemaId);
+			array = w.entitiesModel.getMappingTags(entityEntry, w.schemaManager.schemaId);
 		} else {
 			// not a valid tag so return empty strings
 			array = ['', ''];
@@ -391,7 +401,7 @@ function FileManager(config) {
 			},
 			error: function(xhr, status, error) {
 				w.currentDocId = null;
-				w.dialogs.show('message', {
+				w.dialogManager.show('message', {
 					title: 'Error',
 					msg: 'An error ('+status+') occurred and '+docUrl+' was not loaded.',
 					type: 'error'
@@ -432,7 +442,7 @@ function FileManager(config) {
 			if (forceInline) {
 				tagName = 'span';
 			} else {
-				tagName = w.u.getTagForEditor(tag);
+				tagName = w.utilities.getTagForEditor(tag);
 			}
 			
 			editorString += '<'+tagName+' _tag="'+tag+'"';
@@ -446,7 +456,7 @@ function FileManager(config) {
 			var idNum = parseInt(id.split('_')[1]);
 			if (idNum >= tinymce.DOM.counter) tinymce.DOM.counter = idNum+1;
 			
-			var canContainText = w.u.canTagContainText(tag);
+			var canContainText = w.utilities.canTagContainText(tag);
 			// TODO find non-intensive way to check if tags can possess attributes
 			editorString += ' _textallowed="'+canContainText+'"';
 			
@@ -465,7 +475,7 @@ function FileManager(config) {
 			});
 			editorString += '>';
 			
-			var isInline = forceInline || !w.u.isTagBlockLevel(tag);
+			var isInline = forceInline || !w.utilities.isTagBlockLevel(tag);
 			
 			jQNode.contents().each(function(index, el) {
 				if (el.nodeType == 1) {
@@ -506,12 +516,12 @@ function FileManager(config) {
 				schemaId = 'tei';
 			} else {
 				schemaId = 'customSchema';
-				w.schemamanager.schemas.customSchema = {
+				w.schemaManager.schemas.customSchema = {
 					name: 'Custom Schema',
 					url: schemaUrl
 				};
 			}
-			w.schemamanager.loadSchema(schemaId, false, doProcessing);
+			w.schemaManager.loadSchema(schemaId, false, doProcessing);
 		// determine the schema based on the root element
 		} else {
 			rootName = rootName.toLowerCase();
@@ -525,7 +535,7 @@ function FileManager(config) {
 				} else if (rootName == 'writing') {
 					schemaId = 'writing';
 				}
-				w.schemamanager.loadSchema(schemaId, false, doProcessing);
+				w.schemaManager.loadSchema(schemaId, false, doProcessing);
 			} else {
 				doProcessing();
 			}
@@ -559,7 +569,7 @@ function FileManager(config) {
 				var editorModeStr = w.mode == w.XML ? 'XML only' : 'XML & RDF';
 				var docModeStr = docMode == w.XML ? 'XML only' : 'XML & RDF';
 
-				w.dialogs.show('message', {
+				w.dialogManager.show('message', {
 					title: 'Editor Mode changed',
 					msg: 'The Editor Mode ('+editorModeStr+') has been changed to match the Document Mode ('+docModeStr+').',
 					type: 'info'
@@ -597,7 +607,7 @@ function FileManager(config) {
 								var key = $(this)[0].nodeName.split(':')[1].toLowerCase();
 								var prop = $(this).text();
 								if (key == 'content') {
-									var title = w.u.getTitleFromContent(prop);
+									var title = w.utilities.getTitleFromContent(prop);
 									w.entities[id]['props']['title'] = title;
 								}
 								w.entities[id]['props'][key] = prop;
@@ -647,7 +657,7 @@ function FileManager(config) {
 					parent.contents().each(function(index, element) {
 						if (this.nodeType == Node.TEXT_NODE) {
 							currentOffset += this.length;
-						} else if (w.em.isEntity(this.nodeName.toLowerCase())) {
+						} else if (w.entitiesModel.isEntity(this.nodeName.toLowerCase())) {
 							var ent = $(this);
 							var id = ent.attr(w.idName);
 							if (id == null) {
@@ -666,7 +676,7 @@ function FileManager(config) {
 									id: id,
 									type: this.nodeName.toLowerCase(),
 									content: content,
-									title: w.u.getTitleFromContent(content)
+									title: w.utilities.getTitleFromContent(content)
 								},
 								info: {}
 							};
@@ -802,7 +812,7 @@ function FileManager(config) {
 	};
 	
 	fm.editSource = function() {
-		w.dialogs.confirm({
+		w.dialogManager.confirm({
 			title: 'Edit Source',
 			msg: 'Editing the source directly is only recommended for advanced users who know what they\'re doing.<br/><br/>Are you sure you wish to continue?',
 			callback: function(yes) {
@@ -817,12 +827,12 @@ function FileManager(config) {
 	
 	fm.loadInitialDocument = function(start) {
 		if (start.match('load')) {
-			w.dialogs.filemanager.showLoader();
+			w.dialogManager.filemanager.showLoader();
 		} else if (start.match('sample_') || start.match('template_')) {
 			var name = start.substr(1);
 			_loadTemplate(w.cwrcRootUrl+'xml/'+name+'.xml', name);
 		} else if (start != '') {
-			w.fm.loadDocument(start.substr(1));
+			fm.loadDocument(start.substr(1));
 		}
 	};
 	
@@ -855,10 +865,4 @@ function FileManager(config) {
 	return fm;
 };
 
-//cross browser xml node finder
-//http://www.steveworkman.com/html5-2/javascript/2011/improving-javascript-xml-node-finding-performance-by-2000/
-$.fn.filterNode = function(name) {
-	return this.find('*').filter(function() {
-		return this.nodeName === name;
-	});
-};
+});

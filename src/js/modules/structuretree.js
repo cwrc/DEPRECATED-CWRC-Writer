@@ -1,6 +1,8 @@
-function StructureTree(config) {
+define(['jquery', 'jquery-ui', 'jquery.jstree'], function($, jqueryUi, jsTree) {
 	
+return function(config) {
 	var w = config.writer;
+	
 	var tree = {
 		currentlySelectedNode: null, // id of the currently selected node
 		currentlySelectedEntity: null, // id of the currently selected entity (as opposed to node, ie. struct tag)
@@ -236,7 +238,7 @@ function StructureTree(config) {
 		if (w.structs[id] != null) {
 			tree.currentlySelectedEntity = null;
 			if (w.structs[id]._tag == w.header) {
-				w.dialogs.show('header');
+				w.dialogManager.show('header');
 			} else {
 				ignoreSelect = true; // set to true so tree.highlightNode code isn't run by editor's onNodeChange handler 
 				w.selectStructureTag(id, selectContents);
@@ -278,7 +280,7 @@ function StructureTree(config) {
 			// new struct check
 			if (id == '' || id == null) {
 				id = tinymce.DOM.uniqueId('struct_');
-				if (w.schemamanager.schema.elements.indexOf(tag) != -1) {
+				if (w.schemaManager.schema.elements.indexOf(tag) != -1) {
 					node.attr('id', id).attr('_tag', tag);
 					w.structs[id] = {
 						id: id,
@@ -392,7 +394,7 @@ function StructureTree(config) {
 				if (w.structs[id] != null) {
 					tree.currentlySelectedEntity = null;
 					if (w.structs[id]._tag == w.header) {
-						w.dialogs.show('header');
+						w.dialogManager.show('header');
 					} else {
 						ignoreSelect = true; // set to true so tree.highlightNode code isn't run by editor's onNodeChange handler 
 						w.selectStructureTag(id, selectContents);
@@ -560,11 +562,11 @@ function StructureTree(config) {
 					
 					var parentInfo = w.structs[parentNode.attr('name')];
 					
-					var validKeys = w.u.getChildrenForTag({tag: info._tag, type: 'element', returnType: 'array'});
-	//				var parentKeys = w.u.getParentsForTag({tag: info._tag, returnType: 'array'});
+					var validKeys = w.utilities.getChildrenForTag({tag: info._tag, type: 'element', returnType: 'array'});
+	//				var parentKeys = w.utilities.getParentsForTag({tag: info._tag, returnType: 'array'});
 					var siblingKeys = {};
 					if (parentInfo) {
-						siblingKeys = w.u.getChildrenForTag({tag: parentInfo._tag, type: 'element', returnType: 'array'});
+						siblingKeys = w.utilities.getChildrenForTag({tag: parentInfo._tag, type: 'element', returnType: 'array'});
 					}
 					
 					var submenu = _getSubmenu(validKeys, info);
@@ -714,7 +716,7 @@ function StructureTree(config) {
 //		if (tree.currentlySelectedNode != null || tree.currentlySelectedEntity != null) {
 //			w.tagger.editTag(tree.currentlySelectedNode || tree.currentlySelectedEntity);
 //		} else {
-//			w.dialogs.show('message', {
+//			w.dialogManager.show('message', {
 //				title: 'No Tag Selected',
 //				msg: 'You must first select a tag to edit.',
 //				type: 'error'
@@ -729,7 +731,7 @@ function StructureTree(config) {
 //			w.tagger.removeEntity(tree.currentlySelectedEntity);
 //			_onNodeDeselect();
 //		} else {
-//			w.dialogs.show('message', {
+//			w.dialogManager.show('message', {
 //				title: 'No Tag Selected',
 //				msg: 'You must first select a tag to remove.',
 //				type: 'error'
@@ -744,7 +746,7 @@ function StructureTree(config) {
 //			w.tagger.removeEntity(tree.currentlySelectedEntity);
 //			_onNodeDeselect();
 //		} else {
-//			w.dialogs.show('message', {
+//			w.dialogManager.show('message', {
 //				title: 'No Tag Selected',
 //				msg: 'You must first select a tag to remove.',
 //				type: 'error'
@@ -757,3 +759,5 @@ function StructureTree(config) {
 	
 	return tree;
 };
+
+});
