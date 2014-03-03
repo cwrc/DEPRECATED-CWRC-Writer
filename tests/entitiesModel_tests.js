@@ -1,6 +1,6 @@
 define([], function() {
 
-module("writer.js tests", {
+module("entitiesModel.js tests", {
 	setup : function() {
 		writer.currentDocId = null;
 		var url = writer.cwrcRootUrl + 'xml/sample_letter.xml';
@@ -31,21 +31,34 @@ module("writer.js tests", {
 	}
 });
 
-asyncTest('load file test1', function() {
+asyncTest('Entities type lookups', function() {
 	function test() {
 		start();
-		var content = writer.editor.getContent();
-		ok(content.indexOf("Bull") !== -1, '"Bull" is present.');
+		ok(writer.entitiesModel.isEntity('person') === true, 'isEntity test');
+		ok(writer.entitiesModel.getTitle('person') === 'Person', 'getTitle test');
 		writer.event('documentLoaded').unsubscribe(test);
 	}
 	writer.event('documentLoaded').subscribe(test);
 });
 
-asyncTest('load file test2', function() {
+asyncTest('Mapping tags', function() {
 	function test() {
 		start();
-		var content = writer.editor.getContent();
-		ok(content.indexOf("train") !== -1, '"train" is present.');
+		
+		var entity = {
+			info: {
+				birthDate: "1909",
+				deathDate: "2003",
+				firstName: "Miquel",
+				lastName: "Batllori",
+				name: "Miquel Batllori"
+			},
+			props: {
+				type: 'person'
+			}
+		};
+		var tags = writer.entitiesModel.getMappingTags(entity, 'tei');
+		ok(tags[0].indexOf('<person>') !== -1);
 		writer.event('documentLoaded').unsubscribe(test);
 	}
 	writer.event('documentLoaded').subscribe(test);
