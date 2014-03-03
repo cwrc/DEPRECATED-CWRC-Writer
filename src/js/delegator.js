@@ -168,22 +168,15 @@ return function(writer) {
 				}
 			},
 			error: function() {
-//				 $.ajax({
-//					url : 'xml/validation.xml',
-//					success : function(data, status, xhr) {
-//						if (callback) {
-//							var valid = $('status', data).text() == 'pass';
-//							callback(valid);
-//						} else {
-//							w.validation.showValidationResult(data, docText);
-//						}
-//					}
-//				}); 
-				w.dialogManager.show('message', {
-					title: 'Error',
-					msg: 'An error occurred while trying to validate the document.',
-					type: 'error'
-				});
+				if (callback) {
+					callback.call(w, null);
+				} else {
+					w.dialogManager.show('message', {
+						title: 'Error',
+						msg: 'An error occurred while trying to validate the document.',
+						type: 'error'
+					});
+				}
 			}
 		});
 	};
