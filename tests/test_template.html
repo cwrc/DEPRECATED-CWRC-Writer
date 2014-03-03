@@ -3,96 +3,19 @@
 <head>
 <title>Unit tests template</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+<script type="text/javascript" src="config.js"></script>
+<script type="text/javascript" src="../src/js/lib/require/require.js"></script>
+<script type="text/javascript" src="../src/js/layout.js"></script>
+
 <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-git.css" type="text/css" />
-<script src="http://code.jquery.com/qunit/qunit-git.js"></script>
 
+<link type="text/css" rel="stylesheet" href="../src/css/style.css" />
+<link type="text/css" rel="stylesheet" href="../src/css/islandora_style.css" />
 
-<script type="text/javascript" src="../src/js/lib/jquery/jquery-1.9.1.js"></script>
-<script type="text/javascript" src="../src/js/lib/jquery/jquery-ui-1.10.3.custom.js"></script>
-<script type="text/javascript" src="../src/js/lib/jquery/jquery.layout-latest.min.js"></script>
-<script type="text/javascript" src="../src/js/lib/jquery/jquery.layout.resizeTabLayout-1.3.js"></script>
-<script type="text/javascript" src="../src/js/lib/jquery/jquery.contextmenu.js"></script>
-<script type="text/javascript" src="../src/js/lib/jquery/jquery.tmpl.min.js"></script>
-<script type="text/javascript" src="../src/js/lib/jquery/jquery.watermark.min.js"></script>
-
-<script type="text/javascript" src="../src/js/lib/tinymce/tiny_mce_src.js"></script>
-<script type="text/javascript" src="../src/js/lib/tinymce/copy_event.js"></script>
-
-<script type="text/javascript" src="../src/js/lib/tinymce/jquery.tinymce.js"></script>
-<script type="text/javascript" src="../src/js/lib/jstree/jquery.hotkeys.js"></script>
-<script type="text/javascript" src="../src/js/lib/jstree/jquery.jstree.js"></script>
-<script type="text/javascript" src="../src/js/lib/snippet/jquery.snippet.min.js"></script>
-<script type="text/javascript" src="../src/js/lib/moment/moment.min.js"></script>
-<script type="text/javascript" src="../src/js/lib/objtree/ObjTree.js"></script>
-
-<script type="text/javascript" src="../src/js/dialogs/dialog_addevent.js"></script>
-<script type="text/javascript" src="../src/js/dialogs/dialog_addorg.js"></script>
-<script type="text/javascript" src="../src/js/dialogs/dialog_addperson.js"></script>
-<script type="text/javascript" src="../src/js/dialogs/dialog_addplace.js"></script>
-<script type="text/javascript" src="../src/js/dialogs/search_widget.js"></script>
-<script type="text/javascript" src="../src/js/dialogs/attribute_widget.js"></script>
-<script type="text/javascript" src="../src/js/dialogs/dialog_citation.js"></script>
-<script type="text/javascript" src="../src/js/dialogs/dialog_correction.js"></script>
-<script type="text/javascript" src="../src/js/dialogs/dialog_date.js"></script>
-<script type="text/javascript" src="../src/js/dialogs/dialog_header.js"></script>
-<script type="text/javascript" src="../src/js/dialogs/dialog_keyword.js"></script>
-<script type="text/javascript" src="../src/js/dialogs/dialog_link.js"></script>
-<script type="text/javascript" src="../src/js/dialogs/dialog_message.js"></script>
-<script type="text/javascript" src="../src/js/dialogs/dialog_note.js"></script>
-<script type="text/javascript" src="../src/js/dialogs/dialog_search.js"></script>
-<script type="text/javascript" src="../src/js/dialogs/dialog_settings.js"></script>
-<script type="text/javascript" src="../src/js/dialogs/dialog_title.js"></script>
-<script type="text/javascript" src="../src/js/dialogs/dialog_triple.js"></script>
-<script type="text/javascript" src="../src/js/dialogs/dialog_filemanager.js"></script>
-<script type="text/javascript" src="../src/js/dialogs/dialog_person.js"></script>
-<script type="text/javascript" src="../src/js/editor.js"></script>
-<script type="text/javascript" src="../src/js/tagger.js"></script>
-<script type="text/javascript" src="../src/js/dialog.js"></script>
-<script type="text/javascript" src="../src/js/utilities.js"></script>
-<script type="text/javascript" src="../src/js/filemanager.js"></script>
-<script type="text/javascript" src="../src/js/structuretree.js"></script>
-<script type="text/javascript" src="../src/js/entitieslist.js"></script>
-<script type="text/javascript" src="../src/js/entities_model.js"></script>
-<script type="text/javascript" src="../src/js/relations.js"></script>
-<script type="text/javascript" src="../src/js/validation.js"></script>
-<script type="text/javascript" src="../src/js/selection.js"></script>
-<script type="text/javascript" src="../src/js/delegator.js"></script>
-
-<!-- include all test pages, one for each js file listed above -->
-		<script type="text/javascript" src="delegator_tests.js"></script>
-		<script type="text/javascript" src="dialog_tests.js"></script>
-		<script type="text/javascript" src="editor_tests.js"></script>
-		<script type="text/javascript" src="entities_model_tests.js"></script>
-		<script type="text/javascript" src="entitieslist_tests.js"></script>
-		<script type="text/javascript" src="filemanager_tests.js"></script>
-		<script type="text/javascript" src="relations_tests.js"></script>
-		<script type="text/javascript" src="selection_tests.js"></script>
-		<script type="text/javascript" src="structuretree_tests.js"></script>
-		<script type="text/javascript" src="tagger_tests.js"></script>
-		<script type="text/javascript" src="utilities_tests.js"></script>
-		<script type="text/javascript" src="valiation_tests.js"></script>
-
-		<script type="text/javascript" src="dialogs/dialog_addevent_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_addorg_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_addperson_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_addplace_tests.js"></script>
-		<script type="text/javascript" src="dialogs/search_widget_tests.js"></script>
-		<script type="text/javascript" src="dialogs/attribute_widget_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_citation_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_correction_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_date_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_header_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_keyword_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_link_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_message_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_note_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_search_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_settings_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_title_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_triple_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_filemanager_tests.js"></script>
-		<script type="text/javascript" src="dialogs/dialog_person_tests.js"></script>
-
+<link type="text/css" rel="stylesheet" href="../src/smoothness/jquery-ui-1.10.3.custom.css" />
+<link type="text/css" rel="stylesheet" href="../src/css/layout-default-latest.css" />
+<link type="text/css" rel="stylesheet" href="../src/js/lib/snippet/jquery.snippet.css" />
 
 <link type="text/css" rel="stylesheet" href="../src/css/style.css" />
 <link type="text/css" rel="stylesheet" href="../src/css/islandora_style.css" />
@@ -102,27 +25,14 @@
 <link type="text/css" rel="stylesheet" href="../src/js/lib/snippet/jquery.snippet.css" />
 
 <script type="text/javascript">
-QUnit.config.reorder = false;
-QUnit.config.autostart = false;
-
-//test('Type in the editor', function() {
-//	writer.editor.focus();
-	
-//	window.robot.type('Hello World', false, function() {
-//	ok(writer.editor.getContent().indexOf("Bullit") !== -1)
-	//	equal(writer.editor.getContent(), 'Hello World', 'Content is not "Hello World"');
-//	});
-//});
-
-
-$(function() {
+function cwrcWriterInit(Writer, Delegator) {
 	cwrc_params = {};
 	
 	writer = null;
 	
 	var baseUrl = window.location.protocol+'//'+window.location.host;
 	var config = {
-		containerId: 'cwrc_wrapper',
+		id: 'editor',
 		delegator: Delegator,
 		cwrcRootUrl: baseUrl+'/cwrc/src/',
 		schemas: {
@@ -150,11 +60,22 @@ $(function() {
 	};
 	
 	writer = new Writer(config);
-	$('#'+config.containerId).on('writerInitialized', function() {
-		QUnit.start();
+	writer.event('writerInitialized').subscribe(function(writer) {
+		require([
+		         // modules
+		         'modules/entitiesList', 'modules/relations', 'modules/selection',
+		         'modules/structureTree', 'modules/validation',
+		         // tests
+		         '../../tests/delegator_tests','../../tests/dialogManager_tests'
+		         //,'../../tests/entitiesModel_tests',
+		         //'../../tests/eventManager_tests','../../tests/fileManager_tests','../../tests/schemaManager_tests',
+		         //'../../tests/tagger_tests','../../tests/utilities_tests','../../tests/writer_tests'
+		], function(EntitiesList, Relations, Selection, StructureTree, Validation) {
+			setupLayoutAndModules(writer, EntitiesList, Relations, Selection, StructureTree, Validation);
+			QUnit.start();
+		});
 	});
-	writer.init();
-});
+};
 </script>
 </head>
 <body>
