@@ -1,12 +1,12 @@
 define([
     'jquery',
     'jquery-ui',
-    'dialogs/addEvent','dialogs/addOrg','dialogs/addPerson','dialogs/addPlace',
+    'dialogs/addEvent','dialogs/addOrg','dialogs/addPerson','dialogs/addPlace','dialogs/addSchema',
     'dialogs/citation','dialogs/correction','dialogs/date','dialogs/fileManager',
     'dialogs/header','dialogs/keyword','dialogs/link','dialogs/message',
     'dialogs/note','dialogs/person','dialogs/place','dialogs/search','dialogs/title','dialogs/triple'
 ], function($, jqueryui,
-		AddEvent, AddOrg, AddPerson, AddPlace, Citation, Correction, DateDialog, FileManager,
+		AddEvent, AddOrg, AddPerson, AddPlace, AddSchema, Citation, Correction, DateDialog, FileManager,
 		Header, Keyword, Link, Message, Note, Person, Place, Search, Title, Triple
 ) {
 
@@ -43,7 +43,8 @@ return function(writer) {
 		header: new Header(writer),
 		filemanager: new FileManager(writer),
 		person: new Person(writer),
-		place: new Place(writer)
+		place: new Place(writer),
+		addschema: new AddSchema(writer)
 	};
 	
 //	dialogs.person = dialogs.search;

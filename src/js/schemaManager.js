@@ -1,4 +1,4 @@
-define(['jquery'], function($) {
+define(['jquery', 'tinymce'], function($, tinymce) {
 	
 return function(writer, config) {
 	var w = writer;
@@ -19,6 +19,22 @@ return function(writer, config) {
 	sm.schemaXML = null; // a cached copy of the loaded schema
 	sm.schemaJSON = null; // a json version of the schema
 	sm.schema = {elements: []}; // stores a list of all the elements of the loaded schema
+
+	/**
+	 * Add a schema to the list.
+	 * @param {Object} config The config object
+	 * @param {String} config.name The name for the schema
+	 * @param {String} config.url The url to the schema
+	 * @param {String} config.cssUrl The url to the css
+	 * @returns {String} id The id for the schema
+	 * 
+	 */
+	sm.addSchema = function(config) {
+		var id = tinymce.DOM.uniqueId('schema');
+		sm.schemas[id] = config;
+		w.event('schemaAdded').publish(id);
+		return id;
+	},
 	
 	/**
 	 * Load a new schema.

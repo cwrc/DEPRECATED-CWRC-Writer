@@ -21,60 +21,61 @@ return function(writer, config) {
 	$('#headerButtons').append(''+
 	'<div id="helpLink"><h2>Help</h2></div>'+
 	'<div id="settingsLink"><h2>Settings</h2></div>');
-	var schemasHTML;
-	for(var schema in w.schemaManager.schemas){
-		schemasHTML += '<option value="' + schema + '">"' + w.schemaManager.schemas[schema]['name'] + '"</option>';
-	}
 	
 	$(document.body).append(''+
 	'<div id="settingsDialog">'+
 	'<div>'+
-	'<label>Font Size</label><select name="fontsize">'+
-	'<option value="9pt">9pt</option>'+
-	'<option value="10pt">10pt</option>'+
-	'<option value="11pt">11pt</option>'+
-	'<option value="12pt">12pt</option>'+
-	'<option value="13pt">13pt</option>'+
-	'</select>'+
+		'<label>Font Size</label>'+
+		'<select name="fontsize">'+
+			'<option value="9pt">9pt</option>'+
+			'<option value="10pt">10pt</option>'+
+			'<option value="11pt">11pt</option>'+
+			'<option value="12pt">12pt</option>'+
+			'<option value="13pt">13pt</option>'+
+		'</select>'+
 	'</div>'+
 	'<div style="margin-top: 10px;">'+
-	'<label>Font Type</label><select name="fonttype">'+
-	'<option value="Arial" style="font-family: Arial; font-size: 12px;">Arial</option>'+
-	'<option value="Book Antiqua" style="font-family: Book Antiqua; font-size: 12px;">Book Antiqua</option>'+
-	'<option value="Georgia" style="font-family: Georgia; font-size: 12px;">Georgia</option>'+
-	'<option value="Helvetica" style="font-family: Helvetica; font-size: 12px;">Helvetica</option>'+
-	'<option value="Palatino" style="font-family: Palatino; font-size: 12px;">Palatino</option>'+
-	'<option value="Tahoma" style="font-family: Tahoma; font-size: 12px;">Tahoma</option>'+
-	'<option value="Times New Roman" style="font-family: Times New Roman; font-size: 12px;">Times New Roman</option>'+
-	'<option value="Verdana" style="font-family: Verdana; font-size: 12px;">Verdana</option>'+
-	'</select>'+
+		'<label>Font Type</label>'+
+		'<select name="fonttype">'+
+			'<option value="Arial" style="font-family: Arial; font-size: 12px;">Arial</option>'+
+			'<option value="Book Antiqua" style="font-family: Book Antiqua; font-size: 12px;">Book Antiqua</option>'+
+			'<option value="Georgia" style="font-family: Georgia; font-size: 12px;">Georgia</option>'+
+			'<option value="Helvetica" style="font-family: Helvetica; font-size: 12px;">Helvetica</option>'+
+			'<option value="Palatino" style="font-family: Palatino; font-size: 12px;">Palatino</option>'+
+			'<option value="Tahoma" style="font-family: Tahoma; font-size: 12px;">Tahoma</option>'+
+			'<option value="Times New Roman" style="font-family: Times New Roman; font-size: 12px;">Times New Roman</option>'+
+			'<option value="Verdana" style="font-family: Verdana; font-size: 12px;">Verdana</option>'+
+		'</select>'+
 	'</div>'+
 	'<div style="margin-top: 10px;">'+
-	'<label for="showentitybrackets">Show Entity Brackets</label>'+
-	'<input type="checkbox" id="showentitybrackets" />'+
+		'<label for="showentitybrackets">Show Entity Brackets</label>'+
+		'<input type="checkbox" id="showentitybrackets" />'+
 	'</div>'+
 	'<div style="margin-top: 10px;">'+
-	'<label for="showstructbrackets">Show Tags</label>'+
-	'<input type="checkbox" id="showstructbrackets" />'+
+		'<label for="showstructbrackets">Show Tags</label>'+
+		'<input type="checkbox" id="showstructbrackets" />'+
+	'</div>'+
+	'<div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #aaa;">'+
+	'<label>Editor Mode</label>'+
+		'<select name="editormode">'+
+			'<option value="0">XML & RDF (overlapping entities)</option>'+
+			'<option value="1">XML (no overlap)</option>'+
+		'</select>'+
 	'</div>'+
 	'<div style="margin-top: 10px;">'+
-	'<label>Editor Mode</label><select name="editormode">'+
-	'<option value="0">XML & RDF (overlapping entities)</option>'+
-	'<option value="1">XML (no overlap)</option>'+
-	'</select>'+
-	'</div>'+
-	'<div style="margin-top: 10px;">'+
-	'<label>Schema</label>'+
-	'<select name="schema">'+
-	'</select>'+
+		'<label>Schema</label>'+
+		'<select name="schema">'+
+		'</select>'+
+		'<br/><button>Add Schema</button>'+
 	'</div>'+
 	'</div>'+
 	'<div id="helpDialog">'+
 	'</div>');
 	
-	if(schemasHTML) {
-		$('select[name="schema"]', $('#settingsDialog')).append(schemasHTML);
-	}
+	buildSchema();
+	$('select[name="schema"]', $('#settingsDialog')).nextAll('button').button().click(function() {
+		w.dialogManager.show('addschema');
+	});
 	
 	$('#settingsLink').click(function() {
 		$('select[name="fontsize"] > option[value="'+settings.fontSize+'"]', $('#settingsDialog')).attr('selected', true);
@@ -99,8 +100,8 @@ return function(writer, config) {
 		resizable: false,
 		dialogClass: 'splitButtons',
 		closeOnEscape: true,
-		height: 203,
-		width: 325,
+		height: 350,
+		width: 350,
 		autoOpen: false,
 		buttons: [{
 			text: 'Revert to Defaults',
@@ -139,7 +140,17 @@ return function(writer, config) {
 		}
 	});
 	
-	var applySettings = function() {
+	function buildSchema() {
+		var schemasHTML;
+		for(var schema in w.schemaManager.schemas){
+			schemasHTML += '<option value="' + schema + '">' + w.schemaManager.schemas[schema]['name'] + '</option>';
+		}
+		if(schemasHTML) {
+			$('select[name="schema"]', $('#settingsDialog')).html(schemasHTML);
+		}
+	}
+	
+	function applySettings() {
 		var editorMode = parseInt($('select[name="editormode"]', $('#settingsDialog')).val());
 		if (editorMode != w.mode) {
 			var doModeChange = true;
@@ -172,8 +183,9 @@ return function(writer, config) {
 		}
 		settings.showStructBrackets = $('#showstructbrackets').prop('checked');
 		
-		// TODO schema changed event and handling
+		// TODO add handling for schemaChanged
 		w.schemaManager.schemaId = $('select[name="schema"]', $('#settingsDialog')).val();
+		w.event('schemaChanged').publish(w.schemaManager.schemaId);
 		
 		var styles = {
 			fontSize: settings.fontSize,
@@ -182,7 +194,7 @@ return function(writer, config) {
 		w.editor.dom.setStyles(w.editor.dom.getRoot(), styles);
 	};
 	
-	var setDefaults = function() {
+	function setDefaults() {
 		$('select[name="fontsize"]', $('#settingsDialog')).val(defaultSettings.fontSize);
 		$('select[name="fonttype"]', $('#settingsDialog')).val(defaultSettings.fontFamily);
 		$('#showentitybrackets').prop('checked', defaultSettings.showEntityBrackets);
@@ -192,7 +204,7 @@ return function(writer, config) {
 		$('select[name="schema"]', $('#settingsDialog')).val(defaultSettings.validationSchema);
 	};
 	
-	var _doEntitiesOverlap = function() {
+	function _doEntitiesOverlap() {
 		// remove highlights
 		w.highlightEntity();
 		
@@ -210,6 +222,8 @@ return function(writer, config) {
 		}
 		return false;
 	};
+	
+	w.event('schemaAdded').subscribe(buildSchema);
 	
 	return {
 		getSettings: function() {

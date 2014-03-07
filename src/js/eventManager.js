@@ -66,6 +66,16 @@ return function(writer) {
 	 * A schema was loaded into the editor.
 	 */
 	w.event('schemaLoaded');
+	/**
+	 * The current schema was changed.
+	 * @returns {String} The id of the new schema.
+	 */
+	w.event('schemaChanged');
+	/**
+	 * A schema was added to the list of available schemas.
+	 * @returns {String} The id of the new schema.
+	 */
+	w.event('schemaAdded');
 	
 	/**
 	 * A document was validated.
