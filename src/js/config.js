@@ -55,17 +55,19 @@ var require = {
 	},
 	// initial dependencies
 	deps: ['jquery',
-	       'writer',
-	       'delegator',
-	       'knockout',
-	       'jquery.layout',
-	       'jquery.tablayout',
-	       'jquery.snippet' // need to move to viewsource plugin
-	       ],
-	callback: function($, Writer, Delegator, knockout) {
+	       'knockout'],
+	callback: function($, knockout) {
 		window.ko = knockout; // requirejs shim isn't working for knockout
-		$(function() {
-			cwrcWriterInit.call(window, Writer, Delegator);
+		
+		require(['writer',
+		         'delegator',
+		         'jquery.layout',
+		         'jquery.tablayout',
+		         'jquery.snippet' // need to move to viewsource plugin
+		], function(Writer, Delegator) {
+			$(function() {
+				cwrcWriterInit.call(window, Writer, Delegator);
+			});
 		});
 	}
 };
