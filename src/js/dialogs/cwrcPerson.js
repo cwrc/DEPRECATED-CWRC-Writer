@@ -4,6 +4,17 @@ define(['jquery', 'jquery-ui', 'cwrcDialogs'], function($, jqueryUi, cwrcDialogs
 return function(writer) {
 	var w = writer;
 	
+	function createNewPerson(data) {
+		cD.popCreatePerson({
+			success: function(result) {
+				var r = JSON.stringify(result);
+				console.log(r);
+			},
+			error: function(errorThrown) {
+			},
+		});
+	}
+	
 	return {
 		show: function(config) {
 			cD.popSearchPerson({
@@ -11,8 +22,12 @@ return function(writer) {
 					var r = JSON.stringify(result);
 					console.log(r);
 				},
-				error : function(errorThrown) {
-				}
+				error: function(errorThrown) {
+				},
+				buttons: [{
+					label : "Create New Person",
+					action : createNewPerson
+				}]
 			});
 		},
 		hide: function() {
