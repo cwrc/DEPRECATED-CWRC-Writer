@@ -19,7 +19,14 @@ var require = {
 		'moment': 'lib/moment/moment.min',
 		
 		'attributeWidget': 'dialogs/attributeWidget',
-		'searchWidget': 'dialogs/searchWidget'
+		'searchWidget': 'dialogs/searchWidget',
+		
+		// cwrcDialogs
+		'knockout': 'lib/knockout/knockout-2.3.0',
+		'bootstrap': 'lib/bootstrap/bootstrap',
+		'bootstrap-datepicker': 'lib/bootstrap/bootstrap-datepicker',
+		'cwrc-api': 'cwrcDialogs/cwrc-api',
+		'cwrcDialogs': 'cwrcDialogs/cD'
 	},
 	shim: {
 		'jquery-ui': ['jquery'],
@@ -38,17 +45,25 @@ var require = {
 				return this.tinymce;
 			}
 		},
-		'tinymce-copyevent': ['tinymce']
+		'tinymce-copyevent': ['tinymce'],
+
+		'bootstrap-datepicker': ['bootstrap'],
+		'jquery-ui-d': ['jquery'],
+		'cwrcDialogs': {
+			deps: ['jquery', 'knockout', 'bootstrap-datepicker', 'cwrc-api']
+		}
 	},
 	// initial dependencies
 	deps: ['jquery',
 	       'writer',
 	       'delegator',
+	       'knockout',
 	       'jquery.layout',
 	       'jquery.tablayout',
 	       'jquery.snippet' // need to move to viewsource plugin
 	       ],
-	callback: function($, Writer, Delegator) {
+	callback: function($, Writer, Delegator, knockout) {
+		window.ko = knockout; // requirejs shim isn't working for knockout
 		$(function() {
 			cwrcWriterInit.call(window, Writer, Delegator);
 		});

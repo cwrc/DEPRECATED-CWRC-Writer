@@ -4,10 +4,12 @@ define([
     'dialogs/addEvent','dialogs/addOrg','dialogs/addPerson','dialogs/addPlace','dialogs/addSchema',
     'dialogs/citation','dialogs/correction','dialogs/date','dialogs/fileManager',
     'dialogs/header','dialogs/keyword','dialogs/link','dialogs/message',
-    'dialogs/note','dialogs/person','dialogs/place','dialogs/search','dialogs/title','dialogs/triple'
+    'dialogs/note','dialogs/person','dialogs/place','dialogs/search','dialogs/title','dialogs/triple',
+    'dialogs/cwrcPerson','dialogs/cwrcOrg'
 ], function($, jqueryui,
 		AddEvent, AddOrg, AddPerson, AddPlace, AddSchema, Citation, Correction, DateDialog, FileManager,
-		Header, Keyword, Link, Message, Note, Person, Place, Search, Title, Triple
+		Header, Keyword, Link, Message, Note, Person, Place, Search, Title, Triple,
+		CwrcPerson, CwrcOrg
 ) {
 
 // add event listeners to all of our jquery ui dialogs
@@ -42,15 +44,13 @@ return function(writer) {
 		triple: new Triple(writer),
 		header: new Header(writer),
 		filemanager: new FileManager(writer),
-		person: new Person(writer),
+		person: new CwrcPerson(writer),
+		org: new CwrcOrg(writer),
 		place: new Place(writer),
 		addschema: new AddSchema(writer)
 	};
 	
-//	dialogs.person = dialogs.search;
-//	dialogs.place = dialogs.search;
 	dialogs.event = dialogs.search;
-	dialogs.org = dialogs.search;
 	
 	var pm = {
 		/**

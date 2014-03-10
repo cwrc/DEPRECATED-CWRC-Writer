@@ -1,0 +1,36 @@
+/*
+.modal .modal-body {
+    max-height: 420px;
+    overflow-y: auto;
+}*/
+
+/*.result-area {
+	height: 200px;
+	overflow: auto;
+}*/
+
+.bootstrap-scope .interfaceFieldsContainer {
+	padding: 10px 0 0 20px;
+}
+
+.bootstrap-scope textarea{
+	resize:none
+}
+
+.bootstrap-scope .modal-body-area {
+	max-height: 500px;
+	overflow: auto;
+}
+
+.bootstrap-scope .cwrc-result-area {
+	max-height: 500px;
+	overflow: auto;	
+}
+
+.bootstrap-scope .cwrc-help {
+	cursor: pointer;
+}
+
+.bootstrap-scope .popover {
+	min-width: 300px;
+}
