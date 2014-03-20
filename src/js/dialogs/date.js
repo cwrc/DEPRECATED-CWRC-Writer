@@ -14,7 +14,7 @@ return function(writer) {
 		'<input type="radio" name="dateType" value="range" id="type_range"/><label for="type_range">Date Range</label>'+
 		'</div>'+
 		'<div id="date">'+
-		'<label for="datePicker">Date</label><input type="text" id="datePicker" />'+
+		'<label for="cwrc_datePicker">Date</label><input type="text" id="cwrc_datePicker" />'+
 		'</div>'+
 		'<div id="range">'+
 		'<label for="startDate">Start Date</label><input type="text" id="startDate" style="margin-bottom: 5px;"/><br />'+
@@ -44,7 +44,7 @@ return function(writer) {
 		}
 	});
 	
-	var dateInput = $('#datePicker')[0];
+	var dateInput = $('#cwrc_datePicker')[0];
 	$(dateInput).focus(function() {
 		$(this).css({borderBottom: ''});
 	});
@@ -61,7 +61,7 @@ return function(writer) {
 		}
 	});
 	
-	$('#datePicker').datepicker({
+	$('#cwrc_datePicker').datepicker({
 		dateFormat: 'yy-mm-dd',
 		constrainInput: false,
 		changeMonth: true,
@@ -74,6 +74,9 @@ return function(writer) {
 		buttonImage: w.cwrcRootUrl+'img/calendar.png',
 		buttonImageOnly: true
 	});
+	// wrap the datepicker div with our custom class
+	// TODO find a better way to do this
+	$('#ui-datepicker-div').wrap('<div class="cwrc" />');
 	
 	var startDate = $('#startDate')[0];
 	$(startDate).focus(function() {
@@ -182,20 +185,23 @@ return function(writer) {
 			
 			if (mode == ADD) {
 				var dateValue = '';
+				
 				var dateString = w.editor.currentBookmark.rng.toString();
-				var dateObj = moment(dateString).toDate(); // use moment library to parse date string properly
-				var year = dateObj.getFullYear();
-				if (!isNaN(year)) {
-					if (dateString.length > 4) {
-						var month = dateObj.getMonth();
-						month++; // month is zero based index
-						if (month < 10) month = '0'+month;
-						var day = dateObj.getDate();
-						if (day < 10) day = '0'+day;
-						dateValue = year+'-'+month+'-'+day;
-					} else {
-						year++; // if just the year, Date makes it dec 31st at midnight of the prior year
-						dateValue = year;
+				if (dateString != '') {
+					var dateObj = moment(dateString).toDate(); // use moment library to parse date string properly
+					var year = dateObj.getFullYear();
+					if (!isNaN(year)) {
+						if (dateString.length > 4) {
+							var month = dateObj.getMonth();
+							month++; // month is zero based index
+							if (month < 10) month = '0'+month;
+							var day = dateObj.getDate();
+							if (day < 10) day = '0'+day;
+							dateValue = year+'-'+month+'-'+day;
+						} else {
+							year++; // if just the year, Date makes it dec 31st at midnight of the prior year
+							dateValue = year;
+						}
 					}
 				}
 
