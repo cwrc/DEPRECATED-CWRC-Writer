@@ -17,6 +17,12 @@ $(function(){
 		}
 		var dialogType = "";
 
+		// fix conflicts with jquery ui
+		var datepicker = $.fn.datepicker.noConflict();
+		$.fn.bsDatepicker = datepicker;
+		var button = $.fn.button.noConflict();
+		$.fn.bsButton = button;
+		
 		///////////////////////////////////////////////////////////////////////
 		// Helpers
 		///////////////////////////////////////////////////////////////////////
@@ -37,9 +43,9 @@ $(function(){
 				trigger: 'click',
 				delay: { show: 100, hide: 100 },
 			});
-			// $('.dpYears').datepicker();
+			// $('.dpYears').bsDatepicker();
 
-			$('.input-append.date').datepicker({
+			$('.input-append.date').bsDatepicker({
 				format: "yyyy-mm-dd",
 				startView: 2,
 				autoclose: true
@@ -58,7 +64,7 @@ $(function(){
 		entity.viewModel().dialogTitle = ko.observable("");
 		entity.viewModel().validated = ko.observable(true);
 		entity.selfWorking = $.parseXML('<entity></entity>');
-		entity.elementPath = []
+		entity.elementPath = [];
 		entity.person = {};
 		entity.person.schemaUrl = "js/cwrcDialogs/schemas/entities.rng";
 		entity.person.schema = "";
@@ -221,9 +227,6 @@ $(function(){
 			$('head').append(entityTemplates);
 			$('body').append(newDialogTemplate);
 			$("#cwrcEntityModal").modal(params.modalOptions);
-			$("#cwrcEntityModal").draggable({	
-				handle: ".modal-header"
-			});
 
 			ko.applyBindings(entity.viewModel, $("#newDialogue")[0]);
 
@@ -1201,21 +1204,29 @@ $(function(){
 			}
 		}		
 
-		search.populateCWRCPersonResult = function() {
-			// get data through xpaths
-		}
+		search.htmlifyCWRCPerson = function(){
+			var result = "";
+			// data = search.selectedData;
 
-		search.htmlifyCWRCPerson = function(){			
-			search.populateCWRCPersonResult();			
-			return search.completeHtmlifyPerson(search.selectedData);
+			
+			
+			// alert(search.selectedData.data);
+			// nationality
+			// birthDeath
+			// gender
+			// url
+
+			result += "<div><ul>";
+
+			result += "</ul></div>";
+			return result;
+
 		};
 
 		search.htmlifyVIAFPerson = function(){
-			return search.completeHtmlifyPerson(search.selectedData);
-		};
-
-		search.completeHtmlifyPerson = function(data) {
 			var result = "";
+			var data = search.selectedData;
+
 			result += "<div><ul>";
 			if (data.nationality && data.nationality !== "") {
 				result += "<li>Nationality: "+ data.nationality +"</li>";	
@@ -1231,7 +1242,10 @@ $(function(){
 			}
 			result += "</ul></div>";
 			return result;
-		}
+
+		};
+
+		
 
 		search.htmlifyVIAFOrganization = function(){
 			var result = "";
@@ -1408,9 +1422,6 @@ $(function(){
 
 			ko.applyBindings(search, $("#cDSearch")[0]);
 			$("#cwrcSearchDialog").modal(params.modalOptions);
-			$("#cwrcSearchDialog").draggable({	
-				handle: ".modal-header"
-			});
 			$("#cwrcSearchDialog").on('hidden.bs.modal', function () {
   				// stop ajax call if exists
 				for(var key in search.linkedDataSources) {
