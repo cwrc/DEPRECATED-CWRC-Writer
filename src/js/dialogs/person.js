@@ -1,9 +1,8 @@
 define([
     'jquery',
     'jquery-ui',
-    'searchWidget',
     'attributeWidget'
-], function($, jqueryUi, SearchWidget, AttributeWidget) {
+], function($, jqueryUi, AttributeWidget) {
 	
 return function(writer) {
 	var w = writer;
@@ -78,25 +77,6 @@ return function(writer) {
 		}
 	};
 	
-	var onSearchClick = function(data, source, selected) {
-		var tagAs = $('#'+id+'_tagAs span');
-		var label = '';
-		if (selected) {
-			currentData = data;
-			if (source == 'cwrc') {
-				label = SAVE_LABEL;
-			} else {
-				label = SAVE_ADD_LABEL;
-			}
-			tagAs.html(data.name);
-		} else {
-			currentData = null;
-			label = ADD_LABEL;
-			tagAs.empty();
-		}
-		$('#'+id+'SaveButton').button('option', 'label', label);
-	};
-	
 	var onSaveClick = function() {
 		var buttonLabel = $('#'+id+'SaveButton').button('option', 'label');
 		switch (buttonLabel) {
@@ -153,7 +133,6 @@ return function(writer) {
 	$(document.body).append(''+
 	'<div id="'+id+'Dialog" class="annotationDialog">'+
 		'<div class="leftPanel">'+
-			'<div id="'+id+'_searchParent" style="height: 450px;"></div>'+
 			'<div id="'+id+'_certainty">'+
 		    	'<p>This identification is:</p>'+
 				'<input type="radio" id="'+id+'_definite" name="'+id+'_id_certainty" value="definite" /><label for="'+id+'_definite">Definite</label>'+
@@ -232,15 +211,6 @@ return function(writer) {
 		}]
 	});
 	
-	var searchWidget = new SearchWidget({
-		writer: w, parentId: id+'_searchParent', type: 'person', title: 'Persons',
-		datasource: {
-			name: 'viaf',
-			tmpl: '<span>${name}</span>'
-		},
-		clickHandler: onSearchClick
-	});
-	
 	$('#'+id+'_certainty').buttonset();
 	$('#'+id+'_type').buttonset();
 	
@@ -271,19 +241,14 @@ return function(writer) {
 			$('#'+id+'_tagAs span').empty();
 			$('#'+id+'SaveButton').button('option', 'label', 'Add new person');
 			
-			var query;
 			if (mode == EDIT) {
 				var data = config.entry.info;
 				currentId = config.entry.props.id;
-				query = data.firstName+' '+data.lastName;
 				attributeWidget.setData(data.attributes);
 				$('#'+id+'_certainty input[value="'+data.certainty+'"]').prop('checked', true).button('refresh');
 				$('#'+id+'_type input[value="'+data.type+'"]').prop('checked', true).button('refresh');
 				$('#'+id+'_role select').val(data.role);
-			} else {
-				query = w.editor.currentBookmark.rng.toString();
 			}
-			searchWidget.populateSearch(query);
 			
 			dialog.dialog('open');
 		}

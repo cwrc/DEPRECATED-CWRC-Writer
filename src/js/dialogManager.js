@@ -45,6 +45,7 @@ return function(writer) {
 		header: new Header(writer),
 		filemanager: new FileManager(writer),
 		person: new CwrcPerson(writer),
+		tagPerson: new Person(writer),
 		org: new CwrcOrg(writer),
 		place: new Place(writer),
 		addschema: new AddSchema(writer)

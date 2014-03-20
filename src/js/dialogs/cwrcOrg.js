@@ -17,6 +17,9 @@ return function(writer) {
 	
 	return {
 		show: function(config) {
+			var query = w.editor.currentBookmark.rng.toString();
+			$('#searchEntityInput').val(query);
+			
 			cD.popSearchOrganization({
 				success: function(result) {
 					var r = JSON.stringify(result);
