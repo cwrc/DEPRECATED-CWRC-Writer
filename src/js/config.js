@@ -2,7 +2,7 @@ var require = {
 	baseUrl: 'js',
 	paths: {
 		'jquery': 'lib/jquery/jquery-1.9.1',
-		'jquery-ui': 'lib/jquery/jquery-ui-1.10.3.custom',
+		'jquery-ui': 'lib/jquery/jquery-ui-1.10.4.custom',
 		'jquery.layout': 'lib/jquery/jquery.layout-latest.min',
 		'jquery.tablayout': 'lib/jquery/jquery.layout.resizeTabLayout-1.3',
 		'jquery.contextmenu': 'lib/jquery/jquery.contextmenu',
@@ -48,9 +48,8 @@ var require = {
 		'tinymce-copyevent': ['tinymce'],
 
 		'bootstrap-datepicker': ['bootstrap'],
-		'jquery-ui-d': ['jquery'],
 		'cwrcDialogs': {
-			deps: ['jquery', 'knockout', 'bootstrap-datepicker', 'cwrc-api']
+			deps: ['jquery', 'jquery-ui', 'knockout', 'bootstrap-datepicker', 'cwrc-api']
 		}
 	},
 	// initial dependencies
