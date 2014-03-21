@@ -22,6 +22,8 @@ $(function(){
 		$.fn.bsDatepicker = datepicker;
 		var button = $.fn.button.noConflict();
 		$.fn.bsButton = button;
+		var tooltip = $.fn.tooltip.noConflict();
+		$.fn.bsTooltip = tooltip;
 		
 		///////////////////////////////////////////////////////////////////////
 		// Helpers
@@ -37,7 +39,7 @@ $(function(){
 		};
 
 		var setHelp = function() {
-			$(".cwrc-help").tooltip({
+			$(".cwrc-help").bsTooltip({
 				// trigger: "hover",
 				placement: 'right',
 				trigger: 'click',

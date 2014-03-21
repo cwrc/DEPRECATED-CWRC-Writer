@@ -23,6 +23,16 @@ $.extend($.ui.dialog.prototype.options, {
 		});
 	}
 });
+// do the same for tooltips
+$.extend($.ui.tooltip.prototype.options, {
+	create: function(event) {
+		$(event.target).on('tooltipopen', function(event, ui) {
+			$(ui.tooltip).wrap('<div class="cwrc" />');
+		}).on('tooltipclose', function(event, ui) {
+			$(ui.tooltip).unwrap();
+		});
+	}
+});
 
 return function(writer) {	
 	var currentType = null;
@@ -37,16 +47,16 @@ return function(writer) {
 		title: new Title(writer),
 		date: new DateDialog(writer),
 		link: new Link(writer),
-		addperson: new AddPerson(writer),
+//		addperson: new AddPerson(writer),
 		addplace: new AddPlace(writer),
 		addevent: new AddEvent(writer),
 		addorg: new AddOrg(writer),
 		triple: new Triple(writer),
 		header: new Header(writer),
 		filemanager: new FileManager(writer),
-		person: new CwrcPerson(writer),
-		tagPerson: new Person(writer),
-		org: new CwrcOrg(writer),
+		person: new CwrcPerson(writer), // cwrcDialogs lookup
+		tagPerson: new Person(writer), // CWRCWriter tagger
+		org: new CwrcOrg(writer), // cwrcDialogs lookup
 		place: new Place(writer),
 		addschema: new AddSchema(writer)
 	};
