@@ -229,9 +229,10 @@ return function(writer) {
 			if ($(tag.struct, w.editor.getBody()).attr('_tag')) {
 				w.editor.execCommand('editSchemaTag', tag.struct, pos);
 			} else {
-				w.editor.execCommand('editCustomTag', tag.struct, pos);
+				alert('Tag not recognized!');
 			}
 		} else if (tag.entity) {
+			w.editor.currentBookmark = w.editor.selection.getBookmark(1);
 			var type = tag.entity.props.type;
 			w.dialogManager.show(type, {type: type, title: w.entitiesModel.getTitle(type), pos: pos, entry: tag.entity});
 		}

@@ -7,6 +7,7 @@ define(['jquery'], function($) {
 				tei: function(info) {
 					var xml = '<person';
 					if (info.certainty) xml += ' cert="'+info.certainty+'"';
+					if (info.type) xml += ' type="'+info.type+'"';
 					if (info.gender) xml += ' sex="'+info.gender+'"';
 					if (info.role) xml += ' role="'+info.role+'"';
 					xml += '>';
