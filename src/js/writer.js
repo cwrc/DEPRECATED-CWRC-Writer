@@ -3,9 +3,9 @@ define([
     'tinymce',
     'tinymce-copyevent',
     'eventManager','schemaManager','dialogManager','utilities',
-    'tagger','fileManager','entitiesModel','dialogs/settings'
+    'tagger','converter','fileManager','entitiesModel','dialogs/settings'
 ], function($, tinymce, tinymceCopyEvent,
-		EventManager, SchemaManager, DialogManager, Utilities, Tagger, FileManager, EntitiesModel, SettingsDialog) {
+		EventManager, SchemaManager, DialogManager, Utilities, Tagger, Converter, FileManager, EntitiesModel, SettingsDialog) {
 	
 return function(config) {
 	config = config || {};
@@ -14,8 +14,18 @@ return function(config) {
 	
 	w.layout = null; // jquery ui layout object
 	w.editor = null; // reference to the tinyMCE instance we're creating, set in setup
-	w.entities = {}; // entities store
+	
+	/**
+	 * Entities store.
+	 * Each entry contains 3 properties:
+	 * info: tag info about the entity
+	 * props: metadata for use by CWRCWriter
+	 * annotation: annotation uris and object
+	 */
+	w.entities = {};
+	
 	w.structs = {}; // structs store
+	
 	w.triples = []; // triples store
 	// store deleted tags in case of undo
 	// TODO add garbage collection for this
@@ -170,7 +180,7 @@ return function(config) {
 	 * @returns Element The XML document serialized to a string
 	 */
 	w.getDocument = function() {
-		var docString = w.fileManager.getDocumentContent(true);
+		var docString = w.converter.getDocumentContent(true);
 		var doc = null;
 		try {
 			var parser = new DOMParser();
@@ -458,6 +468,7 @@ return function(config) {
 		w.dialogManager = new DialogManager(w);
 		w.utilities = new Utilities(w);
 		w.tagger = new Tagger(w);
+		w.converter = new Converter(w);
 		w.fileManager = new FileManager(w);
 		w.entitiesModel = EntitiesModel;
 		w.settings = new SettingsDialog(w, {
@@ -617,7 +628,6 @@ return function(config) {
 					ed.addCommand('editStructureTag', w.tagger.editStructureTag);
 					ed.addCommand('changeStructureTag', w.changeStructureTag);
 					ed.addCommand('removeHighlights', w.removeHighlights);
-					ed.addCommand('exportDocument', w.fileManager.exportDocument);
 					ed.addCommand('loadDocument', w.fileManager.loadDocument);
 					ed.addCommand('getParentsForTag', w.utilities.getParentsForTag);
 					ed.addCommand('getDocumentationForTag', w.delegator.getHelp);

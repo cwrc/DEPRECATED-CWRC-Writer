@@ -36,7 +36,7 @@ return function(writer) {
 				
 				var headerString = '';
 				$(xml).find('head').children().each(function(index, el) {
-					headerString += w.fileManager.buildEditorString(el);
+					headerString += w.converter.buildEditorString(el);
 				});
 				$('[_tag="'+w.header+'"]', w.editor.getBody()).html(headerString);
 				
@@ -52,7 +52,7 @@ return function(writer) {
 		var headerString = '';
 		var headerEl = $('[_tag="'+w.header+'"]', w.editor.getBody());
 		headerEl.children().each(function(index, el) {
-			headerString += w.fileManager.buildXMLString($(el));
+			headerString += w.converter.buildXMLString($(el));
 		});
 		$('#headerDialog textarea').val(headerString);
 		header.dialog('open');

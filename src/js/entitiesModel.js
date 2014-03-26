@@ -25,20 +25,20 @@ define(['jquery'], function($) {
 					return '<NAME>[[[editorText]]]</NAME>';
 				}
 			},
-			annotation: function(entity) {
+			annotation: function(data) {
 				var date = new Date().toISOString();
 				var contextUri = 'http://www.w3.org/ns/oa-context-20130208.json';
-				var annotationId = '';
+				var annotationId = data.annotationId;
 				var body = '';
 				var annotatedById = '';
 				var userName = '';
 				var userMbox = '';
 				var targetId = '';
-				var personId = '';
+				var personId = data.entityId;
 				var docId = '';
 				var selectorId = '';
-				var offsetStart = '';
-				var offsetEnd = '';
+				var offsetStart = data.start;
+				var offsetEnd = data.end;
 				
 				var annotation = {
 					'@context': contextUri, 
@@ -74,6 +74,8 @@ define(['jquery'], function($) {
 						}
 					}
 				};
+				
+				return annotation;
 			}
 		},
 		date: {
@@ -218,6 +220,21 @@ define(['jquery'], function($) {
 			}
 		}
 		return ['', '']; // return array of empty strings if there is no mapping
+	};
+	
+	/**
+	 * Get the annotation object for the entity.
+	 * @param {String} type The type of entity
+	 * @param {Object} data A data object for use in populating the annotation.
+	 * @returns {Object} The annotation object. 
+	 */
+	entmod.getAnnotation = function(type, data) {
+		var e = entities[type];
+		var anno = {};
+		if (e && e.annotation) {
+			anno = e.annotation(data);
+		}
+		return anno;
 	};
 	
 	return entmod;

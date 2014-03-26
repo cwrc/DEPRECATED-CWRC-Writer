@@ -17,7 +17,7 @@ return function(config) {
 		var range = ed.selection.getRng(true);
 		var contents = range.cloneContents();
 		$('#selectionContents').html(contents);
-		var xmlString = w.fileManager.buildXMLString($('#selectionContents'));
+		var xmlString = w.converter.buildXMLString($('#selectionContents'));
 		var escapedContents = w.utilities.escapeHTMLString(xmlString);   //$('#selectionContents')[0].innerHTML
 		if (escapedContents.length < 100000 && escapedContents != '\uFEFF') {
 			$('#selection').html('<pre>'+escapedContents+'</pre>');

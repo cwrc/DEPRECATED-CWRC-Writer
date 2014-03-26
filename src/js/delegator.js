@@ -135,19 +135,42 @@ return function(writer) {
 	};
 	
 	// TODO placeholder
-	del.getUriForEntity = function(entity, callback) {
-		var uri = 'http://id.cwrc.ca/'+entity.props.type+'/'+entity.props.id;
-		callback.call(this, uri);
+	/**
+	 * Gets the URI for the entity
+	 * @param {Object} entity The entity object
+	 * @returns {Promise} The promise object
+	 */
+	del.getUriForEntity = function(entity) {
+		var guid = createGuid();
+		var uri = 'http://id.cwrc.ca/'+entity.props.type+'/'+guid;
+		var dfd = new $.Deferred();
+		dfd.resolve(uri);
+		return dfd.promise();
 	};
 	
 	// TODO placeholder
-	del.getUriForAnnotation = function(callback) {
-		var uri = 'http://id.cwrc.ca/annotation/'+Math.round(Math.random() * 100000);
-		callback.call(this, uri);
+	/**
+	 * Gets the URI for the annotation
+	 * @param {Object} entity The entity object
+	 * @returns {Promise} The promise object
+	 */
+	del.getUriForAnnotation = function() {
+		var guid = createGuid();
+		var uri = 'http://id.cwrc.ca/annotation/'+guid;
+		var dfd = new $.Deferred();
+		dfd.resolve(uri);
+		return dfd.promise();
 	};
 	
+	function createGuid() {
+	    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+	        var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
+	        return v.toString(16);
+	    });
+	}
+	
 	del.validate = function(callback) {
-		var docText = w.fileManager.getDocumentContent(false);
+		var docText = w.converter.getDocumentContent(false);
 		var schemaUrl = w.schemaManager.schemas[w.schemaManager.schemaId].url;
 		
 		$.ajax({
@@ -211,7 +234,7 @@ return function(writer) {
 	 * @param callback Called with one boolean parameter: true for successful save, false otherwise
 	 */
 	del.saveDocument = function(callback) {
-		var docText = w.fileManager.getDocumentContent(true);
+		var docText = w.converter.getDocumentContent(true);
 		$.ajax({
 			url : w.baseUrl+'editor/documents/'+w.currentDocId,
 			type: 'PUT',

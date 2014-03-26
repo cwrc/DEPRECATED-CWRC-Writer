@@ -302,13 +302,23 @@ return function(writer) {
 	tagger.finalizeEntity = function(type, info) {
 		w.editor.selection.moveToBookmark(w.editor.currentBookmark);
 		if (info != null) {
+			// add attributes to tag
 //			var startTag = w.editor.$('[name='+id+'][class~=start]');
 //			for (var key in info) {
 //				startTag.attr(key, w.utilities.escapeHTMLString(info[key]));
 //			}
+			
 			var id = tagger.addEntityTag(type);
 			w.entities[id].info = info;
-			w.event('entityAdded').publish(id);
+			
+			$.when(w.delegator.getUriForEntity(w.entities[id]), w.delegator.getUriForAnnotation()).then(function(entityUri, annoUri) {
+				w.entities[id].annotation = {
+					entityId: entityUri,
+					annotationId: annoUri
+				};
+				
+				w.event('entityAdded').publish(id);
+			});
 		}
 		w.editor.currentBookmark = null;
 		w.editor.focus();
