@@ -30,47 +30,46 @@ define(['jquery'], function($) {
 				var contextUri = 'http://www.w3.org/ns/oa-context-20130208.json';
 				var annotationId = data.annotationId;
 				var body = '';
-				var annotatedById = '';
+				var annotatedById = data.userId;
 				var userName = '';
 				var userMbox = '';
-				var targetId = '';
 				var personId = data.entityId;
-				var docId = '';
-				var selectorId = '';
+				var docId = data.docId;
+				var selectorId = data.selectorId;
 				var offsetStart = data.start;
 				var offsetEnd = data.end;
 				
 				var annotation = {
-					'@context': contextUri, 
-					'@id': annotationId, 
+					'@context': contextUri,
+					'@id': annotationId,
 					'@type': 'oa:Annotation',
-					'motivation':['oa:identifying', 'oa:tagging'],
-					'annotatedAt': date, 
+					'motivation': ['oa:identifying', 'oa:tagging'],
+					'annotatedAt': date,
 					'annotatedBy': {
-						'@id': annotatedById, 
-						'@type': 'foaf:Person', 
+						'@id': annotatedById,
+						'@type': 'foaf:Person',
 						'mbox': {
 							'@id': userMbox
-						}, 
+						},
 						'name': userName
 					},
 					'hasBody': {
-						'@id': personId, 
-						'@type': ['oa:SemanticTag', 'foaf:Person']		
-					}, 
+						'@id': personId,
+						'@type': ['oa:SemanticTag', 'foaf:Person']
+					},
 					'hasTarget': {
-						'@id': targetId, 
-						'@type': 'oa:SpecificResource', 
+						'@id': docId,
+						'@type': 'oa:SpecificResource',
 						'hasSelector': {
-							'@id': selectorId, 
-							'@type': 'oa:TextPositionSelector', 
+							'@id': selectorId,
+							'@type': 'oa:TextPositionSelector',
 							'start': offsetStart,
 							'end': offsetEnd
-						}, 
+						},
 						'hasSource': {
-							'@id': docId, 
-							'@type':'dctypes:Text',
-					  		'format':'text/xml'
+							'@id': docId,
+							'@type': 'dctypes:Text',
+					  		'format': 'text/xml'
 						}
 					}
 				};

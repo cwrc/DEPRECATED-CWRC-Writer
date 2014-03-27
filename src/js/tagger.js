@@ -311,10 +311,19 @@ return function(writer) {
 			var id = tagger.addEntityTag(type);
 			w.entities[id].info = info;
 			
-			$.when(w.delegator.getUriForEntity(w.entities[id]), w.delegator.getUriForAnnotation()).then(function(entityUri, annoUri) {
+			$.when(
+				w.delegator.getUriForEntity(w.entities[id]),
+				w.delegator.getUriForAnnotation(),
+				w.delegator.getUriForDocument(),
+				w.delegator.getUriForSelector(),
+				w.delegator.getUriForUser()
+			).then(function(entityUri, annoUri, docUri, selectorUri, userUri) {
 				w.entities[id].annotation = {
 					entityId: entityUri,
-					annotationId: annoUri
+					annotationId: annoUri,
+					docId: docUri,
+					selectorId: selectorUri,
+					userId: userUri
 				};
 				
 				w.event('entityAdded').publish(id);

@@ -134,7 +134,6 @@ return function(writer) {
 		}
 	};
 	
-	// TODO placeholder
 	/**
 	 * Gets the URI for the entity
 	 * @param {Object} entity The entity object
@@ -148,7 +147,6 @@ return function(writer) {
 		return dfd.promise();
 	};
 	
-	// TODO placeholder
 	/**
 	 * Gets the URI for the annotation
 	 * @param {Object} entity The entity object
@@ -157,6 +155,45 @@ return function(writer) {
 	del.getUriForAnnotation = function() {
 		var guid = createGuid();
 		var uri = 'http://id.cwrc.ca/annotation/'+guid;
+		var dfd = new $.Deferred();
+		dfd.resolve(uri);
+		return dfd.promise();
+	};
+	
+	/**
+	 * Gets the URI for the document
+	 * @param {Object} entity The entity object
+	 * @returns {Promise} The promise object
+	 */
+	del.getUriForDocument = function() {
+		var guid = createGuid();
+		var uri = 'http://id.cwrc.ca/doc/'+guid;
+		var dfd = new $.Deferred();
+		dfd.resolve(uri);
+		return dfd.promise();
+	};
+	
+	/**
+	 * Gets the URI for the selector
+	 * @param {Object} entity The entity object
+	 * @returns {Promise} The promise object
+	 */
+	del.getUriForSelector = function() {
+		var guid = createGuid();
+		var uri = 'http://id.cwrc.ca/selector/'+guid;
+		var dfd = new $.Deferred();
+		dfd.resolve(uri);
+		return dfd.promise();
+	};
+	
+	/**
+	 * Gets the URI for the user
+	 * @param {Object} entity The entity object
+	 * @returns {Promise} The promise object
+	 */
+	del.getUriForUser = function() {
+		var guid = createGuid();
+		var uri = 'http://id.cwrc.ca/user/'+guid;
 		var dfd = new $.Deferred();
 		dfd.resolve(uri);
 		return dfd.promise();

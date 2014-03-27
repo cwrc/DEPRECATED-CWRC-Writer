@@ -16,6 +16,62 @@ return function(writer) {
 	
 	
 	
+	/**
+	 * Gets the content of the document, converted from internal format to the schema format
+	 * @param includeRDF True to include RDF in the header
+	 * @returns {String}
+	 */
+	converter.getDocumentContent = function(includeRDF) {
+		// remove highlights
+		w.highlightEntity();
+		
+		var xmlString = '<?xml version="1.0" encoding="UTF-8"?>\n';
+		
+		var body = $(w.editor.getBody());
+		var clone = body.clone(false, true); // make a copy, don't clone body events, but clone child events
+		_entitiesToUnicode(body);
+		
+		// rdf
+		var rdfString = '';
+		if (w.mode == w.XMLRDF && includeRDF) {
+			rdfString = converter.buildAnnotations();
+		}
+		
+//		if (w.mode == w.XMLRDF) {
+			// remove the entity tags since they'll be in the rdf
+//			body.find('[_entity]').remove();
+//		} else {
+		
+			// always convert to tags, for now
+			convertEntitiesToTags();
+			
+//		}
+		
+		var root = body.children('[_tag='+w.root+']');
+		// make sure TEI has the right namespace for validation purposes
+		if (w.root == 'TEI') {
+			root.attr('xmlns','http://www.tei-c.org/ns/1.0');
+		}
+		var tags = _nodeToStringArray(root);
+		xmlString += tags[0];
+		
+		var bodyString = '';
+		root.contents().each(function(index, el) {
+			if (el.nodeType == 1) {
+				bodyString += converter.buildXMLString($(el));
+			} else if (el.nodeType == 3) {
+				bodyString += el.data;
+			}
+		});
+		bodyString = bodyString.replace(/\uFEFF/g, ''); // remove characters inserted by node selecting
+		
+		xmlString += rdfString + bodyString;
+		
+		xmlString += tags[1];
+		body.replaceWith(clone);
+		return xmlString;
+	};
+	
 	// gets any metadata info for the node and adds as attributes
 	// returns an array of 2 strings: opening and closing tags
 	function _nodeToStringArray(node) {
@@ -121,7 +177,7 @@ return function(writer) {
 		for (var i = 0; i < offsets.length; i++) {
 			var o = offsets[i];
 			if (o.entity) {
-				rdfString += '\n<rdf:Description><![CDATA[\n';
+				rdfString += '\n<rdf:Description rdf:datatype="http://www.w3.org/TR/json-ld/"><![CDATA[\n';
 				
 				var entry = w.entities[o.id];
 				
@@ -129,6 +185,9 @@ return function(writer) {
 				entry.annotation.end = o.offset + o.length; 
 				
 				var annotation = w.entitiesModel.getAnnotation(entry.props.type, entry.annotation);
+				
+				// add tag attributes to annotation
+				annotation.cwrcAttributes = entry.info;
 				
 				rdfString += JSON.stringify(annotation);
 				
@@ -157,62 +216,6 @@ return function(writer) {
 		rdfString += '\n</rdf:RDF>\n';
 		
 		return rdfString;
-	};
-	
-	/**
-	 * Gets the content of the document, converted from internal format to the schema format
-	 * @param includeRDF True to include RDF in the header
-	 * @returns {String}
-	 */
-	converter.getDocumentContent = function(includeRDF) {
-		// remove highlights
-		w.highlightEntity();
-		
-		var xmlString = '<?xml version="1.0" encoding="UTF-8"?>\n';
-		
-		var body = $(w.editor.getBody());
-		var clone = body.clone(false, true); // make a copy, don't clone body events, but clone child events
-		_entitiesToUnicode(body);
-		
-		// rdf
-		var rdfString = '';
-		if (w.mode == w.XMLRDF && includeRDF) {
-			rdfString = converter.buildAnnotations();
-		}
-		
-//		if (w.mode == w.XMLRDF) {
-			// remove the entity tags since they'll be in the rdf
-//			body.find('[_entity]').remove();
-//		} else {
-		
-			// always convert to tags, for now
-			convertEntitiesToTags();
-			
-//		}
-		
-		var root = body.children('[_tag='+w.root+']');
-		// make sure TEI has the right namespace for validation purposes
-		if (w.root == 'TEI') {
-			root.attr('xmlns','http://www.tei-c.org/ns/1.0');
-		}
-		var tags = _nodeToStringArray(root);
-		xmlString += tags[0];
-		
-		var bodyString = '';
-		root.contents().each(function(index, el) {
-			if (el.nodeType == 1) {
-				bodyString += converter.buildXMLString($(el));
-			} else if (el.nodeType == 3) {
-				bodyString += el.data;
-			}
-		});
-		bodyString = bodyString.replace(/\uFEFF/g, ''); // remove characters inserted by node selecting
-		
-		xmlString += rdfString + bodyString;
-		
-		xmlString += tags[1];
-		body.replaceWith(clone);
-		return xmlString;
 	};
 	
 	/**
@@ -320,7 +323,14 @@ return function(writer) {
 		return relationships;
 	};
 	
-
+	
+	
+	/////////////////////////////////////////////////////////////////////
+	// XML -> CWRCWriter Methods
+	/////////////////////////////////////////////////////////////////////
+	
+	
+	
 	/**
 	 * Takes a document node and returns a string representation of its
 	 * contents, compatible with the editor. Additionally creates w.structs
@@ -370,6 +380,9 @@ return function(writer) {
 				var attName = att.name;
 				if (attName == w.idName) attName = 'id';
 				w.structs[id][attName] = att.value;
+				
+				// TODO consider adding in all attributes here to expand CSS options
+				
 				if (attName == 'id' || attName.match(/^_/) != null) {
 					editorString += ' '+attName+'="'+att.value+'"';
 				}
@@ -392,14 +405,6 @@ return function(writer) {
 		doBuild(node, false);
 		return editorString;
 	};
-	
-	
-	
-	/////////////////////////////////////////////////////////////////////
-	// XML -> CWRCWriter Methods
-	/////////////////////////////////////////////////////////////////////
-	
-	
 	
 	/**
 	 * Processes a document and loads it into the editor.
@@ -455,44 +460,52 @@ return function(writer) {
 		}
 	};
 	
-	function processRdf(rdfs) {
-		rdfs.children().each(function(i1, el1) {
+	function processRdf(rdfs, offsets) {
+		rdfs.children().each(function() {
 			var rdf = $(this);
 
-			if (rdf.attr('rdf:ID')) {
-				var id = rdf.find('w\\:id, id').text();
-				
-				var entity = rdf.find('w\\:entity, entity').text();
-				// entity
-				if (entity != '') {
-					var idNum = parseInt(id.split('_')[1]);
-					if (idNum >= tinymce.DOM.counter) tinymce.DOM.counter = idNum+1;
+			if (rdf.attr('rdf:datatype') == 'http://www.w3.org/TR/json-ld/') {
+				var entity = JSON.parse(rdf.text());
+				if (entity != null) {
+					
+					var id = tinymce.DOM.uniqueId('ent_');
+					var offset = entity.hasTarget.hasSelector.start;
+					var length = entity.hasTarget.hasSelector.end - offset;
 					
 					offsets.push({
 						id: id,
-						parent: rdf.find('w\\:parent, parent').text(),
-						offset: parseInt(rdf.find('w\\:offset, offset').text()),
-						length: parseInt(rdf.find('w\\:length, length').text())
+						offset: offset,
+						length: length
 					});
+					
+					// determine the entity type
+					// TODO will need better way of doing this
+					var type;
+					var typeArray = entity.hasBody['@type'];
+					for (var i = 0; i < typeArray.length; i++) {
+						var t = typeArray[i];
+						if (t.indexOf('SemanticTag') == -1) {
+							t = t.split(':')[1];
+							type = t.toLowerCase();
+						}
+					}
+					
 					w.entities[id] = {
 						props: {
-							id: id
+							id: id,
+							type: type
 						},
-						info: {}
+						info: entity.cwrcAttributes
 					};
-					rdf.children('[type="props"]').each(function(i2, el2) {
-						var key = $(this)[0].nodeName.split(':')[1].toLowerCase();
-						var prop = $(this).text();
-						if (key == 'content') {
-							var title = w.utilities.getTitleFromContent(prop);
-							w.entities[id]['props']['title'] = title;
-						}
-						w.entities[id]['props'][key] = prop;
-					});
-					rdf.children('[type="info"]').each(function(i2, el2) {
-						var key = $(this)[0].nodeName.split(':')[1].toLowerCase();
-						w.entities[id]['info'][key] = $(this).text();
-					});
+//					rdf.children('[type="props"]').each(function(i2, el2) {
+//						var key = $(this)[0].nodeName.split(':')[1].toLowerCase();
+//						var prop = $(this).text();
+//						if (key == 'content') {
+//							var title = w.utilities.getTitleFromContent(prop);
+//							w.entities[id]['props']['title'] = title;
+//						}
+//						w.entities[id]['props'][key] = prop;
+//					});
 				} else {
 					// struct
 				}
@@ -612,7 +625,7 @@ return function(writer) {
 		
 		// process RDF and/or entities
 		if (docMode == w.XMLRDF) {
-			processRdf(rdfs);
+			processRdf(rdfs, offsets);
 			$(doc).find('rdf\\:RDF, RDF').remove();
 		} else {
 			processEntities($(doc.firstChild), offsets);
@@ -637,7 +650,9 @@ return function(writer) {
 			
 			o = offsets[i];
 			id = o.id;
-			if (o.parent != '') {
+			
+			// method #1: have parent id and offset is relative to that
+			if (o.parent && o.parent != '') {
 				parent = w.editor.$('#'+o.parent);
 				
 				// get all text nodes
@@ -676,8 +691,10 @@ return function(writer) {
 					}
 					return false;
 				})[0];
+			
+			// method #2: offset is relative to the document root
 			} else {
-				parent = $(w.editor.getDoc().body);
+				parent = $(w.editor.getBody());
 				var currentOffset = 0;
 				function getNodes(parent) {
 					parent.contents().each(function(index, element) {
@@ -706,12 +723,20 @@ return function(writer) {
 			
 			if (startNode != null && endNode != null) {
 				var range = w.editor.selection.getRng(true);
+				var entry = w.entities[id];
 				try {
 					range.setStart(startNode, startOffset);
 					range.setEnd(endNode, endOffset);
-					w.tagger.insertBoundaryTags(id, w.entities[id].props.type, range);
+					w.tagger.insertBoundaryTags(id, entry.props.type, range);
+					if (entry.props.content == null) {
+						// get and set the text content
+						w.highlightEntity(id);
+						var content = $('#entityHighlight', w.editor.getBody()).text();
+						w.highlightEntity();
+						entry.props.content = content;
+						entry.props.title = w.utilities.getTitleFromContent(content);
+					}
 				} catch (e) {
-					
 				}
 			}
 		}
@@ -730,7 +755,6 @@ return function(writer) {
 		
 		// reset the undo manager
 		w.editor.undoManager.clear();
-		
 	}
 	
 	return converter;
