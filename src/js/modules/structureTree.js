@@ -621,7 +621,7 @@ return function(config) {
 							label: 'Remove Tag Only',
 							icon: w.cwrcRootUrl+'img/tag_blue_delete.png',
 							action: function(obj) {
-								w.tagger.removeStructureTag(obj.attr('name'));
+								w.tagger.removeStructureTag(obj.attr('name'), false);
 							}
 						},
 						'delete_content': {
