@@ -44,6 +44,7 @@ return function(config) {
 			
 			var type = el.nodeName;
 			var message = $(this).find('message').text();
+			var path = $(this).find('path').text();
 			var elementId = $(this).find('elementId').text();
 			var column = parseInt($(this).find('column').text());
 			
@@ -66,7 +67,8 @@ return function(config) {
 								level--; // opening tag, remove a level
 							}
 							if (level == -1) {
-								id = tag.match(/id="(.*?)"/i)[1];
+								var match = tag.match(/id="(.*?)"/i);
+								if (match != null && match[1]) id = match[1];
 								break;
 							}
 						}
@@ -95,6 +97,7 @@ return function(config) {
 			var item = list.append(''+
 				'<li class="'+(type=='warning'?'ui-state-error':'ui-state-highlight')+'">'+
 					'<span class="ui-icon '+(type=='warning'?'ui-icon-alert':'ui-icon-info')+'" style="float: left; margin-right: 4px;"></span>'+message+
+					'<br/>Path: '+path+
 				'</li>'
 			).find('li:last');
 			item.data('id', id);
