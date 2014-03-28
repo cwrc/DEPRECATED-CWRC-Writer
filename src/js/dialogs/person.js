@@ -77,7 +77,8 @@ return function(writer) {
 		'<div id="'+id+'_certainty">'+
 	    	'<p>This identification is:</p>'+
 			'<input type="radio" id="'+id+'_definite" name="'+id+'_id_certainty" value="definite" /><label for="'+id+'_definite">Definite</label>'+
-			'<input type="radio" id="'+id+'_reasonable" name="'+id+'_id_certainty" value="reasonable" /><label for="'+id+'_reasonable">Reasonably Certain</label>'+
+			'<input type="radio" id="'+id+'_reasonable" name="'+id+'_id_certainty" value="reasonably certain" /><label for="'+id+'_reasonable">Reasonably Certain</label>'+
+			'<input type="radio" id="'+id+'_probable" name="'+id+'_id_certainty" value="probable" /><label for="'+id+'_probable">Probable</label>'+
 			'<input type="radio" id="'+id+'_speculative" name="'+id+'_id_certainty" value="speculative" /><label for="'+id+'_speculative">Speculative</label>'+
 	    '</div>'+
 	    '<div id="'+id+'_type">'+
