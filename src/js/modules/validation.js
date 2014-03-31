@@ -94,12 +94,29 @@ return function(config) {
 				}
 			}
 			
-			var item = list.append(''+
-				'<li class="'+(type=='warning'?'ui-state-error':'ui-state-highlight')+'">'+
-					'<span class="ui-icon '+(type=='warning'?'ui-icon-alert':'ui-icon-info')+'" style="float: left; margin-right: 4px;"></span>'+message+
-					'<br/>Path: '+path+
-				'</li>'
-			).find('li:last');
+			var messageParts;
+			var messageDivLoc = message.indexOf(';');
+			if (messageDivLoc != -1) {
+				messageParts = [message.slice(0, messageDivLoc+1), message.slice(messageDivLoc+2)];
+			} else {
+				messageParts = [message];
+			}
+			
+			var messageHtml = '<li class="'+(type=='warning'?'ui-state-error':'ui-state-highlight')+'">'+
+				'<span class="ui-icon '+(type=='warning'?'ui-icon-alert':'ui-icon-info')+'" style="float: left; margin-right: 4px;"></span>'+
+				'Path: '+path+'<br/>'+
+				'Message: '+message[0];
+			if (message[1] !== undefined) {
+				messageHtml += ' <span class="message_more">more...</span><span style="display: none;">'+message[1]+'</span>';
+			}
+			messageHtml += '</li>';
+			
+			var item = list.append(messageHtml).find('li:last');
+			item.find('[class="message_more"]').click(function() {
+				$(this).next('span').show();
+				$(this).hide();
+			});
+			
 			item.data('id', id);
 		});
 		

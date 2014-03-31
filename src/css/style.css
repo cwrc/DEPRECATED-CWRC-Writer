@@ -350,6 +350,15 @@ html, body {
 	margin: 2px 0 2px 5px;
 }
 
+#validation .messages_more {
+	color: #999999;
+}
+
+#validation .messages_more:hover {
+	color: #999999;
+	text-decoration: underline;
+}
+
 #currentPath {
 	font-size: 11px;
 }
