@@ -350,12 +350,11 @@ html, body {
 	margin: 2px 0 2px 5px;
 }
 
-#validation .messages_more {
+#validation .message_more {
 	color: #999999;
 }
 
-#validation .messages_more:hover {
-	color: #999999;
+#validation .message_more:hover {
 	text-decoration: underline;
 }
 
