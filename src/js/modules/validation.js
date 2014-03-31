@@ -105,9 +105,9 @@ return function(config) {
 			var messageHtml = '<li class="'+(type=='warning'?'ui-state-error':'ui-state-highlight')+'">'+
 				'<span class="ui-icon '+(type=='warning'?'ui-icon-alert':'ui-icon-info')+'" style="float: left; margin-right: 4px;"></span>'+
 				'Path: '+path+'<br/>'+
-				'Message: '+message[0];
-			if (message[1] !== undefined) {
-				messageHtml += ' <span class="message_more">more...</span><span style="display: none;">'+message[1]+'</span>';
+				'Message: '+messageParts[0];
+			if (messageParts[1] !== undefined) {
+				messageHtml += ' <span class="message_more">more...</span><span style="display: none;">'+messageParts[1]+'</span>';
 			}
 			messageHtml += '</li>';
 			
