@@ -495,7 +495,8 @@ return function(writer) {
 							id: id,
 							type: type
 						},
-						info: entity.cwrcAttributes
+						info: entity.cwrcAttributes,
+						annotation: {}
 					};
 //					rdf.children('[type="props"]').each(function(i2, el2) {
 //						var key = $(this)[0].nodeName.split(':')[1].toLowerCase();
