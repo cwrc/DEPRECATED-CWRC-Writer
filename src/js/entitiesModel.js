@@ -5,20 +5,10 @@ define(['jquery'], function($) {
 			title: 'Person',
 			mapping: {
 				tei: function(info) {
-					var xml = '<person';
+					var xml = '<persName';
 					if (info.certainty) xml += ' cert="'+info.certainty+'"';
-					if (info.type) xml += ' type="'+info.type+'"';
-					if (info.gender) xml += ' sex="'+info.gender+'"';
 					if (info.role) xml += ' role="'+info.role+'"';
-					xml += '>';
-					xml += '<persName>';
-					if (info.firstName || info.lastName) {
-						if (info.firstName) xml += '<forename>'+info.firstName+'</forename>';
-						if (info.lastName) xml += '<surname>'+info.lastName+'</surname>';
-					} else {
-						xml += '[[[editorText]]]';
-					}
-					xml += '</persName></person>';
+					xml += '>[[[editorText]]]</persName>';
 					return xml;
 				},
 				events: function(info) {
