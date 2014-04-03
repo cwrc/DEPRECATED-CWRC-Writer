@@ -24,7 +24,8 @@ return function(writer) {
 		'<li class="unselectable" data-name="#sample_biography"><span>Sample Orlando Biography</span></li>'+
 		'<li class="unselectable" data-name="#sample_writing"><span>Sample Orlando Writing</span></li>'+
 		'<li class="unselectable" data-name="#sample_letter"><span>Sample Letter</span></li>'+
-		'<li class="unselectable last" data-name="#sample_poem"><span>Sample Poem</span></li>'+
+		'<li class="unselectable" data-name="#sample_poem"><span>Sample Poem</span></li>'+
+		'<li class="unselectable last" data-name="#blank_tei"><span>Blank TEI Document</span></li>'+
 		'</ul>'+
 		'</div>'+
 		'</div>'+

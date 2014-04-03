@@ -139,7 +139,7 @@ return function(writer) {
 	fm.loadInitialDocument = function(start) {
 		if (start.match('load')) {
 			w.dialogManager.filemanager.showLoader();
-		} else if (start.match('sample_') || start.match('template_')) {
+		} else if (start.match('sample_') || start.match('template_') || start.match('blank_')) {
 			var name = start.substr(1);
 			_loadTemplate(w.cwrcRootUrl+'xml/'+name+'.xml', name);
 		} else if (start != '') {
