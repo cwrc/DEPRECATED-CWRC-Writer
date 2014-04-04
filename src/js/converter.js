@@ -498,6 +498,10 @@ return function(writer) {
 						info: entity.cwrcAttributes,
 						annotation: {}
 					};
+					
+					// TODO remove entity tag from document
+					
+					
 //					rdf.children('[type="props"]').each(function(i2, el2) {
 //						var key = $(this)[0].nodeName.split(':')[1].toLowerCase();
 //						var prop = $(this).text();
@@ -551,7 +555,7 @@ return function(writer) {
 		parent.contents().each(function(index, element) {
 			if (this.nodeType == Node.TEXT_NODE) {
 				currentOffset += this.length;
-			} else if (w.entitiesModel.isEntity(this.nodeName.toLowerCase())) {
+			} else if (w.entitiesModel.isEntity(this.nodeName.toLowerCase()), w.schemaManager.schemaId) {
 				var ent = $(this);
 				var id = ent.attr(w.idName);
 				if (id == null) {
@@ -572,7 +576,8 @@ return function(writer) {
 						content: content,
 						title: w.utilities.getTitleFromContent(content)
 					},
-					info: {}
+					info: {},
+					annotation: {}
 				};
 				$(this.attributes).each(function(index, att) {
 					w.entities[id].info[att.name] = att.value;

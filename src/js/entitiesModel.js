@@ -3,6 +3,10 @@ define(['jquery'], function($) {
 	var entities = {
 		person: {
 			title: 'Person',
+			parentTag: {
+				tei: 'persName',
+				events: 'name'
+			},
 			mapping: {
 				tei: function(info) {
 					var xml = '<persName';
@@ -69,6 +73,10 @@ define(['jquery'], function($) {
 		},
 		date: {
 			title: 'Date',
+			parentTag: {
+				tei: 'date',
+				events: 'DATE'
+			},
 			mapping: {
 				tei: function(info) {
 					var xml = '<date';
@@ -93,6 +101,10 @@ define(['jquery'], function($) {
 		},
 		place: {
 			title: 'Place',
+			parentTag: {
+				tei: 'place',
+				events: 'PLACE'
+			},
 			mapping: {
 				tei: '<place cert="${info.certainty}">[[[editorText]]]</place>',
 				events: '<PLACE>[[[editorText]]]</PLACE>'
@@ -100,12 +112,19 @@ define(['jquery'], function($) {
 		},
 		event: {
 			title: 'Event',
+			parentTag: {
+				tei: 'event'
+			},
 			mapping: {
 				tei: '<event cert="${info.certainty}">[[[editorText]]]</event>'
 			}
 		},
 		org: {
 			title: 'Organization',
+			parentTag: {
+				tei: 'org',
+				events: 'ORGNAME'
+			},
 			mapping: {
 				tei: '<org cert="${info.certainty}">[[[editorText]]]</org>',
 				events: '<ORGNAME>[[[editorText]]]</ORGNAME>'
@@ -113,18 +132,28 @@ define(['jquery'], function($) {
 		},
 		citation: {
 			title: 'Citation',
+			parentTag: {
+				tei: 'cit'
+			},
 			mapping: {
 				tei: '<cit><quote>[[[editorText]]]</quote><ref>${info.citation}</ref></cit>'
 			}
 		},
 		note: {
 			title: 'Note',
+			parentTag: {
+				tei: 'note'
+			},
 			mapping: {
 				tei: '<note type="${info.type}" ana="${info.content}">[[[editorText]]]</note>'
 			}
 		},
 		correction: {
 			title: 'Correction',
+			parentTag: {
+				tei: 'sic',
+				events: 'SIC'
+			},
 			mapping: {
 				tei: '<sic><corr cert="${info.certainty}" type="${info.type}" ana="${info.content}">[[[editorText]]]</corr></sic>',
 				events: '<SIC CORR="${info.content}">[[[editorText]]]</SIC>'
@@ -132,6 +161,10 @@ define(['jquery'], function($) {
 		},
 		keyword: {
 			title: 'Keyword',
+			parentTag: {
+				tei: 'keywords',
+				events: 'KEYWORDCLASS'
+			},
 			mapping: {
 				tei: ''+
 				'<keywords scheme="http://classificationweb.net">'+
@@ -148,6 +181,10 @@ define(['jquery'], function($) {
 		},
 		link: {
 			title: 'Link',
+			parentTag: {
+				tei: 'ref',
+				events: 'XREF'
+			},
 			mapping: {
 				tei: '<ref target="${info.url}">[[[editorText]]]</ref>',
 				events: '<XREF URL="${info.url}">[[[editorText]]]</XREF>'
@@ -155,6 +192,10 @@ define(['jquery'], function($) {
 		},
 		title: {
 			title: 'Text/Title',
+			parentTag: {
+				tei: 'title',
+				events: 'TITLE'
+			},
 			mapping: {
 				tei: '<title level="${info.level}">[[[editorText]]]</title>',
 				events: '<TITLE TITLETYPE="${info.level}">[[[editorText]]]</TITLE>'
@@ -164,13 +205,31 @@ define(['jquery'], function($) {
 	
 	var entmod = {};
 	/**
+	 * Checks if the tag is for an entity.
 	 * @memberOf entmod
-	 * @param type
+	 * @param tag The tag to check.
+	 * @param schema The schema to use.
 	 * @returns {Boolean}
 	 */
-	entmod.isEntity = function(type) {
-		return entities[type] != null;
+	entmod.isEntity = function(type, schema) {
+		if (schema.indexOf('tei') != -1) {
+			schema = 'tei';
+		} else {
+			schema = 'events';
+		}
+		for (var e in entities) {
+			if (entities[e].parentTag[schema] == type) {
+				return true;
+			}
+		}
+		return false;
 	};
+	
+	/**
+	 * Gets the title for an entity.
+	 * @param type The entity type.
+	 * @returns {String}
+	 */
 	entmod.getTitle = function(type) {
 		var e = entities[type];
 		if (e) {
@@ -209,6 +268,27 @@ define(['jquery'], function($) {
 			}
 		}
 		return ['', '']; // return array of empty strings if there is no mapping
+	};
+	
+	/**
+	 * Returns the parent tag for entity when converted to a particular schema.
+	 * @param entityType The entity type.
+	 * @param schema The schema to use.
+	 * @returns {String}
+	 */
+	entmod.getParentTag = function(entityType, schema) {
+		var e = entities[entityType];
+		if (e) {
+			if (schema.indexOf('tei') != -1) {
+				schema = 'tei';
+			} else {
+				schema = 'events';
+			}
+			if (e.parentTag && e.parentTag[schema]) {
+				return e.parentTag[schema];
+			}
+		}
+		return '';
 	};
 	
 	/**
