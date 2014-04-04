@@ -66,60 +66,89 @@ $(function(){
 		entity.viewModel().dialogTitle = ko.observable("");
 		entity.viewModel().validated = ko.observable(true);
 		entity.selfWorking = $.parseXML('<entity></entity>');
-		entity.elementPath = [];
+		entity.elementPath = []
+		
 		entity.person = {};
-		entity.person.schemaUrl = "js/cwrcDialogs/schemas/entities.rng";
 		entity.person.schema = "";
 		entity.person.success = null;
+
 		entity.organization = {};
-		entity.organization.schemaUrl = "js/cwrcDialogs/schemas/entities.rng";
 		entity.organization.schema = "";
 		entity.organization.success = null;
+		
+		entity.place = {};
+		entity.place.schema = "";
+		entity.place.success = null;
+
 		entity.editing = false;
 
 		// XXX Add namespace
 
-		entity.initialize = function() {
+		entity.setPersonSchema = function(url) {
 			$.ajax({
 				type: "GET",
 				async: false,
-				url: entity.person.schemaUrl,
+				url: url,
 				dataType: "xml",
 				success: function(xml) {
 					entity.person.schema = xml;
+				}
+			});
+		}
+
+		cD.setPersonSchema = entity.setPersonSchema;
+
+		entity.setOrganizationSchema = function(url) {
+			$.ajax({
+				type: "GET",
+				async: false,
+				url: url,
+				dataType: "xml",
+				success: function(xml) {
 					entity.organization.schema = xml;
 				}
 			});
+		}
+
+		cD.setOrganizationSchema = entity.setOrganizationSchema;
+
+		entity.setPlaceSchema = function(url) {
+			$.ajax({
+				type: "GET",
+				async: false,
+				url: url,
+				dataType: "xml",
+				success: function(xml) {
+					entity.place.schema = xml;
+				}
+			});
+		}
+
+		cD.setPlaceSchema = entity.setPlaceSchema;
+
+		cD.setSchema = {
+			person : cD.setPersonSchema,
+			organization : cD.setOrganizationSchema,
+			place : cD.setPlaceSchema
+		};
+
+		entity.initialize = function() {
+					
+			// entity.setPersonSchema("./schemas/entities.rng");
+			// entity.setOrganizationSchema("./schemas/entities.rng");
 
 			var entityTemplates = '' +
-			'		<script type="text/html" id="quantifier">' +
+			'		<script type="text/htmlify" id="quantifier">' +
 			'			<div class="quantifier">' +
 			'			<div>' +
+			// '				<h2><span data-bind="text: header"></span></h2>' +
 			'				<span data-bind="text: label"></span>' +
 			'				<span  data-bind="if: isGrowable()">' +
 			'					<span data-bind="if: showAddButton()">' +
 			'						<button data-bind="click: addGroup" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus"</span></button>' +
 			'					</span>' +
-			'					<!--' +
-			'					<span data-bind="if: showDelButton()">' +
-			'						<button data-bind="click: delGroup" class="btn btn-default btn-xs">-</button>' +
-			'					</span>' +
-			'					-->' +
 			'				</span>' +
 			'			</div>' +
-			'			<div data-bind="if: isInterleave()">' +
-			'				<!--isInterleave-->' +
-			'			</div>' +
-			'			<div data-bind="if: isOptional()">' +
-			'				<!--isOptional-->' +
-			'			</div>' +
-			'			<div data-bind="if: isOneOrMore()">' +
-			'				<!--isOneOrMore-->' +
-			'			</div>' +
-			'			<div data-bind="if: isZeroOrMore()">' +
-			'				<!--isZeroOrMore-->' +
-			'			</div>' +
-			'			' +
 			'			<div class="interfaceFieldsContainer" data-bind="template:{name: $root.displayMode, foreach: interfaceFields}"> ' +
 			'			</div>' +
 			'			</div>' +
@@ -142,9 +171,16 @@ $(function(){
 			'				<input data-bind="value: value" /> ' +
 			'				<span class="cwrc-help glyphicon glyphicon-question-sign" data-bind="attr:{\'title\': help}"></span>'+
 			'				<div class="label" data-bind="text:nodeMessage, attr:{class: nodeMessageClass}"></div>' +
-			'' +
 			'			</span>' +
 			'		</script>' +
+			
+			'		<script type="text/html" id="header">' +
+			'			<!--header-->' +
+			'			<span>' +
+			'				<h4><span data-bind="text: label"></span></h4>' +
+			'			</span>' +
+			'		</script>' +
+
 			'		<script type="text/html" id="datePicker">' +
 			'			<!-- datePicker -->' +
 			'			<span>' +
@@ -229,6 +265,9 @@ $(function(){
 			$('head').append(entityTemplates);
 			$('body').append(newDialogTemplate);
 			$("#cwrcEntityModal").modal(params.modalOptions);
+			$("#cwrcEntityModal").draggable({	
+				handle: ".modal-header"
+			});
 
 			ko.applyBindings(entity.viewModel, $("#newDialogue")[0]);
 
@@ -475,6 +514,15 @@ $(function(){
 						case "datePicker" :
 							newInput = datePickerInputModel();
 							break;
+						case "header" :
+							newInput = headerInputModel();
+							break;
+							// var lastContainer = last(entity[dialogType].workingContainers);
+							// var header = $(e).children('label').first().text();
+							// lastContainer.header = header;
+							// alert(header);
+
+							break;
 						case "" : // Label
 							var quantifierLabel = $(e).children('label').first().text();
 							setQuantifierLabel(quantifierLabel);
@@ -538,6 +586,7 @@ $(function(){
 				case 'slider':
 				case 'dialogue':
 				case 'datePicker':
+				case 'header':
 				case '':
 					return true;
 			}
@@ -822,6 +871,7 @@ $(function(){
 			that.input = "quantifier";
 			that.elements = [];
 			that.label = "";
+			that.header = "";
 			that.minItems = 0;
 			that.maxItems = Number.MAX_VALUE; // infinity;
 			that.interfaceFields = ko.observableArray();
@@ -918,6 +968,7 @@ $(function(){
 				result.maxItems = this.maxItems;
 				result.seed = this.seed.clone();
 				result.label = this.label;
+				result.header = this.header;
 				result.elements = this.elements;
 				// take label
 				// result.label = result.seed.interfaceFields()[0].label;
@@ -1021,6 +1072,13 @@ $(function(){
 			return that;
 		};
 		
+		var headerInputModel = function() {
+			var that = inputModel();
+			that.input = "header";
+			that.constructor = headerInputModel;
+			return that;
+		}
+
 		var dialogueInputModel = function() {
 			var that = inputModel();
 			that.input = "dialogue";
@@ -1100,9 +1158,24 @@ $(function(){
 
 		cD.popCreateOrganization = popCreateOrganization;
 
+		var popCreatePlace = function(opts) {
+			dialogType = "place";
+			entity.viewModel().dialogTitle("Add Place");
+			completeDialog(opts);
+			$('#cwrcEntityModal').modal('show');
+			// hackish
+			setTimeout(function(){
+				$(".modal-body-area").scrollTop(0);
+			},5);
+			
+		};
+
+		cD.popCreatePlace = popCreatePlace;
+
 		var popCreate = {
 			person: popCreatePerson,
 			organization : popCreateOrganization,
+			place : popCreatePlace
 		};
 
 		cD.popCreate = popCreate;
@@ -1207,29 +1280,42 @@ $(function(){
 		}		
 
 		search.htmlifyCWRCPerson = function(){
-			var result = "";
-			// data = search.selectedData;
-
 			
+			var data = search.selectedData;
+			var workingXML = $.parseXML(data.data);
 			
-			// alert(search.selectedData.data);
 			// nationality
+			// var nationalitySelector = "";
+			// data.nationality = $(workingXML).find(nationalitySelector).first().text();
+
 			// birthDeath
+			var birthSelector = "";
+			var deathSelector = "";
+			var birthValue = $(workingXML).find(birthSelector).first().text();
+			var deathValue = $(workingXML).find(deathSelector).first().text();
+			if (birthValue !== "" && deathValue !== "") {
+				data.birthDeath = birthValue + "-" + deathValue;	
+			}
+			
 			// gender
+			var genderSelector = "entity > person > description > genders > gender";
+			data.gender = $(workingXML).find(genderSelector).first().text();
+
 			// url
-
-			result += "<div><ul>";
-
-			result += "</ul></div>";
-			return result;
+			data.url = "http://cwrc-dev-01.srv.ualberta.ca/islandora/object/" + data.id;
+			
+			return search.completeHtmlifyPerson(data);
 
 		};
 
-		search.htmlifyVIAFPerson = function(){
-			var result = "";
+		search.htmlifyVIAFPerson = function(){			
 			var data = search.selectedData;
+			return search.completeHtmlifyPerson(data);
+		};
 
-			result += "<div><ul>";
+		search.completeHtmlifyPerson = function(data) {
+			var result = "<div><ul>";
+
 			if (data.nationality && data.nationality !== "") {
 				result += "<li>Nationality: "+ data.nationality +"</li>";	
 			}
@@ -1244,8 +1330,7 @@ $(function(){
 			}
 			result += "</ul></div>";
 			return result;
-
-		};
+		}
 
 		
 
@@ -1424,6 +1509,9 @@ $(function(){
 
 			ko.applyBindings(search, $("#cDSearch")[0]);
 			$("#cwrcSearchDialog").modal(params.modalOptions);
+			$("#cwrcSearchDialog").draggable({	
+				handle: ".modal-header"
+			});
 			$("#cwrcSearchDialog").on('hidden.bs.modal', function () {
   				// stop ajax call if exists
 				for(var key in search.linkedDataSources) {

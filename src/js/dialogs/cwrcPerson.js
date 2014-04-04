@@ -4,6 +4,8 @@ define(['jquery', 'jquery-ui', 'cwrcDialogs'], function($, jqueryUi, cwrcDialogs
 return function(writer) {
 	var w = writer;
 	
+	cD.setPersonSchema('js/cwrcDialogs/schemas/entities.rng');
+	
 	function createNewPerson(data) {
 		cD.popCreatePerson({
 			success: function(result) {
