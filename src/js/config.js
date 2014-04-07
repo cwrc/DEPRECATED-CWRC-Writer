@@ -47,11 +47,15 @@ var require = {
 		},
 		'tinymce-copyevent': ['tinymce'],
 
+		'bootstrap': ['jquery', 'jquery-ui'],
 		'bootstrap-datepicker': ['bootstrap'],
 		'cwrcDialogs': {
-			deps: ['jquery', 'jquery-ui', 'knockout', 'bootstrap-datepicker', 'cwrc-api']
+			deps: ['jquery', 'jquery-ui', 'knockout', 'bootstrap', 'bootstrap-datepicker', 'cwrc-api']
 		}
 	},
+	// cache busting
+//	urlArgs: "bust=" +  (new Date()).getTime(),
+	
 	// initial dependencies
 	deps: ['jquery',
 	       'knockout'],
