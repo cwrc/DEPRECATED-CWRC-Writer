@@ -262,7 +262,7 @@ return function(writer) {
 			while (currentNode != range.endContainer) {
 				currentNode = currentNode.nextSibling;
 				c = $(currentNode);
-				if (c.attr('entity') != null) {
+				if (c.attr('_entity') != null) {
 					if (c.hasClass('start')) {
 						ents[c.attr('name')] = true;
 					} else {
