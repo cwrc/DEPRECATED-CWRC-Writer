@@ -3,26 +3,15 @@ define(['jquery', 'jquery-ui'], function($, jqueryUi) {
 return function(writer) {
 	var w = writer;
 	
-	var currentType = null;
-	
 	var mode = null;
 	var ADD = 0;
 	var EDIT = 1;
 	
+	var sicText = null;
+	
 	$(document.body).append(''+
 	'<div id="correctionDialog">'+
 	    '<div><p>Correction</p><textarea id="correctionInput" name="correction"></textarea></div>'+
-	    '<div id="corr_cert"><p>Certainty</p>'+
-	    '<input type="radio" id="corr_definite" name="corr_certainty" value="definite" /><label for="corr_definite">Definite</label>'+
-		'<input type="radio" id="corr_reasonable" name="corr_certainty" value="reasonable" /><label for="corr_reasonable">Reasonably Certain</label>'+
-		'<input type="radio" id="corr_probable" name="corr_certainty" value="probable" /><label for="corr_probable">Probable</label>'+
-		'<input type="radio" id="corr_speculative" name="corr_certainty" value="speculative" /><label for="corr_speculative">Speculative</label>'+
-		'</div>'+
-		'<div id="corr_type"><p>Type</p>'+
-		'<input type="radio" id="corr_ocr" name="corr_type" value="ocr" /><label for="corr_ocr">OCR</label>'+
-		'<input type="radio" id="corr_typo" name="corr_type" value="typographical" /><label for="corr_typo">Typographical</label>'+
-		'<input type="radio" id="corr_other" name="corr_type" value="other" /><label for="corr_other">Other</label>'+
-		'</div>'+
 	'</div>');
 	
 	var correction = $('#correctionDialog');
@@ -33,7 +22,7 @@ return function(writer) {
 		open: function(event, ui) {
 			$('#correctionDialog').parent().find('.ui-dialog-titlebar-close').hide();
 		},
-		height: 355,
+		height: 220,
 		width: 385,
 		autoOpen: false,
 		buttons: {
@@ -46,41 +35,49 @@ return function(writer) {
 		}
 	});
 	var correctionInput = $('#correctionDialog textarea')[0];
-	$('#corr_cert, #corr_type').buttonset();
 	
 	var correctionResult = function(cancelled) {
 		var data = null;
 		if (!cancelled) {
 			data = {
-				content: correctionInput.value,
-				certainty: $('#corr_cert input:checked').val(),
-				type: $('#corr_type input:checked').val()
+				corrText: correctionInput.value,
+				sicText: sicText
 			};
 		}
 		if (mode == EDIT && data != null) {
+			if (sicText == null) {
+				// edit the correction text
+				var entityStart = $('[name="'+w.editor.currentEntity+'"]', writer.editor.getBody())[0];
+				var textNode = w.utilities.getNextTextNode(entityStart);
+				textNode.textContent = data.corrText;
+			}
 			w.tagger.editEntity(w.editor.currentEntity, data);
 		} else {
-			w.tagger.finalizeEntity(currentType, data);
+			if (data != null) {
+				if (sicText == null) {
+					// insert the correction text so we can make an entity out of that
+					w.editor.execCommand('mceInsertContent', false, data.corrText);
+				}
+			}
+			w.tagger.finalizeEntity('correction', data);
 		}
 		correction.dialog('close');
-		currentType = null;
 	};
 	
 	return {
 		show: function(config) {
-			currentType = config.type;
 			mode = config.entry ? EDIT : ADD;
 			var prefix = 'Add ';
 			
 			if (mode == ADD) {
+				sicText = w.editor.currentBookmark.rng.toString();
+				if (sicText == '') sicText = null;
 				correctionInput.value = '';
-				$('#corr_cert input:eq(0)').click();
-				$('#corr_type input:eq(0)').click();
 			} else {
 				prefix = 'Edit ';
-				correctionInput.value = config.entry.info.content;
-				$('#corr_cert input[value="'+config.entry.info.certainty+'"]').click();
-				$('#corr_type input[value="'+config.entry.info.type+'"]').click();
+				if (config.entry.info.sicText) sicText = config.entry.info.sicText;
+				else sicText = null;
+				correctionInput.value = config.entry.info.corrText;
 			}
 			
 			var title = prefix+config.title;

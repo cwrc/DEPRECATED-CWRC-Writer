@@ -3,42 +3,46 @@ define(['jquery', 'jquery-ui'], function($, jqueryUi) {
 return function(writer) {
 	var w = writer;
 	
+	var id = "title";
+	
 	var mode = null;
 	var ADD = 0;
 	var EDIT = 1;
 	
 	$(document.body).append(''+
-	'<div id="titleDialog">'+
-		'<div>'+
-			'Type<br/>'+
-			'<input type="radio" value="a" name="level" id="level_a"/><label for="level_a">Analytic <span style="font-size: 8px;">(article, poem, or other item published as part of a larger item)</span></label><br/>'+
-			'<input type="radio" value="m" name="level" id="level_m" checked="checked"/><label for="level_m">Monographic <span style="font-size: 8px;">(book, collection, single volume, or other item published as a distinct item)</span></label><br/>'+
-			'<input type="radio" value="j" name="level" id="level_j"/><label for="level_j">Journal <span style="font-size: 8px;">(magazine, newspaper or other periodical publication)</span></label><br/>'+
-			'<input type="radio" value="s" name="level" id="level_s"/><label for="level_s">Series <span style="font-size: 8px;">(book, radio, or other series)</span></label><br/>'+
-			'<input type="radio" value="u" name="level" id="level_u"/><label for="level_u">Unpublished <span style="font-size: 8px;">(thesis, manuscript, letters or other unpublished material)</span></label><br/>'+
+	'<div id="'+id+'Dialog" class="annotationDialog">'+
+		'<div id="'+id+'_level">'+
+			'<p>Type:</p>'+
+			'<input type="radio" value="a" name="level" id="'+id+'_level_a"/>'+
+			'<label for="'+id+'_level_a">Analytic <span>article, poem, or other item published as part of a larger item</span></label><br/>'+
+			'<input type="radio" value="m" name="level" id="'+id+'_level_m" checked="checked"/>'+
+			'<label for="'+id+'_level_m">Monographic <span>book, collection, single volume, or other item published as a distinct item</span></label><br/>'+
+			'<input type="radio" value="j" name="level" id="'+id+'_level_j"/>'+
+			'<label for="'+id+'_level_j">Journal <span>magazine, newspaper or other periodical publication</span></label><br/>'+
+			'<input type="radio" value="s" name="level" id="'+id+'_level_s"/>'+
+			'<label for="'+id+'_level_s">Series <span>book, radio, or other series</span></label><br/>'+
+			'<input type="radio" value="u" name="level" id="'+id+'_level_u"/>'+
+			'<label for="'+id+'_level_u">Unpublished <span>thesis, manuscript, letters or other unpublished material</span></label><br/>'+
 		'</div>'+
-		'<div>'+
-			'Equivalent title (optional) <input name="alt" type="text" /> <span style="font-size: 8px;">(standard form of title)</span>'+
-		'</div>'+
-		'<div>'+
-			'Refer to text (optional) <input name="ref" type="text" />'+
-		'</div>'+
-		'<div>'+
-			'<input type="checkbox" name="unformatted" id="unformatted"/>'+
-			'<label for="unformatted">Unformatted</label>'+
-		'</div>'+
+		'<div id="'+id+'_certainty">'+
+	    	'<p>This identification is:</p>'+
+			'<input type="radio" id="'+id+'_definite" name="'+id+'_id_certainty" value="definite" /><label for="'+id+'_definite">Definite</label>'+
+			'<input type="radio" id="'+id+'_reasonable" name="'+id+'_id_certainty" value="reasonably certain" /><label for="'+id+'_reasonable">Reasonably Certain</label>'+
+			'<input type="radio" id="'+id+'_probable" name="'+id+'_id_certainty" value="probable" /><label for="'+id+'_probable">Probable</label>'+
+			'<input type="radio" id="'+id+'_speculative" name="'+id+'_id_certainty" value="speculative" /><label for="'+id+'_speculative">Speculative</label>'+
+	    '</div>'+
 		'<div><b>NB</b>: This popup is not yet functional. Eventually it will let you look up the text to which you want to refer, or to add an entry for a new text.</div>'+
 	'</div>');
 	
-	var title = $('#titleDialog');
+	var title = $('#'+id+'Dialog');
 	title.dialog({
 		modal: true,
 		resizable: false,
 		closeOnEscape: false,
 		open: function(event, ui) {
-			$('#titleDialog').parent().find('.ui-dialog-titlebar-close').hide();
+			$('#'+id+'Dialog').parent().find('.ui-dialog-titlebar-close').hide();
 		},
-		height: 355,
+		height: 375,
 		width: 435,
 		autoOpen: false,
 		buttons: {
@@ -51,6 +55,8 @@ return function(writer) {
 		}
 	});
 	
+	$('#'+id+'_certainty').buttonset();
+	
 	$('#titleDialog input').keyup(function(event) {
 		if (event.keyCode == '13') {
 			event.preventDefault();
@@ -62,22 +68,12 @@ return function(writer) {
 		var data = null;
 		if (!cancelled) {
 			var level = $('input[name="level"]:checked', title).val();
-			var ref = $('input[name="ref"]', title).val();
-			var alt = $('input[name="alt"]', title).val();
-			var unformatted = $('input[name="unformatted"]', title).prop('checked');
+			var certainty = $('#'+id+'_certainty input:checked').val();
 			
 			data = {
 				level: level,
-				ref: ref,
-				alt: alt,
-				unformatted: unformatted
+				certainty: certainty
 			};
-			
-//			if (level == 'a' || level == 'u') {
-//				data['class'] = 'titleTagQuotes';
-//			} else if (level == 'm' || level == 'j' || level == 's') {
-//				data['class'] = 'titleTagItalics';
-//			}
 		}
 		if (mode == EDIT && data != null) {
 			w.tagger.editEntity(w.editor.currentEntity, data);
@@ -92,22 +88,17 @@ return function(writer) {
 			mode = config.entry ? EDIT : ADD;
 			var prefix = 'Tag ';
 			
+			$('#'+id+'_certainty input:checked').prop('checked', false).button('refresh');
+			
 			if (mode == ADD) {
-				$('input[value="m"]', title).attr('checked', true);
-				$('input[name="ref"]', title).attr('value', '');
-				$('input[name="alt"]', title).attr('value', '');
-				$('input[name="unformatted"]', title).attr('checked', false);
+				$('input[value="m"]', title).prop('checked', true);
 			} else {
 				prefix = 'Edit ';
 				var level = config.entry.info.level;
-				var ref = config.entry.info.ref;
-				var alt = config.entry.info.alt;
-				var unformatted = config.entry.info.unformatted;
+				var cert = config.entry.info.certainty;
 				
-				$('input[value="'+level+'"]', title).attr('checked', true);
-				$('input[name="ref"]', title).attr('value', ref);
-				$('input[name="alt"]', title).attr('value', alt);
-				$('input[name="unformatted"]', title).attr('checked', unformatted);
+				$('input[value="'+level+'"]', title).prop('checked', true);
+				$('#'+id+'_certainty input[value="'+cert+'"]').prop('checked', true).button('refresh');
 			}
 			
 			var t = prefix+config.title;
