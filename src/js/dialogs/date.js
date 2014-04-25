@@ -3,36 +3,39 @@ define(['jquery', 'jquery-ui', 'moment'], function($, jqueryUi, moment) {
 return function(writer) {
 	var w = writer;
 	
+	var id = 'dateDialog';
+	
 	var mode = null;
 	var ADD = 0;
 	var EDIT = 1;
 	
 	$(document.body).append(''+
-	'<div id="dateDialog">'+
-		'<div style="float: right; width: 100px;">'+
-		'<input type="radio" name="dateType" value="date" id="type_date" checked="checked"/><label for="type_date">Date</label><br/>'+
-		'<input type="radio" name="dateType" value="range" id="type_range"/><label for="type_range">Date Range</label>'+
+	'<div id="'+id+'" class="annotationDialog">'+
+		'<div id="'+id+'_type">'+
+			'<p>Date type:</p>'+
+			'<input type="radio" name="dateType" value="date" id="'+id+'_type_date" checked="checked"/><label for="'+id+'_type_date">Single Date</label>'+
+			'<input type="radio" name="dateType" value="range" id="'+id+'_type_range"/><label for="'+id+'_type_range">Date Range</label>'+
 		'</div>'+
 		'<div id="date">'+
-		'<label for="cwrc_datePicker">Date</label><input type="text" id="cwrc_datePicker" />'+
+			'<label for="cwrc_datePicker">Date:</label><br/><input type="text" id="cwrc_datePicker" />'+
 		'</div>'+
 		'<div id="range">'+
-		'<label for="startDate">Start Date</label><input type="text" id="startDate" style="margin-bottom: 5px;"/><br />'+
-	    '<label for="endDate">End Date</label><input type="text" id="endDate" />'+
+			'<label for="startDate">Start date:</label><br/><input type="text" id="startDate" style="margin-bottom: 5px;"/><br />'+
+		    '<label for="endDate">End date:</label><br/><input type="text" id="endDate" />'+
 	    '</div>'+
-	    '<p>Format: yyyy or yyyy-mm-dd<br/>e.g. 2010, 2010-10-05</p>'+
+	    '<p style="position: absolute; bottom: 5px;">Format: YYYY, YYYY-MM, or YYYY-MM-DD<br/>e.g. 2010, 2010-10, 2010-10-31</p>'+
 	'</div>');
 	
-	var date = $('#dateDialog');
+	var date = $('#'+id);
 	date.dialog({
 		modal: true,
 		resizable: false,
 		closeOnEscape: false,
 		open: function(event, ui) {
-			$('#dateDialog').parent().find('.ui-dialog-titlebar-close').hide();
+			$('#'+id).parent().find('.ui-dialog-titlebar-close').hide();
 		},
-		height: 200,
-		width: 375,
+		height: 275,
+		width: 275,
 		autoOpen: false,
 		buttons: {
 			'Tag Date': function() {
@@ -44,17 +47,17 @@ return function(writer) {
 		}
 	});
 	
+	$('#'+id+'_type').buttonset();
+	$('#'+id+'_type input').click(function() {
+		toggleDate($(this).val());
+	});
+	
 	var dateInput = $('#cwrc_datePicker')[0];
 	$(dateInput).focus(function() {
 		$(this).css({borderBottom: ''});
 	});
 	
-	$('#dateDialog input[name="dateType"]').change(function() {
-		var type = this.id.split('_')[1];
-		toggleDate(type);
-	});
-	
-	$('#dateDialog input').keyup(function(event) {
+	$('#'+id+' input').keyup(function(event) {
 		if (event.keyCode == '13') {
 			event.preventDefault();
 			dateResult();
@@ -120,10 +123,10 @@ return function(writer) {
 	var dateResult = function(cancelled) {
 		var data = {};
 		if (!cancelled) {
-			var type = $('#type_date:checked').val();
+			var type = $('#'+id+'_type input:checked').val();
 			if (type == 'date') {
 				var dateString = dateInput.value;
-				if (dateString.match(/^\d{4}-\d{2}-\d{2}$/) || dateString.match(/^\d{4}$/)) {
+				if (dateString.match(/^\d{4}-\d{2}-\d{2}$/) || dateString.match(/^\d{4}-\d{2}$/) || dateString.match(/^\d{4}$/)) {
 					data.date = dateString;
 				} else {
 					$(dateInput).css({borderBottom: '1px solid red'});
@@ -138,6 +141,9 @@ return function(writer) {
 				
 				if (startString.match(/^\d{4}-\d{2}-\d{2}$/)) {
 					data.startDate = startString;
+				} else if (startString.match(/^\d{4}-\d{2}$/)) {
+					data.startDate = startString;
+					padStart = '-01';
 				} else if (startString.match(/^\d{4}$/)) {
 					data.startDate = startString;
 					padStart = '-01-01';
@@ -148,6 +154,9 @@ return function(writer) {
 				
 				if (endString.match(/^\d{4}-\d{2}-\d{2}$/)) {
 					data.endDate = endString;
+				} else if (endString.match(/^\d{4}-\d{2}$/)) {
+					data.endDate = endString;
+					padEnd = '-01';
 				} else if (endString.match(/^\d{4}$/)) {
 					data.endDate = endString;
 					padEnd = '-01-01';
@@ -183,6 +192,9 @@ return function(writer) {
 			mode = config.entry ? EDIT : ADD;
 			var prefix = 'Tag ';
 			
+			// reset the form
+			$('#'+id+'_type input:checked').prop('checked', false).button('refresh');
+			
 			if (mode == ADD) {
 				var dateValue = '';
 				
@@ -206,7 +218,7 @@ return function(writer) {
 				}
 
 				toggleDate('date');
-				$('#type_date').attr('checked', true);
+				$('#'+id+'_type_date').prop('checked', true).button('refresh');
 				dateInput.value = dateValue;
 				startDate.value = '';
 				endDate.value = '';
@@ -215,13 +227,13 @@ return function(writer) {
 				var info = config.entry.info;
 				if (info.date) {
 					toggleDate('date');
-					$('#type_date').attr('checked', true);
+					$('#'+id+'_type_date').prop('checked', true).button('refresh');
 					dateInput.value = info.date;
 					startDate.value = '';
 					endDate.value = '';
 				} else {
 					toggleDate('range');
-					$('#type_date').attr('checked', false);
+					$('#'+id+'_type_range').prop('checked', true).button('refresh');
 					dateInput.value = '';
 					startDate.value = info.startDate;
 					endDate.value = info.endDate;

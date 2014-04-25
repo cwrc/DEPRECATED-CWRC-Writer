@@ -1,5 +1,59 @@
 // TODO add IDs
 define(['jquery'], function($) {
+	
+	// returns a common annotation object
+	function commonAnnotation(data, type) {
+		var date = new Date().toISOString();
+		var contextUri = 'http://www.w3.org/ns/oa-context-20130208.json';
+		var annotationId = data.annotationId;
+		var body = '';
+		var annotatedById = data.userId;
+		var userName = '';
+		var userMbox = '';
+		var entityId = data.entityId;
+		var docId = data.docId;
+		var selectorId = data.selectorId;
+		var offsetStart = data.start;
+		var offsetEnd = data.end;
+		
+		var annotation = {
+			'@context': contextUri,
+			'@id': annotationId,
+			'@type': 'oa:Annotation',
+			'motivation': ['oa:identifying', 'oa:tagging'],
+			'annotatedAt': date,
+			'annotatedBy': {
+				'@id': annotatedById,
+				'@type': 'foaf:Person',
+				'mbox': {
+					'@id': userMbox
+				},
+				'name': userName
+			},
+			'hasBody': {
+				'@id': entityId,
+				'@type': ['oa:SemanticTag', type]
+			},
+			'hasTarget': {
+				'@id': docId,
+				'@type': 'oa:SpecificResource',
+				'hasSelector': {
+					'@id': selectorId,
+					'@type': 'oa:TextPositionSelector',
+					'start': offsetStart,
+					'end': offsetEnd
+				},
+				'hasSource': {
+					'@id': docId,
+					'@type': 'dctypes:Text',
+			  		'format': 'text/xml'
+				}
+			}
+		};
+		
+		return annotation;
+	}
+	
 	var entities = {
 		person: {
 			title: 'Person',
@@ -19,56 +73,9 @@ define(['jquery'], function($) {
 					return '<NAME>[[[editorText]]]</NAME>';
 				}
 			},
-			annotation: function(data) {
-				var date = new Date().toISOString();
-				var contextUri = 'http://www.w3.org/ns/oa-context-20130208.json';
-				var annotationId = data.annotationId;
-				var body = '';
-				var annotatedById = data.userId;
-				var userName = '';
-				var userMbox = '';
-				var personId = data.entityId;
-				var docId = data.docId;
-				var selectorId = data.selectorId;
-				var offsetStart = data.start;
-				var offsetEnd = data.end;
-				
-				var annotation = {
-					'@context': contextUri,
-					'@id': annotationId,
-					'@type': 'oa:Annotation',
-					'motivation': ['oa:identifying', 'oa:tagging'],
-					'annotatedAt': date,
-					'annotatedBy': {
-						'@id': annotatedById,
-						'@type': 'foaf:Person',
-						'mbox': {
-							'@id': userMbox
-						},
-						'name': userName
-					},
-					'hasBody': {
-						'@id': personId,
-						'@type': ['oa:SemanticTag', 'foaf:Person']
-					},
-					'hasTarget': {
-						'@id': docId,
-						'@type': 'oa:SpecificResource',
-						'hasSelector': {
-							'@id': selectorId,
-							'@type': 'oa:TextPositionSelector',
-							'start': offsetStart,
-							'end': offsetEnd
-						},
-						'hasSource': {
-							'@id': docId,
-							'@type': 'dctypes:Text',
-					  		'format': 'text/xml'
-						}
-					}
-				};
-				
-				return annotation;
+			annotation: function(entity) {
+				var data = entity.annotation;
+				return commonAnnotation(data, 'foaf:Person');
 			}
 		},
 		date: {
@@ -97,6 +104,16 @@ define(['jquery'], function($) {
 					}
 					return xml;
 				}
+			},
+			annotation: function(entity) {
+				var data = entity.annotation;
+				var anno = commonAnnotation(data, 'cnt:ContentAsText');
+				if (entity.info.date) {
+					anno.hasBody['cnt:chars'] = entity.info.date;
+				} else {
+					anno.hasBody['cnt:chars'] = entity.info.startDate+'/'+entity.info.endDate;
+				}
+				return anno;
 			}
 		},
 		place: {
@@ -122,12 +139,16 @@ define(['jquery'], function($) {
 		org: {
 			title: 'Organization',
 			parentTag: {
-				tei: 'org',
+				tei: 'orgName',
 				events: 'ORGNAME'
 			},
 			mapping: {
-				tei: '<org cert="${info.certainty}">[[[editorText]]]</org>',
+				tei: '<orgName cert="${info.certainty}">[[[editorText]]]</orgName>',
 				events: '<ORGNAME>[[[editorText]]]</ORGNAME>'
+			},
+			annotation: function(entity) {
+				var data = entity.annotation;
+				return commonAnnotation(data, 'foaf:Organization');
 			}
 		},
 		citation: {
@@ -188,6 +209,13 @@ define(['jquery'], function($) {
 			mapping: {
 				tei: '<ref target="${info.url}">[[[editorText]]]</ref>',
 				events: '<XREF URL="${info.url}">[[[editorText]]]</XREF>'
+			},
+			annotation: function(entity) {
+				var data = entity.annotation;
+				var anno = commonAnnotation(data, 'cnt:ContentAsText');
+				anno.motivation = 'oa:linking';
+				anno.hasBody = entity.info.url;
+				return anno;
 			}
 		},
 		title: {
@@ -197,7 +225,7 @@ define(['jquery'], function($) {
 				events: 'TITLE'
 			},
 			mapping: {
-				tei: '<title level="${info.level}">[[[editorText]]]</title>',
+				tei: '<title cert="${info.certainty}" level="${info.level}">[[[editorText]]]</title>',
 				events: '<TITLE TITLETYPE="${info.level}">[[[editorText]]]</TITLE>'
 			}
 		}
@@ -293,15 +321,16 @@ define(['jquery'], function($) {
 	
 	/**
 	 * Get the annotation object for the entity.
-	 * @param {String} type The type of entity
-	 * @param {Object} data A data object for use in populating the annotation.
+	 * @param {String} type The type of entity.
+	 * @param {Object} entity The entity data object (from the global entities list).
+	 * @param {Object} entity.annotation The annotation data associated with the entity.
 	 * @returns {Object} The annotation object. 
 	 */
-	entmod.getAnnotation = function(type, data) {
+	entmod.getAnnotation = function(type, entity) {
 		var e = entities[type];
 		var anno = {};
 		if (e && e.annotation) {
-			anno = e.annotation(data);
+			anno = e.annotation(entity);
 		}
 		return anno;
 	};

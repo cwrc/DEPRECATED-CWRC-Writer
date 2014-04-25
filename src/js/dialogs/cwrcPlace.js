@@ -4,8 +4,8 @@ define(['jquery', 'jquery-ui', 'cwrcDialogs'], function($, jqueryUi, cwrcDialogs
 return function(writer) {
 	var w = writer;
 	
-	function createNewOrg(data) {
-		cD.popCreateOrganization({
+	function createNewPlace(data) {
+		cD.popCreatePlace({
 			success: function(result) {
 				var r = JSON.stringify(result);
 				console.log(r);
@@ -18,36 +18,42 @@ return function(writer) {
 	return {
 		show: function(config) {
 			if (config.entry) {
-				w.dialogManager.show('tagOrg', {
+				w.dialogManager.show('tagPlace', {
 					entry: config.entry
 				});
 			} else {
 				var query = w.editor.currentBookmark.rng.toString();
 				$('#searchEntityInput').val(query);
 				
-				cD.popSearchOrganization({
+				w.dialogManager.show('message', {
+					title: 'Not yet implemented',
+					msg: 'This dialog is not yet implemented.',
+					type: 'error'
+				});
+				/*cD.popSearchPlace({
 					success: function(result) {
 						if (result.id == null) {
 							result = {
 								id: 'cwrc:3b92364f-0e16-4599-bd8c-92c95a409a00',
-								name: ['Test Org'],
+								name: ['Test Place'],
 								repository: 'cwrc'
 							};
 						}
 						if ($.isArray(result.name)) {
 							result.name = result.name[0];
 						}
-						w.dialogManager.show('tagOrg', {
+						w.dialogManager.show('tagPlace', {
 							cwrcInfo: result
 						});
 					},
 					error: function(errorThrown) {
 					},
 					buttons: [{
-						label : "Create New Organization",
-						action : createNewOrg
+						label : "Create New Place",
+						action : createNewPlace
 					}]
-				});
+				});*/
+				
 			}
 		},
 		hide: function() {

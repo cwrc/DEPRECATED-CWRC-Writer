@@ -4,12 +4,12 @@ define([
     'dialogs/addEvent','dialogs/addOrg','dialogs/addPerson','dialogs/addPlace','dialogs/addSchema',
     'dialogs/citation','dialogs/correction','dialogs/date','dialogs/fileManager',
     'dialogs/header','dialogs/keyword','dialogs/link','dialogs/message',
-    'dialogs/note','dialogs/person','dialogs/place','dialogs/search','dialogs/title','dialogs/triple',
-    'dialogs/cwrcPerson','dialogs/cwrcOrg'
+    'dialogs/note','dialogs/org','dialogs/person','dialogs/place','dialogs/search','dialogs/title','dialogs/triple',
+    'dialogs/cwrcPerson','dialogs/cwrcOrg','dialogs/cwrcPlace'
 ], function($, jqueryui,
 		AddEvent, AddOrg, AddPerson, AddPlace, AddSchema, Citation, Correction, DateDialog, FileManager,
-		Header, Keyword, Link, Message, Note, Person, Place, Search, Title, Triple,
-		CwrcPerson, CwrcOrg
+		Header, Keyword, Link, Message, Note, Org, Person, Place, Search, Title, Triple,
+		CwrcPerson, CwrcOrg, CwrcPlace
 ) {
 
 // add event listeners to all of our jquery ui dialogs
@@ -50,14 +50,16 @@ return function(writer) {
 //		addperson: new AddPerson(writer),
 		addplace: new AddPlace(writer),
 		addevent: new AddEvent(writer),
-		addorg: new AddOrg(writer),
+//		addorg: new AddOrg(writer),
 		triple: new Triple(writer),
 		header: new Header(writer),
 		filemanager: new FileManager(writer),
 		person: new CwrcPerson(writer), // cwrcDialogs lookup
 		tagPerson: new Person(writer), // CWRCWriter tagger
 		org: new CwrcOrg(writer), // cwrcDialogs lookup
-		place: new Place(writer),
+		tagOrg: new Org(writer), // CWRCWriter tagger
+		place: new CwrcPlace(writer),
+		tagPlace: new Place(writer),
 		addschema: new AddSchema(writer)
 	};
 	

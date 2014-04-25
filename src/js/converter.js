@@ -184,7 +184,7 @@ return function(writer) {
 				entry.annotation.start = o.offset;
 				entry.annotation.end = o.offset + o.length; 
 				
-				var annotation = w.entitiesModel.getAnnotation(entry.props.type, entry.annotation);
+				var annotation = w.entitiesModel.getAnnotation(entry.props.type, entry);
 				
 				// add tag attributes to annotation
 				annotation.cwrcAttributes = entry.info;

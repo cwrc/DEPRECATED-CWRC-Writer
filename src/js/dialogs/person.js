@@ -74,6 +74,10 @@ return function(writer) {
 	
 	$(document.body).append(''+
 	'<div id="'+id+'Dialog" class="annotationDialog">'+
+		'<div id="'+id+'_tagAs">'+
+			'<p>Tag as:</p>'+
+			'<span class="tagAs"></span>'+
+		'</div>'+
 		'<div id="'+id+'_certainty">'+
 	    	'<p>This identification is:</p>'+
 			'<input type="radio" id="'+id+'_definite" name="'+id+'_id_certainty" value="definite" /><label for="'+id+'_definite">Definite</label>'+
@@ -98,10 +102,6 @@ return function(writer) {
 		    '<div id="'+id+'_teiParent" style="position: relative; height: 200px;">'+
 		    '</div>'+
 		'</div>'+
-		'<div id="'+id+'_tagAs">'+
-	    	'<p>Tag as:</p>'+
-	    	'<span></span>'+
-	    '</div>'+
 	'</div>'+
 	'');
 	

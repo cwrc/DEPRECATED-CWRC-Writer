@@ -537,8 +537,28 @@ html, body {
   padding: 5px 10px !important;
 }
 
-#titleDialog div, #correctionDialog div {
+.annotationDialog .tagAs {
+	font-size: 16px;
+}
+
+#correctionDialog div {
 	margin-bottom: 10px;
+}
+
+#titleDialog #title_level label span {
+	font-size: 9px;
+	display: block;
+	margin-left: 21px;
+}
+
+#titleDialog #title_level input[type="radio"] {
+	top: 8px;
+	position: relative;
+	margin-top: 8px;
+}
+
+#titleDialog #title_level input[type="radio"]:first-of-type {
+	margin-top: -2px;
 }
 
 #schemaDialog {
