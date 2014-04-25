@@ -157,14 +157,14 @@ return function(writer) {
 				if (hashName) {
 					window.location.hash = '#'+hashName;
 				}
-				var rdf = data.createElement('rdf:RDF');
-				var root;
-				if (data.childNodes) {
-					root = data.childNodes[data.childNodes.length-1];
-				} else {
-					root = data.firstChild;
-				}
-				$(root).prepend(rdf);
+//				var rdf = data.createElement('rdf:RDF');
+//				var root;
+//				if (data.childNodes) {
+//					root = data.childNodes[data.childNodes.length-1];
+//				} else {
+//					root = data.firstChild;
+//				}
+//				$(root).prepend(rdf);
 				w.converter.processDocument(data);
 			},
 			error: function(xhr, status, error) {
