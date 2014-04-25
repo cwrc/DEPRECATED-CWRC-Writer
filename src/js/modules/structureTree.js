@@ -643,6 +643,7 @@ return function(config) {
 					return items;
 				} else {
 					// entity tag
+					w.highlightEntity(node.attr('name')); // highlight the entity, otherwise editing will not function
 					return {
 						'editEntity': {
 							label: 'Edit Entity',
