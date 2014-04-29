@@ -25,10 +25,12 @@ return function(writer) {
 				var query = w.editor.currentBookmark.rng.toString();
 				$('#searchEntityInput').val(query);
 				
-				w.dialogManager.show('message', {
-					title: 'Not yet implemented',
-					msg: 'This dialog is not yet implemented.',
-					type: 'error'
+				w.dialogManager.show('tagPlace', {
+					cwrcInfo: {
+						id: 'cwrc:3b92364f-0e16-4599-bd8c-92c95a409a00',
+						name: ['Test Place'],
+						repository: 'cwrc'
+					}
 				});
 				/*cD.popSearchPlace({
 					success: function(result) {

@@ -73,13 +73,6 @@ return function(writer) {
 	'</div>'+
 	'');
 	
-	$('#'+id+'_role').accordion({
-		heightStyle: 'content',
-		animate: false,
-		collapsible: true,
-		active: false
-	});
-	
 	$('#'+id+'_teiParent').parent().accordion({
 		heightStyle: 'content',
 		animate: false,

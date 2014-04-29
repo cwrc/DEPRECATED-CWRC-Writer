@@ -119,12 +119,29 @@ define(['jquery'], function($) {
 		place: {
 			title: 'Place',
 			parentTag: {
-				tei: 'place',
+				tei: 'placeName',
 				events: 'PLACE'
 			},
 			mapping: {
-				tei: '<place cert="${info.certainty}">[[[editorText]]]</place>',
+				tei: function(info) {
+					var xml = '<placeName';
+					if (info.certainty) xml += ' cert="'+info.certainty+'"';
+					xml += '>[[[editorText]]]';
+					if (info.precision) {
+						xml += '<precision precision="'+info.precision+'">';
+						if (info.detail) {
+							xml += info.detail;
+						}
+						xml += '</precision>';
+					}
+					xml += '</placeName>';
+					return xml;
+				},
 				events: '<PLACE>[[[editorText]]]</PLACE>'
+			},
+			annotation: function(entity) {
+				var data = entity.annotation;
+				return commonAnnotation(data, 'geo:SpatialThing');
 			}
 		},
 		event: {
