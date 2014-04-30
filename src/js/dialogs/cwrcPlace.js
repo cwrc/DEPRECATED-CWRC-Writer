@@ -28,7 +28,7 @@ return function(writer) {
 				w.dialogManager.show('tagPlace', {
 					cwrcInfo: {
 						id: 'cwrc:3b92364f-0e16-4599-bd8c-92c95a409a00',
-						name: ['Test Place'],
+						name: [query],
 						repository: 'cwrc'
 					}
 				});
