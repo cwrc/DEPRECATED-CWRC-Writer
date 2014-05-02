@@ -170,37 +170,20 @@ return function(writer) {
 		var uri = w.baseUrl+'editor/documents/'+w.currentDocId;
 		rdfString += '\n<rdf:Description rdf:about="'+uri+'">\n\t<w:mode>'+w.mode+'</w:mode>\n</rdf:Description>';
 		
-		var offsets = _getNodeOffsetsFromRoot($(w.editor.getBody()));
-		var relationships = _determineOffsetRelationships(offsets);
-		
-		var includeStructRDF = false;
-		for (var i = 0; i < offsets.length; i++) {
-			var o = offsets[i];
-			if (o.entity) {
-				rdfString += '\n<rdf:Description rdf:datatype="http://www.w3.org/TR/json-ld/"><![CDATA[\n';
-				
-				var entry = w.entities[o.id];
-				
-				entry.annotation.start = o.offset;
-				entry.annotation.end = o.offset + o.length; 
-				
-				var annotation = w.entitiesModel.getAnnotation(entry.props.type, entry);
-				
-				// add tag attributes to annotation
-				annotation.cwrcAttributes = entry.info;
-				
-				rdfString += JSON.stringify(annotation);
-				
-//				var r = relationships[o.id];
-//				for (var j = 0; j < r.contains.length; j++) {
-//					rdfString += '\n\t<w:contains>'+r.contains[j]+'</w:contains>';
-//				}
-//				for (var j = 0; j < r.overlaps.length; j++) {
-//					rdfString += '\n\t<w:overlaps>'+r.overlaps[j]+'</w:overlaps>';
-//				}
-				
-				rdfString += '\n]]></rdf:Description>';
-			}
+		var body = w.editor.getBody();
+		for (var key in w.entities) {
+			var entry = w.entities[key];
+			
+			rdfString += '\n<rdf:Description rdf:datatype="http://www.w3.org/TR/json-ld/"><![CDATA[\n';
+			
+			var annotation = converter.getAnnotationForEntity(key);
+			
+			// add tag attributes to annotation
+			annotation.cwrcAttributes = entry.info;
+			
+			rdfString += JSON.stringify(annotation, null, '\t');
+			
+			rdfString += '\n]]></rdf:Description>';
 		}
 		
 		// triples
@@ -216,6 +199,26 @@ return function(writer) {
 		rdfString += '\n</rdf:RDF>\n';
 		
 		return rdfString;
+	};
+	
+	converter.getAnnotationForEntity = function(entityId) {
+		var body = w.editor.getBody();
+		var entry = w.entities[entityId];
+		
+		// get the xpath for the entity's parent
+		var entityParent = $('[name="'+entityId+'"]:eq(0)', body).parent();
+		var xpath = w.utilities.getElementXPath(entityParent[0]);
+		entry.annotation.xpath = xpath;
+		
+		// get the character offset from the parent
+		var offset = _getOffsetFromParentForEntity(entityId, entityParent);
+		
+		entry.annotation.start = offset[0];
+		entry.annotation.length = offset[1]; 
+		
+		var annotation = w.entitiesModel.getAnnotation(entry.props.type, entry);
+		
+		return annotation;
 	};
 	
 	/**
@@ -243,7 +246,7 @@ return function(writer) {
 	 */
 	converter.getEntityOffsets = function() {
 		var body = $(w.editor.getBody());
-		var offsets = _getNodeOffsetsFromRoot(body);
+		var offsets = _getNodeOffsetsFromParent(body);
 		var ents = [];
 		for (var i = 0; i < offsets.length; i++) {
 			var o = offsets[i];
@@ -254,7 +257,12 @@ return function(writer) {
 		return ents;
 	};
 	
-	function _getNodeOffsetsFromRoot(root) {
+	/**
+	 * Get character offsets for a node.
+	 * @param {Node} parent The node to start calculating offsets from.
+	 * @returns Array
+	 */
+	function _getNodeOffsetsFromParent(parent) {
 		var currentOffset = 0;
 		var offsets = [];
 		function getOffsets(parent) {
@@ -282,9 +290,37 @@ return function(writer) {
 			});
 		}
 		
-		getOffsets(root);
+		getOffsets(parent);
 		return offsets;
 	};
+	
+	/**
+	 * Gets the character offset for an entity starting from the parent.
+	 * @param {String} id The entity ID
+	 * @param {jQuery} [parent] The node to start calculating the offset from
+	 * @returns Array
+	 */
+	function _getOffsetFromParentForEntity(id, parent) {
+		var currentOffset = 0;
+		var offset = [];
+		parent = parent || $('[name="'+id+'"]:eq(0)', w.editor.getBody()).parent();
+		function getOffset(parent) {
+			parent.contents().each(function(index, element) {
+				var el = $(this);
+				if (this.nodeType == Node.TEXT_NODE && this.data != ' ') {
+					currentOffset += this.length;
+				} else if (el.attr('_tag')) {
+					getOffset(el);
+				} else if (el.attr('name') == id && el.hasClass('start')) {
+					offset = [currentOffset, w.entities[id].props.content.length];
+					return false;
+				}
+			});
+		}
+		
+		getOffset(parent);
+		return offset;
+	}
 	
 	function _determineOffsetRelationships(offsets) {
 		var relationships = {};
@@ -469,14 +505,18 @@ return function(writer) {
 				if (entity != null) {
 					
 					var id = tinymce.DOM.uniqueId('ent_');
-					var offset = entity.hasTarget.hasSelector.start;
-					var length = entity.hasTarget.hasSelector.end - offset;
 					
-					offsets.push({
-						id: id,
-						offset: offset,
-						length: length
-					});
+					var xpointer = entity.hasTarget.hasSelector['rdf:value'];
+					if (xpointer != null) {
+						var xpath = xpointer.substring(xpointer.indexOf('/'), xpointer.indexOf(','));
+						var bounds = xpointer.match(/,\d+/g);
+						
+						offsets.push({
+							id: id,
+							offset: parseInt(bounds[0].replace(',','')),
+							length: parseInt(bounds[1].replace(',',''))
+						});
+					}
 					
 					// determine the entity type
 					// TODO will need better way of doing this

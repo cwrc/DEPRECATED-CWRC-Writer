@@ -767,6 +767,39 @@ return function(writer) {
 		return atts.length != 0;
 	};
 	
+	/**
+	 * Get the XPath for an element.
+	 * Adapted from the firebug source.
+	 * @param {Element} element The element to get the XPath for
+	 * @returns string
+	 */
+	u.getElementXPath = function(element) {
+		var paths = [];
+
+	    // Use nodeName (instead of localName) so namespace prefix is included (if any).
+	    for (; element && element.nodeType == 1; element = element.parentNode)
+	    {
+	        var index = 0;
+	        for (var sibling = element.previousSibling; sibling; sibling = sibling.previousSibling)
+	        {
+	            // Ignore document type declaration.
+	            if (sibling.nodeType == Node.DOCUMENT_TYPE_NODE)
+	                continue;
+
+	            if (sibling.getAttribute && sibling.getAttribute('_tag') == element.getAttribute('_tag'))
+	                ++index;
+	        }
+
+	        var tagName = element.getAttribute('_tag');
+	        if (tagName != null) {
+		        var pathIndex = (index ? "[" + (index+1) + "]" : "");
+		        paths.splice(0, 0, tagName + pathIndex);
+	        }
+	    }
+
+	    return paths.length ? "/" + paths.join("/") : null;
+	};
+	
 	return u;
 };
 

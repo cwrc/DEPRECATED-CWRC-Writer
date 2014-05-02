@@ -1,10 +1,10 @@
 // TODO add IDs
-define(['jquery'], function($) {
+define(['jquery', 'jquery.tmpl'], function($) {
 	
 	// returns a common annotation object
 	function commonAnnotation(data, type) {
 		var date = new Date().toISOString();
-		var contextUri = 'http://www.w3.org/ns/oa-context-20130208.json';
+		var contextUri = 'http://www.w3.org/ns/oa/oa.ttl';
 		var annotationId = data.annotationId;
 		var body = '';
 		var annotatedById = data.userId;
@@ -13,8 +13,9 @@ define(['jquery'], function($) {
 		var entityId = data.entityId;
 		var docId = data.docId;
 		var selectorId = data.selectorId;
+		var xpath = data.xpath;
 		var offsetStart = data.start;
-		var offsetEnd = data.end;
+		var offsetLength = data.length;
 		
 		var annotation = {
 			'@context': contextUri,
@@ -39,9 +40,9 @@ define(['jquery'], function($) {
 				'@type': 'oa:SpecificResource',
 				'hasSelector': {
 					'@id': selectorId,
-					'@type': 'oa:TextPositionSelector',
-					'start': offsetStart,
-					'end': offsetEnd
+					'@type': 'oa:FragmentSelector',
+					'dcterms:conformsTo': 'http://tools.ietf.org/rfc/rfc3023',
+					'rdf:value': '#xpointer(string-range('+xpath+',"",'+offsetStart+','+offsetLength+'))'
 				},
 				'hasSource': {
 					'@id': docId,
@@ -193,8 +194,23 @@ define(['jquery'], function($) {
 				events: 'SIC'
 			},
 			mapping: {
-				tei: '<sic><corr cert="${info.certainty}" type="${info.type}" ana="${info.content}">[[[editorText]]]</corr></sic>',
-				events: '<SIC CORR="${info.content}">[[[editorText]]]</SIC>'
+				tei: function(info) {
+					var xml;
+					if (info.sicText) {
+						xml = '<choice><sic>[[[editorText]]]</sic><corr>'+info.corrText+'</corr></choice>';
+					} else {
+						xml = '<corr>[[[editorText]]]</corr>';
+					}
+					return xml;
+				},
+				events: '<SIC CORR="${info.corrText}">[[[editorText]]]</SIC>'
+			},
+			annotation: function(entity) {
+				var data = entity.annotation;
+				var anno = commonAnnotation(data, 'cnt:ContentAsText');
+				anno.motivation = 'oa:editing';
+				anno.hasBody['cnt:chars'] = entity.info.corrText;
+				return anno;
 			}
 		},
 		keyword: {
