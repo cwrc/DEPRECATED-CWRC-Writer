@@ -13,7 +13,6 @@ return function(writer) {
 				console.log(r);
 			},
 			error: function(errorThrown) {
-				console.log(errorThrown);
 			},
 		});
 	}
@@ -45,7 +44,6 @@ return function(writer) {
 						});
 					},
 					error: function(errorThrown) {
-						console.log(errorThrown);
 					},
 					buttons: [{
 						label : "Create New Person",

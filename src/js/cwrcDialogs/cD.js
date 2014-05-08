@@ -4,6 +4,7 @@ $(function(){
 	cD = {};
 	(function(){
 		var cwrcApi = new CwrcApi('http://apps.testing.cwrc.ca/services/ccm-api/', $);
+		//var cwrcApi = new CwrcApi('http://localhost/cwrc/', $);
 		
 		// parameters
 
@@ -687,7 +688,7 @@ $(function(){
 				if (node.input === "quantifier") {
 					entity[dialogType].shouldValidate.pop();
 				}
-			} else if (node.input !== "label") {
+			} else if (node.input !== "label" && node.input !== "header") {
 				// CREATE NODE
 				// if (node.input == "datePicker") {
 				// 	alert("picker!!! ");
@@ -854,7 +855,7 @@ $(function(){
 		entity.viewModel().paddedToday = function() {
 			var date = new Date();
 			var pad = "00";
-			var month = "" + date.getMonth() + 1;
+			var month = "" + (date.getMonth() + 1);
 			var day = "" + date.getDate();
 			month = pad.substring(0, pad.length - month.length) + month;
 			day = pad.substring(0, pad.length - day.length) + day;
@@ -1187,8 +1188,9 @@ $(function(){
 		
 		var search = {};
 		search.buttons = ko.observableArray([]);
-		search.infoTitle = ko.observable("");
-		
+		// search.infoTitle = ko.observable("");
+		search.dialogTitle = ko.observable("");
+
 		search.getLinkedDataSource = function(specs) {
 
 
@@ -1449,7 +1451,8 @@ $(function(){
 			'			<div class="modal-content">' +
 			'				<div class="modal-header">' +
 			'					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-			'					<h4 class="modal-title"><span>Title</span></h4>' +
+			// '					<h4 class="modal-title"><span>Search XXX</span></h4>' +
+			'						<h4 class="modal-title"><span data-bind="text: dialogTitle"></span></h4>' +
 			'				</div>' +
 			'				<div class="modal-body">' +
 			'					<!-- Content -->' +
@@ -1571,7 +1574,7 @@ $(function(){
 		search.getResultFromCWRC = function(specs) {
 			// specs has data and source
 			var that = search.result();
-			that.name = specs["solr_doc"]["fgs.label"];
+			that.name = specs["solr_doc"]["fgs_label_s"];
 			that.id = specs["PID"];
 
 			
@@ -1759,6 +1762,7 @@ $(function(){
 		search.showInfoPopOver = function(clicked) {
 			search.selectResult(clicked);
 			$("#search-modal").popover("show");
+			$(".popover").find(".arrow").removeClass("arrow");
 		}
 
 
@@ -1796,6 +1800,7 @@ $(function(){
 
 		var popSearchPerson = function(opts) {
 			search.clear();
+			search.dialogTitle("Search Person");
 			dialogType = "person";
 			
 			// search.buttons = opts.buttons ? opts.buttons : [];
@@ -1808,12 +1813,22 @@ $(function(){
 
 		var popSearchOrganization = function(opts) {
 			search.clear();
+			search.dialogTitle("Search Organization");
 			dialogType = "organization";
 			completeSearchDialog(opts);
 
 		}
 
 		cD.popSearchOrganization = popSearchOrganization;
+		
+		var popSearchPlace = function(opts) {
+			search.clear();
+			search.dialogTitle("Search Place");
+			dialogType = "place";
+			completeSearchDialog(opts);
+		}
+		
+		cD.popSearchPlace = popSearchPlace;
 
 		var popSearch = {
 			person: popSearchPerson,

@@ -25,14 +25,7 @@ return function(writer) {
 				var query = w.editor.currentBookmark.rng.toString();
 				$('#searchEntityInput').val(query);
 				
-				w.dialogManager.show('tagPlace', {
-					cwrcInfo: {
-						id: 'cwrc:3b92364f-0e16-4599-bd8c-92c95a409a00',
-						name: [query],
-						repository: 'cwrc'
-					}
-				});
-				/*cD.popSearchPlace({
+				cD.popSearchPlace({
 					success: function(result) {
 						if (result.id == null) {
 							result = {
@@ -54,8 +47,7 @@ return function(writer) {
 						label : "Create New Place",
 						action : createNewPlace
 					}]
-				});*/
-				
+				});
 			}
 		},
 		hide: function() {

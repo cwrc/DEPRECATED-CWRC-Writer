@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
+     MRB: Tue 22-Apr-2014: Added interface annotation code to render header labels for the four top-level element
+     sections: recordInfo, identity, description, and relations
      MRB: Fri 14-Mar-2014: Added two new values to the <gender> element: "transgendered male-to-female", and
      "transgendered female-to-male"
      MRB: Mon 03-Mar-2014: Revised the <relations> element section's interface annotation code
@@ -223,15 +225,14 @@
             <a:documentation>Captures record-level information. Components of this element are kept
                 to a minimum given that administrative and object-level metadata is captured in
                 other FOXML datastreams.</a:documentation>
-
             <xs:annotation>
                 <xs:appinfo>
-                    <interface-field path="entity/person/recordInfo">             
+                    <interface-field path="entity/person/recordInfo">
                         <label xml:lang="en">Record information</label>
                         <input>header</input>
                     </interface-field>
                 </xs:appinfo>
-            </xs:annotation>                
+            </xs:annotation>
             <optional>
                 <ref name="id-attribute"/>
             </optional>
@@ -259,6 +260,14 @@
             <a:documentation>Captures record-level information. Components of this element are kept
                 to a minimum given that administrative and object-level metadata is captured in
                 other FOXML datastreams.</a:documentation>
+            <xs:annotation>
+                <xs:appinfo>
+                    <interface-field path="entity/organization/recordInfo">
+                        <label xml:lang="en">Record information</label>
+                        <input>header</input>
+                    </interface-field>
+                </xs:appinfo>
+            </xs:annotation>
             <optional>
                 <ref name="id-attribute"/>
             </optional>
@@ -282,6 +291,14 @@
             <a:documentation>Captures record-level information. Components of this element are kept
                 to a minimum given that administrative and object-level metadata is captured in
                 other FOXML datastreams.</a:documentation>
+            <xs:annotation>
+                <xs:appinfo>
+                    <interface-field path="entity/place/recordInfo">
+                        <label xml:lang="en">Record information</label>
+                        <input>header</input>
+                    </interface-field>
+                </xs:appinfo>
+            </xs:annotation>
             <optional>
                 <ref name="id-attribute"/>
             </optional>
@@ -326,15 +343,14 @@
         <element name="identity">
             <a:documentation>A container element grouping data for identification of a CWRC entity
                 instance</a:documentation>
-
             <xs:annotation>
                 <xs:appinfo>
-                    <interface-field path="entity/person/identity">             
+                    <interface-field path="entity/person|organization|place/identity">
                         <label xml:lang="en">Identity</label>
                         <input>header</input>
                     </interface-field>
                 </xs:appinfo>
-            </xs:annotation>        
+            </xs:annotation>
             <optional>
                 <ref name="id-attribute"/>
             </optional>
@@ -395,11 +411,11 @@
             <xs:annotation>
                 <xs:appinfo>
                     <interface-field path="entity/person/description">             
-                        <label xml:lang="en">Person description</label>
+                        <label xml:lang="en">Description</label>
                         <input>header</input>
                     </interface-field>
                 </xs:appinfo>
-            </xs:annotation>                
+            </xs:annotation> 
             <optional>
                 <ref name="id-attribute"/>
             </optional>
@@ -436,6 +452,14 @@
     <define name="orgDescription-element">
         <element name="description">
             <a:documentation>This section captures descriptive data about a CWRC entity record</a:documentation>
+            <xs:annotation>
+                <xs:appinfo>
+                    <interface-field path="entity/organization/description">             
+                        <label xml:lang="en">Description</label>
+                        <input>header</input>
+                    </interface-field>
+                </xs:appinfo>
+            </xs:annotation> 
             <optional>
                 <ref name="id-attribute"/>
             </optional>
@@ -464,6 +488,14 @@
     <define name="placeDescription-element">
         <element name="description">
             <a:documentation>This section captures descriptive data about a CWRC entity record</a:documentation>
+            <xs:annotation>
+                <xs:appinfo>
+                    <interface-field path="entity/place/description">             
+                        <label xml:lang="en">Description</label>
+                        <input>header</input>
+                    </interface-field>
+                </xs:appinfo>
+            </xs:annotation> 
             <optional>
                 <ref name="id-attribute"/>
             </optional>
@@ -633,8 +665,8 @@
                             <value a:en="female">female</value>
                             <value a:en="male">male</value>
                             <value a:en="transgendered">transgendered</value>
-                            <value a:en="transgendered">transgendered male-to-female</value>
-                            <value a:en="transgendered">transgendered female-to-male</value>
+                            <value a:en="transgendered male-to-female">transgendered male-to-female</value>
+                            <value a:en="transgendered female-to-male">transgendered female-to-male</value>
                             <data a:en="other" type="string"/>
                         </choice>
                     </values>
@@ -712,15 +744,14 @@
         <element name="relations">
             <a:documentation>A group of relations between a given entity and other entities. Equivalent to EAC-CPF\'s
                 relation element, used as a wrapper for grouping one or more specific relations.</a:documentation>
-
             <xs:annotation>
                 <xs:appinfo>
-                    <interface-field path="entity/person/relations">             
+                    <interface-field path="entity/person|organization|place/relations">
                         <label xml:lang="en">Relations</label>
                         <input>header</input>
                     </interface-field>
                 </xs:appinfo>
-            </xs:annotation>                 
+            </xs:annotation>
             <optional>
                 <ref name="id-attribute"/>
             </optional>
@@ -916,7 +947,10 @@
                 </xs:appinfo>
             </xs:annotation>
 
-            <data type="decimal"/>
+            <choice>
+                <empty/>
+                <data type="decimal"/>
+            </choice>
         </element>
     </define>
 
@@ -936,7 +970,10 @@
                 </xs:appinfo>
             </xs:annotation>
 
-            <data type="decimal"/>
+            <choice>
+                <empty/>
+                <data type="decimal"/>
+            </choice>
         </element>
     </define>
 
@@ -1111,7 +1148,10 @@
                 </xs:appinfo>
             </xs:annotation>
 
-            <data type="integer"/>
+            <choice>
+                <empty/>
+                <data type="integer"/>
+            </choice>
         </element>
     </define>
 
@@ -1133,7 +1173,10 @@
                 </xs:appinfo>
             </xs:annotation>
 
-            <data type="integer"/>
+            <choice>
+                <empty/>
+                <data type="integer"/>
+            </choice>
         </element>
     </define>
 
@@ -1153,7 +1196,10 @@
                 </xs:appinfo>
             </xs:annotation>
 
-            <data type="decimal"/>
+            <choice>
+                <empty/>
+                <data type="decimal"/>
+            </choice>
         </element>
     </define>
 
@@ -1217,15 +1263,15 @@
     <define name="projectId-element">
         <element name="projectId">
             <a:documentation>Similar to EAC-CPF\'s agencyCode. In CWRC\'s context, projectId
-                captures an identifier for the originating project or collection. Subsequent modifications of the record
+                captures an identifier for the originating project. Subsequent modifications of the record
                 should be captured in FOXML\'s datastreams</a:documentation>
             <xs:annotation>
                 <xs:appinfo>
 
                     <interface-field path="entity/person|organization|place/recordInfo/originInfo/projectId">
-                        <label xml:lang="en">Collection</label>
-                        <help-text xml:lang="en">Select one or more collections to associate
-                            the present entity record with a project.</help-text>
+                        <label xml:lang="en">Project</label>
+                        <help-text xml:lang="en">Select one or more projects to associate
+                            the present entity record.</help-text>
                         <input>textField</input>
                         <!-- mpo: ideally dynamic
                             dropDown (combobox) populated with cwrc project
@@ -1920,6 +1966,7 @@
                             <value a:fr="" a:en="musical">musical</value>
                             <value a:fr="" a:en="religious">religious</value>
                             <value a:fr="" a:en="publishing">publishing</value>
+                            <value a:fr="" a:en="school">school</value>
                             <data a:fr="" a:en="other" type="string"/>
                         </choice>
                     </values>
@@ -1958,6 +2005,7 @@
                     <value a:fr="" a:en="musical">musical</value>
                     <value a:fr="" a:en="religious">religious</value>
                     <value a:fr="" a:en="publishing">publishing</value>
+                    <value a:fr="" a:en="school">school</value>
                     <data a:fr="" a:en="other" type="string"/>
                     <!--<value>financial</value>-->
                     <!--<value>non-governmental</value>-->
@@ -2114,7 +2162,7 @@
                 <xs:appinfo>
 
                     <interface-field path="entity/person|organization|place/description/existDates/dateSingle">
-                        <label xml:lang="en">Date Single</label>
+                        <label xml:lang="en">Major Event</label>
                         <input label="Add">dialogue</input>
                     </interface-field>
 
@@ -2140,7 +2188,7 @@
                 <xs:appinfo>
 
                     <interface-field path="entity/person|organization|place/description/existDates/dateRange">
-                        <label xml:lang="en">Date Range</label>
+                        <label xml:lang="en">Important Stages</label>
                         <input label="Add">dialogue</input>
                     </interface-field>
 
