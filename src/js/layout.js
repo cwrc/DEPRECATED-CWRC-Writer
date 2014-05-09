@@ -3,8 +3,7 @@ function setupLayoutAndModules(w, EntitiesList, Relations, Selection, StructureT
 		defaults: {
 			maskIframesOnResize: true,
 			resizable: true,
-			slidable: false,
-			maskIframesOnResize: true,
+			slidable: false
 		},
 	//			east: {
 	//				onresize: function() {
