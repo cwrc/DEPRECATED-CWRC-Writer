@@ -569,6 +569,15 @@ html, body {
 	margin-bottom: 0;
 }
 
+#keywordDialog .keywordRow input {
+	vertical-align: middle;
+	width: 150px;
+}
+
+#keywordDialog .keywordRow button {
+	margin-left: 5px;
+}
+
 .attributeWidget label {
 	display: inline;
 }
