@@ -9,8 +9,15 @@ return function(writer) {
 	var ADD = 0;
 	var EDIT = 1;
 	
+	var currentId = null;
+	var currentData = null;
+	
 	$(document.body).append(''+
 	'<div id="'+id+'Dialog" class="annotationDialog">'+
+		'<div id="'+id+'_tagAs">'+
+			'<p>Tag as:</p>'+
+			'<span class="tagAs"></span>'+
+		'</div>'+
 		'<div id="'+id+'_level">'+
 			'<p>Type:</p>'+
 			'<input type="radio" value="a" name="level" id="'+id+'_level_a"/>'+
@@ -35,13 +42,14 @@ return function(writer) {
 	
 	var title = $('#'+id+'Dialog');
 	title.dialog({
+		title: 'Tag Title',
 		modal: true,
 		resizable: false,
 		closeOnEscape: false,
 		open: function(event, ui) {
 			$('#'+id+'Dialog').parent().find('.ui-dialog-titlebar-close').hide();
 		},
-		height: 375,
+		height: 400,
 		width: 435,
 		autoOpen: false,
 		buttons: {
@@ -49,7 +57,9 @@ return function(writer) {
 				titleResult();
 			},
 			'Cancel': function() {
-				titleResult(true);
+				currentData = null;
+				currentId = null;
+				title.dialog('close');
 			}
 		}
 	});
@@ -63,22 +73,18 @@ return function(writer) {
 		}
 	});
 	
-	var titleResult = function(cancelled) {
-		var data = null;
-		if (!cancelled) {
-			var level = $('input[name="level"]:checked', title).val();
-			var certainty = $('#'+id+'_certainty input:checked').val();
-			
-			data = {
-				level: level,
-				certainty: certainty
-			};
-		}
-		if (mode == EDIT && data != null) {
-			w.tagger.editEntity(w.editor.currentEntity, data);
+	var titleResult = function() {
+		currentData.level = $('#'+id+'_level input[name="level"]:checked').val();
+		currentData.certainty = $('#'+id+'_certainty input:checked').val();
+		
+		if (mode == EDIT && currentData != null) {
+			w.tagger.editEntity(currentId, currentData);
 		} else {
-			w.tagger.finalizeEntity('title', data);
+			w.tagger.finalizeEntity('title', currentData);
 		}
+		currentId = null;
+		currentData = null;
+		
 		title.dialog('close');
 	};
 	
@@ -87,20 +93,31 @@ return function(writer) {
 			mode = config.entry ? EDIT : ADD;
 			var prefix = 'Tag ';
 			
+			$('#'+id+'_tagAs span').empty();
 			$('#'+id+'_certainty input:checked').prop('checked', false).button('refresh');
+			
+			currentData = {};
+			
+			if (config.cwrcInfo != null) {
+				$('#'+id+'_tagAs span').html(config.cwrcInfo.name);
+				currentData.cwrcInfo = config.cwrcInfo;
+			}
 			
 			if (mode == ADD) {
 				$('input[value="m"]', title).prop('checked', true);
 			} else {
 				prefix = 'Edit ';
-				var level = config.entry.info.level;
-				var cert = config.entry.info.certainty;
 				
-				$('input[value="'+level+'"]', title).prop('checked', true);
-				$('#'+id+'_certainty input[value="'+cert+'"]').prop('checked', true).button('refresh');
+				var data = config.entry.info;
+				currentData.cwrcInfo = data.cwrcInfo;
+				currentId = config.entry.props.id;
+				
+				$('#'+id+'_tagAs span').html(data.cwrcInfo.name);
+				$('#'+id+'_level input[value="'+data.level+'"]').prop('checked', true);
+				$('#'+id+'_certainty input[value="'+data.certainty+'"]').prop('checked', true).button('refresh');
 			}
 			
-			var t = prefix+config.title;
+			var t = prefix+'Title';
 			title.dialog('option', 'title', t);
 			if (config.pos) {
 				title.dialog('option', 'position', [config.pos.x, config.pos.y]);

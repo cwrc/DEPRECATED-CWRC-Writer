@@ -303,6 +303,8 @@ A:hover
 /* Entities Tab */
 #westTabs .title
 {
+/* FIXME conflicts */
+/*
   margin-left: 10px;
   
   background: transparent;
@@ -311,6 +313,7 @@ A:hover
   left: auto;
   position: inherit;
   text-align: left;
+ */
 }
 
 #westTabs .title.box
