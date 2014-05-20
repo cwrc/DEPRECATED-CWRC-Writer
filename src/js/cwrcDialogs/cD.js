@@ -4,7 +4,7 @@ $(function(){
 	cD = {};
 	(function(){
 		var cwrcApi = new CwrcApi('http://apps.testing.cwrc.ca/services/ccm-api/', $);
-//		var cwrcApi = new CwrcApi('http://localhost/cwrc/', $);
+//		 var cwrcApi = new CwrcApi('http://localhost/cwrc/', $);
 		
 		// parameters
 
@@ -122,6 +122,7 @@ $(function(){
 		entity.title.success = null;
 
 		entity.editing = false;
+		entity.editingPID = "";
 
 		// XXX Add namespace
 
@@ -465,8 +466,8 @@ $(function(){
 		}
 
 		var completeDialog = function(opts) {
-			entity[dialogType].success = typeof opts.success === undefined ? function(){} : opts.success;
-			entity[dialogType].error = typeof opts.error === undefined ? function(){} : opts.error;
+			entity[dialogType].success = opts.success ? opts.success : function(){};
+			entity[dialogType].error = opts.error ? opts.error : function(){};
 			newDialog();
 			setHelp();
 		};
@@ -716,6 +717,7 @@ $(function(){
 						var parent = $(node).parent()[0];
 						if (parent.nodeName === 'attribute') {
 							newInput.attributeName = $(parent).attr('name') + "";
+							newInput.path += "," + newInput.attributeName;
 						}
 						newInput.label = $(e).children('label').first().text();
 						newInput.help = $(e).children('help-text').first().text();
@@ -980,7 +982,7 @@ $(function(){
 					var role = entity.selfWorking.createElement("role");
 					var roleTerm = entity.selfWorking.createElement("roleTerm");
 					roleTerm.setAttribute("type", "text");
-					roleTerm.setAttribute("marcrealtor");
+					roleTerm.setAttribute("authority", "marcrealtor");
 					roleTerm.appendChild(entity.selfWorking.createTextNode("Author"));
 					$(role).append(roleTerm);
 				
@@ -1123,31 +1125,43 @@ $(function(){
 					break;
 			}
 
+			var result = null;
+			
 			if(dialogType == 'title'){
 				entity.selfWorking = $.parseXML(startingXML + "</mods>");
 				validateModsInfo();
 				addModsInfo(entity.selfWorking);
+				
+				var result = xmlToString(entity.selfWorking);
+				
+				result = result.replace(/xmlns=""/g, "");
 			}else{
 				entity.selfWorking = $.parseXML(startingXML + '<entity></entity>');
 				addRecordInfo(entity.selfWorking);
 				visitStringifyResult(entity[dialogType].workingContainers[0]);
+				var result = xmlToString(entity.selfWorking);
 			}
 			
-			var result = xmlToString(entity.selfWorking);
 			return result;
 		};
 
 		cD.processCallback = function() {
 			entity.viewModel().validated(true);
 			var xml = getWorkingXML();
+			console.log(xml);
 			if (entity.viewModel().validated()) {
-				var response = cwrcApi[dialogType].newEntity(xml);
+				var response;
+				if (entity.editing) {
+					response = cwrcApi[dialogType].modifyEntity(entity.editingPID, xml);	
+				} else {
+					response = cwrcApi[dialogType].newEntity(xml);	
+				}
 				var result = {
 					response : response,
 					data : xml
 				};
 
-				entity[dialogType].success(result);
+				entity[dialogType].success(result);	
 				
 				if(dialogType === 'title'){
 					$('#cwrcTitleModal').modal('hide');
@@ -1474,7 +1488,14 @@ $(function(){
 					switch (opts.repository) {
 						case "cwrc":
 						populatePersonCWRC(opts);
+						break;
 					}
+				break;
+				case "organization":
+				break;
+				case "place":
+				break;
+
 			}
 			
 
@@ -1482,13 +1503,13 @@ $(function(){
 
 		var populatePersonCWRC = function(opts) {
 			// cwrc
-			console.log(opts.data);
+			
 			var workingXML = $.parseXML(opts.data);
 			
 			children = workingXML.childNodes;
 			var path = [];
 			for (var i=0; i< children.length; ++i) {
-				visitNodeCWRCPopulate(children[i], path);
+				visitNodeCWRCPopulate(children[i], path, null);
 			}
 		}
 		
@@ -1541,51 +1562,30 @@ $(function(){
 			return result;
 		}
 
-		var visitNodeCWRCPopulate = function (node, path) {
+		var visitNodeCWRCPopulate = function (node, path, parentNode) {
 			path.push(node.nodeName);
-			var parentPath = path.slice(0, path.length-1);
-			// console.log(path);
-			// console.log("nodetype: " + node.nodetype);	
-			var nodeValue = $.trim(node.nodeValue);
-			if (node.nodeType === 3 && nodeValue !== "") {
-
-				// console.log("Nodename: " + node.nodeName);
-				// console.log("nodetype: " + node.nodeType);	
-				// console.log("value: " + nodeValue);
-				// console.log("parentPath: "+ parentPath.toString());
-
-				// XXX populate field
-				// it exits, find it
-				
-
-				// alert(entity.viewModel().interfaceFields());
-				// alert(entity.viewModel().interfaceFields().input)
-				// for (var i =0; i < entity.viewModel().interfaceFields().length; ++i) {
-				// 	alert(i)
-				// 	var currentField = entity.viewModel().interfaceFields[i];
-				// 	if(foundAndFilled(nodeValue, parentPath, currentField)) {
-				//  		// return false; // break out of loop
-				//  		i = entity.viewModel().interfaceFields().length;
-				//  	}
-				// }
-
-
-				foundAndFilled(nodeValue, parentPath, entity.viewModel().interfaceFields());
-
-				// $.each(entity.viewModel().interfaceFields(), function(i, currentField) {
-				// 	alert(typeof currentField + " << " + i)
-				// 	if(foundAndFilled(nodeValue, parentPath, currentField)) {
-				// 		return false; // break out of loop
-				// 	}
-				// });
-			} 
 			
-
 			var children = node.childNodes;	
 			for (var i=0; i< children.length; ++i) {		
 				var currentNode = children[i]
-				visitNodeCWRCPopulate(currentNode, path);
+				visitNodeCWRCPopulate(currentNode, path, node);
 			}
+
+			var parentPath = path.slice(0, path.length-1);
+			var nodeValue = $.trim(node.nodeValue);
+			if (node.nodeType === 3 && nodeValue !== "") {
+				foundAndFilled(nodeValue, parentPath, entity.viewModel().interfaceFields());
+
+				var atts =parentNode.attributes;
+				for (var attIndex =0; attIndex < atts.length; ++attIndex) {
+					var currentAtt = atts.item(attIndex);
+					parentPath.push(currentAtt.name);
+					
+					foundAndFilled(currentAtt.value, parentPath, entity.viewModel().interfaceFields());
+					parentPath.pop();
+				}
+
+			} 
 
 			path.pop();
 		}
@@ -1601,8 +1601,12 @@ $(function(){
 			return result;
 		}
 
-		var foundAndFilled = function(nodeValue, parentPath, field) {
+		// XXX second seed is not added
+		// XXX second value in group is not added 
+		// XXX same problem ?
 
+		var foundAndFilled = function(nodeValue, parentPath, field) {
+			// 
 			if (field.input === "quantifier") {
 				// check path if sub continue
 
@@ -1612,24 +1616,20 @@ $(function(){
 					var foundOnFields = false;
 					// alert(field.interfaceFields().length)
 					$.each(field.interfaceFields(), function(i, currentField) {
-						if(foundAndFilled(nodeValue, parentPath, currentField)) {
-							console.log("FOUNMD ONM FIELDS")
+						
+						if(foundAndFilled(nodeValue, parentPath, currentField)) {							
 							foundOnFields = true;
 							return false; // break out of loop
 						}
 					});
 					if (foundOnFields) {
-						console.log("HERE")
 						return true;
 					}
 					if (!foundOnFields) {
-						// alert("not found on fields")
-
 						if (foundOnSeed(field, parentPath)) {
-							console.log(field.input + " " + field.path + " <> " + parentPath)
-							// alert("adding group")
+
 							field.addGroup();
-							// field.interfaceFields.push(field.seed.clone());
+
 							var lastfield = last(field.interfaceFields()) ; 					
 							return foundAndFilled(nodeValue, parentPath, lastfield);
 						}
@@ -1640,7 +1640,9 @@ $(function(){
 
 			} else if(field.input === "seed") {
 				var foundOnSeedCheck = false;
+				
 				$.each(field.interfaceFields(), function(i, currentField) {
+					
 					if(foundAndFilled(nodeValue, parentPath, currentField)) {
 						foundOnSeedCheck = true;
 						return false; // break out of loop
@@ -1651,13 +1653,17 @@ $(function(){
 					return true;
 				}
 
-			}else if (field.input !== " header") {
-				// check path if same fill
-				// inputs dont have path
-				// fill now ?
-				// alert(">>>>>> " + field.input + " <> [" + field.path + "] [" + parentPath + "] " + nodeValue)
+			}else if (field.input !== " header") {				
 				if (field.path == parentPath) {
-					field.value(nodeValue);
+					// console.log(field.input + " " + nodeValue);
+					if (field.input == "radioButton" || field.input == "dynamicCheckbox") {
+						field.value(nodeValue.split(","));
+					} else {
+						field.value(nodeValue);		
+					}
+					
+					
+					// XXX need to add another group in previous container
 					return true;
 				}
 				// return true;
@@ -1734,6 +1740,7 @@ $(function(){
 
 		var popEditPerson = function(opts) {
 			entity.editing = true;
+			entity.editingPID = opts.id;
 			cD.popCreatePerson(opts);
 			populateDialog(opts);
 		};
