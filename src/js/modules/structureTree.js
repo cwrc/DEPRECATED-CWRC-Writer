@@ -758,6 +758,8 @@ return function(config) {
 	// add to writer
 	w.tree = tree;
 	
+	w.event('structureTreeInitialized').publish(tree);
+	
 	return tree;
 };
 

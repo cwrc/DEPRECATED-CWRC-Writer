@@ -36,11 +36,23 @@ return function(writer) {
 	 * CWRCWriter events
 	 */
 	
+	
 	/**
 	 * The writer has been initialized.
 	 * @returns {Object} The CWRCWriter.
 	 */
 	w.event('writerInitialized');
+	/**
+	 * The StructureTree has been initialized.
+	 * @returns {Object} The StructureTree.
+	 */
+	w.event('structureTreeInitialized');
+	/**
+	 * The EntitiesList has been initialized.
+	 * @returns {Object} The EntitiesList.
+	 */
+	w.event('entitiesListInitialized');
+	
 	
 	/**
 	 * The current node was changed.
@@ -53,6 +65,7 @@ return function(writer) {
 	 */
 	w.event('contentChanged');
 	
+	
 	/**
 	 * A document was loaded into the editor.
 	 */
@@ -61,6 +74,7 @@ return function(writer) {
 	 * A document was saved.
 	 */
 	w.event('documentSaved');
+	
 	
 	/**
 	 * A schema was loaded into the editor.
@@ -77,6 +91,7 @@ return function(writer) {
 	 */
 	w.event('schemaAdded');
 	
+	
 	/**
 	 * A document was validated.
 	 * @returns {Boolean} True if the doc is valid.
@@ -84,6 +99,7 @@ return function(writer) {
 	 * @returns {String} The string sent to the validator.
 	 */
 	w.event('documentValidated');
+	
 	
 	/**
 	 * A segment of the document was copied.
@@ -104,6 +120,7 @@ return function(writer) {
 	 * @returns {Object} Event object.
 	 */
 	w.event('writerKeyup');
+	
 	
 	/**
 	 * An entity was added to the document.

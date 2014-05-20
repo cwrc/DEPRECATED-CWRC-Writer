@@ -3,9 +3,7 @@ define(['jquery', 'jquery-ui', 'tinymce'], function($, jqueryUi, tinymce) {
 return function(writer) {
 	var w = writer;
 	
-	var noteEditor = null;
-	
-	var currentType = null;
+	var cwrcWriter = null;
 	
 	var mode = null;
 	var ADD = 0;
@@ -13,30 +11,28 @@ return function(writer) {
 	
 	$(document.body).append(''+
 	'<div id="noteDialog">'+
-		'<div id="note_type"><p>Type</p>'+
-		'<input type="radio" id="note_re" name="note_type" value="research" /><label for="note_re" title="Internal to projects">Research Note</label>'+
-		'<input type="radio" id="note_scho" name="note_type" value="scholarly" /><label for="note_scho" title="Footnotes/endnotes">Scholarly Note</label>'+
-		'<input type="radio" id="note_ann" name="note_type" value="annotation" /><label for="note_ann" title="Informal notes">Annotation</label>'+
-		'<input type="radio" id="note_trans" name="note_type" value="translation" /><label for="note_trans">Translation</label>'+
+		'<div style="position: absolute; top: 5px; left: 5px; right: 5px; bottom: 5px; text-align: center;">'+
+			'<div id="note_type">'+
+				'<input type="radio" id="note_re" name="note_type" value="researchNote" /><label for="note_re" title="Internal to projects">Research Note</label>'+
+				'<input type="radio" id="note_scho" name="note_type" value="scholarNote" /><label for="note_scho" title="Footnotes/endnotes">Scholarly Note</label>'+
+				'<input type="radio" id="note_ann" name="note_type" value="typeAnnotation" /><label for="note_ann" title="Informal notes">Annotation</label>'+
+			'</div>'+
 		'</div>'+
-	    '<form method="post" action=""><textarea id="note_textarea"></textarea></form>'+
-	    '<div id="note_access"><p>Access</p>'+
-		'<input type="radio" id="note_pub" name="note_access" value="public" /><label for="note_pub">Public</label>'+
-		'<input type="radio" id="note_pro" name="note_access" value="project" /><label for="note_pro">Project</label>'+
-		'<input type="radio" id="note_pri" name="note_access" value="private" /><label for="note_pri">Private</label>'+
+		'<div style="position: absolute; top: 35px; left: 5px; right: 5px; bottom: 5px; border: 1px solid #ccc;">'+
+			'<iframe style="width: 100%; height: 100%; border: none;"/>'+ // set src dynamically
 		'</div>'+
 	'</div>');
 	
 	var note = $('#noteDialog');
 	note.dialog({
 		modal: true,
-		resizable: false,
+		resizable: true,
 		closeOnEscape: false,
 		open: function(event, ui) {
 			$('#noteDialog').parent().find('.ui-dialog-titlebar-close').hide();
 		},
-		height: 450,
-		width: 405,
+		height: 650,
+		width: 850,
 		autoOpen: false,
 		buttons: {
 			'Tag Note': function() {
@@ -47,39 +43,41 @@ return function(writer) {
 			}
 		}
 	});
-	$('#note_type, #note_access').buttonset();
+	$('#note_type').buttonset();
 	
 	function noteResult(cancelled) {
 		var data = null;
 		if (!cancelled) {
-			var content = w.utilities.escapeHTMLString(noteEditor.getContent());
+			var content = cwrcWriter.converter.getDocumentContent();
 			var data = {
-				content: content,
 				type: $('#note_type input:checked').val(),
-				access: $('#note_access input:checked').val()
+				content: content
 			};
 		}
 		
-		w.editor.focus();
 		if (mode == EDIT && data != null) {
 			w.tagger.editEntity(w.editor.currentEntity, data);
 		} else {
-			w.tagger.finalizeEntity(currentType, data);
+			w.tagger.finalizeEntity('note', data);
 		}
 		
-		noteEditor.remove();
-		noteEditor.destroy();
-		noteEditor = null;
-		
+		cwrcWriter.editor.remove();
+		cwrcWriter.editor.destroy();
 		note.dialog('close');
-		currentType = null;
 	};
 	
 	return {
 		show: function(config) {
-			currentType = config.type;
+			var iframe = note.find('iframe')[0];
+			if (iframe.src == '') {
+				iframe.src = 'note.htm';
+			}
+			
 			mode = config.entry ? EDIT : ADD;
 			var prefix = 'Add ';
+			if (mode == EDIT) {
+				prefix = 'Edit ';
+			}
 			
 			var title = prefix+config.title;
 			note.dialog('option', 'title', title);
@@ -90,47 +88,53 @@ return function(writer) {
 			}
 			note.dialog('open');
 			
-			function postSetup() {
-				noteEditor.focus();
-				if (mode == ADD) {
-					$('#note_type input:eq(0)').click();
-					$('#note_access input:eq(0)').click();
-					noteEditor.setContent('');
+			// hack to get the writer
+			function getCwrcWriter() {
+				var iframe = note.find('iframe')[0];
+				cwrcWriter = iframe.contentWindow.writer;
+				if (cwrcWriter == null) {
+					setTimeout(getCwrcWriter, 50);
 				} else {
-					prefix = 'Edit ';
-					$('#note_type input[value="'+config.entry.info.type+'"]').click();
-					$('#note_access input[value="'+config.entry.info.access+'"]').click();
-					var content = w.utilities.unescapeHTMLString(config.entry.info.content);
-					noteEditor.setContent(content);
+					cwrcWriter.event('writerInitialized').subscribe(postSetup);
 				}
 			}
 			
-			if (noteEditor == null) {
-				tinymce.init({
-					mode: 'exact',
-					elements: 'note_textarea',
-					height: '225',
-					width: '380',
-					theme: 'advanced',
-					theme_advanced_buttons1: 'bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,|,formatselect',
-					theme_advanced_buttons2: '',
-					theme_advanced_buttons3: '',
-					theme_advanced_toolbar_location : 'top',
-				    theme_advanced_toolbar_align : 'left',
-					theme_advanced_path: false,
-					theme_advanced_statusbar_location: 'none',
-					setup: function(ed) {
-						noteEditor = ed;
-					},
-					oninit: function() {
-						postSetup();
+			function postSetup() {
+				if (w.schemaManager.schemaId == 'tei') {
+					cwrcWriter.event('documentLoaded').subscribe(function() {
+						cwrcWriter.editor.focus();
+					});
+					
+					// in case document is loaded before tree
+					cwrcWriter.event('structureTreeInitialized').subscribe(function(tree) {
+						setTimeout(tree.update, 50); // need slight delay to get indents working for some reason
+					});
+					cwrcWriter.event('entitiesListInitialized').subscribe(function(el) {
+						setTimeout(el.update, 50);
+					});
+					
+					if (mode == ADD) {
+						$('#note_type input:eq(0)').prop('checked', true).button('refresh');
+						var noteUrl = w.cwrcRootUrl+'xml/note_tei.xml';
+						cwrcWriter.fileManager.loadDocumentFromUrl(noteUrl);
+					} else {
+						var data = config.entry.info;
+						$('#note_type input[value="'+data.type+'"]').prop('checked', true).button('refresh');
+						var xmlDoc = cwrcWriter.utilities.stringToXML(data.content);
+						cwrcWriter.fileManager.loadDocumentFromXml(xmlDoc);
 					}
-				});
-			} else {
-				postSetup();
+				} else {
+					alert('Current schema not supported yet!');
+				}
 			}
+			
+			getCwrcWriter();
 		},
 		hide: function() {
+			// TODO destroy the CWRC-Writer
+			cwrcWriter.editor.remove();
+			cwrcWriter.editor.destroy();
+			
 			note.dialog('close');
 			w.editor.focus();
 		}

@@ -470,7 +470,7 @@ return function(config) {
 		w.tagger = new Tagger(w);
 		w.converter = new Converter(w);
 		w.fileManager = new FileManager(w);
-		w.entitiesModel = EntitiesModel;
+		w.entitiesModel = new EntitiesModel(w);
 		w.settings = new SettingsDialog(w, {
 			showEntityBrackets: true,
 			showStructBrackets: false

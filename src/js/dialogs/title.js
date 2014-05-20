@@ -31,7 +31,6 @@ return function(writer) {
 			'<input type="radio" id="'+id+'_probable" name="'+id+'_id_certainty" value="probable" /><label for="'+id+'_probable">Probable</label>'+
 			'<input type="radio" id="'+id+'_speculative" name="'+id+'_id_certainty" value="speculative" /><label for="'+id+'_speculative">Speculative</label>'+
 	    '</div>'+
-		'<div><b>NB</b>: This popup is not yet functional. Eventually it will let you look up the text to which you want to refer, or to add an entry for a new text.</div>'+
 	'</div>');
 	
 	var title = $('#'+id+'Dialog');

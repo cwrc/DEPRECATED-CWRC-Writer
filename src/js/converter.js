@@ -6,8 +6,11 @@ define(['jquery','tinymce'], function($, tinymce) {
 return function(writer) {
 	var w = writer;
 	
-	var converter = {};
+	$(document.body).append(''+
+		'<div id="entitiesConverter"></div>' // used by _htmlEntitiesToUnicode
+	);
 	
+	var converter = {};
 	
 	
 	/////////////////////////////////////////////////////////////////////
@@ -29,28 +32,53 @@ return function(writer) {
 		
 		var body = $(w.editor.getBody());
 		var clone = body.clone(false, true); // make a copy, don't clone body events, but clone child events
-		_entitiesToUnicode(body);
+		
+		_htmlEntitiesToUnicode(body);
 		
 		// rdf
-		var rdfString = '';
-		if (w.mode == w.XMLRDF && includeRDF) {
-			rdfString = converter.buildAnnotations();
-		}
+//		var rdfString = '';
+//		if (w.mode == w.XMLRDF && includeRDF) {
+//			rdfString = buildAnnotations();
+//		}
 		
 //		if (w.mode == w.XMLRDF) {
 			// remove the entity tags since they'll be in the rdf
 //			body.find('[_entity]').remove();
 //		} else {
 		
-			// always convert to tags, for now
-			convertEntitiesToTags();
+		
+		// always convert to tags, for now
+		
+		// get the entity IDs, in order that they appear in the document
+		// have to be order so that conversion and overlapping is done properly
+		var entNodes = $('[_entity]', writer.editor.getBody()).filter(function() {
+			return $(this).hasClass('start');
+		});
+		var entIds = $.map(entNodes, function(val, index) {
+			return $(val).attr('name');
+		});
+		
+		var overlappingEntities = [];
+		$.each(entIds, function(index, id) {
+			var success = convertEntityToTag(id, body[0]);
+			if (!success) {
+				overlappingEntities.push(id);
+			}
+		});
 			
 //		}
+		
+		var rdfString = buildAnnotations();
+		
 		
 		var root = body.children('[_tag='+w.root+']');
 		// make sure TEI has the right namespace for validation purposes
 		if (w.root == 'TEI') {
-			root.attr('xmlns','http://www.tei-c.org/ns/1.0');
+			var struct = w.structs[root.attr('id')];
+			// add them to the structs entry and they'll get added to the markup later
+			struct['xmlns'] = 'http://www.tei-c.org/ns/1.0';
+			struct['xmlns:rdf'] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
+			struct['xmlns:w'] = 'http://cwrctc.artsrn.ualberta.ca/#';
 		}
 		var tags = _nodeToStringArray(root);
 		xmlString += tags[0];
@@ -72,17 +100,61 @@ return function(writer) {
 		return xmlString;
 	};
 	
+	/**
+	 * Converts the opening and closing entity tag pairs to a matched set of opening and closing tags.
+	 * @param id The entity id.
+	 * @param [el] The element within which to look for the entity. Defaults to the editor dom.
+	 * @returns {Boolean} true if successful, false if overlapping
+	 */
+	function convertEntityToTag(id, el) {
+		el = el || w.editor.getBody();
+		var markers = $('[name="' + id + '"]', el);
+		var start = markers[0];
+		var end = markers[1];
+
+		var overlap = true;
+		var nodes = [start];
+		var currentNode = start;
+		while (currentNode != end && currentNode != null) {
+			currentNode = currentNode.nextSibling;
+			nodes.push(currentNode);
+			if (currentNode == end) {
+				overlap = false; // we've used nextSibling to reach the end so there's no overlap
+			}
+		}
+		
+		if (overlap) {
+			return false;
+		} else {
+			var type = w.entities[id].props.type;
+			var tag = w.entitiesModel.getParentTag(type, w.schemaManager.schemaId);
+			var entString = '<entity id="'+id+'" _type="'+type+'" _tag="'+tag+'"/>';
+			$(nodes, el).wrapAll(entString);			
+			$(markers, el).remove();
+			
+			return true;
+		}
+	}
+	
 	// gets any metadata info for the node and adds as attributes
 	// returns an array of 2 strings: opening and closing tags
 	function _nodeToStringArray(node) {
 		var array = [];
 		var id = node.attr('id');
-		var tag = node.attr('_tag') || node.attr('_type');
+		var tag = node.attr('_tag');
 		
 		var structEntry = w.structs[id];
 		var entityEntry = w.entities[id];
 		if (structEntry) {
 			var openingTag = '<'+tag;
+			var cwrcAnnotationId = node[0].getAttribute('annotationId');
+			if (cwrcAnnotationId != null) {
+				openingTag += ' annotationId="'+cwrcAnnotationId+'"';
+			}
+			var cwrcOffsetId = node[0].getAttribute('offsetId');
+			if (cwrcOffsetId != null) {
+				openingTag += ' offsetId="'+cwrcOffsetId+'"';
+			}
 			for (var key in structEntry) {
 				if (key.indexOf('_') != 0) {
 					var attName = key;
@@ -97,7 +169,7 @@ return function(writer) {
 			openingTag += '>';
 			array.push(openingTag);
 			array.push('</'+tag+'>');
-		} else if (entityEntry) {
+		} else if (entityEntry && tag) {
 			array = w.entitiesModel.getMappingTags(entityEntry, w.schemaManager.schemaId);
 		} else {
 			// not a valid tag so return empty strings
@@ -105,37 +177,6 @@ return function(writer) {
 		}
 		
 		return array;
-	}
-	
-	/**
-	 * Converts the opening and closing entity tag pairs to a matched set of opening and closing tags.
-	 * @param id The entity id.
-	 * @param [el] The element within which to look for the entity. Defaults to the editor dom. 
-	 */
-	function convertEntityToTag(id, el) {
-		el = el || w.editor.getBody();
-		var markers = $('[name="' + id + '"]', el);
-		var start = markers[0];
-		var end = markers[1];
-
-		var nodes = [start];
-		var currentNode = start;
-		while (currentNode != end && currentNode != null) {
-			currentNode = currentNode.nextSibling;
-			nodes.push(currentNode);
-		}
-		
-		var entString = '<entity id="'+id+'" _type="'+w.entities[id].props.type+'" />';
-		$(nodes, el).wrapAll(entString);			
-		$(markers, el).remove();
-	}
-	
-	// converts the opening and closing entity tag pairs to a matched set of opening and closing tags
-	function convertEntitiesToTags() {
-		var body = w.editor.getBody();
-		for (var id in w.entities) {
-			convertEntityToTag(id, body);
-		}
 	}
 	
 	/**
@@ -163,7 +204,7 @@ return function(writer) {
 		return xmlString;
 	};
 	
-	converter.buildAnnotations = function() {
+	function buildAnnotations() {
 		var rdfString = '\n<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:w="http://cwrctc.artsrn.ualberta.ca/#">';
 		
 		// xml mode
@@ -176,10 +217,12 @@ return function(writer) {
 			
 			rdfString += '\n<rdf:Description rdf:datatype="http://www.w3.org/TR/json-ld/"><![CDATA[\n';
 			
-			var annotation = converter.getAnnotationForEntity(key);
+			var annotation = getAnnotationForEntity(key);
 			
 			// add tag attributes to annotation
 			annotation.cwrcAttributes = entry.info;
+			// TODO save type differently
+			annotation.cwrcType = entry.props.type;
 			
 			rdfString += JSON.stringify(annotation, null, '\t');
 			
@@ -199,32 +242,59 @@ return function(writer) {
 		rdfString += '\n</rdf:RDF>\n';
 		
 		return rdfString;
-	};
+	}
 	
-	converter.getAnnotationForEntity = function(entityId) {
+	// sets annotation info in the entity entry, and returns a string representation of it
+	// must call after convertEntityToTag
+	function getAnnotationForEntity(entityId) {
 		var body = w.editor.getBody();
 		var entry = w.entities[entityId];
 		
-		// get the xpath for the entity's parent
-		var entityParent = $('[name="'+entityId+'"]:eq(0)', body).parent();
-		var xpath = w.utilities.getElementXPath(entityParent[0]);
-		entry.annotation.xpath = xpath;
+		var range = {};
 		
-		// get the character offset from the parent
-		var offset = _getOffsetFromParentForEntity(entityId, entityParent);
+		var entity = $('#'+entityId, body);
+		if (entity.length === 0) {
+			// overlap, get xpaths for start and end
+			var entitySpans = $('[name="'+entityId+'"]', body);
+			var entityStart = entitySpans[0];
+			var entityEnd = entitySpans[1];
+			
+			var startId = entityStart.parentNode.getAttribute('id');
+			if (startId == null) {
+				startId = tinymce.DOM.uniqueId('struct_');
+			} else if (w.entities[startId] != null) {
+				w.entities[startId].annotation.range.cwrcOffsetId = startId;
+			}
+			entityStart.parentNode.setAttribute('offsetId', startId);
+			range.start = '//'+entityStart.parentNode.getAttribute('_tag')+'[@offsetId="'+startId+'"]';
+			range.startOffset = _getOffsetFromParentForEntity(entityId, $(entityStart.parentNode));
+			
+			var endId = entityEnd.parentNode.getAttribute('id');
+			if (endId == null) {
+				endId = tinymce.DOM.uniqueId('struct_');
+			} else if (w.entities[endId] != null) {
+				w.entities[endId].annotation.range.cwrcOffsetId = endId;
+			}
+			entityEnd.parentNode.setAttribute('offsetId', endId);
+			range.end = '//'+entityEnd.parentNode.getAttribute('_tag')+'[@offsetId="'+endId+'"]';
+			range.endOffset = _getOffsetFromParentForEntity(entityId, $(entityEnd.parentNode));
+		} else {
+			// get the xpath for the entity's tag
+			entity[0].setAttribute('annotationId', entityId);
+			range.start = '//'+entity[0].getAttribute('_tag')+'[@annotationId="'+entityId+'"]';
+			range.cwrcAnnotationId = entityId;
+		}
 		
-		entry.annotation.start = offset[0];
-		entry.annotation.length = offset[1]; 
+		$.extend(entry.annotation.range, range);
 		
 		var annotation = w.entitiesModel.getAnnotation(entry.props.type, entry);
-		
 		return annotation;
-	};
+	}
 	
 	/**
-	 * Converts entities to unicode, while preserving those that must be escaped as entities.
+	 * Converts HTML entities to unicode, while preserving those that must be escaped as entities.
 	 */
-	function _entitiesToUnicode(parentNode) {
+	function _htmlEntitiesToUnicode(parentNode) {
 		var contents = $(parentNode).contents();
 		contents.each(function(index, el) {
 			if (el.nodeType == Node.TEXT_NODE) {
@@ -236,7 +306,7 @@ return function(writer) {
 				// the following characters must be escaped
 				el.nodeValue = nodeValue.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 			} else if (el.nodeType == Node.ELEMENT_NODE) {
-				_entitiesToUnicode(el);
+				_htmlEntitiesToUnicode(el);
 			}
 		});
 	};
@@ -295,24 +365,21 @@ return function(writer) {
 	};
 	
 	/**
-	 * Gets the character offset for an entity starting from the parent.
+	 * Gets the character offset for an entity boundary marker, starting from the parent.
 	 * @param {String} id The entity ID
 	 * @param {jQuery} [parent] The node to start calculating the offset from
-	 * @returns Array
+	 * @returns {Integer}
 	 */
 	function _getOffsetFromParentForEntity(id, parent) {
 		var currentOffset = 0;
-		var offset = [];
-		parent = parent || $('[name="'+id+'"]:eq(0)', w.editor.getBody()).parent();
+		var offset = 0;
 		function getOffset(parent) {
 			parent.contents().each(function(index, element) {
 				var el = $(this);
 				if (this.nodeType == Node.TEXT_NODE && this.data != ' ') {
 					currentOffset += this.length;
-				} else if (el.attr('_tag')) {
-					getOffset(el);
-				} else if (el.attr('name') == id && el.hasClass('start')) {
-					offset = [currentOffset, w.entities[id].props.content.length];
+				} else if (el.attr('name') == id) {
+					offset = currentOffset;
 					return false;
 				}
 			});
@@ -365,82 +432,6 @@ return function(writer) {
 	// XML -> CWRCWriter Methods
 	/////////////////////////////////////////////////////////////////////
 	
-	
-	
-	/**
-	 * Takes a document node and returns a string representation of its
-	 * contents, compatible with the editor. Additionally creates w.structs
-	 * entries.
-	 * 
-	 * @param node
-	 *            An (X)HTML element
-	 * @returns {String}
-	 */
-	converter.buildEditorString = function(node) {
-		var editorString = '';
-		
-		function doBuild(currentNode, forceInline) {
-			var tag = currentNode.nodeName;
-			var jQNode = $(currentNode);
-			
-			// TODO ensure that block level elements aren't inside inline level elements, the inline parent will be removed by the browser
-			// temp fix: force inline level for children if parent is inline
-			var tagName;
-			if (forceInline) {
-				tagName = 'span';
-			} else {
-				tagName = w.utilities.getTagForEditor(tag);
-			}
-			
-			editorString += '<'+tagName+' _tag="'+tag+'"';
-			
-			// create structs entries while we build the string
-			var id = jQNode.attr(w.idName);
-			if (id == null) {
-				id = tinymce.DOM.uniqueId('struct_');
-				editorString += ' id="'+id+'"';
-			}
-			var idNum = parseInt(id.split('_')[1]);
-			if (idNum >= tinymce.DOM.counter) tinymce.DOM.counter = idNum+1;
-			
-			var canContainText = w.utilities.canTagContainText(tag);
-			// TODO find non-intensive way to check if tags can possess attributes
-			editorString += ' _textallowed="'+canContainText+'"';
-			
-			w.structs[id] = {
-				id: id,
-				_tag: tag,
-				_textallowed: canContainText
-			};
-			$(currentNode.attributes).each(function(index, att) {
-				var attName = att.name;
-				if (attName == w.idName) attName = 'id';
-				w.structs[id][attName] = att.value;
-				
-				// TODO consider adding in all attributes here to expand CSS options
-				
-				if (attName == 'id' || attName.match(/^_/) != null) {
-					editorString += ' '+attName+'="'+att.value+'"';
-				}
-			});
-			editorString += '>';
-			
-			var isInline = forceInline || !w.utilities.isTagBlockLevel(tag);
-			
-			jQNode.contents().each(function(index, el) {
-				if (el.nodeType == 1) {
-					doBuild(el, isInline);
-				} else if (el.nodeType == 3) {
-					editorString += el.data;
-				}
-			});
-			
-			editorString += '</'+tagName+'>';
-		}
-		
-		doBuild(node, false);
-		return editorString;
-	};
 	
 	/**
 	 * Processes a document and loads it into the editor.
@@ -496,7 +487,83 @@ return function(writer) {
 		}
 	};
 	
-	function processRdf(rdfs, offsets) {
+	function doProcessing(doc) {
+		// reset the stores
+		w.entities = {};
+		w.structs = {};
+		w.triples = [];
+		w.deletedEntities = {};
+		w.deletedStructs = {};
+		
+		var docMode;
+		var rdfs = $(doc).find('rdf\\:RDF, RDF');
+
+		if (rdfs.length) {
+			var mode = parseInt(rdfs.find('w\\:mode, mode').first().text());
+			if (mode == w.XML) {
+				docMode = w.XML;
+			} else {
+				docMode = w.XMLRDF;
+			}
+		} else {
+			docMode = w.XML;
+		}
+		
+		if (w.mode != docMode) {
+			var editorModeStr = w.mode == w.XML ? 'XML only' : 'XML & RDF';
+			var docModeStr = docMode == w.XML ? 'XML only' : 'XML & RDF';
+
+			w.dialogManager.show('message', {
+				title: 'Editor Mode changed',
+				msg: 'The Editor Mode ('+editorModeStr+') has been changed to match the Document Mode ('+docModeStr+').',
+				type: 'info'
+			});
+			
+			w.mode = docMode;
+		}
+		
+		// process RDF and/or entities
+		if (docMode == w.XMLRDF) {
+			processRdf(rdfs);
+		} else {
+			processEntities($(doc.firstChild));
+		}
+		$(doc).find('rdf\\:RDF, RDF').remove();
+
+		// FIXME temp fix until document format is correct
+		var root = $(w.root+', '+w.root.toLowerCase(), doc)[0];
+		
+		var editorString = converter.buildEditorString(root);
+		w.editor.setContent(editorString);
+		
+		insertEntities();
+		
+		w.event('documentLoaded').publish();
+		
+		// try putting the cursor in the body
+		window.setTimeout(function() {
+			var bodyTag = $('[_tag='+w.header+']', w.editor.getBody()).next()[0];
+			if (bodyTag != null) {
+				w.editor.selection.select(bodyTag);
+				w.editor.selection.collapse(true);
+				w._fireNodeChange(bodyTag);
+			}
+		}, 50);
+		
+		// reset the undo manager
+		w.editor.undoManager.clear();
+	}
+	
+	function processRdf(rdfs) {
+		var doc = rdfs.parents().last()[0].parentNode;
+		
+		var nsr = doc.createNSResolver(doc.documentElement);
+		var defaultNamespace = doc.documentElement.getAttribute('xmlns');
+		
+		function nsResolver(prefix) {
+			return nsr.lookupNamespaceURI(prefix) || defaultNamespace;
+		}
+		
 		rdfs.children().each(function() {
 			var rdf = $(this);
 
@@ -505,54 +572,81 @@ return function(writer) {
 				if (entity != null) {
 					
 					var id = tinymce.DOM.uniqueId('ent_');
-					
-					var xpointer = entity.hasTarget.hasSelector['rdf:value'];
-					if (xpointer != null) {
-						var xpath = xpointer.substring(xpointer.indexOf('/'), xpointer.indexOf(','));
-						var bounds = xpointer.match(/,\d+/g);
-						
-						offsets.push({
-							id: id,
-							offset: parseInt(bounds[0].replace(',','')),
-							length: parseInt(bounds[1].replace(',',''))
-						});
-					}
-					
-					// determine the entity type
-					// TODO will need better way of doing this
-					var type;
-					var typeArray = entity.hasBody['@type'];
-					for (var i = 0; i < typeArray.length; i++) {
-						var t = typeArray[i];
-						if (t.indexOf('SemanticTag') == -1) {
-							t = t.split(':')[1];
-							type = t.toLowerCase();
-						}
-					}
-					
 					w.entities[id] = {
 						props: {
 							id: id,
-							type: type
+							type: entity.cwrcType
 						},
-						info: entity.cwrcAttributes,
-						annotation: {}
+						info: entity.cwrcAttributes
 					};
 					
+					// parse the xpointer, get the el associated with the xpath, assign a temp. ID for later usage
+					// expected format: xpointer(string-range(XPATH,"",OFFSET))
+					// regex assumes no parentheses in xpath
+					function parseXpointer(xpointer, doc) {
+						var regex = new RegExp(/xpointer\((?:string-range\()?([^\)]*)\)+/); // regex for isolating xpath and offset
+						var content = regex.exec(xpointer)[1];
+						var parts = content.split(',');
+						
+						var xpath = parts[0];
+						var foopath = xpath.replace(/\/\//g, '//foo:'); // default namespace hack (http://stackoverflow.com/questions/9621679/javascript-xpath-and-default-namespaces)
+//						foopath = foopath.replace(/\//g, '/foo:');
+						var result = doc.evaluate(foopath, doc, nsResolver, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+						var xpathEl = $(result.singleNodeValue);
+						
+						var parentId = xpathEl.attr('cwrcStructId');
+						if (parentId == null) {
+							// assign a struct ID now, to associate with the entity
+							// later we'll insert it as the real struct ID value
+							parentId = tinymce.DOM.uniqueId('struct_');
+							xpathEl.attr('cwrcStructId', parentId);
+						}
+						
+						var offset = null;
+						if (parts[2]) {
+							offset = parseInt(parts[2]);
+						}
+						
+						return {
+							xpath: xpath,
+							el: xpathEl,
+							parentId: parentId,
+							offset: offset
+						};
+					}
+					
+					var selector = entity.hasTarget.hasSelector;
+					if (selector['@type'] == 'oa:TextPositionSelector') {
+						var xpointerStart = selector['oa:start'];
+						var xpointerEnd = selector['oa:end'];
+						var xpathStart = parseXpointer(xpointerStart, doc);
+						var xpathEnd = parseXpointer(xpointerEnd, doc);
+						
+						w.entities[id].annotation = {
+							range: {
+								id: id,
+								parentStart: xpathStart.parentId,
+								start: xpathStart.xpath,
+								startOffset: xpathStart.offset,
+								parentEnd: xpathEnd.parentId,
+								end: xpathEnd.xpath,
+								endOffset: xpathEnd.offset
+							}
+						};
+					} else if (selector['@type'] == 'oa:FragmentSelector') {
+						var xpointer = selector['rdf:value'];
+						var xpathObj = parseXpointer(xpointer, doc);
+						
+						w.entities[id].annotation = {
+							range: {
+								id: id,
+								parentStart: xpathObj.parentId,
+								start: xpathObj.xpath
+							}
+						};
+					}
+					
 					// TODO remove entity tag from document
-					
-					
-//					rdf.children('[type="props"]').each(function(i2, el2) {
-//						var key = $(this)[0].nodeName.split(':')[1].toLowerCase();
-//						var prop = $(this).text();
-//						if (key == 'content') {
-//							var title = w.utilities.getTitleFromContent(prop);
-//							w.entities[id]['props']['title'] = title;
-//						}
-//						w.entities[id]['props'][key] = prop;
-//					});
-				} else {
-					// struct
 				}
 				
 			// triple
@@ -590,186 +684,199 @@ return function(writer) {
 	/**
 	 * Recursively builds offset info from entity tags.
 	 */
-	function processEntities(parent, offsets) {
+	function processEntities(parent) {
+		// TODO update this function
 		var currentOffset = 0;
 		parent.contents().each(function(index, element) {
 			if (this.nodeType == Node.TEXT_NODE) {
 				currentOffset += this.length;
-			} else if (w.entitiesModel.isEntity(this.nodeName.toLowerCase()), w.schemaManager.schemaId) {
-				var ent = $(this);
-				var id = ent.attr(w.idName);
-				if (id == null) {
-					id = tinymce.DOM.uniqueId('ent_');
-				}
-				offsets.push({
-					id: id,
-					parent: $(parent).attr(w.idName),
-					offset: currentOffset,
-					length: ent.text().length
-				});
-				
-				var content = ent.text();
-				w.entities[id] = {
-					props: {
-						id: id,
-						type: this.nodeName.toLowerCase(),
-						content: content,
-						title: w.utilities.getTitleFromContent(content)
-					},
-					info: {},
-					annotation: {}
-				};
-				$(this.attributes).each(function(index, att) {
-					w.entities[id].info[att.name] = att.value;
-				});
-				
-				ent.contents().unwrap();
-				
-				currentOffset += content.length;
 			} else {
-				processEntities($(this), offsets);
+				var entityType = w.entitiesModel.getEntityTypeForTag(this.nodeName.toLowerCase(), w.schemaManager.schemaId);
+				if (entityType != null) {
+					var ent = $(this);
+					var id = ent.attr(w.idName);
+					if (id == null) {
+						id = tinymce.DOM.uniqueId('ent_');
+					}
+					
+					var content = ent.text();
+					w.entities[id] = {
+						props: {
+							id: id,
+							type: entityType,
+							content: content,
+							title: w.utilities.getTitleFromContent(content)
+						},
+						info: {},
+						annotation: {
+							range: {
+								id: id,
+								parentStart: $(parent).attr(w.idName),
+								startOffset: currentOffset,
+								length: ent.text().length
+							}
+						}
+					};
+					$(this.attributes).each(function(index, att) {
+						w.entities[id].info[att.name] = att.value;
+					});
+					
+//					ent.contents().unwrap();
+					
+//					processEntities(ent);
+					
+					currentOffset += content.length;
+				} else {
+					processEntities($(this));
+				}
 			}
 		});
 	}
 	
-	function doProcessing(doc) {
-		// reset the stores
-		w.entities = {};
-		w.structs = {};
-		w.triples = [];
-		w.deletedEntities = {};
-		w.deletedStructs = {};
-		
-		var offsets = [];
-		
-		var docMode;
-		var rdfs = $(doc).find('rdf\\:RDF, RDF');
+	/**
+	 * Takes a document node and returns a string representation of its
+	 * contents, compatible with the editor. Additionally creates w.structs
+	 * entries.
+	 * 
+	 * @param node
+	 *            An (X)HTML element
+	 * @returns {String}
+	 */
+	converter.buildEditorString = function(node) {
+		var editorString = '';
 
-		if (rdfs.length) {
-			var mode = parseInt(rdfs.find('w\\:mode, mode').first().text());
-			if (mode == w.XML) {
-				docMode = w.XML;
+		function doBuild(currentNode, forceInline) {
+			var tag = currentNode.nodeName;
+			var jQNode = $(currentNode);
+			
+			// TODO ensure that block level elements aren't inside inline level elements, the inline parent will be removed by the browser
+			// temp fix: force inline level for children if parent is inline
+			
+			var isEntity = jQNode.attr('annotationId') != null; // temp entity tag needs to be inline, otherwise spaces around entity text will disappear
+			var tagName;
+			if (forceInline || isEntity) {
+				tagName = 'span';
 			} else {
-				docMode = w.XMLRDF;
+				tagName = w.utilities.getTagForEditor(tag);
 			}
-		} else {
-			docMode = w.XML;
-		}
-		
-		if (w.mode != docMode) {
-			var editorModeStr = w.mode == w.XML ? 'XML only' : 'XML & RDF';
-			var docModeStr = docMode == w.XML ? 'XML only' : 'XML & RDF';
-
-			w.dialogManager.show('message', {
-				title: 'Editor Mode changed',
-				msg: 'The Editor Mode ('+editorModeStr+') has been changed to match the Document Mode ('+docModeStr+').',
-				type: 'info'
+			
+			editorString += '<'+tagName+' _tag="'+tag+'"';
+			
+			// create structs entries while we build the string
+			
+			// determine the ID
+			// first check the ID attribute, then our special cwrcStructId attribute, finally generate a new one
+			var id = jQNode.attr(w.idName);
+			if (id == null) {
+				id = jQNode.attr('cwrcStructId');
+				jQNode.removeAttr('cwrcStructId');
+				if (id == null) {
+					id = tinymce.DOM.uniqueId('struct_');
+				}
+				editorString += ' id="'+id+'"';
+			}
+			var idNum = parseInt(id.split('_')[1]);
+			if (idNum >= tinymce.DOM.counter) tinymce.DOM.counter = idNum+1;
+			
+			var canContainText = w.utilities.canTagContainText(tag);
+			// TODO find non-intensive way to check if tags can possess attributes
+			editorString += ' _textallowed="'+canContainText+'"';
+			
+			w.structs[id] = {
+				id: id,
+				_tag: tag,
+				_textallowed: canContainText
+			};
+			$(currentNode.attributes).each(function(index, att) {
+				var attName = att.name;
+				if (attName == w.idName) attName = 'id';
+				if (attName === 'annotationId') {
+					editorString += ' annotationId="'+att.value+'"';
+				} else if (attName === 'offsetId') {
+					editorString += ' offsetId="'+att.value+'"';
+				} else {
+					w.structs[id][attName] = att.value;
+				}
+				
+				// TODO consider adding in all attributes here to expand CSS options
+				
+				if (attName == 'id' || attName.match(/^_/) != null) {
+					editorString += ' '+attName+'="'+att.value+'"';
+				}
+			});
+			editorString += '>';
+			
+			var isInline = forceInline || !w.utilities.isTagBlockLevel(tag);
+			
+			jQNode.contents().each(function(index, el) {
+				if (el.nodeType == 1) {
+					doBuild(el, isInline);
+				} else if (el.nodeType == 3) {
+					editorString += el.data;
+				}
 			});
 			
-			w.mode = docMode;
+			editorString += '</'+tagName+'>';
 		}
 		
-		// process RDF and/or entities
-		if (docMode == w.XMLRDF) {
-			processRdf(rdfs, offsets);
-			$(doc).find('rdf\\:RDF, RDF').remove();
-		} else {
-			processEntities($(doc.firstChild), offsets);
-		}
-
-		// FIXME temp fix until document format is correct
-		var root = $(w.root+', '+w.root.toLowerCase(), doc)[0];
-		
-		var editorString = converter.buildEditorString(root);
-		w.editor.setContent(editorString);
-		
+		doBuild(node, false);
+		return editorString;
+	};
+	
+	function insertEntities() {
 		// editor needs focus in order for entities to be properly inserted
 		w.editor.focus();
 		
+		var entityNodes = []; // keep track of the nodes so we can remove them afterwards
+		
+		var body = w.editor.getBody();
 		// insert entities
-		var id, o, parent, contents, lengthCount, match, startOffset, endOffset, startNode, endNode;
-		for (var i = 0; i < offsets.length; i++) {
+		var entry, range, parent, contents, lengthCount, match, matchingNode, startOffset, endOffset, startNode, endNode;
+		for (var id in w.entities) {
+			matchingNode = null;
 			startNode = null;
 			endNode = null;
 			startOffset = 0;
 			endOffset = 0;
 			
-			o = offsets[i];
-			id = o.id;
+			entry = w.entities[id];
+			range = entry.annotation.range;
 			
-			// method #1: have parent id and offset is relative to that
-			if (o.parent && o.parent != '') {
-				parent = w.editor.$('#'+o.parent);
-				
-				// get all text nodes
-				contents = parent.contents().filter(function() {
-					return this.nodeType == Node.TEXT_NODE;
-				});
-				
-				startOffset = o.offset;
-				lengthCount = 0;
-				match = false;
-				startNode = contents.filter(function() {
-					if (!match) {
-						lengthCount += this.length;
-						if (lengthCount > o.offset) {
-							match = true;
-							return true;
-						} else {
-							startOffset -= this.length;
-						}
+			// just rdf, no markup
+			if (range.parentEnd) {
+				var parent = $('#'+range.parentStart, body);
+				var result = _getTextNodeFromParentAndOffset(parent, range.startOffset);
+				startNode = result.textNode;
+				startOffset = result.offset;
+				parent = $('#'+range.parentEnd, body);
+				result = _getTextNodeFromParentAndOffset(parent, range.endOffset);
+				endNode = result.textNode;
+				endOffset = result.offset;
+			// markup
+			} else if (range.parentStart) {
+				var entityNode = $('#'+range.parentStart, body);
+				startNode = entityNode[0].previousSibling;
+				if (startNode != null) {
+					if (startNode.nodeType === Node.TEXT_NODE) {
+						startOffset = startNode.length;
+					} else if (startNode.nodeType === Node.ELEMENT_NODE) {
+						startOffset = 0;
 					}
-					return false;
-				})[0];
-				
-				endOffset = o.offset+o.length;
-				lengthCount = 0;
-				match = false;
-				endNode = contents.filter(function() {
-					if (!match) {
-						lengthCount += this.length;
-						if (lengthCount >= o.offset+o.length) {
-							match = true;
-							return true;
-						} else {
-							endOffset -= this.length;
-						}
-					}
-					return false;
-				})[0];
-			
-			// method #2: offset is relative to the document root
-			} else {
-				parent = $(w.editor.getBody());
-				var currentOffset = 0;
-				function getNodes(parent) {
-					parent.contents().each(function(index, element) {
-						if (this.nodeType == Node.TEXT_NODE && this.data != ' ') {
-							currentOffset += this.length;
-							if (currentOffset > o.offset && startNode == null) {
-								startNode = this;
-								startOffset = o.offset - (currentOffset - this.length);
-							}
-							
-							if (currentOffset >= o.offset + o.length && endNode == null) {
-								endNode = this;
-								endOffset = startOffset + o.length;
-							}
-						} else if ($(this).attr('_tag')) {
-							getNodes($(this));
-						}
-						if (startNode != null && endNode != null) {
-							return false;
-						}
-					});
+				} else {
+					// TODO
+				}
+				endNode = entityNode[0].nextSibling;
+				if (endNode != null) {
+					endOffset = 0;
+				} else {
+					// TODO
 				}
 				
-				getNodes(parent);
+				entityNodes.push(entityNode);
 			}
 			
 			if (startNode != null && endNode != null) {
 				var range = w.editor.selection.getRng(true);
-				var entry = w.entities[id];
 				try {
 					range.setStart(startNode, startOffset);
 					range.setEnd(endNode, endOffset);
@@ -787,20 +894,45 @@ return function(writer) {
 			}
 		}
 		
-		w.event('documentLoaded').publish();
-		
-		// try putting the cursor in the body
-		window.setTimeout(function() {
-			var bodyTag = $('[_tag='+w.header+']', w.editor.getBody()).next()[0];
-			if (bodyTag != null) {
-				w.editor.selection.select(bodyTag);
-				w.editor.selection.collapse(true);
-				w._fireNodeChange(bodyTag);
+		// TODO figure out how to not remove all correction entity markup
+		// remove all the entity markup
+		$.each(entityNodes, function(index, node) {
+			var id = $(node).attr('annotationId');
+			
+			var tag = $(node).attr('_tag');
+			var type = w.entitiesModel.getEntityTypeForTag(tag, w.schemaManager.schemaId);
+			var textTag = w.entitiesModel.getTextTag(type, w.schemaManager.schemaId);
+			if (textTag != '') {
+				$('[_tag="'+textTag+'"]', node).contents().unwrap(); // keep the text inside the textTag
 			}
-		}, 50);
+			
+			$('[annotationId="'+id+'"]', node).remove(); // remove all child elements with matching ID
+			$(node).contents().unwrap();
+		});
+	}
+	
+	function _getTextNodeFromParentAndOffset(parent, offset) {
+		var currentOffset = 0;
+		var textNode = null;
+		function getTextNode(parent) {
+			parent.contents().each(function(index, element) {
+				if (this.nodeType == Node.TEXT_NODE && this.data != ' ') {
+					currentOffset += this.length;
+					if (currentOffset >= offset) {
+						currentOffset = offset - (currentOffset - this.length);
+						textNode = this;
+						return false;
+					}
+				}
+			});
+		}
 		
-		// reset the undo manager
-		w.editor.undoManager.clear();
+		getTextNode(parent);
+		
+		return {
+			textNode: textNode,
+			offset: currentOffset
+		};
 	}
 	
 	return converter;

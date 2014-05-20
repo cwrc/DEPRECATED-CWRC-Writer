@@ -1,6 +1,9 @@
 // TODO add IDs
 define(['jquery', 'jquery.tmpl'], function($) {
 	
+return function(writer) {
+	var w = writer;
+	
 	// returns a common annotation object
 	function commonAnnotation(data, type) {
 		var date = new Date().toISOString();
@@ -13,9 +16,6 @@ define(['jquery', 'jquery.tmpl'], function($) {
 		var entityId = data.entityId;
 		var docId = data.docId;
 		var selectorId = data.selectorId;
-		var xpath = data.xpath;
-		var offsetStart = data.start;
-		var offsetLength = data.length;
 		
 		var annotation = {
 			'@context': contextUri,
@@ -38,12 +38,6 @@ define(['jquery', 'jquery.tmpl'], function($) {
 			'hasTarget': {
 				'@id': docId,
 				'@type': 'oa:SpecificResource',
-				'hasSelector': {
-					'@id': selectorId,
-					'@type': 'oa:FragmentSelector',
-					'dcterms:conformsTo': 'http://tools.ietf.org/rfc/rfc3023',
-					'rdf:value': '#xpointer(string-range('+xpath+',"",'+offsetStart+','+offsetLength+'))'
-				},
 				'hasSource': {
 					'@id': docId,
 					'@type': 'dctypes:Text',
@@ -51,6 +45,23 @@ define(['jquery', 'jquery.tmpl'], function($) {
 				}
 			}
 		};
+		
+		if (data.range.end) {
+			annotation.hasTarget.hasSelector = {
+				'@id': selectorId,
+				'@type': 'oa:TextPositionSelector',
+				'dcterms:conformsTo': 'http://tools.ietf.org/rfc/rfc3023',
+				'oa:start': 'xpointer(string-range('+data.range.start+',"",'+data.range.startOffset+'))',
+				'oa:end': 'xpointer(string-range('+data.range.end+',"",'+data.range.endOffset+'))',
+			};
+		} else {
+			annotation.hasTarget.hasSelector = {
+				'@id': selectorId,
+				'@type': 'oa:FragmentSelector',
+				'dcterms:conformsTo': 'http://tools.ietf.org/rfc/rfc3023',
+				'rdf:value': 'xpointer('+data.range.start+')'
+			};
+		}
 		
 		return annotation;
 	}
@@ -63,14 +74,20 @@ define(['jquery', 'jquery.tmpl'], function($) {
 				events: 'name'
 			},
 			mapping: {
-				tei: function(info) {
+				tei: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
 					var xml = '<persName';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
 					if (info.certainty) xml += ' cert="'+info.certainty+'"';
 					if (info.role) xml += ' role="'+info.role+'"';
 					xml += '>[[[editorText]]]</persName>';
 					return xml;
 				},
-				events: function(info) {
+				events: function(entity) {
 					return '<NAME>[[[editorText]]]</NAME>';
 				}
 			},
@@ -86,17 +103,23 @@ define(['jquery', 'jquery.tmpl'], function($) {
 				events: 'DATE'
 			},
 			mapping: {
-				tei: function(info) {
+				tei: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
 					var xml = '<date';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
 					if (info.date) {
 						xml += ' when="'+info.date+'"';
 					} else if (info.startDate) {
 						xml += ' from="'+info.startDate+'" to="'+info.endDate+'"';
 					}
-					xml += '[[[editorText]]]</date>';
+					xml += '>[[[editorText]]]</date>';
 					return xml;
 				},
-				events: function(info) {
+				events: function(entity) {
 					var xml = '';
 					if (info.date) {
 						xml += '<DATE VALUE="'+info.date+'">[[[editorText]]]</DATE>';
@@ -124,12 +147,20 @@ define(['jquery', 'jquery.tmpl'], function($) {
 				events: 'PLACE'
 			},
 			mapping: {
-				tei: function(info) {
+				tei: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
 					var xml = '<placeName';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
 					if (info.certainty) xml += ' cert="'+info.certainty+'"';
 					xml += '>[[[editorText]]]';
 					if (info.precision) {
-						xml += '<precision precision="'+info.precision+'">';
+						xml += '<precision';
+						if (id) xml += ' annotationId="'+id+'"';
+						xml += ' precision="'+info.precision+'">';
 						if (info.detail) {
 							xml += info.detail;
 						}
@@ -161,7 +192,19 @@ define(['jquery', 'jquery.tmpl'], function($) {
 				events: 'ORGNAME'
 			},
 			mapping: {
-				tei: '<orgName cert="${info.certainty}">[[[editorText]]]</orgName>',
+				tei: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '<orgName';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					if (info.certainty) xml += ' cert="'+info.certainty+'"';
+					if (info.cwrcInfo) xml += ' ref="'+info.cwrcInfo.id+'"';
+					xml += '>[[[editorText]]]</orgName>';
+					return xml;
+				},
 				events: '<ORGNAME>[[[editorText]]]</ORGNAME>'
 			},
 			annotation: function(entity) {
@@ -184,22 +227,60 @@ define(['jquery', 'jquery.tmpl'], function($) {
 				tei: 'note'
 			},
 			mapping: {
-				tei: '<note type="${info.type}" ana="${info.content}">[[[editorText]]]</note>'
+				tei: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '[[[editorText]]]<note';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					if (info.type) {
+						xml += ' type="'+info.type+'"';
+					}
+					xml += '>';
+					if (info.content) {
+						var xmlDoc = w.utilities.stringToXML(info.content);
+						var noteContent = $('note', xmlDoc)[0];
+						xml += noteContent.innerHTML;
+					}
+					xml += '</note>';
+					return xml;
+				}
 			}
 		},
 		correction: {
 			title: 'Correction',
 			parentTag: {
-				tei: 'sic',
+				tei: 'choice', // TODO add corr option
 				events: 'SIC'
 			},
+			textTag: {
+				tei: 'sic'
+			},
 			mapping: {
-				tei: function(info) {
+				tei: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
 					var xml;
 					if (info.sicText) {
-						xml = '<choice><sic>[[[editorText]]]</sic><corr>'+info.corrText+'</corr></choice>';
+						xml = '<choice';
+						if (id) xml += ' annotationId="'+id+'"';
+						if (offsetId) xml += ' offsetId="'+offsetId+'"';
+						xml += '>';
+						xml += '<sic';
+						if (id) xml += ' annotationId="'+id+'"';
+						xml += '>[[[editorText]]]</sic>';
+						xml += '<corr';
+						if (id) xml += ' annotationId="'+id+'"';
+						xml += '>'+info.corrText+'</corr></choice>';
 					} else {
-						xml = '<corr>[[[editorText]]]</corr>';
+						xml = '<corr';
+						if (id) xml += ' annotationId="'+id+'"';
+						if (offsetId) xml += ' offsetId="'+offsetId+'"';
+						xml += '>[[[editorText]]]</corr>';
 					}
 					return xml;
 				},
@@ -220,16 +301,19 @@ define(['jquery', 'jquery.tmpl'], function($) {
 				events: 'KEYWORDCLASS'
 			},
 			mapping: {
-				tei: ''+
-				'<keywords scheme="http://classificationweb.net">'+
-					'<term '+
-					'{{if info.id}}'+
-						'sameAs="${info.id}"'+
-					'{{else info.keyword}}'+
-						'sameAs="${info.keyword}"'+
-					'{{/if}}'+
-					' type="${info.type}">[[[editorText]]]</term>'+
-				'</keywords>',
+				tei: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					// TODO handling for multiple keywords
+					var xml = '[[[editorText]]]<note';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					xml += ' type="termAnnotation"';
+					xml += '></note>';
+					return xml;
+				},
 				events: '<KEYWORDCLASS>[[[editorText]]]</KEYWORDCLASS>'
 			}
 		},
@@ -270,20 +354,20 @@ define(['jquery', 'jquery.tmpl'], function($) {
 	 * @memberOf entmod
 	 * @param tag The tag to check.
 	 * @param schema The schema to use.
-	 * @returns {Boolean}
+	 * @returns {String} The entity type, or null
 	 */
-	entmod.isEntity = function(type, schema) {
+	entmod.getEntityTypeForTag = function(tag, schema) {
 		if (schema.indexOf('tei') != -1) {
 			schema = 'tei';
 		} else {
 			schema = 'events';
 		}
 		for (var e in entities) {
-			if (entities[e].parentTag[schema] == type) {
-				return true;
+			if (entities[e].parentTag[schema] == tag) {
+				return e;
 			}
 		}
-		return false;
+		return null;
 	};
 	
 	/**
@@ -323,7 +407,7 @@ define(['jquery', 'jquery.tmpl'], function($) {
 						mappedString = result[0].outerHTML;
 					}
 				} else if (typeof mapping == 'function') {
-					mappedString = mapping(entity.info);
+					mappedString = mapping(entity);
 				}
 				return mappedString.split('[[[editorText]]]');
 			}
@@ -353,6 +437,28 @@ define(['jquery', 'jquery.tmpl'], function($) {
 	};
 	
 	/**
+	 * Returns the text tag (tag containing user-highlighted text) for entity when converted to a particular schema.
+	 * @param entityType The entity type.
+	 * @param schema The schema to use.
+	 * @returns {String}
+	 */
+	entmod.getTextTag = function(entityType, schema) {
+		var e = entities[entityType];
+		if (e) {
+			if (schema.indexOf('tei') != -1) {
+				schema = 'tei';
+			} else {
+				schema = 'events';
+			}
+			if (e.textTag && e.textTag[schema]) {
+				return e.textTag[schema];
+			}
+		}
+		return '';
+	};
+	
+	
+	/**
 	 * Get the annotation object for the entity.
 	 * @param {String} type The type of entity.
 	 * @param {Object} entity The entity data object (from the global entities list).
@@ -369,4 +475,6 @@ define(['jquery', 'jquery.tmpl'], function($) {
 	};
 	
 	return entmod;
+};
+
 });

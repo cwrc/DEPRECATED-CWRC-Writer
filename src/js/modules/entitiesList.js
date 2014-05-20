@@ -237,6 +237,8 @@ return function(config) {
 	// add to writer
 	w.entitiesList = pm;
 	
+	w.event('entitiesListInitialized').publish(pm);
+	
 	return pm;
 };
 

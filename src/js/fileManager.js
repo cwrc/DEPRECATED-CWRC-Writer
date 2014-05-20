@@ -16,7 +16,6 @@ return function(writer) {
 	var w = writer;
 	
 	$(document.body).append(''+
-		'<div id="entitiesConverter"></div>'+
 		'<div id="editSourceDialog">'+
 			'<textarea></textarea>'+
 		'</div>'
