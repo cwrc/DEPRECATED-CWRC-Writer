@@ -14,6 +14,7 @@ return function(writer) {
 	 */
 	tagger.insertBoundaryTags = function(id, type, range) {
 		var sel = w.editor.selection;
+		sel.setRng(range);
 		var bm = sel.getBookmark();
 		
 		var start = w.editor.dom.create('span', {'_entity': true, '_type': type, 'class': 'entity '+type+' start', 'name': id}, '');
@@ -323,7 +324,8 @@ return function(writer) {
 					annotationId: annoUri,
 					docId: docUri,
 					selectorId: selectorUri,
-					userId: userUri
+					userId: userUri,
+					range: {}
 				};
 				
 				w.event('entityAdded').publish(id);
