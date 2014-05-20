@@ -775,7 +775,7 @@ return function(writer) {
 	 */
 	u.getElementXPath = function(element) {
 		var paths = [];
-
+		
 	    // Use nodeName (instead of localName) so namespace prefix is included (if any).
 	    for (; element && element.nodeType == 1; element = element.parentNode)
 	    {
@@ -786,11 +786,17 @@ return function(writer) {
 	            if (sibling.nodeType == Node.DOCUMENT_TYPE_NODE)
 	                continue;
 
-	            if (sibling.getAttribute && sibling.getAttribute('_tag') == element.getAttribute('_tag'))
-	                ++index;
+	            if (sibling.getAttribute) {
+	            	if (sibling.getAttribute('_tag') == element.getAttribute('_tag')) {
+	            		++index;
+	            	}
+//	            	else if (sibling.getAttribute('_tag') == null && sibling.nodeName == element.nodeName) {
+//	            		++index;
+//	            	}
+	            }
 	        }
 
-	        var tagName = element.getAttribute('_tag');
+	        var tagName = element.getAttribute('_tag');// || element.nodeName;
 	        if (tagName != null) {
 		        var pathIndex = (index ? "[" + (index+1) + "]" : "");
 		        paths.splice(0, 0, tagName + pathIndex);
