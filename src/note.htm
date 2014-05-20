@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+		<title>CWRCWriter</title>
+		
+		<script type="text/javascript" src="js/config.js"></script>
+		<script type="text/javascript" src="js/lib/require/require.js"></script>
+
+		<link type="text/css" rel="stylesheet" href="css/style.css" />
+		<link type="text/css" rel="stylesheet" href="css/islandora_style.css" />
+		
+		<link type="text/css" rel="stylesheet" href="smoothness/jquery-ui-1.10.3.custom.css" />
+		<link type="text/css" rel="stylesheet" href="js/lib/snippet/jquery.snippet.css" />
+
+		<style type="text/css">
+			#cwrc_main {
+				height: 100%;
+				width: 100%;
+			}
+		</style>
+
+		<script type="text/javascript">
+			function cwrcWriterInit(Writer, Delegator) {
+				cwrc_params = {};
+				
+				writer = null;
+				
+				function doResize() {
+					var uiHeight = $('#'+writer.editor.id+'_tbl tr.mceFirst').outerHeight() + 2;
+					writer.editor.theme.resizeTo($(window).width(), $(window).height() - uiHeight);
+				}
+				
+				var baseUrl = window.location.protocol+'//'+window.location.host;
+				var config = {
+					id: 'editor',
+					mode: 'xml',
+					delegator: Delegator,
+					cwrcRootUrl: baseUrl+'/editor/test/',
+					buttons1: 'schematags,editTag,removeTag,|,addperson,addplace,adddate,addevent,addorg,addcitation,addtitle,addcorrection,addkeyword,addlink',
+					schemas: {
+						tei: {
+							name: 'CWRC Basic TEI Schema',
+							url: baseUrl+'/schema/CWRC-TEIBasic.rng',
+							cssUrl: baseUrl+'/editor/test/css/tei_converted.css'
+						},
+						events: {
+							name: 'Events Schema',
+							url: baseUrl+'/schema/events.rng',
+							cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
+						},
+						biography: {
+							name: 'Biography Schema',
+							url: baseUrl+'/schema/biography.rng',
+							cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
+						},
+						writing: {
+							name: 'Writing Schema',
+							url: baseUrl+'/schema/writing.rng',
+							cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
+						}
+					}
+				};
+				
+				$.ajax({
+					url: 'http://apps.testing.cwrc.ca/editor/documents/info/projectname',
+					timeout: 3000,
+					success: function(data, status, xhr) {
+						config.project = data;
+						writer = new Writer(config);
+						writer.event('writerInitialized').subscribe(doResize);
+						$(window).on('resize', doResize);
+					},
+					error: function() {
+						config.cwrcRootUrl = baseUrl+'/cwrc/src/';
+						config.schemas = {
+							tei: {
+								name: 'CWRC Basic TEI Schema',
+								url: baseUrl+'/cwrc/src/schema/CWRC-TEIBasic.rng',
+								cssUrl: baseUrl+'/cwrc/src/css/tei_converted.css'
+							},
+							events: {
+								name: 'Events Schema',
+								url: baseUrl+'/cwrc/src/schema/events.rng',
+								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
+							},
+							biography: {
+								name: 'Biography Schema',
+								url: baseUrl+'/cwrc/src/schema/biography.rng',
+								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
+							},
+							writing: {
+								name: 'Writing Schema',
+								url: baseUrl+'/cwrc/src/schema/writing.rng',
+								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
+							}
+						};
+						writer = new Writer(config);
+						writer.event('writerInitialized').subscribe(doResize);
+						$(window).on('resize', doResize);
+						
+						writer.event('writerInitialized').subscribe(function(writer) {
+							// load modules then do the setup
+							require(['modules/entitiesList', 'modules/structureTree', 'modules/validation'
+							], function(EntitiesList, StructureTree, Validation) {
+								setupLayoutAndModules(writer, EntitiesList, StructureTree, Validation);
+							});
+						});
+					}
+				});
+			};
+			
+			function setupLayoutAndModules(w, EntitiesList, StructureTree, Validation) {
+				w.layout = $('#cwrc_wrapper').layout({
+					defaults: {
+						maskIframesOnResize: true,
+						resizable: true,
+						slidable: false
+					},
+					west: {
+						size: 'auto',
+						minSize: 225,
+						onresize: function(region, pane, state, options) {
+							var tabsHeight = $('#westTabs > ul').outerHeight();
+							$('#westTabsContent').height(state.layoutHeight - tabsHeight);
+				//					$.layout.callbacks.resizeTabLayout(region, pane);
+						}
+					}
+				});
+				
+				new StructureTree({writer: w, parentId: 'westTabsContent'});
+				new EntitiesList({writer: w, parentId: 'westTabsContent'});
+				new Validation({writer: w, parentId: 'southTabsContent'});
+				
+				$('#westTabs').tabs({
+					active: 1,
+					activate: function(event, ui) {
+						$.layout.callbacks.resizeTabLayout(event, ui);
+					},
+					create: function(event, ui) {
+						$('#westTabs').parent().find('.ui-corner-all').removeClass('ui-corner-all');
+					}
+				});
+				
+				setTimeout(function() {
+					w.layout.resizeAll(); // now that the editor is loaded, set proper sizing
+				}, 250);
+			}
+		</script>
+	</head>
+<body>
+<div id="cwrc_wrapper">
+	<div class="cwrc ui-layout-west">
+		<div id="westTabs" class="tabs">
+			<ul>
+				<li><a href="#entities">Entities</a></li>
+				<li><a href="#structure">Markup</a></li>
+			</ul>
+			<div id="westTabsContent" class="ui-layout-content">
+			</div>
+		</div>
+	</div>
+	<div id="cwrc_main" class="ui-layout-center">
+		<form method="post" action="">
+			<textarea id="editor" name="editor" class="tinymce"></textarea>
+		</form>
+	</div>
+</div>
+</body>
+</html>
