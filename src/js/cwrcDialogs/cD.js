@@ -3,8 +3,8 @@
 $(function(){
 	cD = {};
 	(function(){
-		var cwrcApi = new CwrcApi('http://apps.testing.cwrc.ca/services/ccm-api/', $);
-		//var cwrcApi = new CwrcApi('http://localhost/cwrc/', $);
+		//var cwrcApi = new CwrcApi('http://apps.testing.cwrc.ca/services/ccm-api/', $);
+		var cwrcApi = new CwrcApi('http://localhost/cwrc/', $);
 		
 		// parameters
 
@@ -67,7 +67,43 @@ $(function(){
 		entity.viewModel().dialogTitle = ko.observable("");
 		entity.viewModel().validated = ko.observable(true);
 		entity.selfWorking = $.parseXML('<entity></entity>');
-		entity.elementPath = []
+		entity.elementPath = [];
+		
+		entity.viewModel().modsFields = ko.observable({
+			modsTypes: [
+			{name:'Audio'},
+			{name:'Book (part)'},
+			{name:'Book (whole)'},
+			{name:'Correspondence'},
+			{name:'Journal (part)'},
+			{name:'Journal (whole)'},
+			{name:'Manuscript'},
+			{name:'Video'},
+			{name:'Web resource'},
+			],
+			modsType: ko.observable("Audio"),
+			title: ko.observable(),
+			author: ko.observableArray([
+			]),
+			date: ko.observable(),
+			project: ko.observable(),
+			validation: {
+				title: ko.observable(true),
+				date: ko.observable(true)
+			},
+			addNewAuthor: function(){
+				var author = {
+					name: ko.observable("")
+				};
+				
+				entity.viewModel().modsFields().author.push(author);
+				
+				return author;
+			},
+			removeThisAuthor: function(author){
+				entity.viewModel().modsFields().author.remove(author);
+			}
+		}); // Added to create mods entries
 		
 		entity.person = {};
 		entity.person.schema = "";
@@ -80,6 +116,10 @@ $(function(){
 		entity.place = {};
 		entity.place.schema = "";
 		entity.place.success = null;
+		
+		entity.title = {};
+		entity.title.schema = "";
+		entity.title.success = null;
 
 		entity.editing = false;
 
@@ -262,16 +302,113 @@ $(function(){
 			'	</div>' +
 			'</div>' +
 			'</div>';
+			
+			var newTitleDialogTemplate = '' +
+			'<div id="newTitleDialogue" class="bootstrap-scope cwrcDialog" title="">' +
+			'<div class="modal fade" id="cwrcTitleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+			'	<div class="modal-dialog">' +
+			'		<div class="modal-content">' +
+			'			<div class="modal-header">' +
+			'				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+			'				<h4 class="modal-title"><span data-bind="text: dialogTitle"></span></h4>' +
+			'			</div>' +
+			'			<div class="modal-body modal-body-area" data-bind="with: modsFields">' +
+			//Type of Resource
+			'				<div class="quantifier">' +
+			'					<div>' +
+			'						<span>Type of resource</span>' +
+			'					</div>' +
+			'					<div class="interfaceFieldsContainer"> ' +
+			'						<select data-bind="options: modsTypes, optionsText: \'name\', optionsValue: \'name\', value: modsType">' +
+			'						</select>' +
+			'					</div>' +
+			'				</div>' +
+			//Title
+			'				<div class="quantifier">' +
+			'					<div>' +
+			'						<span>Title</span>' +
+			'					</div>' +
+			'					<div class="interfaceFieldsContainer"> ' +
+			'						<input data-bind="value: title">' +	
+			'						<div class="label label-info" data-bind="if:validation.title">Required value</div>' +
+			'						<div class="label label-danger" data-bind="ifnot:validation.title">Required value</div>' +
+			'					</div>' +
+			'				</div>' +
+			//Authors
+			'				<div class="quantifier">' +
+			'					<div>' +
+			'						<span>Author</span>' +
+			'							<span>' +
+			'								<span>' +
+			'									<button data-bind="click: addNewAuthor" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus"</span></button>' +
+			'								</span>' +
+			'							</span>' +
+			'						</div>' +
+			'					<div class="interfaceFieldsContainer" data-bind="foreach: author"> ' +
+			'						<div>' +
+			'							<span>' +
+			'								<input data-bind="value: name" /> ' +
+			'								<!--<div class="label" data-bind="text:nodeMessage, attr:{class: nodeMessageClass}"></div>-->' +
+			'							</span>' +
+			'							<span data-bind="if: $index">' +
+			'								<button data-bind="click: $parent.removeThisAuthor" class="btn btn-default btn-xs">' +
+			'									<span class="glyphicon glyphicon-minus"></span>' +
+			'								</button>' +
+			'							</span>' +
+			'						</div>' +	
+			'					</div>' +
+			'				</div>' +
+			//Date
+			'				<div class="quantifier">' +
+			'					<div>' +
+			'						<span>Date</span>' +
+			'					</div>' +
+			'					<div class="interfaceFieldsContainer"> ' +
+			//'						<div class="input-append date">' +
+			'							<input placeholder="YYYY-MM-DD" type="text" class="span2" data-bind="value: date">' +
+			//'							<button class=" add-on btn btn-default btn-xs"><span class="glyphicon glyphicon-calendar"></span></button>' +
+			'							<span class="cwrc-help glyphicon glyphicon-question-sign" title="Date must be in the form of YYYY, YYYY-MM or YYYY-MM-DD."></span>'+
+			//'						</div>' +
+			'						<div class="label label-danger" data-bind="ifnot:validation.date">Invalid date</div>' +
+			'					</div>' +
+			'				</div>' +
+			
+			//Project
+			'				<div class="quantifier">' +
+			'					<div>' +
+			'						<span>Project</span>' +
+			'					</div>' +
+			'					<div class="interfaceFieldsContainer"> ' +
+			'						<input data-bind="value: project">' +	
+			'						<!--<div class="label label-info" data-bind="text:nodeMessage, attr:{class: nodeMessageClass}">Required value</div>-->' +
+			'					</div>' +
+			'				</div>' +
+			
+			'			</div>' +
+			'			<div class="modal-footer">' +
+			'				<div class="label label-danger" data-bind="ifnot: validated"> Form is not valid</div>' +
+			'				<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>' +
+			'				<button type="button" class="btn btn-primary" onclick="cD.processCallback();">Ok</button>' +
+			'			</div>' +
+			'		</div>' +
+			'	</div>' +
+			'</div>' +
+			'</div>';
 
 			$('head').append(entityTemplates);
 			$('body').append(newDialogTemplate);
+			$('body').append(newTitleDialogTemplate);
 			$("#cwrcEntityModal").modal(params.modalOptions);
 			$("#cwrcEntityModal").draggable({	
 				handle: ".modal-header"
 			});
+			$("#cwrcTitleModal").modal(params.modalOptions);
+			$("#cwrcTitleModal").draggable({	
+				handle: ".modal-header"
+			});
 
 			ko.applyBindings(entity.viewModel, $("#newDialogue")[0]);
-
+			ko.applyBindings(entity.viewModel, $("#newTitleDialogue")[0]);
 		}
 
 		var initializeQuantifiers = function() {
@@ -280,10 +417,52 @@ $(function(){
 			entity[dialogType].shouldValidate = [];
 			entity.viewModel().interfaceFields([]);
 			var startingInterleave = interleaveModel();
+			startingInterleave.path = "entity";
 			entity.viewModel().interfaceFields.push(startingInterleave);
 			entity[dialogType].workingContainers.push(startingInterleave);
 			entity.viewModel().validated(true);
 		};
+		
+		var completeTitleDialog = function(opts, data) {
+			entity[dialogType].success = typeof opts.success === undefined ? function(){} : opts.success;
+			entity[dialogType].error = typeof opts.error === undefined ? function(){} : opts.error;
+			newTitleDialog(data);
+			setHelp();
+		};
+		
+		var newTitleDialog = function(data) {
+			initializeQuantifiers();
+			
+			var modsFields = entity.viewModel().modsFields();
+			if(data && data != null){
+				modsFields.modsType(data.modsType);
+				modsFields.title(data.title);
+				modsFields.date(data.date ? data.date : "");
+				modsFields.project(data.project ? data.project : "");
+				modsFields.author([])
+				
+				if(data.author && data.author != null && data.author.length > 0){
+					data.author.forEach(function(author){
+						var a = modsFields.addNewAuthor();
+						a.name(author.name);
+					})
+				}else{
+					modsFields.addNewAuthor();
+				}
+			}else{
+				modsFields.modsType("Audio");
+				modsFields.title("");
+				modsFields.author([]);
+				modsFields.date("");
+				modsFields.project("");
+				
+				modsFields.addNewAuthor();
+			}
+			
+			
+			modsFields.validation.title(true);
+			modsFields.validation.date(true);
+		}
 
 		var completeDialog = function(opts) {
 			entity[dialogType].success = typeof opts.success === undefined ? function(){} : opts.success;
@@ -367,7 +546,7 @@ $(function(){
 					postprocessQuantifier();
 					break;
 				case 'interleave':
-					postProcessInterleave();
+					postprocessInterleave();
 					break;
 			}
 		};
@@ -532,7 +711,7 @@ $(function(){
 						newInput = textInputModel();
 					}
 					if (newInput) {
-						newInput.path = entity.elementPath + "";
+						newInput.path = entity.elementPath.toString();
 						// check if it should be stored as an attribute
 						var parent = $(node).parent()[0];
 						if (parent.nodeName === 'attribute') {
@@ -570,6 +749,13 @@ $(function(){
 					newQuantifier = interleaveModel();
 				break;
 			}
+
+			///////////////
+
+			newQuantifier.path = entity.elementPath.toString();
+			
+			///////////////
+
 			// add to latestWorking quantifier
 			last(entity[dialogType].workingContainers).seed.interfaceFields.push(newQuantifier);
 			// add to quantifier list
@@ -594,19 +780,19 @@ $(function(){
 			return false;
 		};
 
-		var postProcessInterleave = function(node) {
+		var postprocessInterleave = function(node) {
 			var lastContainer = last(entity[dialogType].workingContainers);
 
 			if (lastContainer.seed.interfaceFields().length >= 1) {
 				lastContainer.hasInterface = true;
 
-				$.each(lastContainer.seed.interfaceFields(), function(index, item){
-					var path = item.path;
-					if (item.attributeName !== "") {
-						path += "," + item.attributeName;
-					}
-					lastContainer.elements.push(path);
-				});
+				// $.each(lastContainer.seed.interfaceFields(), function(index, item){
+				// 	var path = item.path;
+				// 	if (item.attributeName !== "") {
+				// 		path += "," + item.attributeName;
+				// 	}
+				// 	lastContainer.elements.push(path);
+				// });
 			}
 
 			if (lastContainer.hasInterface) {
@@ -628,12 +814,12 @@ $(function(){
 				if (isInterfaceIsPresent(item)) {
 					lastContainer.hasInterface = true;
 					
-					var path = item.path;
-					if (item.attributeName !== "") {
-						path += "," + item.attributeName;
-					}
+					// var path = item.path;
+					// if (item.attributeName !== "") {
+					// 	path += "," + item.attributeName;
+					// }
 				
-					lastContainer.elements.push(path);
+					// lastContainer.elements.push(path);
 					
 				}
 			});
@@ -664,6 +850,8 @@ $(function(){
 			if (to.label === "") {
 				to.label = from.label;
 			}
+			// alert(to.path + " + " + from.path)
+			// to.path = from.path
 			to.seed.interfaceFields.remove(from);
 		};
 
@@ -746,6 +934,136 @@ $(function(){
 			}
 
 		};
+		
+		var validateModsInfo = function(xml){
+			var modsFields = entity.viewModel().modsFields();
+			
+			if(modsFields.title().trim().length < 1){
+				modsFields.validation.title(false);
+				entity.viewModel().validated(false);
+			}else{
+				modsFields.validation.title(true);
+			}
+			
+			var testDate = modsFields.date().trim();
+			var rx = /^\d{1,4}(-(0[1-9]|1[012])(-(0[1-9]|[12][0-9]|3[01]))?)?$/; //Tests that the date can be eirther YYYY, YYYY-MM, or YYYY-MM-DD
+			if(testDate.length > 0 && !rx.test(testDate)){
+				modsFields.validation.date(false);
+				entity.viewModel().validated(false);
+			}else{
+				modsFields.validation.date(true);
+			}
+			modsFields.date(testDate);
+		};
+		
+		var addModsInfo = function(xml){
+			var accessConditionText = 'Use of this public-domain resource is governed by the <a href="http://creativecommons.org/licenses/by-nc/3.0/" rel="license">Creative Commons Attribution-NonCommercial 3.0 Unported License</a>.';
+			var mods = $(xml).find("mods");
+			var modsFields = entity.viewModel().modsFields();
+			
+			// Create the title element
+			var titleInfo = entity.selfWorking.createElement("titleInfo");
+			var title = entity.selfWorking.createElement("title");
+			title.appendChild(entity.selfWorking.createTextNode(modsFields.title()));
+			$(titleInfo).append(title);
+			mods.append(titleInfo);
+			
+			// Create the author names
+			modsFields.author().forEach(function(author){
+				if(author.name().trim().length > 0){
+					var name = entity.selfWorking.createElement("name");
+					name.setAttribute("type", "personal");
+					var namePart = entity.selfWorking.createElement("namePart");
+					namePart.appendChild(entity.selfWorking.createTextNode(author.name()));
+					$(name).append(namePart);
+				
+					var role = entity.selfWorking.createElement("role");
+					var roleTerm = entity.selfWorking.createElement("roleTerm");
+					roleTerm.setAttribute("type", "text");
+					roleTerm.setAttribute("marcrealtor");
+					roleTerm.appendChild(entity.selfWorking.createTextNode("Author"));
+					$(role).append(roleTerm);
+				
+					$(name).append(roleTerm);
+					mods.append(name);
+				}
+			});
+			
+			// Create genre element
+			var genre = entity.selfWorking.createElement("genre");
+			genre.setAttribute("type", "formatType");
+			genre.appendChild(entity.selfWorking.createTextNode(modsFields.modsType()));
+			mods.append(genre);
+			 
+			// create origin info or related item info
+			if(modsFields.date().trim().length > 0){
+				var relatedItem = entity.selfWorking.createElement("relatedItem");
+				var originInfo = entity.selfWorking.createElement("originInfo");
+			
+				var dateIssued = entity.selfWorking.createElement("dateIssued");
+				dateIssued.setAttribute("encoding", "w3cdtf");
+				dateIssued.setAttribute("keyDate", "yes");
+				dateIssued.appendChild(entity.selfWorking.createTextNode(modsFields.date()));
+				$(originInfo).append(dateIssued);
+			
+				switch(modsFields.modsType()){
+					case 'Audio':
+					case 'Book (whole)':
+					case 'Correspondence':
+					case 'Journal (whole)':
+					case 'Manuscript':
+					case 'Video':
+					case 'Web resource':
+						mods.append(originInfo);
+						break;
+					
+					case 'Book (part)':
+						$(relatedItem).append(originInfo);
+						mods.append(relatedItem);
+						break;
+					
+					case 'Journal (part)':
+						var part = entity.selfWorking.createElement("part");
+						
+						var date = entity.selfWorking.createElement("date");
+						date.setAttribute("encoding", "w3cdtf");
+						date.appendChild(entity.selfWorking.createTextNode(modsFields.date()));
+						$(part).append(date);
+						
+						$(relatedItem).append(part);
+						mods.append(relatedItem);
+						break;
+				}
+			}
+			
+			// create access condition
+			var accessCondition = entity.selfWorking.createElement("accessCondition");
+			accessCondition.setAttribute("type", "use and reproduction");
+			accessCondition.appendChild(entity.selfWorking.createTextNode(accessConditionText));
+			mods.append(accessCondition);
+			
+			// create record info
+			var now = new Date();
+			var recordInfo = entity.selfWorking.createElement("recordInfo");
+			
+			if(modsFields.project().trim().length > 0){
+				var recordContentSource = entity.selfWorking.createElement("recordContentSource");
+				recordContentSource.appendChild(entity.selfWorking.createTextNode(modsFields.project()));
+				$(recordInfo).append(recordContentSource);
+			}
+			
+			var recordCreationDate = entity.selfWorking.createElement("recordCreationDate");
+			recordCreationDate.setAttribute("encoding", "w3cdtf");
+			recordCreationDate.appendChild(entity.selfWorking.createTextNode(now.toISOString().substring(0, 10)));
+			$(recordInfo).append(recordCreationDate);
+			
+			var recordChangeDate = entity.selfWorking.createElement("recordChangeDate");
+			recordChangeDate.setAttribute("encoding", "w3cdtf");
+			recordChangeDate.appendChild(entity.selfWorking.createTextNode(now.toISOString().substring(0, 10)));
+			$(recordInfo).append(recordChangeDate);
+			
+			mods.append(recordInfo);
+		}
 
 		var addRecordInfo = function(xml) {
 			var accessConditionText = 'Use of this public-domain resource is governed by the <a href="http://creativecommons.org/licenses/by-nc/3.0/" rel="license">Creative Commons Attribution-NonCommercial 3.0 Unported License</a>.';
@@ -805,9 +1123,16 @@ $(function(){
 					break;
 			}
 
-			entity.selfWorking = $.parseXML(startingXML + '<entity></entity>');
-			addRecordInfo(entity.selfWorking);
-			visitStringifyResult(entity[dialogType].workingContainers[0]);
+			if(dialogType == 'title'){
+				entity.selfWorking = $.parseXML(startingXML + "</mods>");
+				validateModsInfo();
+				addModsInfo(entity.selfWorking);
+			}else{
+				entity.selfWorking = $.parseXML(startingXML + '<entity></entity>');
+				addRecordInfo(entity.selfWorking);
+				visitStringifyResult(entity[dialogType].workingContainers[0]);
+			}
+			
 			var result = xmlToString(entity.selfWorking);
 			return result;
 		};
@@ -823,8 +1148,12 @@ $(function(){
 				};
 
 				entity[dialogType].success(result);
-				$('#cwrcEntityModal').modal('hide');
 				
+				if(dialogType === 'title'){
+					$('#cwrcTitleModal').modal('hide');
+				}else{
+					$('#cwrcEntityModal').modal('hide');
+				}
 			} else {
 				entity[dialogType].error("Form not valid");
 			}
@@ -870,7 +1199,8 @@ $(function(){
 			// var self = this;
 			var that = {};
 			that.input = "quantifier";
-			that.elements = [];
+			// that.elements = [];
+			that.path = "";
 			that.label = "";
 			that.header = "";
 			that.minItems = 0;
@@ -968,9 +1298,10 @@ $(function(){
 				result.minItems = this.minItems;
 				result.maxItems = this.maxItems;
 				result.seed = this.seed.clone();
+				result.path = this.path;
 				result.label = this.label;
 				result.header = this.header;
-				result.elements = this.elements;
+				// result.elements = this.elements;
 				// take label
 				// result.label = result.seed.interfaceFields()[0].label;
 				if (result.minItems === 1) {
@@ -1022,6 +1353,7 @@ $(function(){
 				$.each(that.interfaceFields(), function(index, field){
 					result.interfaceFields.push(field.clone());
 				});
+				
 				return result;
 			};
 			return that;
@@ -1132,6 +1464,208 @@ $(function(){
 
 		cD.initializeWithLogin = initializeWithLogin;
 
+		// population functions
+
+		var populateDialog = function(opts) {
+			
+			// change this to object
+			switch (dialogType) {
+				case "person" :
+					switch (opts.repository) {
+						case "cwrc":
+						populatePersonCWRC(opts);
+					}
+			}
+			
+
+		}
+
+		var populatePersonCWRC = function(opts) {
+			// cwrc
+			console.log(opts.data);
+			var workingXML = $.parseXML(opts.data);
+			
+			children = workingXML.childNodes;
+			var path = [];
+			for (var i=0; i< children.length; ++i) {
+				visitNodeCWRCPopulate(children[i], path);
+			}
+		}
+		
+		var extractTitleMODS = function(opts){
+			var mods = $(opts.data);
+			var modsFields = entity.viewModel().modsFields();
+			var element = null;
+			var result = {
+				author: []
+			};
+			
+			// Create the title element
+			element = mods.find("titleInfo>title");
+			result.title = element.text();
+			
+			// Create the author names
+			mods.find("name>namePart").each(function(){
+				result.author.push({
+						name: $(this).text()
+					});
+			});
+			
+			// Create genre element
+			var genre = mods.find("genre").text();
+			result.modsType = genre;
+			 
+			// create origin info or related item info
+			switch(genre){
+				case 'Book (part)':
+					element = mods.find("relatedItem > originInfo > dateIssued");
+					break;
+					
+				case 'Journal (part)':
+					element = mods.find("relatedItem > part > date");
+					break;
+					
+				default:
+					element = mods.find("originInfo > dateIssued");
+					break;
+			}
+			if(element.length > 0){
+				result.date = element.text();
+			}
+			
+			element = mods.find("recordInfo > recordContentSource");
+			if(element.length > 0){
+				result.project = element.text();
+			}
+			
+			return result;
+		}
+
+		var visitNodeCWRCPopulate = function (node, path) {
+			path.push(node.nodeName);
+			var parentPath = path.slice(0, path.length-1);
+			// console.log(path);
+			// console.log("nodetype: " + node.nodetype);	
+			var nodeValue = $.trim(node.nodeValue);
+			if (node.nodeType === 3 && nodeValue !== "") {
+
+				// console.log("Nodename: " + node.nodeName);
+				// console.log("nodetype: " + node.nodeType);	
+				// console.log("value: " + nodeValue);
+				// console.log("parentPath: "+ parentPath.toString());
+
+				// XXX populate field
+				// it exits, find it
+				
+
+				// alert(entity.viewModel().interfaceFields());
+				// alert(entity.viewModel().interfaceFields().input)
+				// for (var i =0; i < entity.viewModel().interfaceFields().length; ++i) {
+				// 	alert(i)
+				// 	var currentField = entity.viewModel().interfaceFields[i];
+				// 	if(foundAndFilled(nodeValue, parentPath, currentField)) {
+				//  		// return false; // break out of loop
+				//  		i = entity.viewModel().interfaceFields().length;
+				//  	}
+				// }
+
+
+				foundAndFilled(nodeValue, parentPath, entity.viewModel().interfaceFields());
+
+				// $.each(entity.viewModel().interfaceFields(), function(i, currentField) {
+				// 	alert(typeof currentField + " << " + i)
+				// 	if(foundAndFilled(nodeValue, parentPath, currentField)) {
+				// 		return false; // break out of loop
+				// 	}
+				// });
+			} 
+			
+
+			var children = node.childNodes;	
+			for (var i=0; i< children.length; ++i) {		
+				var currentNode = children[i]
+				visitNodeCWRCPopulate(currentNode, path);
+			}
+
+			path.pop();
+		}
+
+		var foundOnSeed = function(field, parentPath) {
+			var result = false;
+			$.each(field.seed.interfaceFields(), function(i, currentField) {
+				if (parentPath.toString().indexOf(currentField.path) === 0) {
+					result = true;
+					return false;
+				}
+			});
+			return result;
+		}
+
+		var foundAndFilled = function(nodeValue, parentPath, field) {
+
+			if (field.input === "quantifier") {
+				// check path if sub continue
+
+
+				// if (parentPath.toString().indexOf(field.path) > -1) {
+				if (parentPath.toString().indexOf(field.path) === 0) {
+					var foundOnFields = false;
+					// alert(field.interfaceFields().length)
+					$.each(field.interfaceFields(), function(i, currentField) {
+						if(foundAndFilled(nodeValue, parentPath, currentField)) {
+							console.log("FOUNMD ONM FIELDS")
+							foundOnFields = true;
+							return false; // break out of loop
+						}
+					});
+					if (foundOnFields) {
+						console.log("HERE")
+						return true;
+					}
+					if (!foundOnFields) {
+						// alert("not found on fields")
+
+						if (foundOnSeed(field, parentPath)) {
+							console.log(field.input + " " + field.path + " <> " + parentPath)
+							// alert("adding group")
+							field.addGroup();
+							// field.interfaceFields.push(field.seed.clone());
+							var lastfield = last(field.interfaceFields()) ; 					
+							return foundAndFilled(nodeValue, parentPath, lastfield);
+						}
+					}
+					
+				}
+
+
+			} else if(field.input === "seed") {
+				var foundOnSeedCheck = false;
+				$.each(field.interfaceFields(), function(i, currentField) {
+					if(foundAndFilled(nodeValue, parentPath, currentField)) {
+						foundOnSeedCheck = true;
+						return false; // break out of loop
+					}
+				});
+
+				if(foundOnSeedCheck) {
+					return true;
+				}
+
+			}else if (field.input !== " header") {
+				// check path if same fill
+				// inputs dont have path
+				// fill now ?
+				// alert(">>>>>> " + field.input + " <> [" + field.path + "] [" + parentPath + "] " + nodeValue)
+				if (field.path == parentPath) {
+					field.value(nodeValue);
+					return true;
+				}
+				// return true;
+			}
+		}
+
+		// pop create		
+
 		var popCreatePerson = function(opts) {
 			dialogType = "person";
 			entity.viewModel().dialogTitle("Add Person");
@@ -1172,15 +1706,59 @@ $(function(){
 		};
 
 		cD.popCreatePlace = popCreatePlace;
+		
+		var popCreateTitle = function(opts, data) {
+			dialogType = "title";
+			entity.viewModel().dialogTitle(entity.editing ? "Edit " + data.title : "Add Title");
+			completeTitleDialog(opts, data);
+			$('#cwrcTitleModal').modal('show');
+			// hackish
+			setTimeout(function(){
+				$(".modal-body-area").scrollTop(0);
+			},5);
+			
+		};
 
+		cD.popCreateTitle = popCreateTitle;
+		
 		var popCreate = {
 			person: popCreatePerson,
 			organization : popCreateOrganization,
-			place : popCreatePlace
+			place : popCreatePlace,
+			title : popCreateTitle
 		};
 
 		cD.popCreate = popCreate;
 		
+		// pop edit
+
+		var popEditPerson = function(opts) {
+			entity.editing = true;
+			cD.popCreatePerson(opts);
+			populateDialog(opts);
+		};
+
+		cD.popEditPerson = popEditPerson;
+
+		var popEditOrganization = function(opts) {
+
+		};
+
+		cD.popEditOrganization = popEditOrganization;
+
+		var popEditPlace = function(opts) {
+
+		}
+
+		cD.popEditPlace = popEditPlace;
+		
+		var popEditTitle = function(opts) {
+			entity.editing = true;
+			cD.popCreateTitle(opts, extractTitleMODS(opts));
+		}
+
+		cD.popEditTitle = popEditTitle;
+
 		///////////////////////////////////////////////////////////////////////
 		// Search
 		///////////////////////////////////////////////////////////////////////
@@ -1251,15 +1829,21 @@ $(function(){
 				break;
 				case "organization": 
 				viafPrefix = "local.corporateNames+all+";
-				break
+				break;
+				case "place": 
+				viafPrefix = "local.geographicNames+all+";
+				break;
+				case "title": 
+				viafPrefix = "local.uniformTitleWorks+="; 
+				break; 
 			}
-
+			var quotedQueryString = '"' + queryString + '"';
 			search.linkedDataSources.viaf.ajaxRequest = $.ajax({
 				url: viafUrl,
 				// dataType : 'json',
 				dataType : "xml",
 				processData : false,
-				data : "query=" + viafPrefix + queryString + "&httpAccept=text/xml",
+				data : "query=" + viafPrefix + quotedQueryString + "&httpAccept=text/xml",
 				success: function(response) {
 					$('searchRetrieveResponse record', response).each(function(index, spec) {
 						search.linkedDataSources.viaf.results.push(search.getResultFromVIAF(spec, index));
@@ -1608,7 +2192,18 @@ $(function(){
 			var i = index + 2
 			// Chrome has a bug which does not find elements with namesapces, to avoid this problem we define the selector twice
 			// VIAF returns all of the required information on the list call so there is no need to request again on second call
-			var nameSelector = search.viafSelectorHelper("recordData >  ns"+i+"\\:VIAFCluster >  ns"+i+"\\:mainHeadings > ns"+i+"\\:mainHeadingEl > ns"+i+"\\:datafield > ns"+i+"\\:subfield[code='a']"); //code attribute a
+			var codeSelector = "a";
+			switch(dialogType) {
+				case "person":
+				case "organization":
+					codeSelector = "a";
+					break;
+				case "title":
+					codeSelector = "t";
+
+			}
+
+			var nameSelector = search.viafSelectorHelper("recordData >  ns"+i+"\\:VIAFCluster >  ns"+i+"\\:mainHeadings > ns"+i+"\\:mainHeadingEl > ns"+i+"\\:datafield > ns"+i+"\\:subfield[code='"+codeSelector+"']"); //code attribute a
 			var idSelector = search.viafSelectorHelper("recordData ns"+i+"\\:VIAFCluster ns"+i+"\\:viafID");
 			
 
@@ -1830,9 +2425,20 @@ $(function(){
 		
 		cD.popSearchPlace = popSearchPlace;
 
+		var popSearchTitle = function(opts) {
+			search.clear();
+			search.dialogTitle("Search Title");
+			dialogType = "title";
+			completeSearchDialog(opts);	
+		}
+
+		cD.popSearchTitle = popSearchTitle;
+
 		var popSearch = {
 			person: popSearchPerson,
-			organization : popSearchOrganization
+			organization : popSearchOrganization,
+			place : popSearchPlace,
+			title: popSearchTitle
 		};
 
 		cD.popSearch = popSearch;
