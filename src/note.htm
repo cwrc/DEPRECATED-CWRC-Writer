@@ -71,6 +71,14 @@
 						writer = new Writer(config);
 						writer.event('writerInitialized').subscribe(doResize);
 						$(window).on('resize', doResize);
+						
+						writer.event('writerInitialized').subscribe(function(writer) {
+							// load modules then do the setup
+							require(['modules/entitiesList', 'modules/structureTree', 'modules/validation'
+							], function(EntitiesList, StructureTree, Validation) {
+								setupLayoutAndModules(writer, EntitiesList, StructureTree, Validation);
+							});
+						});
 					},
 					error: function() {
 						config.cwrcRootUrl = baseUrl+'/cwrc/src/';
