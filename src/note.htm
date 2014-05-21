@@ -32,6 +32,57 @@
 					writer.editor.theme.resizeTo($(window).width(), $(window).height() - uiHeight);
 				}
 				
+				function doInit() {
+					writer = new Writer(config);
+					writer.event('writerInitialized').subscribe(doResize);
+					$(window).on('resize', doResize);
+					
+					writer.event('writerInitialized').subscribe(function(writer) {
+						// load modules then do the setup
+						require(['modules/entitiesList', 'modules/structureTree', 'modules/validation'
+						], function(EntitiesList, StructureTree, Validation) {
+							setupLayoutAndModules(writer, EntitiesList, StructureTree, Validation);
+						});
+					});
+				}
+				
+				function setupLayoutAndModules(w, EntitiesList, StructureTree, Validation) {
+					w.layout = $('#cwrc_wrapper').layout({
+						defaults: {
+							maskIframesOnResize: true,
+							resizable: true,
+							slidable: false
+						},
+						west: {
+							size: 'auto',
+							minSize: 225,
+							onresize: function(region, pane, state, options) {
+								var tabsHeight = $('#westTabs > ul').outerHeight();
+								$('#westTabsContent').height(state.layoutHeight - tabsHeight);
+					//					$.layout.callbacks.resizeTabLayout(region, pane);
+							}
+						}
+					});
+					
+					new StructureTree({writer: w, parentId: 'westTabsContent'});
+					new EntitiesList({writer: w, parentId: 'westTabsContent'});
+					new Validation({writer: w, parentId: 'southTabsContent'});
+					
+					$('#westTabs').tabs({
+						active: 1,
+						activate: function(event, ui) {
+							$.layout.callbacks.resizeTabLayout(event, ui);
+						},
+						create: function(event, ui) {
+							$('#westTabs').parent().find('.ui-corner-all').removeClass('ui-corner-all');
+						}
+					});
+					
+					setTimeout(function() {
+						w.layout.resizeAll(); // now that the editor is loaded, set proper sizing
+					}, 250);
+				}
+				
 				var baseUrl = window.location.protocol+'//'+window.location.host;
 				var config = {
 					id: 'editor',
@@ -68,17 +119,8 @@
 					timeout: 3000,
 					success: function(data, status, xhr) {
 						config.project = data;
-						writer = new Writer(config);
-						writer.event('writerInitialized').subscribe(doResize);
-						$(window).on('resize', doResize);
 						
-						writer.event('writerInitialized').subscribe(function(writer) {
-							// load modules then do the setup
-							require(['modules/entitiesList', 'modules/structureTree', 'modules/validation'
-							], function(EntitiesList, StructureTree, Validation) {
-								setupLayoutAndModules(writer, EntitiesList, StructureTree, Validation);
-							});
-						});
+						doInit();
 					},
 					error: function() {
 						config.cwrcRootUrl = baseUrl+'/cwrc/src/';
@@ -104,56 +146,10 @@
 								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
 							}
 						};
-						writer = new Writer(config);
-						writer.event('writerInitialized').subscribe(doResize);
-						$(window).on('resize', doResize);
 						
-						writer.event('writerInitialized').subscribe(function(writer) {
-							// load modules then do the setup
-							require(['modules/entitiesList', 'modules/structureTree', 'modules/validation'
-							], function(EntitiesList, StructureTree, Validation) {
-								setupLayoutAndModules(writer, EntitiesList, StructureTree, Validation);
-							});
-						});
+						doInit();
 					}
 				});
-			};
-			
-			function setupLayoutAndModules(w, EntitiesList, StructureTree, Validation) {
-				w.layout = $('#cwrc_wrapper').layout({
-					defaults: {
-						maskIframesOnResize: true,
-						resizable: true,
-						slidable: false
-					},
-					west: {
-						size: 'auto',
-						minSize: 225,
-						onresize: function(region, pane, state, options) {
-							var tabsHeight = $('#westTabs > ul').outerHeight();
-							$('#westTabsContent').height(state.layoutHeight - tabsHeight);
-				//					$.layout.callbacks.resizeTabLayout(region, pane);
-						}
-					}
-				});
-				
-				new StructureTree({writer: w, parentId: 'westTabsContent'});
-				new EntitiesList({writer: w, parentId: 'westTabsContent'});
-				new Validation({writer: w, parentId: 'southTabsContent'});
-				
-				$('#westTabs').tabs({
-					active: 1,
-					activate: function(event, ui) {
-						$.layout.callbacks.resizeTabLayout(event, ui);
-					},
-					create: function(event, ui) {
-						$('#westTabs').parent().find('.ui-corner-all').removeClass('ui-corner-all');
-					}
-				});
-				
-				setTimeout(function() {
-					w.layout.resizeAll(); // now that the editor is loaded, set proper sizing
-				}, 250);
 			}
 		</script>
 	</head>

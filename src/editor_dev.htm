@@ -26,11 +26,18 @@
 				
 				writer = null;
 				
-				var EntitiesList = EntitiesList;
-				var Relations = Relations;
-				var Selection = Selection;
-				var StructureTree = StructureTree;
-				var Validation = Validation;
+				function doInit() {
+					writer = new Writer(config);
+					writer.event('writerInitialized').subscribe(function(writer) {
+						// load modules then do the setup
+						require(['modules/entitiesList', 'modules/relations',
+						         'modules/selection', 'modules/structureTree', 'modules/validation'
+						], function(EntitiesList, Relations, Selection, StructureTree, Validation) {
+							setupLayoutAndModules(writer, EntitiesList, Relations, Selection, StructureTree, Validation);
+							writer.fileManager.loadInitialDocument(window.location.hash);
+						});
+					});
+				}
 				
 				var baseUrl = window.location.protocol+'//'+window.location.host;
 				var config = {
@@ -66,16 +73,8 @@
 					timeout: 3000,
 					success: function(data, status, xhr) {
 						config.project = data;
-						writer = new Writer(config);
-						writer.event('writerInitialized').subscribe(function(writer) {
-							// load modules then do the setup
-							require(['modules/entitiesList', 'modules/relations',
-							         'modules/selection', 'modules/structureTree', 'modules/validation'
-							], function(EntitiesList, Relations, Selection, StructureTree, Validation) {
-								setupLayoutAndModules(writer, EntitiesList, Relations, Selection, StructureTree, Validation);
-								writer.fileManager.loadInitialDocument(window.location.hash);
-							});
-						});
+						
+						doInit();
 					},
 					error: function() {
 						config.cwrcRootUrl = baseUrl+'/cwrc/src/';
@@ -101,16 +100,8 @@
 								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
 							}
 						};
-						writer = new Writer(config);
-						writer.event('writerInitialized').subscribe(function(writer) {
-							// load modules then do the setup
-							require(['modules/entitiesList', 'modules/relations',
-							         'modules/selection', 'modules/structureTree', 'modules/validation'
-							], function(EntitiesList, Relations, Selection, StructureTree, Validation) {
-								setupLayoutAndModules(writer, EntitiesList, Relations, Selection, StructureTree, Validation);
-								writer.fileManager.loadInitialDocument(window.location.hash);
-							});
-						});
+						
+						doInit();
 					}
 				});
 			};
