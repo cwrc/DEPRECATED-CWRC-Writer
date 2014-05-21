@@ -79,7 +79,7 @@ return function(writer) {
 				prefix = 'Edit ';
 			}
 			
-			var title = prefix+config.title;
+			var title = prefix+'Note';
 			note.dialog('option', 'title', title);
 			if (config.pos) {
 				note.dialog('option', 'position', [config.pos.x, config.pos.y]);

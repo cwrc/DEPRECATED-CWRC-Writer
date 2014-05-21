@@ -5,11 +5,11 @@ define([
     'dialogs/citation','dialogs/correction','dialogs/date','dialogs/fileManager',
     'dialogs/header','dialogs/keyword','dialogs/link','dialogs/message',
     'dialogs/note','dialogs/org','dialogs/person','dialogs/place','dialogs/search','dialogs/title','dialogs/triple',
-    'dialogs/cwrcPerson','dialogs/cwrcOrg','dialogs/cwrcPlace','dialogs/cwrcTitle'
+    'dialogs/cwrcPerson','dialogs/cwrcOrg','dialogs/cwrcPlace','dialogs/cwrcTitle','dialogs/cwrcCitation'
 ], function($, jqueryui,
 		AddEvent, AddOrg, AddPerson, AddPlace, AddSchema, Citation, Correction, DateDialog, FileManager,
 		Header, Keyword, Link, Message, Note, Org, Person, Place, Search, Title, Triple,
-		CwrcPerson, CwrcOrg, CwrcPlace, CwrcTitle
+		CwrcPerson, CwrcOrg, CwrcPlace, CwrcTitle, CwrcCitation
 ) {
 
 // add event listeners to all of our jquery ui dialogs
@@ -41,7 +41,6 @@ return function(writer) {
 		message: new Message(writer),
 		search: new Search(writer),
 		note: new Note(writer),
-		citation: new Citation(writer),
 		correction: new Correction(writer),
 		keyword: new Keyword(writer),
 		date: new DateDialog(writer),
@@ -59,6 +58,8 @@ return function(writer) {
 		tagOrg: new Org(writer), // CWRCWriter tagger
 		title: new CwrcTitle(writer), // cwrcDialogs lookup
 		tagTitle: new Title(writer), // CWRCWriter tagger
+		citation: new CwrcCitation(writer), // cwrcDialogs lookup
+		tagCitation: new Citation(writer), // CWRCWriter tagger
 		place: new CwrcPlace(writer),
 		tagPlace: new Place(writer),
 		addschema: new AddSchema(writer)
