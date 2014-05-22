@@ -4,6 +4,8 @@ define(['jquery', 'jquery.tmpl'], function($) {
 return function(writer) {
 	var w = writer;
 	
+	var TEXT_SELECTION = '[[[editorText]]]'; // constant represents the user's text selection when adding an entity
+	
 	// returns a common annotation object
 	function commonAnnotation(data, type) {
 		var date = new Date().toISOString();
@@ -84,11 +86,11 @@ return function(writer) {
 					if (offsetId) xml += ' offsetId="'+offsetId+'"';
 					if (info.certainty) xml += ' cert="'+info.certainty+'"';
 					if (info.role) xml += ' role="'+info.role+'"';
-					xml += '>[[[editorText]]]</persName>';
+					xml += '>'+TEXT_SELECTION+'</persName>';
 					return xml;
 				},
 				events: function(entity) {
-					return '<NAME>[[[editorText]]]</NAME>';
+					return '<NAME>'+TEXT_SELECTION+'</NAME>';
 				}
 			},
 			annotation: function(entity) {
@@ -116,15 +118,15 @@ return function(writer) {
 					} else if (info.startDate) {
 						xml += ' from="'+info.startDate+'" to="'+info.endDate+'"';
 					}
-					xml += '>[[[editorText]]]</date>';
+					xml += '>'+TEXT_SELECTION+'</date>';
 					return xml;
 				},
 				events: function(entity) {
 					var xml = '';
 					if (info.date) {
-						xml += '<DATE VALUE="'+info.date+'">[[[editorText]]]</DATE>';
+						xml += '<DATE VALUE="'+info.date+'">'+TEXT_SELECTION+'</DATE>';
 					} else if (info.startDate) {
-						xml += '<DATERANGE FROM="'+info.startDate+'" TO="'+info.endDate+'">[[[editorText]]]</DATERANGE>';
+						xml += '<DATERANGE FROM="'+info.startDate+'" TO="'+info.endDate+'">'+TEXT_SELECTION+'</DATERANGE>';
 					}
 					return xml;
 				}
@@ -156,7 +158,7 @@ return function(writer) {
 					if (id) xml += ' annotationId="'+id+'"';
 					if (offsetId) xml += ' offsetId="'+offsetId+'"';
 					if (info.certainty) xml += ' cert="'+info.certainty+'"';
-					xml += '>[[[editorText]]]';
+					xml += '>'+TEXT_SELECTION+'';
 					if (info.precision) {
 						xml += '<precision';
 						if (id) xml += ' annotationId="'+id+'"';
@@ -169,7 +171,7 @@ return function(writer) {
 					xml += '</placeName>';
 					return xml;
 				},
-				events: '<PLACE>[[[editorText]]]</PLACE>'
+				events: '<PLACE>'+TEXT_SELECTION+'</PLACE>'
 			},
 			annotation: function(entity) {
 				var data = entity.annotation;
@@ -182,7 +184,7 @@ return function(writer) {
 				tei: 'event'
 			},
 			mapping: {
-				tei: '<event cert="${info.certainty}">[[[editorText]]]</event>'
+				tei: '<event cert="${info.certainty}">'+TEXT_SELECTION+'</event>'
 			}
 		},
 		org: {
@@ -202,10 +204,10 @@ return function(writer) {
 					if (offsetId) xml += ' offsetId="'+offsetId+'"';
 					if (info.certainty) xml += ' cert="'+info.certainty+'"';
 					if (info.cwrcInfo) xml += ' ref="'+info.cwrcInfo.id+'"';
-					xml += '>[[[editorText]]]</orgName>';
+					xml += '>'+TEXT_SELECTION+'</orgName>';
 					return xml;
 				},
-				events: '<ORGNAME>[[[editorText]]]</ORGNAME>'
+				events: '<ORGNAME>'+TEXT_SELECTION+'</ORGNAME>'
 			},
 			annotation: function(entity) {
 				var data = entity.annotation;
@@ -218,7 +220,26 @@ return function(writer) {
 				tei: 'cit'
 			},
 			mapping: {
-				tei: '<cit><quote>[[[editorText]]]</quote><ref>${info.citation}</ref></cit>'
+				tei: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '<note';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					if (info.type) {
+						xml += ' type="'+info.type+'"';
+					}
+					xml += '><bibl>';
+					if (info.content) {
+						var xmlDoc = w.utilities.stringToXML(info.content);
+						var biblContent = $('bibl', xmlDoc)[0];
+						xml += biblContent.innerHTML;
+					}
+					xml += '</bibl></note>';
+					return xml;
+				}
 			}
 		},
 		note: {
@@ -232,7 +253,7 @@ return function(writer) {
 					var id = entity.annotation.range.cwrcAnnotationId;
 					var offsetId = entity.annotation.range.cwrcOffsetId;
 					
-					var xml = '[[[editorText]]]<note';
+					var xml = '<note';
 					if (id) xml += ' annotationId="'+id+'"';
 					if (offsetId) xml += ' offsetId="'+offsetId+'"';
 					if (info.type) {
@@ -272,7 +293,7 @@ return function(writer) {
 						xml += '>';
 						xml += '<sic';
 						if (id) xml += ' annotationId="'+id+'"';
-						xml += '>[[[editorText]]]</sic>';
+						xml += '>'+TEXT_SELECTION+'</sic>';
 						xml += '<corr';
 						if (id) xml += ' annotationId="'+id+'"';
 						xml += '>'+info.corrText+'</corr></choice>';
@@ -280,11 +301,11 @@ return function(writer) {
 						xml = '<corr';
 						if (id) xml += ' annotationId="'+id+'"';
 						if (offsetId) xml += ' offsetId="'+offsetId+'"';
-						xml += '>[[[editorText]]]</corr>';
+						xml += '>'+TEXT_SELECTION+'</corr>';
 					}
 					return xml;
 				},
-				events: '<SIC CORR="${info.corrText}">[[[editorText]]]</SIC>'
+				events: '<SIC CORR="${info.corrText}">'+TEXT_SELECTION+'</SIC>'
 			},
 			annotation: function(entity) {
 				var data = entity.annotation;
@@ -306,15 +327,18 @@ return function(writer) {
 					var id = entity.annotation.range.cwrcAnnotationId;
 					var offsetId = entity.annotation.range.cwrcOffsetId;
 					
-					// TODO handling for multiple keywords
-					var xml = '[[[editorText]]]<note';
+					var xml = '<note';
 					if (id) xml += ' annotationId="'+id+'"';
 					if (offsetId) xml += ' offsetId="'+offsetId+'"';
 					xml += ' type="termAnnotation"';
-					xml += '></note>';
+					xml += '>';
+					for (var i = 0; i < info.keywords.length; i++) {
+						xml += '<term>'+info.keywords[i]+'</term>';
+					}
+					xml += '</note>';
 					return xml;
 				},
-				events: '<KEYWORDCLASS>[[[editorText]]]</KEYWORDCLASS>'
+				events: '<KEYWORDCLASS>'+TEXT_SELECTION+'</KEYWORDCLASS>'
 			}
 		},
 		link: {
@@ -324,8 +348,8 @@ return function(writer) {
 				events: 'XREF'
 			},
 			mapping: {
-				tei: '<ref target="${info.url}">[[[editorText]]]</ref>',
-				events: '<XREF URL="${info.url}">[[[editorText]]]</XREF>'
+				tei: '<ref target="${info.url}">'+TEXT_SELECTION+'</ref>',
+				events: '<XREF URL="${info.url}">'+TEXT_SELECTION+'</XREF>'
 			},
 			annotation: function(entity) {
 				var data = entity.annotation;
@@ -342,8 +366,8 @@ return function(writer) {
 				events: 'TITLE'
 			},
 			mapping: {
-				tei: '<title cert="${info.certainty}" level="${info.level}">[[[editorText]]]</title>',
-				events: '<TITLE TITLETYPE="${info.level}">[[[editorText]]]</TITLE>'
+				tei: '<title cert="${info.certainty}" level="${info.level}">'+TEXT_SELECTION+'</title>',
+				events: '<TITLE TITLETYPE="${info.level}">'+TEXT_SELECTION+'</TITLE>'
 			}
 		}
 	};
@@ -409,7 +433,11 @@ return function(writer) {
 				} else if (typeof mapping == 'function') {
 					mappedString = mapping(entity);
 				}
-				return mappedString.split('[[[editorText]]]');
+				if (mappedString.indexOf(TEXT_SELECTION) === -1) {
+					return ['', mappedString];
+				} else {
+					return mappedString.split(TEXT_SELECTION);
+				}
 			}
 		}
 		return ['', '']; // return array of empty strings if there is no mapping
