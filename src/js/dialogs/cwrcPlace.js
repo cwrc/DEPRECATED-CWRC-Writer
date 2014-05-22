@@ -7,8 +7,22 @@ return function(writer) {
 	function createNewPlace(data) {
 		cD.popCreatePlace({
 			success: function(result) {
-				var r = JSON.stringify(result);
-				console.log(r);
+				if (result.data == null) {
+					var error = result.error || 'There was an error creating the entry.';
+					w.dialogManager.show('message', {
+						title: 'Error',
+						msg: error,
+						type: 'error'
+					});
+				} else {
+					result = {
+						id: result.response.pid,
+						data: result.data
+					};
+					w.dialogManager.show('tagCitation', {
+						cwrcInfo: result
+					});
+				}
 			},
 			error: function(errorThrown) {
 			},

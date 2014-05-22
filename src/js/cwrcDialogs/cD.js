@@ -4,7 +4,9 @@ $(function(){
 	cD = {};
 	(function(){
 		var cwrcApi = new CwrcApi('http://apps.testing.cwrc.ca/services/ccm-api/', $);
-//		 var cwrcApi = new CwrcApi('http://localhost/cwrc/', $);
+		//var cwrcApi = new CwrcApi('http://localhost/cwrc/', $);
+		
+		var geonameUrl = "http://apps.testing.cwrc.ca/cwrc-mtp/geonames/";
 		
 		// parameters
 
@@ -30,7 +32,7 @@ $(function(){
 		// Helpers
 		///////////////////////////////////////////////////////////////////////
 
-		var last = function(array) {
+		var last = function(array) {	
 			return array[array.length-1];
 		};
 		
@@ -986,7 +988,7 @@ $(function(){
 					roleTerm.appendChild(entity.selfWorking.createTextNode("Author"));
 					$(role).append(roleTerm);
 				
-					$(name).append(roleTerm);
+					$(name).append(role);
 					mods.append(name);
 				}
 			});
@@ -1483,11 +1485,12 @@ $(function(){
 		var populateDialog = function(opts) {
 			
 			// change this to object
+			/*
 			switch (dialogType) {
 				case "person" :
 					switch (opts.repository) {
 						case "cwrc":
-						populatePersonCWRC(opts);
+						populateCWRC(opts);
 						break;
 					}
 				break;
@@ -1497,11 +1500,18 @@ $(function(){
 				break;
 
 			}
+			*/
+
+			switch (opts.repository) {
+				case "cwrc":
+					populateCWRC(opts);
+				break;
+			}
 			
 
 		}
 
-		var populatePersonCWRC = function(opts) {
+		var populateCWRC = function(opts) {
 			// cwrc
 			
 			var workingXML = $.parseXML(opts.data);
@@ -1748,13 +1758,19 @@ $(function(){
 		cD.popEditPerson = popEditPerson;
 
 		var popEditOrganization = function(opts) {
-
+			entity.editing = true;
+			entity.editingPID = opts.id;
+			cD.popCreateOrganization(opts);
+			populateDialog(opts);
 		};
 
 		cD.popEditOrganization = popEditOrganization;
 
 		var popEditPlace = function(opts) {
-
+			entity.editing = true;
+			entity.editingPID = opts.id;
+			cD.popCreatePlace(opts);
+			populateDialog(opts);
 		}
 
 		cD.popEditPlace = popEditPlace;
@@ -1785,7 +1801,9 @@ $(function(){
 				name : specs.name === null ? "" : specs.name,
 				processSearch : specs.processSearch === null ? function(queryString){} : specs.processSearch,
 				// scrape : specs.scrape,
-				htmlify : specs.htmlify
+				htmlify : specs.htmlify,
+				datatype: specs.datatype,
+				showPanel: ko.observable(true)
 			}
 
 			return that;
@@ -1805,6 +1823,10 @@ $(function(){
 				},
 			});
 
+		}
+		
+		search.processGeoNameData = function(id) {
+			return xmlToString(search.linkedDataSources.geonames.response[id]);
 		}
 
 		search.processViafData = function(id) {
@@ -1863,6 +1885,31 @@ $(function(){
 				}
 			});
 		}
+		
+		search.processGeoNameSearch = function(queryString) {
+			search.processData = search.processGeoNameData;
+			
+			var quotedQueryString = encodeURI(queryString);
+			search.linkedDataSources.viaf.ajaxRequest = $.ajax({
+				url: geonameUrl,
+				// dataType : 'json',
+				dataType : "xml",
+				processData : false,
+				data : "query=" + quotedQueryString,
+				success: function(response) {
+					search.linkedDataSources.geonames.response = [];
+					$('geonames geoname', response).each(function(index, spec) {
+						search.linkedDataSources.geonames.results.push(search.getResultFromGeoName(spec, index));
+						search.linkedDataSources.geonames.response.push(spec);
+					});
+				},
+				error : function(xhr, ajaxOptions, thrownError) {
+					if (ajaxOptions !== "abort") {
+						console.log("Error " + ajaxOptions);	
+					}					
+				}
+			});
+		}
 
 		// Scraping functions 
 
@@ -1882,12 +1929,27 @@ $(function(){
 			// data.nationality = $(workingXML).find(nationalitySelector).first().text();
 
 			// birthDeath
-			var birthSelector = "";
-			var deathSelector = "";
-			var birthValue = $(workingXML).find(birthSelector).first().text();
-			var deathValue = $(workingXML).find(deathSelector).first().text();
-			if (birthValue !== "" && deathValue !== "") {
-				data.birthDeath = birthValue + "-" + deathValue;	
+			var dateTypeSelector = "entity > person > description > existDates > dateSingle > dateType";
+			
+			var birthNode = $(workingXML).find(dateTypeSelector).filter(function(){ return $(this).text() == 'birth'; });
+			var deathNode = $(workingXML).find(dateTypeSelector).filter(function(){ return $(this).text() == 'death'; });
+			var birthValue = birthNode.siblings("standardDate").text();
+			var deathValue = deathNode.siblings("standardDate").text()
+			// if (birthValue !== "" && deathValue !== "") {
+			// 	data.birthDeath = birthValue + "-" + deathValue;	
+			// }
+			data.birthDeath = "";
+
+			if (birthValue !== "") {
+				data.birthDeath += birthValue;
+			}
+			data.birthDeath += " - ";
+			if (deathValue !== "") {
+				data.birthDeath += deathValue;
+			}
+
+			if (data.birthDeath === " - ") {
+				data.birthDeath = "";
 			}
 			
 			// gender
@@ -1900,6 +1962,142 @@ $(function(){
 			return search.completeHtmlifyPerson(data);
 
 		};
+
+		search.htmlifyCWRCOrganization = function() {
+			
+			var data = search.selectedData;
+			var workingXML = $.parseXML(data.data);
+			// url
+			data.url = "http://cwrc-dev-01.srv.ualberta.ca/islandora/object/" + data.id;
+			return search.completeHtmlifyOrganization(data);
+			
+		}
+
+		search.getAnchor = function(url) {
+			var anchor = $("<a></a>");
+			anchor.attr("target", "_blank");
+			anchor.attr("href", url);
+			anchor.append("URL:" + url);
+
+			return anchor;
+		}
+
+		search.completeHtmlifyOrganization = function(data) {
+			var head = $("<div></div>");
+			var list = $("<ul></ul>");
+			
+			// for (var i =0 ; i< data.variantNames.length; ++i) {
+			var listItem = $("<li></li>");
+			
+			listItem.append(search.getAnchor(data.url));
+			list.append(listItem);
+			// }
+					
+			head.append(list);
+			
+			return xmlToString(head[0]);
+		}
+
+		search.htmlifyCWRCTitle = function() {
+			
+			var data = search.selectedData;
+			var workingXML = $.parseXML(data.data);
+			// author, 
+			data.authors = [];//"Author";
+			var authorSelector = "mods > name"; // 
+
+			var authors = $(workingXML).find(authorSelector).filter(function(){ return $(this).attr("type") === 'personal'; });
+			$(authors).children("namePart").each(function(i, namePart){
+				data.authors.push($(namePart).text());
+			});
+		
+			//date, 
+
+			var dateSelector = "mods > originInfo > dateIssued";
+			data.date = $(workingXML).find(dateSelector).first().text();
+			//URL
+			data.url = "http://cwrc-dev-01.srv.ualberta.ca/islandora/object/" + data.id;
+
+			return search.completeHtmlifyTitle(data);
+		}
+
+		search.completeHtmlifyTitle = function(data) {
+			var head = $("<div></div>");
+			var list = $("<ul></ul>");
+			//author
+			var listItem;
+			for (var i=0 ;i<data.authors.length; ++i) {
+				listItem = $("<li></li>");
+				listItem.append("Author: " + data.authors[i]);
+				list.append(listItem);	
+			}
+			
+			// date
+			listItem = $("<li></li>");
+			listItem.append("Date: " + data.date);
+			list.append(listItem);
+			// url
+			listItem = $("<li></li>");
+			listItem.append(search.getAnchor(data.url));
+			list.append(listItem);
+			
+
+			head.append(list);
+			return xmlToString(head[0]);
+		}
+
+		search.htmlifyCWRCPlace = function() {
+			var data = search.selectedData;
+			var workingXML = $.parseXML(data.data);
+
+			// First administrative division, country (displayed in line, separated by commas - if possible), 
+			var firstSelector = "entity > place > description > firstAdministrativeDivision";
+			var countrySelector = "entity > place > description > countryName";
+
+			var first = $(workingXML).find(firstSelector).first().text();
+			var country = $(workingXML).find(countrySelector).first().text();
+
+
+			data.first = first + ", " + country;
+
+			var latSelector = "entity > place > description > latitude";
+
+			data.lat = $(workingXML).find(latSelector).first().text();
+			var longSelector = "entity > place > description > longitude";
+			data.long = $(workingXML).find(longSelector).first().text();
+
+
+			data.url = "http://cwrc-dev-01.srv.ualberta.ca/islandora/object/" + data.id;
+
+			return search.completeHtmlifyPlace(data);
+		}
+
+		search.completeHtmlifyPlace = function(data) {
+			var head = $("<div></div>");
+			var list = $("<ul></ul>");
+			var listItem;
+
+			// first
+			listItem = $("<li></li>");
+			listItem.append(data.first);
+			list.append(listItem);
+			// lat
+			listItem = $("<li></li>");
+			listItem.append("Latitude: " + data.lat);
+			list.append(listItem);
+			// long
+			listItem = $("<li></li>");
+			listItem.append("Longitude: " + data.long);
+			list.append(listItem);
+			// url
+			listItem = $("<li></li>");
+			listItem.append(search.getAnchor(data.url));
+			list.append(listItem);
+			
+
+			head.append(list);
+			return xmlToString(head[0]);
+		}
 
 		search.htmlifyVIAFPerson = function(){			
 			var data = search.selectedData;
@@ -1915,11 +2113,11 @@ $(function(){
 			if (data.birthDeath && data.birthDeath !== "") {
 				result += "<li>Birth - Death: "+ data.birthDeath +"</li>";	
 			}
-			if (data.gender && data.gender !== "") {
-				result += "<li>Gender: "+ data.gender +"</li>";	
-			}
+			// if (data.gender && data.gender !== "") {
+			// 	result += "<li>Gender: "+ data.gender +"</li>";	
+			// }
 			if (data.url && data.url !== "") {
-				result += "<li>URL: <a href='" + data.url + "'>" + data.url +"</a></li>";
+				result += "<li>URL: <a target='_blank' href='" + data.url + "'>" + data.url +"</a></li>";
 			}
 			result += "</ul></div>";
 			return result;
@@ -1956,10 +2154,17 @@ $(function(){
 			"cwrc": search.getLinkedDataSource({
 				"name": "CWRC", 
 				"processSearch": search.processCWRCSearch,
+				"datatype": ["person", "place", "organization", "title"]
 			}),
 			"viaf": search.getLinkedDataSource({
 				"name": "VIAF", 
 				"processSearch": search.processVIAFSearch,
+				"datatype": ["person", "organization", "title"]
+			}),
+			"geonames": search.getLinkedDataSource({
+				"name": "GeoName",
+				"processSearch": search.processGeoNameSearch,
+				"datatype": ["place"]
 			})
 		}
 
@@ -1976,7 +2181,7 @@ $(function(){
 			for (var key in search.linkedDataSources) {
 				var lds = search.linkedDataSources[key];
 				result +=
-				'										<div class="panel panel-default">' +
+				'										<div class="panel panel-default" data-bind="visible: $root.linkedDataSources.' + key+ '.showPanel">' +
 				'											<div data-name="'+key+'" class="panel-heading panel-title" data-toggle="collapse" data-parent="#accordion" href="#collapse'+key+'" data-bind="{click:$root.selectLinkedDataSource}">' +
 				'														' + lds.name +
 				'											</div>' +
@@ -2161,6 +2366,51 @@ $(function(){
 			}
 			return that;
 		}
+		
+		search.htmlifyGeoNamePlace = function(name, countryName, latitude, longitude, id){
+			var head = $("<div></div>");
+			var list = $("<ul></ul>");
+			
+			
+			var listItem = $("<li></li>");
+			listItem.append("Country: " + countryName);
+			list.append(listItem);
+			
+			listItem = $("<li></li>");
+			listItem.append("Latitude: " + latitude);
+			list.append(listItem);
+			
+			listItem = $("<li></li>");
+			listItem.append("Longitude: " + longitude);
+			list.append(listItem);
+			
+			var url = "http://www.geonames.org/" + id;
+			listItem = $("<li></li>");
+			listItem.append("<a href='" + url + "'>" + url + "</a>");
+			list.append(listItem);
+			
+			head.append(list);
+			
+			return xmlToString(head[0]);
+		}
+		
+		search.getResultFromGeoName = function(specs, index) {
+			// specs has data and source
+			var that = search.result();
+			that.id = index;
+			that.name = $(specs).find("name").text() + ", " + $(specs).find("countryName").text();
+
+			
+			that.htmlify = function(){
+				return search.htmlifyGeoNamePlace($(specs).find("name").text(),
+				 $(specs).find("countryName").text(),
+				 $(specs).find("lat").text(),
+				 $(specs).find("lng").text(),
+				 $(specs).find("geonameid").text())
+				 };
+			
+			return that;
+		}
 
 		search.getResultFromCWRC = function(specs) {
 			// specs has data and source
@@ -2181,6 +2431,10 @@ $(function(){
 				case "title":
 				// that.scrape = search.scrapeCWRCTitle;
 				that.htmlify = search.htmlifyCWRCTitle;
+				break;
+				case "place":
+				// that.scrape = search.scrapeCWRCTitle;
+				that.htmlify = search.htmlifyCWRCPlace;
 				break;
 			}
 			
@@ -2393,6 +2647,13 @@ $(function(){
 						search.buttons.push(button);	
 					}
 				}
+			}
+			
+			// define panels to be shown
+			var dataId = "";
+			for(dataId in search.linkedDataSources){
+				var dataSource = search.linkedDataSources[dataId];
+				dataSource.showPanel(dataSource.datatype.indexOf(dialogType) > -1);
 			}
 		
 			// alert(search.buttons[0].label)

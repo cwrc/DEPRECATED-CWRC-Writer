@@ -158,7 +158,14 @@ $(function(){
 			error : function(errorThrown) {
 				$("#entityXMLContainer").text("");
 				$("#resultHeader").text("Entity ");
-			}
+			},
+			buttons : [				
+				{
+					label : "Edit",
+					action : cD.popEditOrganization
+				},
+					
+			]
 		}
 
 		cD.popSearchOrganization(opts);
@@ -176,7 +183,14 @@ $(function(){
 			error : function(errorThrown) {
 				$("#entityXMLContainer").text("");
 				$("#resultHeader").text("Entity ");
-			}
+			},
+			buttons : [				
+				{
+					label : "Edit",
+					action : cD.popEditPlace
+				},
+					
+			]
 		}
 
 		cD.popSearchPlace(opts);
