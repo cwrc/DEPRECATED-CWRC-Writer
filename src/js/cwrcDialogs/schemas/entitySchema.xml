@@ -1,0 +1,2340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- MRB: Mon 09-Sep-2013: Revised <relation> element section so that relation references to person and organization follow
+     the approach adopted in the placeRef/place approach, i.e., now have personRef/person and organizationRef/organization.
+-->
+
+<!-- MRB: July 2013: The entity schema now includes the person, organization, and place entity types; i.e., a place entity
+     code section was developed.  The title entity is defined by the MODS schema mods.xsd.  The events entity schema will
+     eventually be developed in RDF by JS.
+-->
+
+<!-- 
+    CANADIAN WRITING RESEARCH COLLABORATORY - ENTITY SCHEMA
+    Based on elements of EAC - CPF, MADS, and FOAF
+    
+    Schema Type: Relax NG Schema XML
+    
+    Version: 2013-04
+    
+    Summary: The present CWRC Entity Schema outlines a format for the description of persons, corporate bodies, places, titles (frbr:work), and event entities. It is based on concepts from ISAAR(CPF), EAC-CFP standards, MADS, and FOAF and designed for implementation within the Fedora Commons framework.
+    Most administrative metadata (equivalent to EAC-CPF\'s <control> element) should be captured in Fedora Object datastreams such as object properties, AUDIT, RELS-EXT (object-level relations), or worlkflow. Content-level relations are captured in the entity record itself.
+    
+    **********
+    Release Notes: V04.
+    
+    Revised 2013-10-02: added comment on interface annotations (possible future improvement), changed documentation's release number and version approximate date [MPO]
+    
+    ********** 
+    
+    **********
+    For comments, questions, and suggestions please contact Susan Brown, CWRC project leader (sbrown@uoguelph.ca) or Mariana Paredes-Olea, CWRC Metadata Coordinator (paredeso@ualberta.ca)
+    **********    
+-->
+
+<!-- PENDING WORK:
+    decide whether to have:
+        localType elements
+        noteTypes
+        mandate?
+        useDates?
+        source - granularize
+        noteTypes
+        languageUsed
+        contact
+        relation types: family, parent, friend, child, sibling, marriage, affiliation, associative (see cpfRelation and
+        @cpfRelationType), 
+        position?
+        
+    document interoperability with FOAF and EAC-CPF
+    
+    alphabetize definitions and values
+    
+    translate interface labels
+    
+    partType
+    variantType
+    dateType
+    -> defined in appinfo
+    
+    personType values
+    ->  in define node
+-->
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+    xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <start>
+        <choice>
+            <ref name="cwrc-element"/>
+            <ref name="entity-element"/>
+        </choice>
+    </start>
+
+
+
+    <define name="cwrc-element">
+        <element name="cwrc">
+            <a:documentation>Group of CWRC records</a:documentation>
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <oneOrMore>
+                <ref name="entity-element"/>
+            </oneOrMore>
+        </element>
+    </define>
+
+
+
+    <define name="entity-element">
+        <element name="entity">
+            <a:documentation>CWRC entity record</a:documentation>
+            <choice>
+                <ref name="person-element"/>
+                <ref name="organization-element"/>
+                <ref name="place-element"/>
+                <!--<ref name="title-element"/> MRB: July 2013: title-element schema will now be governed by the MODS schema-->
+                <!-- <ref name="event"/> MRB: July 2013: event schema will be developed in RDF by JS-->
+            </choice>
+        </element>
+    </define>
+
+
+    <define name="person-element">
+        <element name="person">
+            <a:documentation>CWRC entity person record</a:documentation>
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <interleave>
+                <optional>
+                    <ref name="personRecordInfo-element"/>
+                </optional>
+                <ref name="identity-element"/>
+                <optional>
+                    <ref name="personDescription-element"/>
+                </optional>
+            </interleave>
+            <optional>
+                <ref name="relations-element"/>
+            </optional>
+        </element>
+    </define>
+
+
+    <define name="organization-element">
+        <element name="organization">
+            <a:documentation>CWRC entity organization record</a:documentation>
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <interleave>
+                <optional>
+                    <ref name="orgRecordInfo-element"/>
+                </optional>
+                <ref name="identity-element"/>
+                <optional>
+                    <ref name="orgDescription-element"/>
+                </optional>
+            </interleave>
+            <optional>
+                <ref name="relations-element"/>
+            </optional>
+        </element>
+    </define>
+
+
+    <define name="place-element">
+        <element name="place">
+            <a:documentation>Place name of a location associated with the described entity.</a:documentation>
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <interleave>
+                <optional>
+                    <ref name="placeRecordInfo-element"/>
+                </optional>
+                <ref name="identity-element"/>
+                <optional>
+                    <ref name="placeDescription-element"/>
+                </optional>
+            </interleave>
+            <optional>
+                <ref name="relations-element"/>
+            </optional>
+        </element>
+    </define>
+
+    <!--<define name="title-element">
+        <element name="title">
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <interleave>
+                <optional>
+                    <ref name="recordInfo-element"/>
+                </optional>
+                <ref name="titleIdentity-element"/>
+                <optional>
+                    <ref name="orgDescription-element"/>
+                </optional>
+            </interleave>
+            <optional>
+                <ref name="relations-element"/>
+            </optional>
+        </element>
+    </define>-->
+
+
+    <define name="personRecordInfo-element">
+        <element name="recordInfo">
+            <a:documentation>Captures record-level information. Components of this element are kept
+                to a minimum given that administrative and object-level metadata is captured in
+                other FOXML datastreams.</a:documentation>
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <interleave>
+                <optional>
+                    <ref name="personTypes-element"/>
+                </optional>
+                <optional>
+                    <ref name="originInfo-element"/>
+                </optional>
+                <optional>
+                    <ref name="entityId-element"/>
+                    <!-- mpo: change to mandatory? -->
+                </optional>
+                <optional>
+                    <ref name="access-element"/>
+                </optional>                
+            </interleave>
+        </element>
+    </define>
+
+
+    <define name="orgRecordInfo-element">
+        <element name="recordInfo">
+            <a:documentation>Captures record-level information. Components of this element are kept
+                to a minimum given that administrative and object-level metadata is captured in
+                other FOXML datastreams.</a:documentation>
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <interleave>
+                <optional>
+                    <ref name="originInfo-element"/>
+                </optional>
+                <optional>
+                    <ref name="entityId-element"/>
+                    <!-- mpo: change to mandatory? -->
+                </optional>
+                <optional>
+                    <ref name="access-element"/>
+                </optional>
+            </interleave>
+        </element>
+    </define>
+
+    <define name="placeRecordInfo-element">
+        <element name="recordInfo">
+            <a:documentation>Captures record-level information. Components of this element are kept
+                to a minimum given that administrative and object-level metadata is captured in
+                other FOXML datastreams.</a:documentation>
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <interleave>
+                <optional>
+                    <ref name="originInfo-element"/>
+                </optional>
+                <optional>
+                    <ref name="entityId-element"/>
+                    <!-- mpo: change to mandatory? -->
+                </optional>
+                <optional>
+                    <ref name="access-element"/>
+                </optional>
+            </interleave>
+        </element>
+    </define>
+
+    <define name="recordInfo-element">
+        <element name="recordInfo">
+            <a:documentation>Captures record-level information. Components of this element are kept
+                to a minimum given that administrative and object-level metadata is captured in
+                other FOXML datastreams.</a:documentation>
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <interleave>
+                <optional>
+                    <ref name="originInfo-element"/>
+                </optional>
+                <optional>
+                    <ref name="entityId-element"/>
+                </optional>
+                <ref name="access-element"/>
+            </interleave>
+        </element>
+    </define>
+
+    <define name="identity-element">
+        <element name="identity">
+            <a:documentation>A container element grouping data for identification of a CWRC entity
+                instance</a:documentation>
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <interleave>
+                <ref name="preferredForm-element"/>
+                <!-- mpo: old "authorityLabel" -->
+                <optional>
+                    <ref name="displayLabel-element"/>
+                </optional>
+                <optional>
+                    <ref name="variantForms-element"/>
+                </optional>
+                <zeroOrMore>
+                    <ref name="sameAs-element"/>
+                </zeroOrMore>
+            </interleave>
+        </element>
+    </define>
+
+
+    <define name="titleIdentity-element">
+        <element name="identity">
+            <a:documentation>A container element grouping data for identification of a CWRC entity
+                instance</a:documentation>
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <interleave>
+                <ref name="preferredForm-element"/>
+                <!-- mpo: old "authorityLabel" -->
+                <ref name="level-element"/>
+                <!--<optional>
+                    <ref name="formats-element"/>            
+                    </optional>
+                    <optional>
+                    <ref name="genres-element"/>            
+                    </optional>
+                    <optional>
+                    <ref name="languages-element"/>            
+                    </optional>-->
+                <optional>
+                    <ref name="displayLabel-element"/>
+                </optional>
+                <optional>
+                    <ref name="variantForms-element"/>
+                </optional>
+                <zeroOrMore>
+                    <ref name="sameAs-element"/>
+                </zeroOrMore>
+            </interleave>
+        </element>
+    </define>
+
+
+    <define name="personDescription-element">
+        <element name="description">
+            <a:documentation>This section captures descriptive data about a CWRC entity record</a:documentation>
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <interleave>
+                <optional>
+                    <ref name="descriptiveNotes-element"/>
+                </optional>
+                <optional>
+                    <ref name="existDates-element"/>
+                </optional>
+                <optional>
+                    <ref name="genders-element"/>
+                </optional>
+                <optional>
+                    <ref name="occupations-element"/>
+                </optional>
+                <optional>
+                    <ref name="activities-element"/>
+                </optional>
+                <optional>
+                    <ref name="researchInterests-element"/>
+                </optional>
+                <!--<optional>
+                    <ref name="contact-element"/>
+                </optional>-->
+                <optional>
+                    <ref name="relatedResources-element"/>
+                </optional>
+            </interleave>
+        </element>
+    </define>
+
+
+    <define name="orgDescription-element">
+        <element name="description">
+            <a:documentation>This section captures descriptive data about a CWRC entity record</a:documentation>
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <interleave>
+                <optional>
+                    <ref name="orgTypes-element"/>
+                </optional>
+                <optional>
+                    <ref name="existDates-element"/>
+                </optional>
+                <optional>
+                    <ref name="activities-element"/>
+                </optional>
+                <optional>
+                    <ref name="researchInterests-element"/>
+                </optional>
+                <!--<optional>
+                    <ref name="contact-element"/>
+                    </optional>-->
+                <optional>
+                    <ref name="descriptiveNotes-element"/>
+                </optional>
+                <optional>
+                    <ref name="relatedResources-element"/>
+                </optional>
+            </interleave>
+        </element>
+    </define>
+    
+    <!-- MRB: July 2013: added various child elements of the <placeDescription> element -->
+    <define name="placeDescription-element">
+        <element name="description">
+            <a:documentation>This section captures descriptive data about a CWRC place entity record</a:documentation>
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <interleave>
+                <optional>
+                    <ref name="descriptiveNotes-element"/>
+                </optional>
+                <optional>
+                    <ref name="existDates-element"/>
+                </optional>
+                <optional>
+                    <ref name="relatedResources-element"/>
+                </optional>
+                <optional>
+                    <ref name="latitude-element"/>
+                </optional>
+                <optional>
+                    <ref name="longitude-element"/>
+                </optional>
+                <optional>
+                    <ref name="featureType-element"/>
+                </optional>
+                <optional>
+                    <ref name="altitude-element"/>
+                </optional>
+                <optional>
+                    <ref name="administrativeDivision-element"/>
+                </optional>
+                <optional>
+                    <ref name="country-element"/>
+                </optional>
+            </interleave>
+        </element>
+    </define>
+
+
+    <define name="occupations-element">
+        <element name="occupations">
+            <a:documentation>A group of occupation terms associated with a CWRC entity record. For more information see occupation element.</a:documentation>
+            <zeroOrMore>
+                <ref name="occupation-element"/>
+            </zeroOrMore>
+        </element>
+    </define>
+
+    <define name="activities-element">
+        <element name="activities">
+            <a:documentation>A group of activity terms associated with a CWRC entity record. For more information see activity element.</a:documentation>
+            <zeroOrMore>
+                <ref name="activity-element"/>
+            </zeroOrMore>
+        </element>
+    </define>
+
+    <define name="researchInterests-element">
+        <element name="researchInterests">
+            <a:documentation>A group of research interest terms associated with a CWRC entity record. For more information see researchInterest element.</a:documentation>
+            <zeroOrMore>
+                <ref name="interest-element"/>
+            </zeroOrMore>
+        </element>
+    </define>
+
+    <define name="genders-element">
+        <element name="genders">
+            <a:documentation>A group of gender terms associated with a CWRC entity record. For more information see gender element.</a:documentation>
+            <zeroOrMore>
+                <ref name="gender-element"/>
+            </zeroOrMore>
+        </element>
+    </define>
+   
+
+    <define name="occupation-element">
+        <element name="occupation">
+            <a:documentation>Occupation captures relevant paid occupations held by the person described in an entity record.</a:documentation>
+            <interleave>
+                <optional>
+                    <ref name="term-element"/>
+                </optional>
+                <!--from EAC CPF
+                    <zeroOrMore>
+                    <ref name="e.placeEntry"/>
+                    </zeroOrMore>-->
+                <zeroOrMore>
+                    <ref name="dateSingle-element"/>
+                </zeroOrMore>
+                <zeroOrMore>
+                    <ref name="dateRange-element"/>
+                </zeroOrMore>
+                <!--from EAC CPF
+                    <optional>
+                    <ref name="e.citation"/>
+                    </optional>-->
+                <optional>
+                    <ref name="note-element"/>
+                </optional>
+            </interleave>
+        </element>
+    </define>
+
+    <define name="relatedResources-element">
+        <element name="relatedResources">
+            <optional>
+                <ref name="source-element"/>
+            </optional>
+        </element>
+    </define>
+
+    <define name="activity-element">
+        <element name="activity">
+            <a:documentation>Activity captures all unpaid work or function such as volunteer work or other significant activity that a person was engaged in. Examples: parenting, unpaid  domestic labour, nursing, as well as philantropic, missionary, or other political activities.</a:documentation>
+            <optional>
+                <ref name="term-element"/>
+            </optional>
+        </element>
+    </define>
+
+    <define name="interest-element">
+        <element name="interest">
+            <a:documentation>This field can capture a topic of interest associated with an entity (person or organization).</a:documentation>
+            <optional>
+                <ref name="term-element"/>
+            </optional>
+        </element>
+    </define>
+
+    <define name="gender-element">
+        <element name="gender" a:defaultValue="undefined">           
+            <a:documentation>Gender captures a group of gender terms associated with a person entity.</a:documentation>
+            
+            <xs:annotation>
+                <xs:appinfo>
+
+                    <interface-field path="entity/person/description/genders/gender">
+                        <help-text xml:lang="en">An optional field to capture gender terms the
+                            present person is associated with.</help-text>
+                        <label xml:lang="en">Gender</label>
+                        <input>combobox</input>
+                    </interface-field>
+
+                    <values>
+                        <choice>
+                            <value a:en="undefined" default="yes">undefined</value>
+                            <value a:en="female">female</value>
+                            <value a:en="male">male</value>
+                            <value a:en="transgendered">transgendered</value>
+                            <data a:en="other" type="string"/>
+                        </choice>
+                    </values>
+
+                </xs:appinfo>
+            </xs:annotation>
+
+            
+            <optional>
+                <choice>
+                    <value>female</value>
+                    <value>male</value>
+                    <value>undefined</value>
+                    <value>transgendered</value>
+                    <data a:en="Specify" type="string"/>
+                </choice>
+            </optional>
+            
+            <optional>
+                <ref name="cert-attribute"/>
+            </optional>
+            
+        </element>
+    </define>
+
+
+    <define name="term-element">
+        <element name="term">
+            <a:documentation>Term works as a generic field to capture terms associated with an entity in terms of occupation, activity, research interests, and gender.</a:documentation>
+
+            <xs:annotation>
+                <xs:appinfo>
+
+
+                    <interface-field path="entity/person/description/occupations/occupation/term">
+                        <help-text xml:lang="en">This field can capture relevant paid occupations held by
+                            the person described in the present record.</help-text>
+                        <label xml:lang="en">Occupation</label>
+                        <input>textField</input>
+                    </interface-field>
+
+                    <interface-field
+                        path="entity/person|organization/description/activities/activity/term">
+                        <help-text xml:lang="en">The activity field captures all unpaid work or
+                            function such as volunteer work or other significant
+                            activity that a person was engaged in. Example: parenting, unpaid
+                            domestic labour, nursing, as well as philantropic, missionary, or other
+                            political activities.</help-text>
+                        <label xml:lang="en">Activity</label>
+                        <input>textField</input>
+                    </interface-field>
+
+                    <interface-field
+                        path="entity/person|organization/description/researchInterests/interest/term">
+                        <help-text xml:lang="en">This field can capture a topic of interest to the
+                            present entity. </help-text>
+                        <label xml:lang="en">Research Interest</label>
+                        <input>textField</input>
+                    </interface-field>
+
+                    <!--<interface-field path="entity/person|organization/description/contactInformation/contact/term">
+                        <help-text xml:lang="en">This field can capture relevant occupations held by the entity being described.</help-text>
+                        <label xml:lang="en">Occupation</label>
+                        <input>textField</input>
+                        </interface-field>-->
+
+                </xs:appinfo>
+            </xs:annotation>
+            
+            <text/>
+            
+            <optional>
+                <ref name="cert-attribute"/>
+            </optional>
+        </element>
+    </define>
+
+
+
+    <define name="relations-element">
+        <element name="relations">
+            <a:documentation>A group of relations between a given entity and other entities. Equivalent to EAC-CPF\'s relation element, used as a wrapper for grouping one or more specific relations.</a:documentation>
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <optional>
+                <ref name="lang-attribute"/>
+            </optional>
+            <zeroOrMore>
+                <ref name="relation-element"/>
+            </zeroOrMore>
+            <!--<zeroOrMore>
+                <ref name="e.resourceRelation"/>
+            </zeroOrMore>
+            <zeroOrMore>
+                <ref name="e.functionRelation"/>
+            </zeroOrMore>-->
+        </element>
+    </define>
+
+
+    <define name="relation-element">
+        <element name="relation">
+            <a:documentation>Captures a relation between a given entity and other entities. For example, an organization, person, work, or place related to the described entity. Equivalent to EAC-CPF\'s cpfRelation (if the relation is to organizations and persons) or to resourceRelation (if the relation involves a work or title).</a:documentation>
+            <optional>
+                <ref name="type-attribute"/>
+            </optional>
+            <zeroOrMore>
+                <choice>
+                    <ref name="personRef-element"/> <!-- mpo: revise to only include identity -->
+                    <ref name="organizationRef-element"/> <!-- mpo: revise to only include identity -->
+                    <ref name="placeRef-element"/>
+                </choice>
+                <!--<ref name="personRef-element"/>
+                    <ref name="organizationRef-element"/>
+                    <ref name="titleRef-element"/>
+                    <ref name="eventRef-element"/>-->
+            </zeroOrMore>
+        </element>
+    </define>
+
+    <define name="personRef-element">
+        <element name="personRef">
+            <a:documentation>A person entity associated with the described entity. Used in relations section.</a:documentation>
+            <optional>
+                <ref name="URI-element"/>
+            </optional>
+        </element>
+    </define>
+
+    <define name="organizationRef-element">
+        <element name="organizationRef">
+            <a:documentation>An organization entity associated with the described entity. Used in relations section.</a:documentation>
+            <optional>
+                <ref name="URI-element"/>
+            </optional>
+        </element>
+    </define>
+
+
+    <define name="placeRef-element">
+        <element name="placeRef">
+            <a:documentation>A place entity associated with the described entity. Used in relations section.</a:documentation>
+            <optional>
+                <ref name="URI-element"/>
+            </optional>
+        </element>
+    </define>
+
+    
+    <!-- MRB: July 2013: added definitions for various child elements of the <placeDescription> element -->
+
+    <define name="latitude-element">
+        <element name="placeLat">
+            <a:documentation>Latitude of the place associated with the described place entity.</a:documentation>
+            <data type="string"/>
+        </element>
+    </define>
+
+    <define name="longitude-element">
+        <a:documentation>Longitude of the place associated with the described place entity.</a:documentation>
+        <element name="placeLong">
+            <data type="string"/>
+        </element>
+    </define>
+
+    <define name="featureType-element">
+        <a:documentation>Feature type of the place associated with the described place entity (e.g., populated place).</a:documentation>
+        <element name="placeFeatureType">
+            <data type="string"/>
+        </element>
+    </define>
+
+    <define name="altitude-element">
+        <a:documentation>Altitude in meters of the place associated with the described place entity.</a:documentation>
+        <element name="placeAltitude">
+            <data type="string"/>
+        </element>
+    </define>
+
+    <define name="administrativeDivision-element">
+        <a:documentation>The ISO 3166-2 country subdivision name, or first-order administrative division name (e.g., provinces or states) that contains the place associated with the described place entity.</a:documentation>
+        <element name="placeAdministrativeDivision">
+            <data type="string"/>
+        </element>
+    </define>
+    
+    <define name="country-element">
+        <a:documentation>The ISO 3166-1 country name that contains the place associated with the described place entity.</a:documentation>
+        <element name="placeCountry">
+            <data type="string"/>
+        </element>
+    </define>
+
+    <define name="URI-element">
+        <a:documentation>URI of a linked resource that describes a geographical location associated with the described place entity.</a:documentation>
+        <element name="placeURI">
+            <data type="anyURI"/>
+        </element>
+    </define>
+
+    <!--<define name="personRef-element">
+        <element>
+            <element></element>
+        </element>
+    </define>
+    
+    <define name="organizationRef-element"></define>
+    
+    <define name="titleRef-element"></define>
+    
+    <define name="eventRef-element"></define>-->
+
+
+    <define name="type-attribute">
+        <attribute name="type">
+            <a:documentation>Generic type attribute available to classify types of relations.</a:documentation>
+            
+            <data type="string"/>
+        </attribute>
+    </define>
+
+
+    <define name="originInfo-element">
+        <element name="originInfo">
+            <a:documentation>Record origin information. Equivalent to MADS recordInfo element, similar to EAC-CPF\'s control element.</a:documentation>
+
+            <xs:annotation>
+                <xs:appinfo>
+
+                    <interface-field path="entity/person|organization/recordInfo/originInfo">
+                        <label xml:lang="en">Record Origin</label>
+                    </interface-field>
+
+                </xs:appinfo>
+            </xs:annotation>
+
+            <zeroOrMore>
+                <ref name="projectId-element"/>
+            </zeroOrMore>
+            <zeroOrMore>
+                <ref name="recordIdentifier-element"/>
+            </zeroOrMore>
+            <zeroOrMore>
+                <ref name="recordCreationDate-element"/>
+            </zeroOrMore>
+            <zeroOrMore>
+                <ref name="recordChangeDate-element"/>
+            </zeroOrMore>
+        </element>
+    </define>
+
+
+    <define name="projectId-element">
+        <element name="projectId">
+            <a:documentation>Similar to EAC-CPF\'s agencyCode. In CWRC\'s context, projectId
+                captures an identifieer for the originating project or collection. Subsequent modifications of the record
+                should be captured in FOXML\'s datastreams</a:documentation>
+            <xs:annotation>
+                <xs:appinfo>
+
+                    <interface-field
+                        path="entity/person|organization/recordInfo/originInfo/projectId">
+                        <label xml:lang="en">Collection</label>
+                        <help-text xml:lang="en">Select one or more collections to associate
+                            the present entity record with a project.</help-text>
+                        <input>textField</input>
+                        <!-- mpo: ideally dynamic
+                            dropDown (combobox) populated with cwrc project
+                            identifiers and option to enter text -->
+                        <!-- mpo: to be changed to drop-down once we get project ids from Fedora -->
+                    </interface-field>
+
+                    <interface-field
+                        path="entity/person|organization/identity/variantForms/variant/authorizedBy/projectId">
+                        <help-text xml:lang="en">Optional. Specify a project that uses this as the
+                            preferred form of the name.</help-text>
+                        <label xml:lang="en">Preferred name for</label>
+                        <input>textField</input>
+                        <!-- mpo: ideally dynamic
+                            dropDown (combobox) populated with cwrc project
+                            identifiers and option to enter text -->
+                    </interface-field>
+
+                    <interface-field
+                        path="entity/person|organization/description/descriptiveNotes/note/projectId">
+                        <help-text xml:lang="en">Specify a project that is author of the present
+                            note.</help-text>
+                        <label xml:lang="en">Note created by project</label>
+                        <input>textField</input>
+                        <!-- mpo: ideally dynamic
+                            dropDown (combobox) populated with cwrc project
+                            identifiers and option to enter text -->
+                    </interface-field>
+
+                    <!--<interface-field
+                        path="entity/person|organization/description/existDates/dateSingle/note/projectId">
+                        <help-text xml:lang="en">Specify a project that is author of the present
+                            note.</help-text>
+                        <label xml:lang="en">Note created by project</label>
+                        <input>textField</input>
+                        <!-\- mpo: ideally dynamic
+                            dropDown (combobox) populated with cwrc project
+                            identifiers and option to enter text -\->
+                    </interface-field>-->
+
+                    <!-- mpo: interface: project ids for notes in existdates or other elements with
+                        notes are not here -->
+
+                </xs:appinfo>
+            </xs:annotation>
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <data type="string"/>
+        </element>
+    </define>
+
+
+    <define name="recordIdentifier-element">
+        <element name="recordIdentifier">
+            <a:documentation>Provenance field used to capture original record identifiers. CWRC record identifiers are captured in entityId and in FOXML.</a:documentation>
+            <optional>
+                <ref name="source-attribute"/>
+            </optional>
+            <data type="string"/>
+        </element>
+        <!-- mads -->
+    </define>
+
+
+    <define name="recordCreationDate-element">
+        <element name="recordCreationDate">
+            <a:documentation>Provenance field used to capture the original creation date of an entity instance deposited in CWRC. Dates of creation for new entities created in CWRC are captured in FOXML. Equivalent to MADS recordCreationDate and EAC-CPF's maintenanceHistory/maintenance/Event/eventType[text()="created"]/eventDateTime .</a:documentation>
+            <zeroOrMore>
+                <ref name="dateSingle-element"/>
+            </zeroOrMore>
+        </element>
+    </define>
+
+    <define name="recordChangeDate-element">
+        <element name="recordChangeDate">
+            <a:documentation>Provenance field used to capture the original modification dates of an entity instance deposited in CWRC. Subsequent dates of modification in CWRC are captured in FOXML. Equivalent to MADS recordChangeDate and EAC-CPF's maintenanceHistory/maintenance/Event/eventType/eventDateTime .</a:documentation>
+            <zeroOrMore>
+                <ref name="dateSingle-element"/>
+            </zeroOrMore>
+            <optional>
+                <ref name="source-attribute"/>
+            </optional>
+        </element>
+    </define>
+
+
+    <define name="source-element">
+        <element name="resource">
+            <a:documentation>A source of evidence used in describing the entity or entities instances. Equivalent to EAC-CFPF\'s source element.</a:documentation>
+            <data type="string"/>
+        </element>
+    </define>
+
+    <define name="source-attribute">
+        <attribute name="source">
+            <a:documentation>Provenance field used to capture the source responsible for the publication or modification of an entity record.</a:documentation>
+            <data type="string"/>
+        </attribute>
+    </define>
+
+
+    <define name="entityId-element">
+        <element name="entityId">
+            <a:documentation>Optional CWRC record identifier. This information is captured in FOXML. Equivalent to EAC-CPF\'s recordId.</a:documentation>
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <optional>
+                <data type="NMTOKEN"/>
+            </optional>
+        </element>
+    </define>
+
+
+
+    <define name="preferredForm-element">
+        <element name="preferredForm">
+            <a:documentation>An element used to indicate which recorded entity name is the preferred
+                one for display purposes in a given context.</a:documentation>
+            <xs:annotation>
+                <xs:appinfo>
+
+                    <interface-field path="entity/person|organization/identity/preferredForm">
+                        <label xml:lang="en">Standard Name</label>
+                        <help-text xml:lang="en">Use this section to flag a name as a preferred form
+                            to identify a person or organization.</help-text>
+                    </interface-field>
+
+                </xs:appinfo>
+            </xs:annotation>
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <oneOrMore>
+                <ref name="namePart-element"/>
+            </oneOrMore>
+            <optional>
+                <ref name="displayLabel-element"/>
+            </optional>
+        </element>
+    </define>
+
+
+
+    <define name="displayLabel-element">
+        <element name="displayLabel">
+            <a:documentation>Display label of entity described if different than CWRC's preferredForm.</a:documentation>
+            <text/>
+        </element>
+    </define>
+
+
+
+    <define name="namePart-element">
+        <element name="namePart">
+            <a:documentation>Used to distinguish components of the name of the entity. Equivalent to MADS\'s namePart and to EAC-CPF\'s part element.</a:documentation>
+            <xs:annotation>
+                <xs:appinfo>
+
+                    <interface-field
+                        path="entity/person|organization/identity/preferredForm/namePart">
+                        <label xml:lang="en">Name Part</label>
+                        <help-text xml:lang="en">Required. Provide the person's or organization's
+                            standard name, by part, in natural order. Add more name parts if
+                            necessary. Person name example: Joyce (forename), Carol (middlename),
+                            Oates (surname). Organization name example: Conseil des Arts du
+                            Canada.</help-text>
+                        <input>textField</input>
+                    </interface-field>
+
+                    <interface-field
+                        path="entity/person|organization/identity/variantForms/variant/namePart">
+                        <label xml:lang="en">Name Part</label>
+                        <help-text xml:lang="en">Optional. Record one or more alternative names
+                            here, in natural order. Add more name parts if necessary. Sample person
+                            variant name: Mary Shelley's birth name should be entered as Mary
+                            (forename), Wollstonecraft (middlename), Godwin (surname). Sample
+                            organization name: Canada Council for the Arts.</help-text>
+                        <input>textField</input>
+                    </interface-field>
+
+                </xs:appinfo>
+            </xs:annotation>
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <optional>
+                <ref name="partType-attribute"/>
+            </optional>
+            <text/>
+        </element>
+    </define>
+
+    <!--<define name="titlePart-element">
+        <element name="titlePart">
+            <xs:annotation>
+                <xs:appinfo>
+                    
+                    <interface-field
+                        path="entity/title/identity/preferredForm/titlePart">
+                        <label xml:lang="en">Title Part</label>
+                        <help-text xml:lang="en">Use this field to capture a
+                            complete title or title part</help-text>
+                        <input>textField</input>
+                    </interface-field>
+                    
+                    <interface-field
+                        path="entity/title/identity/variantForms/variant/titlePart">
+                        <label xml:lang="en">Title Part</label>
+                        <help-text xml:lang="en">Use this field to capture a
+                            complete title or title part</help-text>
+                        <input>textField</input>
+                    </interface-field>
+                    
+                </xs:appinfo>
+            </xs:annotation>
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <optional>
+                <ref name="partType-attribute"/>
+            </optional>
+            <text/>
+        </element>
+    </define>-->
+
+
+
+    <define name="partType-attribute">
+        <attribute name="partType" a:defaultValue="unspecified">
+            <a:documentation>Captures types of name components of an entity. Example: forename.</a:documentation>
+            
+            <a:documentation/>
+            <xs:annotation>
+                <xs:appinfo>
+
+                    <interface-field
+                        path="entity/person|organization/identity/preferredForm/namePart/@partType">
+                        <help-text xml:lang="en">Optional. Select a type of name part from the
+                            list.</help-text>
+                        <label xml:lang="en">Name Part Type</label>
+                        <input>dropDown</input>
+                    </interface-field>
+
+                    <interface-field
+                        path="entity/person|organization/identity/variantForms/variant/namePart/@partType">
+                        <help-text xml:lang="en">Optional. Select a type of name part from the
+                            list.</help-text>
+                        <label xml:lang="en">Name Part Type</label>
+                        <input>dropDown</input>
+                    </interface-field>
+
+
+                    <values type="person">
+                        <choice>
+                            <value a:en="undefined">undefined</value>
+                            <value a:en="forename" default="yes">forename</value>
+                            <a:documentation>e. g. Monica</a:documentation>
+                            <value a:en="surname" default="yes">surname</value>
+                            <a:documentation>e. g. Johnson</a:documentation>
+                            <value a:en="date">date</value>
+                            <a:documentation>e. g. fl. 1780</a:documentation>
+                            <value a:en="salutation">salutation</value>
+                            <a:documentation>e. g. Ms.</a:documentation>
+                            <value a:en="qualification">qualification</value>
+                            <a:documentation>e. g. Reverend</a:documentation>
+                            <value a:en="initials">initials</value>
+                            <a:documentation>e. g. J.C.</a:documentation>
+                            <value a:en="suffix">suffix</value>
+                            <a:documentation>e. g. Jr.</a:documentation>
+                        </choice>
+                    </values>
+
+                    <values type="organization">
+                        <choice>
+                            <value a:en="undefined" default="yes">undefined</value>
+                            <value a:en="Geographic">geographic</value>
+                            <a:documentation>e. g. "Canada" in "Conseil des Arts du
+                                Canada"</a:documentation>
+                            <value a:en="date">date</value>
+                            <a:documentation>e. g. fl. 1780</a:documentation>
+                            <value a:en="Associated person">person</value>
+                            <a:documentation>e. g. "Ellington" in "Ellington Fund"</a:documentation>
+                        </choice>
+                    </values>
+
+
+                </xs:appinfo>
+            </xs:annotation>
+            
+            <optional>
+                <choice>
+                    <value a:en="undefined">undefined</value>
+                    
+                    <value a:en="forename - person">forename</value>
+                    <a:documentation>e. g. Monica</a:documentation>
+                    <value a:en="surname - person">surname</value>
+                    <a:documentation>e. g. Johnson</a:documentation>
+                    <value a:en="date - person or organization">date</value>
+                    <a:documentation>e. g. fl. 1780</a:documentation>
+                    <value a:en="salutation - person">salutation</value>
+                    <a:documentation>e. g. Ms.</a:documentation>
+                    <value a:en="qualification - person">qualification</value>
+                    <a:documentation>e. g. Reverend</a:documentation>
+                    <value a:en="initials - person">initials</value>
+                    <a:documentation>e. g. J.C.</a:documentation>
+                    <value a:en="suffix - person">suffix</value>
+                    <a:documentation>e. g. Jr.</a:documentation>
+
+                    <value a:en="Geographic - organization">geographic</value>
+                    <a:documentation>e. g. "Canada" in "Conseil des Arts du
+                        Canada"</a:documentation>                    
+                    <value a:en="Associated person - organization">person</value>
+                    <a:documentation>e. g. "Ellington" in "Ellington Fund"</a:documentation>
+                    
+                    <data type="string"/>
+                </choice>
+            </optional>
+            
+        </attribute>
+    </define>
+
+
+
+    <define name="variantType-element">
+        <element name="variantType" a:defaultValue="undefined">
+            <a:documentation>Captures tname type to describe contexts in which this name was used to refer to the present entity.</a:documentation>
+
+            <xs:annotation>
+                <xs:appinfo>
+
+                    <interface-field
+                        path="entity/person|organization/identity/variantForms/variant/variantType">
+                        <help-text xml:lang="en">If applicable, select a name type to describe
+                            contexts in which this name was used to refer to the present
+                            entity.</help-text>
+                        <label xml:lang="en">Variant Name Type</label>
+                        <input>dropDown</input>
+                    </interface-field>
+
+                    <values type="person">
+                        <choice>
+                            <value a:en="undefined" default="yes">undefined</value>
+                            <value a:en="Birth Name">birthName</value>
+                            <value a:en="Married Name">marriedName</value>
+                            <value a:en="Indexed Name">indexedName</value>
+                            <value a:en="Pseudonym">pseudonym</value>
+                            <value a:en="Used Form">usedForm</value>
+                            <value a:en="Nickname">nickname</value>
+                            <value a:en="Religious">religiousName</value>
+                            <value a:en="Royal">royalName</value>
+                            <value a:en="Self Constructed">selfConstructedName</value>
+                            <value a:en="Styled">styledName</value>
+                            <value a:en="Titled">titledName</value>
+                        </choice>
+                    </values>
+
+                    <values type="organization">
+                        <choice>
+                            <value a:en="undefined" default="yes">undefined</value>
+                            <value a:en="Used Form">usedForm</value>
+                            <value a:en="Organization 'Birth' Name">birthName</value>
+                            <value a:en="Indexed Name">indexedName</value>
+                            <value a:en="Descriptive Name">descriptive</value>
+                            <a:documentation>e. g. Women's Aid Society</a:documentation>
+                            <value a:en="Popular Name">popular</value>
+                            <a:documentation>e. g. "Wrens" for "Women's Royal Naval
+                                Service"</a:documentation>
+                            <value a:en="Acronym">acronym</value>
+                            <a:documentation>e. g. OCLC</a:documentation>
+                        </choice>
+                    </values>
+
+                </xs:appinfo>
+            </xs:annotation>
+
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <choice>
+                <value a:en="undefined">undefined</value>
+                
+                <value a:en="Birth Name - person or organization">birthName</value>
+                <value a:en="Married Name - person">marriedName</value>
+                <value a:en="Indexed Name - person or organization">indexedName</value>
+                <value a:en="Pseudonym - person">pseudonym</value>
+                <value a:en="Used Form - person or organization">usedForm</value>
+                <value a:en="Nickname - person">nickname</value>
+                <value a:en="Religious - person">religiousName</value>
+                <value a:en="Royal - person">royalName</value>
+                <value a:en="Self Constructed - person">selfConstructedName</value>
+                <value a:en="Styled - person">styledName</value>
+                <value a:en="Titled - person">titledName</value>
+                
+                <value a:en="Descriptive Name - organization">descriptive</value>
+                <a:documentation>e. g. Women's Aid Society</a:documentation>
+                <value a:en="Popular Name - organization">popular</value>
+                <a:documentation>e. g. "Wrens" for "Women's Royal Naval
+                    Service"</a:documentation>
+                <value a:en="Acronym - organization">acronym</value>
+                <a:documentation>e. g. OCLC</a:documentation>
+                <data type="string"/>
+            </choice>
+            
+        </element>
+    </define>
+
+
+
+    <define name="existDates-element">
+        <element name="existDates">
+            <a:documentation>Dates of existence of the entity described (i.e. birth, death, fl., etc.), of the present entity.</a:documentation>
+
+            <xs:annotation>
+                <xs:appinfo>
+
+                    <interface-field path="entity/person|organization/description/existDates">
+                        <help-text xml:lang="en">If known, enter dates of existence (i.e. birth,
+                            death, fl., etc.), of the present entity.</help-text>
+                        <label xml:lang="en">Dates of Existence</label>
+                    </interface-field>
+
+                </xs:appinfo>
+            </xs:annotation>
+
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <interleave>
+                <zeroOrMore>
+                    <ref name="dateSingle-element"/>
+                </zeroOrMore>
+                <zeroOrMore>
+                    <ref name="dateRange-element"/>
+                </zeroOrMore>
+            </interleave>
+        </element>
+    </define>
+
+
+
+    <!--<define name="entityType-element">
+        <element name="entityType">
+            <choice>
+                <value a:fr="" a:en="Writer">person</value>
+                <value a:fr="" a:en="organization">organization</value>
+                <value a:fr="" a:en="title">title</value>
+                <value a:fr="" a:en="place">place</value>
+                <value a:fr="" a:en="event">event</value>
+                <value a:fr="" a:en="biological species">biological species</value>
+                <value a:fr="" a:en="abstract concept">abstract concept</value>
+                <value a:fr="" a:en="other named entity">other named entity</value>
+            </choice>
+        </element>
+    </define>-->
+
+
+    <define name="personTypes-element">
+        <element name="personTypes">
+            <a:documentation>Captures generic person types defined by each project. Based on
+                WEAC-CPF\'s @localType.</a:documentation>
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <zeroOrMore>
+                <ref name="personType-element"/>
+            </zeroOrMore>
+        </element>
+    </define>
+
+    <define name="personType-element">
+        <element name="personType" a:defaultValue="undefined">
+            <a:documentation>Captures generic person types defined by each project. Based on
+                WEAC-CPF\'s @localType.</a:documentation>
+            <xs:annotation>
+                <xs:appinfo>
+
+                    <interface-field path="entity/person/recordInfo/personTypes/personType">
+                        <help-text xml:lang="en">Generic person types defined by projects. Select a
+                            category from the list or specify a custom value.</help-text>
+                        <label xml:lang="en">Person Type</label>
+                        <input>dynamicCheckbox</input>
+                    </interface-field>
+
+                    <values>
+                        <choice>
+                            <value a:en="undefined" default="yes">undefined</value>
+                            <value a:fr="" a:en="Writer">writer</value>
+                            <value a:fr=""
+                                a:en="Canada's Early Women
+                                Writer"
+                                >ceww:earlyWomenWriter</value>
+                            <!-- check with Carole
+                                    Gerson -->
+                            <value a:fr="" a:en="British Woman Writer (Orlando)">orl:BWW</value>
+                            <value a:fr="" a:en="International-British Women Writer (Orlando)"
+                                >orl:IBW</value>
+                            <value a:fr="" a:en="International Women Writer (Orlando)"
+                                >orl:IWW</value>
+                            <value a:fr="" a:en="Male Writer (Orlando)">orl:MW</value>
+                            <value a:fr="" a:en="Creator (CanWWr)">canwwr:creator</value>
+                            <value a:fr="" a:en="Critic (CanWWr)">canwwr:critic</value>
+                            <!-- mpo: check with P Demers -->
+                            <data a:fr="" a:en="other" type="string"/>
+                        </choice>
+                    </values>
+
+                </xs:appinfo>
+            </xs:annotation>
+            <data type="string"/>
+        </element>
+    </define>
+
+    <define name="level-element">
+        <element name="level" a:defaultValue="undefined">
+            <a:documentation>Captures generic title types. Based on TEI\'s @level.</a:documentation>
+
+            <!--<xs:annotation>
+                <xs:appinfo>
+                    
+                    <interface-field
+                        path="entity/organization/recordInfo/orgTypes/orgType">
+                        <help-text xml:lang="en">Generic organization types defined by
+                            projects. Select a category from the list or specify
+                            a custom value.</help-text>
+                        <label xml:lang="en">Organization Type</label>
+                        <input>dynamicCheckbox</input>
+                    </interface-field>
+                    
+                    <values>
+                        <choice>                        
+                            <value a:fr="" a:en="labour">labour</value>
+                            <value a:fr="" a:en="club or society">club or society</value>
+                            <value a:fr="" a:en="political">political</value>
+                            <value a:fr="" a:en="academic">academic</value>
+                            <value a:fr="" a:en="research">research</value>
+                            <value a:fr="" a:en="corporate">corporate</value><!-\- commercial? (img) -\->
+                            <value a:fr="" a:en="activist">activist</value>
+                            <value a:fr="" a:en="governmental">governmental</value>
+                            <value a:fr="" a:en="military">military</value>
+                            <value a:fr="" a:en="law-enforcement">law-enforcement</value>
+                            <value a:fr="" a:en="professional">professional</value>                            
+                            <value a:fr="" a:en="sporting">sporting</value>
+                            <value a:fr="" a:en="medical">medical</value>
+                            <value a:fr="" a:en="altruistic">altruistic</value> <!-\- charitable? (img) -\->
+                            <value a:fr="" a:en="non-profit">non-profit</value>                            
+                            <value a:fr="" a:en="artistic">artistic</value>
+                            <value a:fr="" a:en="dramatic">dramatic</value>
+                            <value a:fr="" a:en="ethnic">ethnic</value>
+                            <value a:fr="" a:en="iterary">literary</value>
+                            <value a:fr="" a:en="musical">musical</value>
+                            <value a:fr="" a:en="religious">religious</value>
+                            <value a:fr="" a:en="publishing">publishing</value>
+                            <data a:fr="" a:en="other" type="string"/>
+                            <!-\-<value>financial</value>-\->                            
+                            <!-\-<value>non-governmental</value>-\->
+                            <!-\-<value>criminal</value>-\->
+                            <!-\-<value>cultural</value>-\->
+                            <!-\- international -\->
+                            <!-\- cooperative -\->
+                            <!-\- university -\->
+                        </choice>
+                    </values>
+                    
+                </xs:appinfo>
+            </xs:annotation>-->
+
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <choice>
+                <value a:en="undefined">undefined</value>
+                <value a:fr="" a:en="analytic">a</value>
+                <a:documentation>(analytic) analytic title (article, poem, or other item published
+                    as part of a larger item) </a:documentation>
+                <value a:fr="" a:en="monographic">m</value>
+                <a:documentation>(monographic) monographic title (book, collection, or other item
+                    published as a distinct item, including single volumes of multi-volume works) </a:documentation>
+                <value a:fr="" a:en="journal">j</value>
+                <a:documentation>(journal) journal title </a:documentation>
+                <value a:fr="" a:en="series">s</value>
+                <a:documentation>(series) series title </a:documentation>
+                <value a:fr="" a:en="unpublished">u</value>
+                <a:documentation>(unpublished) title of unpublished material (including theses and
+                    dissertations unless published by a commercial press)</a:documentation>
+            </choice>
+        </element>
+    </define>
+
+    <define name="orgTypes-element">
+        <element name="orgTypes">
+            <a:documentation>Captures generic person types defined by each project. Based on
+                WEAC-CPF\'s @localType.</a:documentation>
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <zeroOrMore>
+                <ref name="orgType-element"/>
+            </zeroOrMore>
+        </element>
+    </define>
+
+
+    <define name="orgType-element">
+        <element name="orgType" a:defaultValue="undefined">
+            <a:documentation>Captures generic organization types. Based on EAC-CPF\'s
+                @localType.</a:documentation>
+
+            <xs:annotation>
+                <xs:appinfo>
+
+                    <interface-field path="entity/organization/description/orgTypes/orgType">
+                        <help-text xml:lang="en">Generic organization types defined by projects.
+                            Select a category from the list or specify a custom value.</help-text>
+                        <label xml:lang="en">Organization Type</label>
+                        <input>dynamicCheckbox</input>
+                    </interface-field>
+                    
+                    <!-- MPO: note that values are currently defined twice (for schema and interface annotations) to match current CWRC entity pop-up prototype requirements. This can be improved later [MPO] -->
+                    <values>
+                        <choice>
+                            <value a:fr="" a:en="undefined" default="yes">undefined</value>
+                            <value a:fr="" a:en="labour">labour</value>
+                            <value a:fr="" a:en="club or society">club or society</value>
+                            <value a:fr="" a:en="political">political</value>
+                            <value a:fr="" a:en="academic">academic</value>
+                            <value a:fr="" a:en="research">research</value>
+                            <value a:fr="" a:en="corporate">corporate</value>
+                            <value a:fr="" a:en="activist">activist</value>
+                            <value a:fr="" a:en="governmental">governmental</value>
+                            <value a:fr="" a:en="military">military</value>
+                            <value a:fr="" a:en="law-enforcement">law-enforcement</value>
+                            <value a:fr="" a:en="professional">professional</value>
+                            <value a:fr="" a:en="sporting">sporting</value>
+                            <value a:fr="" a:en="medical">medical</value>
+                            <value a:fr="" a:en="altruistic">altruistic</value>
+                            <value a:fr="" a:en="non-profit">non-profit</value>
+                            <value a:fr="" a:en="artistic">artistic</value>
+                            <value a:fr="" a:en="dramatic">dramatic</value>
+                            <value a:fr="" a:en="ethnic">ethnic</value>
+                            <value a:fr="" a:en="iterary">literary</value>
+                            <value a:fr="" a:en="musical">musical</value>
+                            <value a:fr="" a:en="religious">religious</value>
+                            <value a:fr="" a:en="publishing">publishing</value>
+                            <data a:fr="" a:en="other" type="string"/>
+                        </choice>
+                    </values>
+
+                </xs:appinfo>
+            </xs:annotation>
+
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            
+            <optional>
+                <choice>
+                    <value a:fr="" a:en="undefined">undefined</value>
+                    <value a:fr="" a:en="labour">labour</value>
+                    <value a:fr="" a:en="club or society">club or society</value>
+                    <value a:fr="" a:en="political">political</value>
+                    <value a:fr="" a:en="academic">academic</value>
+                    <value a:fr="" a:en="research">research</value>
+                    <value a:fr="" a:en="corporate">corporate</value>
+                    <!-- commercial? (img) -->
+                    <value a:fr="" a:en="activist">activist</value>
+                    <value a:fr="" a:en="governmental">governmental</value>
+                    <value a:fr="" a:en="military">military</value>
+                    <value a:fr="" a:en="law-enforcement">law-enforcement</value>
+                    <value a:fr="" a:en="professional">professional</value>
+                    <value a:fr="" a:en="sporting">sporting</value>
+                    <value a:fr="" a:en="medical">medical</value>
+                    <value a:fr="" a:en="altruistic">altruistic</value>
+                    <!-- charitable? (img) -->
+                    <value a:fr="" a:en="non-profit">non-profit</value>
+                    <value a:fr="" a:en="artistic">artistic</value>
+                    <value a:fr="" a:en="dramatic">dramatic</value>
+                    <value a:fr="" a:en="ethnic">ethnic</value>
+                    <value a:fr="" a:en="iterary">literary</value>
+                    <value a:fr="" a:en="musical">musical</value>
+                    <value a:fr="" a:en="religious">religious</value>
+                    <value a:fr="" a:en="publishing">publishing</value>
+                    <data a:fr="" a:en="other" type="string"/>
+                    <!--<value>financial</value>-->
+                    <!--<value>non-governmental</value>-->
+                    <!--<value>criminal</value>-->
+                    <!--<value>cultural</value>-->
+                    <!-- international -->
+                    <!-- cooperative -->
+                    <!-- university -->
+                    <data type="string"/>
+                </choice>
+            </optional>
+            
+        </element>
+    </define>
+
+
+
+    <define name="sameAs-element">
+        <element name="sameAs">
+            <a:documentation>Captures a link to a resource that contains
+                information about this entity (e. g. an article about the
+                entity that is subject of a record). This field is also useful to declare that the present
+                entity likely refers to the same entity represented in another
+                resource.</a:documentation>
+            
+            <xs:annotation>
+                <xs:appinfo>
+                    <interface-field path="entity/person|organization/identity/sameAs">
+                        <help-text xml:lang="en">Enter a link to a resource that contains
+                            information about this entity (e. g. a Wikipedia article about the
+                            person, organization, title, place, or event that is subject of the
+                            present record). This field is also useful to declare that the present
+                            entity likely refers to the same entity represented in another
+                            resource.</help-text>
+                        <label xml:lang="en">Same as entity described in</label>
+                        <input>textField</input>
+                    </interface-field>
+                </xs:appinfo>
+            </xs:annotation>
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>            
+            <data type="anyURI"/>
+            <optional>
+                <ref name="cert-attribute"/>
+            </optional>
+        </element>
+    </define>
+
+
+
+    <define name="cert-attribute">
+        <!-- mpo: check if attribute or element -->
+        <attribute name="cert" a:defaultValue="4">
+            <a:documentation>Captures degree of certainty about a particular statement about the entity described.</a:documentation>
+
+            <xs:annotation>
+                <xs:appinfo>
+
+
+                    <interface-field
+                        path="entity/person|organization/identity/variantForms/variant/@cert">
+                        <help-text xml:lang="en">By selecting a certainty level you can specify an
+                            approximate degree of confidence on a given piece of information about
+                            this entity. Definite is default.</help-text>
+                        <label xml:lang="en">Certainty</label>
+                        <input>slider</input>
+                    </interface-field>
+
+                    <interface-field path="entity/person|organization/identity/sameAs/@cert">
+                        <help-text xml:lang="en">By selecting a certainty level you can specify an
+                            approximate degree of confidence on a given piece of information about
+                            this entity. Definite is default.</help-text>
+                        <label xml:lang="en">Certainty</label>
+                        <input>slider</input>
+                    </interface-field>
+
+                    <interface-field
+                        path="entity/person|organization/description/existDates/dateSingle/@cert">
+                        <help-text xml:lang="en">By selecting a certainty level you can specify an
+                            approximate degree of confidence on a given piece of information about
+                            this entity. Definite is default.</help-text>
+                        <label xml:lang="en">Certainty</label>
+                        <input>slider</input>
+                    </interface-field>
+
+                    <interface-field
+                        path="entity/person|organization/description/existDates/dateRange/fromDate/@cert">
+                        <help-text xml:lang="en">By selecting a certainty level you can specify an
+                            approximate degree of confidence on a given piece of information about
+                            this entity. Definite is default.</help-text>
+                        <label xml:lang="en">Certainty</label>
+                        <input>slider</input>
+                    </interface-field>
+
+                    <interface-field
+                        path="entity/person|organization/description/existDates/dateRange/toDate/@cert">
+                        <help-text xml:lang="en">By selecting a certainty level you can specify an
+                            approximate degree of confidence on a given piece of information about
+                            this entity. Definite is default.</help-text>
+                        <label xml:lang="en">Certainty</label>
+                        <input>slider</input>
+                    </interface-field>
+
+                    <interface-field path="entity/person/description/genders/gender/@cert">
+                        <help-text xml:lang="en">By selecting a certainty level you can specify an
+                            approximate degree of confidence on a given piece of information about
+                            this entity. Definite is default.</help-text>
+                        <label xml:lang="en">Certainty</label>
+                        <input>slider</input>
+                    </interface-field>
+
+                    <interface-field
+                        path="entity/person|organization/description/occupations|activities|researchInterests/occupation|activity|interest/term/@cert">
+                        <help-text xml:lang="en">By selecting a certainty level you can specify an
+                            approximate degree of confidence on a given piece of information about
+                            this entity. Definite is default.</help-text>
+                        <label xml:lang="en">Certainty</label>
+                        <input>slider</input>
+                    </interface-field>
+
+                    <values>
+                        <choice>
+                            <value a:en="definite" a:fr="" default="yes">4</value>
+                            <value a:en="reasonably certain" a:fr="">3</value>
+                            <value a:en="probable" a:fr="">2</value>
+                            <value a:en="speculative" a:fr="">1</value>
+                        </choice>
+                    </values>
+
+                </xs:appinfo>
+            </xs:annotation>
+
+            
+                <choice>
+                    <optional><value a:en="definite" a:fr="">4</value></optional>
+                    <optional><value a:en="reasonably certain" a:fr="">3</value></optional>
+                    <optional><value a:en="probable" a:fr="">2</value></optional>
+                    <optional><value a:en="speculative" a:fr="">1</value></optional>
+                </choice>
+            
+        </attribute>
+    </define>
+
+
+    <define name="dateSingle-element">
+        <element name="dateSingle">
+            <a:documentation>Captures a date associated with the entity record or entity instance.</a:documentation>
+
+            <xs:annotation>
+                <xs:appinfo>
+
+                    <interface-field
+                        path="entity/person|organization/description/existDates/dateSingle">
+                        <label xml:lang="en">Date</label>
+                        <input label="Add">dialogue</input>
+                    </interface-field>
+
+                </xs:appinfo>
+            </xs:annotation>
+
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <interleave>
+                <ref name="date-pattern"/>
+            </interleave>
+        </element>
+    </define>
+
+
+
+    <define name="dateRange-element">
+        <element name="dateRange">
+            <a:documentation>Captures a date range associated with the entity record or entity instance.</a:documentation>
+
+            <xs:annotation>
+                <xs:appinfo>
+
+                    <interface-field
+                        path="entity/person|organization/description/existDates/dateRange">
+                        <label xml:lang="en">Date Range</label>
+                        <input label="Add">dialogue</input>
+                    </interface-field>
+
+                </xs:appinfo>
+            </xs:annotation>
+
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <interleave>
+                <optional>
+                    <ref name="fromDate-element"/>
+                </optional>
+                <optional>
+                    <ref name="toDate-element"/>
+                </optional>
+            </interleave>
+        </element>
+    </define>
+
+
+
+    <define name="fromDate-element">
+        <element a:id="fromDate" name="fromDate">
+            <a:documentation>Captures the start date of a date range associated with the entity described.</a:documentation>
+            
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <optional><ref name="date-pattern"/></optional>
+        </element>
+    </define>
+
+
+
+    <define name="toDate-element">
+        <element a:id="toDate" name="toDate">
+            <a:documentation>Captures the end date of a date range associated with the entity described.</a:documentation>
+            
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <optional><ref name="date-pattern"/></optional>
+        </element>
+    </define>
+
+
+    <!-- mpo: the below allows one standard AND one text date, one text date, or one standard
+        date but is disabled so that the interface can read the instruction via optional
+        elements. the difference is that the disabled expression enforces having at least
+        one type of date-->
+    <!--<choice>
+        <interleave>
+        <ref name="standardDate-element"/>
+        <ref name="textDate-element"/>
+        </interleave>
+        <ref name="textDate-element"/>
+        <ref name="standardDate-element"/>
+        </choice>-->
+
+    <define name="date-pattern">        
+        <interleave>            
+            <ref name="standardDate-element"/>
+            <optional>
+                <ref name="textDate-element"/>
+            </optional>
+            <optional>
+                <ref name="dateType-element"/>
+            </optional>            
+            <optional>
+                <ref name="note-element"/>
+            </optional>
+        </interleave>
+        <optional>
+            <ref name="cert-attribute"/>
+        </optional>
+    </define>
+
+
+    <define name="standardDate-element">
+        <element name="standardDate">
+            <a:documentation>Captures a date in ISO standard format.</a:documentation>
+
+            <xs:annotation>
+                <xs:appinfo>
+
+                    <interface-field
+                        path="entity/person|organization/description/existDates/dateSingle/standardDate">
+                        <help-text xml:lang="en">Select a date from date picker or enter a date in
+                            the format yyyy-mm-dd, yyyy-mm, or yyyy.</help-text>
+                        <input>datePicker</input>
+                    </interface-field>
+
+                    <interface-field
+                        path="entity/person|organization/description/existDates/dateRange/fromDate/standardDate">
+                        <help-text xml:lang="en">If known, add date ranges of existence (i.e. birth,
+                            death, fl., etc.).</help-text>
+                        <label xml:lang="en">From</label>
+                        <input>datePicker</input>
+                    </interface-field>
+
+                    <interface-field
+                        path="entity/person|organization/description/existDates/dateRange/toDate/standardDate">
+                        <help-text xml:lang="en">If known, add date ranges of existence (i.e. birth,
+                            death, fl., etc.).</help-text>
+                        <label xml:lang="en">To</label>
+                        <input>datePicker</input>
+                    </interface-field>
+
+                </xs:appinfo>
+            </xs:annotation>
+
+            <choice>
+                <empty/>
+                <data type="date"/>
+                <data type="gYearMonth"/>
+                <data type="gYear"/>
+                <data type="dateTime"/>
+                <data type="string">
+                    <!-- mpo: regex - orlando dates; check datatype -->
+                    <param name="pattern"
+                        >((\d{4})\D(0[1-9]|1[0-2])\D([12]\d|0[1-9]|3[01])|(\d{4})(0[1-9]|1[0-2])([12]\d|0[1-9]|3[01]))</param>
+                    <!-- mpo: check if replace \d for hyphens -->
+                </data>
+                <data type="string">
+                    <param name="pattern">(\d{4})((\D(0[1-9]|1[0-2])\D)|(0[1-9]|1[0-2]))</param>
+                </data>
+                <data type="string">
+                    <param name="pattern">(\d{4})(\D{2})?</param>
+                </data>
+            </choice>
+        </element>
+    </define>
+
+
+
+    <define name="textDate-element">
+        <element name="textDate">
+            <a:documentation>Captures a date in prose format.</a:documentation>
+
+            <!--<<xs:annotation>
+                xs:appinfo><!-\- mpo: ask Omar if we need to declare this,
+                    and if so, do we need the three declarations? -\->
+                    
+                    <interface-field>
+                        <path>entity/description/existDates/dateSingle/textDate</path>
+                        <help-text xml:lang="en">Date in text format.</help-text>
+                        <label xml:lang="en">Date Text</label>
+                        <input>textField</input>
+                    </interface-field>
+                    
+                    <interface-field>
+                        <path>entity/description/existDates/dateRange/fromDate/textDate</path>
+                        <help-text xml:lang="en">Date in text format.</help-text>
+                        <label xml:lang="en">Date Text</label>
+                        <input>textField</input>
+                    </interface-field>
+                    
+                    
+                    <interface-field>
+                        <path>entity/description/existDates/dateRange/toDate/textDate</path>
+                        <help-text xml:lang="en">If known, add date ranges of existence
+                            (i.e. birth, death, fl., etc.).</help-text>
+                        <label xml:lang="en">Date Text</label>
+                        <input>textField</input>
+                    </interface-field>
+                    
+                </xs:appinfo>
+            </xs:annotation>-->
+
+            <text/>
+        </element>
+    </define>
+
+
+
+    <define name="dateType-element">
+        <element name="dateType" a:defaultValue="undefined">
+            <a:documentation>Captures a date type in relation to its association with the entity described. Recommended values - Person: birth, death, marriage, flourish, circa.
+                Organization: start, end, flourish, circa. Works: original issuance, edition,
+                reprint.</a:documentation>
+
+            <xs:annotation>
+                <xs:appinfo>
+
+                    <interface-field
+                        path="entity/person|organization/description/existDates/dateSingle/dateType">
+                        <help-text xml:lang="en">Select a term from the list or add a custom keyword
+                            that best describes the context in which this date is relevant to the
+                            present entity.</help-text>
+                        <label xml:lang="en">Date Type</label>
+                        <input>combobox</input>
+                    </interface-field>
+
+                    <interface-field
+                        path="entity/person|organization/description/existDates/dateRange/fromDate/dateType">
+                        <help-text xml:lang="en">Select a term from the list or add a custom keyword
+                            to best describes the context in which this date is relevant to the
+                            present entity.</help-text>
+                        <label xml:lang="en">Date Type</label>
+                        <input>combobox</input>
+                    </interface-field>
+
+                    <interface-field
+                        path="entity/person|organization/description/existDates/dateRange/toDate/dateType">
+                        <help-text xml:lang="en">Select a term from the list or add a custom keyword
+                            to best describes the context in which this date is relevant to the
+                            present entity.</help-text>
+                        <label xml:lang="en">Date Type</label>
+                        <input>combobox</input>
+                    </interface-field>
+
+                    <values type="person">
+                        <choice>
+                            <value a:en="undefined" default="yes">undefined</value>
+                            <value a:fr="neé" a:en="birth">birth</value>
+                            <value a:fr="" a:en="death">death</value>
+                            <value a:fr="" a:en="marriage">marriage</value>
+                            <value a:fr="" a:en="flourish">flourish</value>
+                            <value a:fr="" a:en="circa">circa</value>
+                            <data type="string"/>
+                        </choice>
+                    </values>
+
+                    <values type="organization">
+                        <choice>
+                            <value a:en="undefined" default="yes">undefined</value>
+                            <value a:fr="" a:en="start">start</value>
+                            <value a:fr="" a:en="end">end</value>
+                            <value a:fr="" a:en="flourish">flourish</value>
+                            <value a:fr="" a:en="circa">circa</value>
+                            <data type="string"/>
+                        </choice>
+                    </values>
+
+                    <values type="title">
+                        <choice>
+                            <value a:en="undefined" default="yes">undefined</value>
+                            <value a:fr="" a:en="original publication or issuance">original
+                                issuance</value>
+                            <value a:fr="" a:en="edition">edition</value>
+                            <value a:fr="" a:en="reprint">reprint</value>
+                            <data type="string"/>
+                        </choice>
+                    </values>
+
+                </xs:appinfo>
+            </xs:annotation>
+
+            <data type="string"/>
+        </element>
+    </define>
+
+
+
+    <define name="id-attribute" ns="http://www.w3.org/XML/1998/namespace">
+        <attribute a:id="xmlID" name="xml:id">
+            <data type="NCName">
+                <!-- Because of restrictions in Relax NG, the expression of this attribute is NCName. 
+                    This is not strictly conformant to the xml:id specification, though necessary in order for
+                    to validate. The XML Schema version of this attribute should be defined as ID -->
+            </data>
+        </attribute>
+    </define>
+
+
+
+    <define name="descriptiveNotes-element">
+        <element name="descriptiveNotes">
+            <xs:annotation>
+                <xs:appinfo>
+
+                    <interface-field path="entity/person|organization/description/descriptiveNotes">
+                        <label>Summary</label>
+                    </interface-field>
+
+                </xs:appinfo>
+            </xs:annotation>
+
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <zeroOrMore>
+                <ref name="note-element"/>
+            </zeroOrMore>
+        </element>
+    </define>
+
+
+
+    <define name="p-element">
+        <element name="p">
+            <xs:annotation>
+                <xs:appinfo>
+
+                    <interface-field
+                        path="entity/person|organization/description/existDates/dateSingle/note/p">
+                        <help-text xml:lang="en">Enter one or more notes about this
+                            date.</help-text>
+                        <label xml:lang="en">Note</label>
+                        <input>textArea</input>
+                    </interface-field>
+
+                    <interface-field
+                        path="entity/person|organization/description/existDates/dateRange/fromDate/note/p">
+                        <help-text xml:lang="en">Enter one or more notes about this
+                            date.</help-text>
+                        <label xml:lang="en">Note</label>
+                        <input>textArea</input>
+                    </interface-field>
+
+                    <interface-field
+                        path="entity/person|organization/description/existDates/dateRange/toDate/note/p">
+                        <help-text xml:lang="en">Enter one or more notes about this
+                            date.</help-text>
+                        <label xml:lang="en">Note</label>
+                        <input>textArea</input>
+                    </interface-field>
+
+                    <interface-field
+                        path="entity/person|organization/description/descriptiveNotes/note/p">
+                        <help-text xml:lang="en">Enter a descriptive summary about the present
+                            entity.</help-text>
+                        <label xml:lang="en">Brief Description</label>
+                        <input>textArea</input>
+                    </interface-field>
+
+                    <!--mpo: interface: notes in existDates context are not represented in interface-->
+
+                </xs:appinfo>
+            </xs:annotation>
+
+            <text/>
+        </element>
+    </define>
+
+
+
+    <define name="access-element">
+        <element name="access" a:defaultValue="public">
+
+            <xs:annotation>
+                <xs:appinfo>
+
+                    <!--<interface-field
+                        path="entity/person|organization/description/existDates/dateSingle/note/access">
+                        <label>Note Access</label>
+                        <help-text xml:lang="en">Select access level for this note: public, project,
+                            or private. If blank, default value is public.</help-text>
+                        <input>radioButton</input>
+                    </interface-field>
+
+                    <interface-field
+                        path="entity/person|organization/description/existDates/dateRange/fromDate/note/access">
+                        <label>Note Access</label>
+                        <help-text xml:lang="en">Select access level for this note: public, project,
+                            or private. If blank, default value is public.</help-text>
+                        <input>radioButton</input>
+                    </interface-field>
+
+                    <interface-field
+                        path="entity/person|organization/description/existDates/dateRange/toDate/note/access">
+                        <label>Note Access</label>
+                        <help-text xml:lang="en">Select access level for this note: public, project,
+                            or private. If blank, default value is public.</help-text>
+                        <input>radioButton</input>
+                    </interface-field>-->
+
+                    <interface-field
+                        path="entity/person|organization/description/descriptiveNotes/note/access">
+                        <label>Note Access</label>
+                        <help-text xml:lang="en">Select access level for this note: public, project,
+                            or private. If blank, default value is public.</help-text>
+                        <input>radioButton</input>
+                    </interface-field>
+
+
+                    <interface-field path="entity/person|organization/recordInfo/access">
+                        <label>Record Access</label>
+                        <help-text>Public access is default. You may elect to limit acces to this
+                            record but please recognize that this limits interoperability: use
+                            sparingly. NB: limitation of access not yet implemented.</help-text>
+                        <input>radioButton</input>
+                    </interface-field>
+
+                    <values url="http://apps.testing.cwrc.ca/ccm-interface/entityTest-dev/test/testOptions.json">
+                        <optional>
+                            <choice>
+                                <value a:en="public" default="yes">public</value>
+                                <value a:en="project">project</value>
+                                <value a:en="private">private</value>
+                            </choice>
+                        </optional>
+                    </values>
+
+                </xs:appinfo>
+            </xs:annotation>
+
+            <optional>
+                <choice>
+                    <value a:en="public">public</value>
+                    <value a:en="project">project</value>
+                    <value a:en="private">private</value>
+                </choice>
+            </optional>
+
+        </element>
+    </define>
+
+
+
+    <define name="note-element">
+        <element name="note">
+
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <!--<optional>
+                <ref name="noteType-attribute"/>
+                </optional>-->
+
+            <interleave>
+                <optional>
+                    <oneOrMore>
+                        <ref name="p-element"/>
+                    </oneOrMore>
+                </optional>
+                <optional>
+                    <ref name="lang-attribute"/>
+                </optional>
+                <optional>
+                    <ref name="projectId-element"/>
+                </optional>
+
+                <ref name="access-element"/>
+
+            </interleave>
+        </element>
+    </define>
+
+
+    <!--<define name="noteType-attribute">
+        <attribute name="noteType">
+            
+            <xs:annotation>
+                <xs:appinfo>
+                    
+                    <interface-field
+                    path="entity/person|organization/description/existDates/dateSingle/note/@noteType">
+                        <help-text xml:lang="en">Pick a note type from the list.</help-text>
+                        <label xml:lang="en">Note Type</label>
+                        <input>combobox</input>
+                    </interface-field>
+                    
+                    <interface-field
+                    path="entity/person|organization/description/existDates/dateRange/note/@noteType">
+                        <help-text xml:lang="en">Pick a note type from the list.</help-text>
+                        <label xml:lang="en">Note Type</label>
+                        <input>dropDown</input>
+                        <default>en</default>
+                    </interface-field>
+                    
+                    
+                    <interface-field path="entity/person|organization/description/descriptiveNotes/note/@noteType='summary'">
+                        <help-text xml:lang="en">Pick a note type from the list.</help-text>
+                        <label xml:lang="en">Note Type</label>
+                        <input>dropDown</input>
+                    </interface-field>
+                    
+                </xs:appinfo>
+            </xs:annotation>
+            
+            <choice>
+                <value a:fr="" a:en="summary">summary</value>
+                <value a:fr="" a:en="research note">researchNote</value>
+                <value a:fr="" a:en="scholar note">scholarNote</value>
+                <value a:fr="" a:en="disambiguation">disambiguation</value>
+                
+                <!-\-mpo: check-\->
+            </choice>
+        </attribute>
+    </define>-->
+
+
+    <define name="lang-attribute" ns="http://www.w3.org/XML/1998/namespace">
+        <attribute name="xml:lang">
+
+            <xs:annotation>
+                <xs:appinfo>
+
+                    <interface-field
+                        path="entity/person|organization/description/existDates/dateSingle/note/@xml:lang">
+                        <help-text xml:lang="en">Optional; pick a language from the list. If blank,
+                            English is assumed.</help-text>
+                        <label xml:lang="en">Note Language</label>
+                        <input>dropDown</input>
+                    </interface-field>
+
+                    <interface-field
+                        path="entity/person|organization/description/existDates/dateRange/fromDate|toDate/note/@xml:lang">
+                        <help-text xml:lang="en">Optional; pick a language from the list. If blank,
+                            English is assumed.</help-text>
+                        <label xml:lang="en">Note Language</label>
+                        <input>dropDown</input>
+                        <default>en</default>
+                    </interface-field>
+
+                    <interface-field
+                        path="entity/person|organization/description/descriptiveNotes/note/@xml:lang">
+                        <help-text xml:lang="en">Optional; pick a language from the list to specify
+                            the summary's language. If blank, English is assumed.</help-text>
+                        <label xml:lang="en">Language</label>
+                        <input>dropDown</input>
+                        <default>en</default>
+                    </interface-field>
+
+                    <values>
+                        <optional>
+                            <choice>
+                                <value a:en="English" default="yes">en</value>
+                                <value a:en="French">fr</value>
+                            </choice>
+                        </optional>
+                    </values>
+
+                    <!--<values url="http://www.loc.gov/standards/iso639-2/ISO-639-2_8859-1.txt"/>-->
+
+                </xs:appinfo>
+            </xs:annotation>
+
+            <data type="language"/>
+        </attribute>
+    </define>
+
+
+
+    <define name="variantForms-element">
+        <element name="variantForms">
+            <zeroOrMore>
+                <ref name="variant-element"/>
+            </zeroOrMore>
+        </element>
+    </define>
+
+
+
+    <define name="variant-element">
+        <element name="variant">
+
+            <xs:annotation>
+                <xs:appinfo>
+
+                    <interface-field path="entity/person|organization/identity/variantForms/variant">
+                        <help-text xml:lang="en">If known, indicate one or more alternative name
+                            forms used to refer to this entity.</help-text>
+                        <label xml:lang="en">Variant Names</label>
+                        <input label="Add">dialogue</input>
+                    </interface-field>
+
+                </xs:appinfo>
+            </xs:annotation>
+            
+            
+            <interleave>
+                <oneOrMore>
+                    <ref name="namePart-element"/>
+                </oneOrMore>
+                <zeroOrMore>
+                    <!-- mpo: check if zeroOrMore or oneOrMore -->
+                    <ref name="variantType-element"/>
+                </zeroOrMore>
+                <optional>
+                    <ref name="authorizedBy-element"/>
+                </optional>
+                <zeroOrMore>
+                    <ref name="picklist-element"/>
+                </zeroOrMore>                
+            </interleave>
+            
+        </element>
+    </define>
+
+
+
+    <define name="picklist-element">
+        <element name="picklist">
+            <optional>
+                <value>YES</value>
+            </optional>
+        </element>
+    </define>
+
+
+
+    <define name="authorizedBy-element">
+        <element name="authorizedBy">
+            <a:documentation>authorizedBy element captures a note indicating that one or more
+                projects use the present name as a preferred form in their local
+                context.</a:documentation>
+
+            <oneOrMore>
+                <ref name="projectId-element"/>
+            </oneOrMore>
+        </element>
+    </define>
+
+
+
+    <define name="link-element">
+        <element name="link">
+            <optional>
+                <ref name="id-attribute"/>
+            </optional>
+            <data type="anyURI"/>
+        </element>
+    </define>
+
+    <xs:annotation>
+        <xs:appinfo>
+
+
+            <interface>
+
+                <interface-order type="person" path="entity/person">
+
+                    <ref name="identity-element"/>
+                    <ref name="personDescription-element"/>
+                    <ref name="personRecordInfo-element"/>
+
+                </interface-order>
+
+
+                <interface-order type="organization" path="entity/organization">
+
+                    <ref name="identity-element"/>
+                    <ref name="orgDescription-element"/>
+                    <ref name="orgRecordInfo-element"/>
+
+                </interface-order>
+
+            </interface>
+
+
+        </xs:appinfo>
+    </xs:annotation>
+    
+    
+
+</grammar>

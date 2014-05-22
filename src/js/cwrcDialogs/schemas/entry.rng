@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar 
+    xmlns="http://relaxng.org/ns/structure/1.0"
+    xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    
+    <!--
+    orlando.rnc
+        
+    This schema combines Biography, Writing, Event, and Entry elements within an Orlando root element in the pattern:
+    ORLANDO-CWRC/ENTRY/ORLANDOHEADER?/BIOGRAPHY*|WRITING*|EVENTS*|ENTRY*
+    or
+    one document can contain one or more choices of biography, writing, events, or entry.
+    The intent is to provide a schema for the Canadian Writing and Research Collaboratory (CWRC)
+    literary team based in Orlando's ontology and structure.
+    
+    Written 2013-02-19 by Mariana Paredes-Olea
+    revised 2013-03-23
+    revised 2013-04-01
+    revised 2013-04-07
+    revised 2013-04-14
+    revised 2013-06-30
+    revised 2013-07-07
+    revised 2013-10-02: relative URLs [MPO]
+
+    -->
+    
+    
+    <!-- Remove -->
+    <!-- educationInclusion, anyBio without contestedbehaviour-->
+    <!-- p, authorsummary, quote without extentofoeuvre -->
+    <!-- p, authorSummary, extentofoeuvre without genericRange -->
+    <!-- production, reception, textualFeatures, Div0-inclusiin and BIBCITS without keywordClass-->
+    <!-- datestruct wo month, occasion, season-->
+    <!-- production, reception, textualFeatures, authorsummary (what instead?), chronevent, div2 and div3 without shortprose-->
+    
+    <!--
+        
+        rename
+            award - prize (nonliterary)
+            job - jobtitle
+            location - residence&mobility
+            member - FAMILYMEMBER
+            pliteraryschools - LiteraryMovements
+            rrecognitions - Awards&Recognitions
+            wealth - rename to Economics and expand description to cover things like bartering, fur trade, etc.
+            sex att - gender
+            sex att - custom values and in line w entity schemas
+            
+            
+        changes
+            occupation - ensure attributes capture unpaid labour adequately 
+            rpenalties - controversy attribute
+            ttonestyle - add attribute experimental
+            persontype - writer and historicalfigure
+            
+        add
+            animals
+            environment - For discussions of writer's relation to natural world, urban environment, milieu
+            food
+            mediatype - attributes for Digital, Oral, Multimedia, PNonBookMedia, (maybe also Performance?
+            role attribute
+            nationalityCategory att - British, Canadian, International - att or ele for multiple?
+            
+        -->
+    
+    <include href="orlando_common_schema.rng">
+        <start combine="choice">
+            <ref name="Entry-element"/>
+        </start>
+        
+        <define name="header-element">
+            <element name="CWRCHEADER">
+                <ref name="ID-attribute"/>
+                <optional>
+                    <ref name="type-attribute"/>
+                </optional>
+                <ref name="fileDesc-element"/>
+                <optional>
+                    <ref name="revisionDesc-element"/>
+                </optional>            
+            </element>
+        </define>
+        
+        <define name="Div1-inclusion" combine="choice">            
+            <zeroOrMore>
+                <choice>
+                    <ref name="name-element"/>
+                    <ref name="place-element"/>
+                    <ref name="orgName-element"/>
+                    <ref name="rs-element"/>
+                    <ref name="sic-element"/>
+                    <ref name="corr-element"/>
+                    <ref name="emph-element"/>
+                    <ref name="quote-element"/>
+                    <ref name="foreign-element"/>
+                    <ref name="soCalled-element"/>
+                    <ref name="topic-element"/>
+                    <ref name="tGenre-element"/>
+                    <!--<ref name="job-element"/>-->
+                    <ref name="xptr-element"/>
+                    <ref name="xref-element"/>
+                    <ref name="date-element"/>
+                    <ref name="dateRange-element"/>
+                    <ref name="dateStruct-element"/>
+                    <ref name="l-element"/>
+                    <ref name="lg-element"/>
+                    <ref name="time-element"/>
+                    <ref name="anyOrlando"/>
+                    <!--  -->
+                </choice>
+            </zeroOrMore>
+        </define>
+        
+        <!--<define name="keywordClass-element" combine="choice">
+            <notAllowed/>
+        </define>-->
+        
+        <define name="month-element" combine="choice">
+            <notAllowed/>
+        </define>
+        
+        <define name="occasion-element" combine="choice">
+            <notAllowed/>
+        </define>
+        
+        <define name="season-element" combine="choice">
+            <notAllowed/>
+        </define>
+        
+        <define name="job-element" combine="choice">
+            <notAllowed/>
+        </define>
+        
+        <define name="sex-attribute" combine="choice">
+            <empty/>
+        </define>
+        
+    </include>
+    
+    
+    <include href="biography.rng">
+        
+        <define name="contestedBehaviour-element" combine="choice">
+            <notAllowed/>
+        </define>
+        
+        <define name="award-element" combine="choice">
+            <notAllowed/>
+        </define>
+        
+        <define name="job-element" combine="choice">
+            <notAllowed/>
+        </define>
+        
+        <define name="location-element" combine="choice">
+            <notAllowed/>
+        </define>
+        
+        <define name="member-element" combine="choice">
+            <notAllowed/>
+        </define>
+        
+        <define name="wealth-element" combine="choice">
+            <notAllowed/>
+        </define>
+        
+    </include>
+    
+    <include href="writing.rng">
+        
+        <define name="ExtentOfOeuvre-element" combine="choice">
+            <notAllowed/>
+        </define>
+        
+        <define name="genericRange-element" combine="choice">
+            <notAllowed/>
+        </define>
+        
+        <!--<define name="keywordClass-element" combine="choice">
+            <notAllowed/>
+        </define>-->
+        
+        <define name="job-element" combine="choice">
+            <notAllowed/>
+        </define><!-- mpo: not sure if necessary here -->
+        
+        <define name="pLiterarySchools-element" combine="choice">
+            <notAllowed/>
+        </define>
+        
+        <define name="rRecognitions-element" combine="choice">
+            <notAllowed/>
+        </define>        
+        
+    </include>
+    
+    <define name="anyOrlando">
+        <choice>
+            <ref name="anyBio"/>
+            <ref name="anyWri"/>            
+        </choice>
+    </define> 
+    
+    
+    <define name="Entry-element">
+        <element name="ENTRY">
+            <ref name="attlist.Entry"/>
+            <optional>
+                <optional>
+                    <ref name="header-element"/>
+                </optional>
+                <optional>
+                    <ref name="Div0-element"/>
+                </optional>
+            </optional>
+        </element>
+    </define>
+    
+
+<!-- ATTRIBUTES -->
+    <define name="attlist.Entry" combine="interleave">
+        <optional>
+            <attribute name="ID">
+                <data type="ID"/>
+            </attribute>
+        </optional>
+        <optional>
+            <attribute name="SEX">
+                <choice>
+                    <value>female</value>
+                    <value>male</value>
+                    <value>transgendered</value>
+                    <value>undefined</value>
+                    <data type="string"/>
+                </choice>
+            </attribute>
+        </optional>
+        <optional>
+            <attribute name="NATIONALITY">
+                <data type="string"/>
+            </attribute>
+        </optional>
+        <optional>
+            <attribute name="PERSONTYPE">
+                <choice>
+                    <value>historicalFigure</value>
+                    <value>writer</value>
+                    <data type="string"/>
+                </choice>
+            </attribute>
+        </optional>
+    </define>
+    
+    
+    <define name="keywordClass-element">
+        <notAllowed/>
+    </define>
+    
+</grammar>
