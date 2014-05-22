@@ -65,6 +65,9 @@ return function(writer) {
 		addschema: new AddSchema(writer)
 	};
 	
+	// log in for CWRC-Dialogs
+	cD.initializeWithLogin('mark_test', 'P4ssw0rd!');
+	
 	dialogs.event = dialogs.search;
 	
 	var pm = {

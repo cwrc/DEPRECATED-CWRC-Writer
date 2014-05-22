@@ -4,6 +4,8 @@ define(['jquery', 'jquery-ui', 'cwrcDialogs'], function($, jqueryUi, cwrcDialogs
 return function(writer) {
 	var w = writer;
 	
+	cD.setPlaceSchema('js/cwrcDialogs/schemas/entities.rng');
+	
 	function createNewPlace(data) {
 		cD.popCreatePlace({
 			success: function(result) {

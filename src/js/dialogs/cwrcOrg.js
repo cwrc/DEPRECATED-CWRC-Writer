@@ -4,6 +4,8 @@ define(['jquery', 'jquery-ui', 'cwrcDialogs'], function($, jqueryUi, cwrcDialogs
 return function(writer) {
 	var w = writer;
 	
+	cD.setOrganizationSchema('js/cwrcDialogs/schemas/entities.rng');
+	
 	function createNewOrg(data) {
 		cD.popCreateOrganization({
 			success: function(result) {
