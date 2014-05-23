@@ -148,6 +148,9 @@ return function(writer) {
 				tei: 'placeName',
 				events: 'PLACE'
 			},
+			textTag: {
+				tei: 'placeName'
+			},
 			mapping: {
 				tei: function(entity) {
 					var info = entity.info;
@@ -228,10 +231,7 @@ return function(writer) {
 					var xml = '<note';
 					if (id) xml += ' annotationId="'+id+'"';
 					if (offsetId) xml += ' offsetId="'+offsetId+'"';
-					if (info.type) {
-						xml += ' type="'+info.type+'"';
-					}
-					xml += '><bibl>';
+					xml += ' type="citation"><bibl>';
 					if (info.content) {
 						var xmlDoc = w.utilities.stringToXML(info.content);
 						var biblContent = $('bibl', xmlDoc)[0];
@@ -330,7 +330,7 @@ return function(writer) {
 					var xml = '<note';
 					if (id) xml += ' annotationId="'+id+'"';
 					if (offsetId) xml += ' offsetId="'+offsetId+'"';
-					xml += ' type="termAnnotation"';
+					xml += ' type="keyword"';
 					xml += '>';
 					for (var i = 0; i < info.keywords.length; i++) {
 						xml += '<term>'+info.keywords[i]+'</term>';
