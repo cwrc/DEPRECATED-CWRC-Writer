@@ -327,15 +327,13 @@ return function(writer) {
 					var id = entity.annotation.range.cwrcAnnotationId;
 					var offsetId = entity.annotation.range.cwrcOffsetId;
 					
-					var xml = '<note';
-					if (id) xml += ' annotationId="'+id+'"';
-					if (offsetId) xml += ' offsetId="'+offsetId+'"';
-					xml += ' type="keyword"';
-					xml += '>';
+					var xml = '';
 					for (var i = 0; i < info.keywords.length; i++) {
-						xml += '<term>'+info.keywords[i]+'</term>';
+						xml += '<note type="keyword"';
+						if (id) xml += ' annotationId="'+id+'"';
+						if (offsetId) xml += ' offsetId="'+offsetId+'"';
+						xml +='><term>'+info.keywords[i]+'</term></note>';
 					}
-					xml += '</note>';
 					return xml;
 				},
 				events: '<KEYWORDCLASS>'+TEXT_SELECTION+'</KEYWORDCLASS>'
