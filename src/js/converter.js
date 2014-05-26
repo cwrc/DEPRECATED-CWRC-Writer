@@ -498,37 +498,24 @@ return function(writer) {
 		w.deletedEntities = {};
 		w.deletedStructs = {};
 		
-		var docMode;
 		var rdfs = $(doc).find('rdf\\:RDF, RDF');
 
 		if (rdfs.length) {
 			var mode = parseInt(rdfs.find('w\\:mode, mode').first().text());
 			if (mode == w.XML) {
-				docMode = w.XML;
+				w.mode = w.XML;
 			} else {
-				docMode = w.XMLRDF;
+				w.mode = w.XMLRDF;
 			}
+			processRdf(rdfs);
 		} else {
-			docMode = w.XML;
-		}
-		
-		if (w.mode != docMode) {
-			var editorModeStr = w.mode == w.XML ? 'XML only' : 'XML & RDF';
-			var docModeStr = docMode == w.XML ? 'XML only' : 'XML & RDF';
-
-			w.dialogManager.show('message', {
-				title: 'Editor Mode changed',
-				msg: 'The Editor Mode ('+editorModeStr+') has been changed to match the Document Mode ('+docModeStr+').',
-				type: 'info'
-			});
-			
-			w.mode = docMode;
+			w.mode = w.XML;
 		}
 		
 		// process RDF and/or entities
 		// TODO add processEntities back in
-		//if (docMode == w.XMLRDF) {
-			processRdf(rdfs);
+		//if (w.mode == w.XMLRDF) {
+		//	processRdf(rdfs);
 		//} else {
 		//	processEntities($(doc.firstChild));
 		//}
@@ -556,6 +543,19 @@ return function(writer) {
 		
 		// reset the undo manager
 		w.editor.undoManager.clear();
+		
+		var msg;
+		if (w.mode == w.XML) {
+			msg = 'This document is set to edit in XML (no overlap) mode: XML and RDF will be created with no overlapping annotations.';
+		} else {
+			msg = 'This document is set to edit in XML and RDF (overlapping entities) mode; XML and RDF will be kept in sync where possible, but where overlap occurs RDF will be created without corresponding XML.';
+		}
+		
+		w.dialogManager.show('message', {
+			title: 'CWRC-Writer Mode',
+			msg: msg,
+			type: 'info'
+		});
 	}
 	
 	function processRdf(rdfs) {
