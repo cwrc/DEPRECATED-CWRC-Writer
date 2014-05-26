@@ -196,7 +196,10 @@ return function(writer) {
 				$('#'+id+'_tagAs span').html(data.cwrcInfo.name);
 				
 				currentId = config.entry.props.id;
+				
 				attributeWidget.setData(data.attributes);
+				$('#'+id+'_teiParent').parent().accordion('option', 'active', 0);
+				
 				$('#'+id+'_certainty input[value="'+data.certainty+'"]').prop('checked', true).button('refresh');
 				$('#'+id+'_type input[value="'+data.type+'"]').prop('checked', true).button('refresh');
 				$('#'+id+'_role select').val(data.role);
