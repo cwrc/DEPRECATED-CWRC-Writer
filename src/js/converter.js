@@ -867,13 +867,15 @@ return function(writer) {
 						startOffset = 0;
 					}
 				} else {
-					// TODO
+					startNode = entityNode[0];
+					startOffset = 0;
 				}
 				endNode = entityNode[0].nextSibling;
 				if (endNode != null) {
 					endOffset = 0;
 				} else {
-					// TODO
+					endNode = entityNode[0];
+					endOffset = endNode.childNodes.length;
 				}
 				
 				entityNodes.push(entityNode);
@@ -894,6 +896,9 @@ return function(writer) {
 						entry.props.title = w.utilities.getTitleFromContent(content);
 					}
 				} catch (e) {
+					if (window.console) {
+						console.log(e);
+					}
 				}
 			}
 		}
