@@ -21,7 +21,7 @@ return function(writer) {
 						id: result.response.pid,
 						data: result.data
 					};
-					w.dialogManager.show('tagCitation', {
+					w.dialogManager.show('tagPerson', {
 						cwrcInfo: result
 					});
 				}
