@@ -68,7 +68,10 @@ return function(writer) {
 			
 //		}
 		
-		var rdfString = buildAnnotations();
+		var rdfString = '';
+		if (includeRDF) {
+			rdfString = buildAnnotations();
+		}
 		
 		
 		var root = body.children('[_tag='+w.root+']');
