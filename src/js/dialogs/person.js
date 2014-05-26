@@ -47,28 +47,29 @@ return function(writer) {
 	};
 	
 	var initAttributeWidget = function() {
-		var personAtts = w.utilities.getChildrenForTag({tag: 'person', type: 'attribute', returnType: 'object'});
-		$.map(personAtts, function(val, key) {
-			personAtts[key].parent = 'person';
-		});
-		var persNameAtts = w.utilities.getChildrenForTag({tag: 'persName', type: 'attribute', returnType: 'object'});
-		$.map(persNameAtts, function(val, key) {
-			persNameAtts[key].parent = 'persName';
-		});
-		var combinedAtts = {};
-		$.extend(combinedAtts, persNameAtts, personAtts);
-
-		var finalAtts = [];
-		for (var key in combinedAtts) {
-			finalAtts.push(combinedAtts[key]);
+		// TODO determine if person attributes should be re-added, current markup only allows for persName
+//		var personAtts = w.utilities.getChildrenForTag({tag: 'person', type: 'attribute', returnType: 'object'});
+//		$.map(personAtts, function(val, key) {
+//			personAtts[key].parent = 'person';
+//		});
+		var persNameAtts = w.utilities.getChildrenForTag({tag: 'persName', type: 'attribute', returnType: 'array'});
+		for (var i = 0; i < persNameAtts.length; i++) {
+			persNameAtts[i].parent = 'persName';
 		}
-		finalAtts.sort(function(a, b) {
-			if (a.name < b.name) return -1;
-			if (a.name > b.name) return 1;
-			return 0;
-		});
+//		var combinedAtts = {};
+//		$.extend(combinedAtts, persNameAtts, personAtts);
+//
+//		var finalAtts = [];
+//		for (var key in combinedAtts) {
+//			finalAtts.push(combinedAtts[key]);
+//		}
+//		finalAtts.sort(function(a, b) {
+//			if (a.name < b.name) return -1;
+//			if (a.name > b.name) return 1;
+//			return 0;
+//		});
 		
-		attributeWidget.buildWidget(finalAtts);
+		attributeWidget.buildWidget(persNameAtts);
 		attWidgetInit = true;
 	};
 	

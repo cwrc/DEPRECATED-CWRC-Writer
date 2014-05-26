@@ -68,6 +68,15 @@ return function(writer) {
 		return annotation;
 	}
 	
+	// converts a key/value obj into a markup string
+	function getAttributeString(attObj) {
+		var str = '';
+		for (var key in attObj) {
+			str += ' '+key+'="'+attObj[key]+'"';
+		}
+		return str;
+	}
+	
 	var entities = {
 		person: {
 			title: 'Person',
@@ -86,6 +95,10 @@ return function(writer) {
 					if (offsetId) xml += ' offsetId="'+offsetId+'"';
 					if (info.certainty) xml += ' cert="'+info.certainty+'"';
 					if (info.role) xml += ' role="'+info.role+'"';
+					
+					var atts = info.attributes.persName;
+					xml += getAttributeString(atts);
+					
 					xml += '>'+TEXT_SELECTION+'</persName>';
 					return xml;
 				},
@@ -207,6 +220,10 @@ return function(writer) {
 					if (offsetId) xml += ' offsetId="'+offsetId+'"';
 					if (info.certainty) xml += ' cert="'+info.certainty+'"';
 					if (info.cwrcInfo) xml += ' ref="'+info.cwrcInfo.id+'"';
+					
+					var atts = info.attributes.orgName;
+					xml += getAttributeString(atts);
+					
 					xml += '>'+TEXT_SELECTION+'</orgName>';
 					return xml;
 				},
