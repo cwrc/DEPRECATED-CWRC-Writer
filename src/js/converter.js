@@ -526,11 +526,12 @@ return function(writer) {
 		}
 		
 		// process RDF and/or entities
-		if (docMode == w.XMLRDF) {
+		// TODO add processEntities back in
+		//if (docMode == w.XMLRDF) {
 			processRdf(rdfs);
-		} else {
-			processEntities($(doc.firstChild));
-		}
+		//} else {
+		//	processEntities($(doc.firstChild));
+		//}
 		$(doc).find('rdf\\:RDF, RDF').remove();
 
 		// FIXME temp fix until document format is correct
