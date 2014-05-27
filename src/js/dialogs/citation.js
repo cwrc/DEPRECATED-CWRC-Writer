@@ -86,11 +86,13 @@ return function(writer) {
 			
 			var title = prefix+'Citation';
 			citation.dialog('option', 'title', title);
-			if (config.pos) {
-				citation.dialog('option', 'position', [config.pos.x, config.pos.y]);
-			} else {
-				citation.dialog('option', 'position', 'center');
-			}
+			citation.dialog('option', 'position', 'center');
+			
+			var width = $(document).width() * 0.85;
+			var height = $(document).height() * 0.85;
+			citation.dialog('option', 'width', width);
+			citation.dialog('option', 'height', height);
+			
 			citation.dialog('open');
 			
 			// hack to get the writer

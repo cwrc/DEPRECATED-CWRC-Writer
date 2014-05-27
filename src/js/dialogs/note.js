@@ -81,11 +81,13 @@ return function(writer) {
 			
 			var title = prefix+'Note';
 			note.dialog('option', 'title', title);
-			if (config.pos) {
-				note.dialog('option', 'position', [config.pos.x, config.pos.y]);
-			} else {
-				note.dialog('option', 'position', 'center');
-			}
+			note.dialog('option', 'position', 'center');
+			
+			var width = $(document).width() * 0.85;
+			var height = $(document).height() * 0.85;
+			note.dialog('option', 'width', width);
+			note.dialog('option', 'height', height);
+			
 			note.dialog('open');
 			
 			// hack to get the writer
