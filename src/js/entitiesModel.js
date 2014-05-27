@@ -262,6 +262,12 @@ return function(writer) {
 					xml += '</bibl></note>';
 					return xml;
 				}
+			},
+			annotation: function(entity) {
+				var data = entity.annotation;
+				var anno = commonAnnotation(data, 'cnt:ContentAsText');
+				anno.motivation = 'oa:identifying';
+				return anno;
 			}
 		},
 		note: {
@@ -290,6 +296,12 @@ return function(writer) {
 					xml += '</note>';
 					return xml;
 				}
+			},
+			annotation: function(entity) {
+				var data = entity.annotation;
+				var anno = commonAnnotation(data, 'cnt:ContentAsText');
+				anno.motivation = 'oa:commenting';
+				return anno;
 			}
 		},
 		correction: {
@@ -359,6 +371,12 @@ return function(writer) {
 					return xml;
 				},
 				events: '<KEYWORDCLASS>'+TEXT_SELECTION+'</KEYWORDCLASS>'
+			},
+			annotation: function(entity) {
+				var data = entity.annotation;
+				var anno = commonAnnotation(data, 'cnt:ContentAsText');
+				anno.motivation = 'oa:tagging';
+				return anno;
 			}
 		},
 		link: {
@@ -388,6 +406,12 @@ return function(writer) {
 			mapping: {
 				tei: '<title cert="${info.certainty}" level="${info.level}">'+TEXT_SELECTION+'</title>',
 				events: '<TITLE TITLETYPE="${info.level}">'+TEXT_SELECTION+'</TITLE>'
+			},
+			annotation: function(entity) {
+				var data = entity.annotation;
+				var anno = commonAnnotation(data, 'cnt:ContentAsText');
+				anno.motivation = 'oa:identifying';
+				return anno;
 			}
 		}
 	};
