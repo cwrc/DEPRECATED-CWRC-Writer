@@ -352,7 +352,7 @@ return function(writer) {
 		keyword: {
 			title: 'Keyword',
 			parentTag: {
-				tei: 'keywords',
+				tei: 'note',
 				events: 'KEYWORDCLASS'
 			},
 			mapping: {

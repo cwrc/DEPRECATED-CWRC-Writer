@@ -15,7 +15,8 @@ return function(writer) {
 	
 	function addRow(prevRow) {
 		var newRow;
-		var html = '<div class="keywordRow"><input type="text" value="" /><button class="add">Add Keyword</button>';
+		// TODO add handling for multiple keywords, currently broken when loading a document
+		var html = '<div class="keywordRow"><input type="text" value="" />';//<button class="add">Add Keyword</button>';
 		if (prevRow == null) {
 			html += '</div>';
 			newRow = $('#keywordRowsParent').append(html).find('.keywordRow');
