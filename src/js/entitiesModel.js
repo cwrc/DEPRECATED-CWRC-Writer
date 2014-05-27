@@ -183,11 +183,7 @@ return function(writer) {
 					if (info.precision) {
 						xml += '<precision';
 						if (id) xml += ' annotationId="'+id+'"';
-						xml += ' precision="'+info.precision+'">';
-						if (info.detail) {
-							xml += info.detail;
-						}
-						xml += '</precision>';
+						xml += ' precision="'+info.precision+'" />';
 					}
 					xml += '</placeName>';
 					return xml;

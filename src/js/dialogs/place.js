@@ -18,7 +18,6 @@ return function(writer) {
 	var processData = function() {
 		currentData.certainty = $('#'+id+'_certainty input:checked').val();
 		currentData.precision = $('#'+id+'_precision input:checked').val();
-		currentData.detail = $('#'+id+'_detail').val();
 		
 		for (var key in currentData) {
 			if (currentData[key] == undefined || currentData[key] == '') {
@@ -54,12 +53,13 @@ return function(writer) {
 			'<input type="radio" id="'+id+'_speculative" name="'+id+'_id_certainty" value="speculative" /><label for="'+id+'_speculative">Speculative</label>'+
 	    '</div>'+
 	    '<div>'+
-		    '<p>Absolute or relative place name:</p>'+
+		    '<p>Precision of location of place name:</p>'+
 		    '<div id="'+id+'_precision">'+
-			    '<input type="radio" id="'+id+'_precise" name="'+id+'_detail_radio" value="precise" /><label for="'+id+'_precise">Precise</label>'+
-				'<input type="radio" id="'+id+'_proximate" name="'+id+'_detail_radio" value="proximate" /><label for="'+id+'_proximate">Proximate</label>'+
+			    '<input type="radio" id="'+id+'_high" name="'+id+'_detail_radio" value="high" /><label for="'+id+'_high">High</label>'+
+				'<input type="radio" id="'+id+'_medium" name="'+id+'_detail_radio" value="medium" /><label for="'+id+'_medium">Medium</label>'+
+				'<input type="radio" id="'+id+'_low" name="'+id+'_detail_radio" value="low" /><label for="'+id+'_low">Low</label>'+
+				'<input type="radio" id="'+id+'_unknown" name="'+id+'_detail_radio" value="unknown" /><label for="'+id+'_unknown">Unknown</label>'+
 		    '</div>'+
-		    '<label for="'+id+'_detail">Detail (optional):</label><input type="text" id="'+id+'_detail"/>'+
 		'</div>'+
 	'</div>'+
 	'');
@@ -102,7 +102,6 @@ return function(writer) {
 			$('#'+id+'_certainty input:checked').prop('checked', false).button('refresh');
 			$('#'+id+'_precision input:checked').prop('checked', false).button('refresh');
 			$('#'+id+'_tagAs span').empty();
-			$('#'+id+'_detail').val('');
 			
 			// TODO how to handle ADD/EDIT with cwrcInfo
 			
@@ -122,7 +121,6 @@ return function(writer) {
 				currentId = config.entry.props.id;
 				$('#'+id+'_certainty input[value="'+data.certainty+'"]').prop('checked', true).button('refresh');
 				$('#'+id+'_precision input[value="'+data.precision+'"]').prop('checked', true).button('refresh');
-				$('#'+id+'_detail').val(data.detail);
 			}
 			
 			dialog.dialog('open');
