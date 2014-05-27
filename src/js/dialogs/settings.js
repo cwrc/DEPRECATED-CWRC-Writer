@@ -70,6 +70,7 @@ return function(writer, config) {
 	'</div>'+
 	'</div>'+
 	'<div id="helpDialog">'+
+		'<p>For help with CWRC-Writer click <a href="https://drive.google.com/a/ualberta.ca/?tab=mo#folders/0B3fHpXyQEt3bXzZiT3ppWEdMODQ" target="_blank">here</a>.</p>'+
 	'</div>');
 	
 	buildSchema();
@@ -88,9 +89,6 @@ return function(writer, config) {
 	});
 	
 	$('#helpLink').click(function() {
-		if ($('#helpDialog iframe').length == 0) {
-			$('#helpDialog').html('<iframe src="https://sites.google.com/site/cwrcwriterhelp/home"/>');
-		}
 		$('#helpDialog').dialog('open');
 	});
 	
@@ -130,8 +128,8 @@ return function(writer, config) {
 		modal: true,
 		resizable: true,
 		closeOnEscape: true,
-		height: 500,
-		width: 900,
+		height: 150,
+		width: 250,
 		autoOpen: false,
 		buttons: {
 			'Close': function() {
