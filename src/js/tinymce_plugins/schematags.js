@@ -107,7 +107,11 @@
 				
 				var valid = t.editor.execCommand('isSelectionValid', true, t.action);
 				if (valid != 2) {
-					t.editor.execCommand('showError', valid);
+					t.editor.writer.dialogManager.show('message', {
+						title: 'Error',
+						msg: 'Please ensure that the beginning and end of your selection have a common parent.<br/>For example, your selection cannot begin in one paragraph and end in another, or begin in bolded text and end outside of that text.',
+						type: 'error'
+					});
 					return;
 				}
 				
