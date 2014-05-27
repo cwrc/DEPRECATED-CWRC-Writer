@@ -146,8 +146,10 @@ return function(writer) {
 				
 				currentId = config.entry.props.id;
 				
-				attributeWidget.setData(data.attributes);
-				$('#'+id+'_teiParent').parent().accordion('option', 'active', 0);
+				var showWidget = attributeWidget.setData(data.attributes);
+				if (showWidget) {
+					$('#'+id+'_teiParent').parent().accordion('option', 'active', 0);
+				}
 				
 				$('#'+id+'_certainty input[value="'+data.certainty+'"]').prop('checked', true).button('refresh');
 			}

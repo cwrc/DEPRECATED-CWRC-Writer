@@ -1,13 +1,29 @@
-define(['jquery', 'jquery-ui', 'moment'], function($, jqueryUi, moment) {
+define(['jquery',
+        'jquery-ui',
+        'moment',
+        'attributeWidget'
+], function($, jqueryUi, moment, AttributeWidget) {
 	
 return function(writer) {
 	var w = writer;
 	
 	var id = 'dateDialog';
 	
+	var attWidgetInit = false;
+	var attributeWidget;
+	
 	var mode = null;
 	var ADD = 0;
 	var EDIT = 1;
+	
+	var initAttributeWidget = function() {
+		var dateAtts = w.utilities.getChildrenForTag({tag: 'date', type: 'attribute', returnType: 'array'});
+		for (var i = 0; i < dateAtts.length; i++) {
+			dateAtts[i].parent = 'date';
+		}
+		attributeWidget.buildWidget(dateAtts);
+		attWidgetInit = true;
+	};
 	
 	$(document.body).append(''+
 	'<div id="'+id+'" class="annotationDialog">'+
@@ -23,8 +39,27 @@ return function(writer) {
 			'<label for="startDate">Start date:</label><br/><input type="text" id="startDate" style="margin-bottom: 5px;"/><br />'+
 		    '<label for="endDate">End date:</label><br/><input type="text" id="endDate" />'+
 	    '</div>'+
-	    '<p style="position: absolute; bottom: 5px;">Format: YYYY, YYYY-MM, or YYYY-MM-DD<br/>e.g. 2010, 2010-10, 2010-10-31</p>'+
+	    '<div>Format: YYYY, YYYY-MM, or YYYY-MM-DD<br/>e.g. 2010, 2010-10, 2010-10-31</div>'+
+	    '<div id="'+id+'_certainty">'+
+	    	'<p>This identification is:</p>'+
+			'<input type="radio" id="'+id+'_definite" name="'+id+'_id_certainty" value="definite" /><label for="'+id+'_definite">Definite</label>'+
+			'<input type="radio" id="'+id+'_reasonable" name="'+id+'_id_certainty" value="reasonably certain" /><label for="'+id+'_reasonable">Reasonably Certain</label>'+
+			'<input type="radio" id="'+id+'_probable" name="'+id+'_id_certainty" value="probable" /><label for="'+id+'_probable">Probable</label>'+
+			'<input type="radio" id="'+id+'_speculative" name="'+id+'_id_certainty" value="speculative" /><label for="'+id+'_speculative">Speculative</label>'+
+	    '</div>'+
+	    '<div>'+
+		    '<h3>Markup options</h3>'+
+		    '<div id="'+id+'_teiParent" style="position: relative; height: 200px;">'+
+		    '</div>'+
+		'</div>'+
 	'</div>');
+	
+	$('#'+id+'_teiParent').parent().accordion({
+		heightStyle: 'content',
+		animate: false,
+		collapsible: true,
+		active: false
+	});
 	
 	var date = $('#'+id);
 	date.dialog({
@@ -34,8 +69,8 @@ return function(writer) {
 		open: function(event, ui) {
 			$('#'+id).parent().find('.ui-dialog-titlebar-close').hide();
 		},
-		height: 275,
-		width: 275,
+		height: 580,
+		width: 400,
 		autoOpen: false,
 		buttons: {
 			'Tag Date': function() {
@@ -47,6 +82,7 @@ return function(writer) {
 		}
 	});
 	
+	$('#'+id+'_certainty').buttonset();
 	$('#'+id+'_type').buttonset();
 	$('#'+id+'_type input').click(function() {
 		toggleDate($(this).val());
@@ -176,6 +212,10 @@ return function(writer) {
 				
 				if (error) return false;
 			}
+			
+			data.certainty = $('#'+id+'_certainty input:checked').val();
+			data.attributes = attributeWidget.getData();
+			
 		} else {
 			data = null;
 		}
@@ -187,13 +227,23 @@ return function(writer) {
 		date.dialog('close');
 	};
 	
+	attributeWidget = new AttributeWidget({writer: w, parentId: id+'_teiParent'});
+	
 	return {
 		show: function(config) {
 			mode = config.entry ? EDIT : ADD;
+			
+			if (attWidgetInit == false) {
+				initAttributeWidget();
+			}
+			
 			var prefix = 'Tag ';
 			
 			// reset the form
+			attributeWidget.reset();
 			$('#'+id+'_type input:checked').prop('checked', false).button('refresh');
+			$('#'+id+'_certainty input:checked').prop('checked', false).button('refresh');
+			$('#'+id+'_teiParent').parent().accordion('option', 'active', false);
 			
 			if (mode == ADD) {
 				var dateValue = '';
@@ -224,20 +274,27 @@ return function(writer) {
 				endDate.value = '';
 			} else {
 				prefix = 'Edit ';
-				var info = config.entry.info;
-				if (info.date) {
+				var data = config.entry.info;
+				if (data.date) {
 					toggleDate('date');
 					$('#'+id+'_type_date').prop('checked', true).button('refresh');
-					dateInput.value = info.date;
+					dateInput.value = data.date;
 					startDate.value = '';
 					endDate.value = '';
 				} else {
 					toggleDate('range');
 					$('#'+id+'_type_range').prop('checked', true).button('refresh');
 					dateInput.value = '';
-					startDate.value = info.startDate;
-					endDate.value = info.endDate;
+					startDate.value = data.startDate;
+					endDate.value = data.endDate;
 				}
+				
+				var showWidget = attributeWidget.setData(data.attributes);
+				if (showWidget) {
+					$('#'+id+'_teiParent').parent().accordion('option', 'active', 0);
+				}
+				
+				$('#'+id+'_certainty input[value="'+data.certainty+'"]').prop('checked', true).button('refresh');
 			}
 			
 			$(dateInput).css({borderBottom: ''});

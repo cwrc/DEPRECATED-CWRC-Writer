@@ -141,16 +141,21 @@ return function(config) {
 			$('.attsContainer input, .attsContainer select', parent).val('');
 		},
 		setData: function(data) {
+			var wasDataSet = false;
+			
 			for (var key in data) {
 				var entry = data[key];
 				// assumes that each entry is a parent for the actual attribute values
 				for (var subkey in entry) {
+					wasDataSet = true;
 					$('.attributeSelector li[data-name="'+subkey+'"]', parent).addClass('selected');
 					var div = $('[data-name="form_'+subkey+'"]', parent);
 					$('input, select', div).val(entry[subkey]);
 					div.show();
 				}
 			}
+			
+			return wasDataSet;
 		},
 		getData: function() {
 			// collect values then close dialog

@@ -126,11 +126,16 @@ return function(writer) {
 					var xml = '<date';
 					if (id) xml += ' annotationId="'+id+'"';
 					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					if (info.certainty) xml += ' cert="'+info.certainty+'"';
 					if (info.date) {
 						xml += ' when="'+info.date+'"';
 					} else if (info.startDate) {
 						xml += ' from="'+info.startDate+'" to="'+info.endDate+'"';
 					}
+					
+					var atts = info.attributes.date;
+					xml += getAttributeString(atts);
+					
 					xml += '>'+TEXT_SELECTION+'</date>';
 					return xml;
 				},
