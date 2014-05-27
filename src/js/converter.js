@@ -544,18 +544,18 @@ return function(writer) {
 		// reset the undo manager
 		w.editor.undoManager.clear();
 		
-		var msg;
-		if (w.mode == w.XML) {
-			msg = 'This document is set to edit in XML (no overlap) mode: XML and RDF will be created with no overlapping annotations.';
-		} else {
-			msg = 'This document is set to edit in XML and RDF (overlapping entities) mode; XML and RDF will be kept in sync where possible, but where overlap occurs RDF will be created without corresponding XML.';
-		}
-		
-		w.dialogManager.show('message', {
-			title: 'CWRC-Writer Mode',
-			msg: msg,
-			type: 'info'
-		});
+//		var msg;
+//		if (w.mode == w.XML) {
+//			msg = 'This document is set to edit in XML (no overlap) mode: XML and RDF will be created with no overlapping annotations.';
+//		} else {
+//			msg = 'This document is set to edit in XML and RDF (overlapping entities) mode; XML and RDF will be kept in sync where possible, but where overlap occurs RDF will be created without corresponding XML.';
+//		}
+//		
+//		w.dialogManager.show('message', {
+//			title: 'CWRC-Writer Mode',
+//			msg: msg,
+//			type: 'info'
+//		});
 	}
 	
 	function processRdf(rdfs) {
