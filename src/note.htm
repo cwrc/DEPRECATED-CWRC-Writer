@@ -27,7 +27,7 @@
 				
 				function doResize() {
 					var uiHeight = $('#'+writer.editor.id+'_tbl tr.mceFirst').outerHeight() + 2;
-					writer.editor.theme.resizeTo($(window).width(), $(window).height() - uiHeight);
+					$('#'+writer.editor.id+'_ifr').height($(window).height() - uiHeight);
 				}
 				
 				function doInit() {
