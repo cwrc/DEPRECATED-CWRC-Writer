@@ -382,7 +382,18 @@ return function(writer) {
 				events: 'XREF'
 			},
 			mapping: {
-				tei: '<ref target="${info.url}">'+TEXT_SELECTION+'</ref>',
+				tei: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '<ref';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					if (info.url) xml += ' target="'+info.url+'"';
+					xml += '>'+TEXT_SELECTION+'</ref>';
+					return xml;
+				},
 				events: '<XREF URL="${info.url}">'+TEXT_SELECTION+'</XREF>'
 			},
 			annotation: function(entity) {
@@ -400,7 +411,19 @@ return function(writer) {
 				events: 'TITLE'
 			},
 			mapping: {
-				tei: '<title cert="${info.certainty}" level="${info.level}">'+TEXT_SELECTION+'</title>',
+				tei: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '<title';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					if (info.certainty) xml += ' cert="'+info.certainty+'"';
+					if (info.level) xml += ' level="'+info.level+'"';
+					xml += '>'+TEXT_SELECTION+'</title>';
+					return xml;
+				},
 				events: '<TITLE TITLETYPE="${info.level}">'+TEXT_SELECTION+'</TITLE>'
 			},
 			annotation: function(entity) {
