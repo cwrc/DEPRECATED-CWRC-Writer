@@ -581,7 +581,8 @@ return function(writer) {
 							id: id,
 							type: entity.cwrcType
 						},
-						info: entity.cwrcAttributes
+						info: entity.cwrcAttributes,
+						annotation: {}
 					};
 					
 					// parse the xpointer, get the el associated with the xpath, assign a temp. ID for later usage
@@ -596,27 +597,34 @@ return function(writer) {
 						var foopath = xpath.replace(/\/\//g, '//foo:'); // default namespace hack (http://stackoverflow.com/questions/9621679/javascript-xpath-and-default-namespaces)
 //						foopath = foopath.replace(/\//g, '/foo:');
 						var result = doc.evaluate(foopath, doc, nsResolver, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
-						var xpathEl = $(result.singleNodeValue);
-						
-						var parentId = xpathEl.attr('cwrcStructId');
-						if (parentId == null) {
-							// assign a struct ID now, to associate with the entity
-							// later we'll insert it as the real struct ID value
-							parentId = tinymce.DOM.uniqueId('struct_');
-							xpathEl.attr('cwrcStructId', parentId);
+						if (result.singleNodeValue != null) {
+							var xpathEl = $(result.singleNodeValue);
+							
+							var parentId = xpathEl.attr('cwrcStructId');
+							if (parentId == null) {
+								// assign a struct ID now, to associate with the entity
+								// later we'll insert it as the real struct ID value
+								parentId = tinymce.DOM.uniqueId('struct_');
+								xpathEl.attr('cwrcStructId', parentId);
+							}
+							
+							var offset = null;
+							if (parts[2]) {
+								offset = parseInt(parts[2]);
+							}
+							
+							return {
+								xpath: xpath,
+								el: xpathEl,
+								parentId: parentId,
+								offset: offset
+							};
+						} else {
+							if (window.console) {
+								console.warn('Could not find node for: '+xpath);
+							}
+							return null;
 						}
-						
-						var offset = null;
-						if (parts[2]) {
-							offset = parseInt(parts[2]);
-						}
-						
-						return {
-							xpath: xpath,
-							el: xpathEl,
-							parentId: parentId,
-							offset: offset
-						};
 					}
 					
 					var selector = entity.hasTarget.hasSelector;
@@ -626,31 +634,33 @@ return function(writer) {
 						var xpathStart = parseXpointer(xpointerStart, doc);
 						var xpathEnd = parseXpointer(xpointerEnd, doc);
 						
-						w.entities[id].annotation = {
-							range: {
-								id: id,
-								parentStart: xpathStart.parentId,
-								start: xpathStart.xpath,
-								startOffset: xpathStart.offset,
-								parentEnd: xpathEnd.parentId,
-								end: xpathEnd.xpath,
-								endOffset: xpathEnd.offset
-							}
-						};
+						if (xpathStart != null && xpathEnd != null) {
+							w.entities[id].annotation = {
+								range: {
+									id: id,
+									parentStart: xpathStart.parentId,
+									start: xpathStart.xpath,
+									startOffset: xpathStart.offset,
+									parentEnd: xpathEnd.parentId,
+									end: xpathEnd.xpath,
+									endOffset: xpathEnd.offset
+								}
+							};
+						}
 					} else if (selector['@type'] == 'oa:FragmentSelector') {
 						var xpointer = selector['rdf:value'];
 						var xpathObj = parseXpointer(xpointer, doc);
 						
-						w.entities[id].annotation = {
-							range: {
-								id: id,
-								parentStart: xpathObj.parentId,
-								start: xpathObj.xpath
-							}
-						};
+						if (xpathObj != null) {
+							w.entities[id].annotation = {
+								range: {
+									id: id,
+									parentStart: xpathObj.parentId,
+									start: xpathObj.xpath
+								}
+							};
+						}
 					}
-					
-					// TODO remove entity tag from document
 				}
 				
 			// triple
@@ -846,39 +856,41 @@ return function(writer) {
 			entry = w.entities[id];
 			range = entry.annotation.range;
 			
-			// just rdf, no markup
-			if (range.parentEnd) {
-				var parent = $('#'+range.parentStart, body);
-				var result = _getTextNodeFromParentAndOffset(parent, range.startOffset);
-				startNode = result.textNode;
-				startOffset = result.offset;
-				parent = $('#'+range.parentEnd, body);
-				result = _getTextNodeFromParentAndOffset(parent, range.endOffset);
-				endNode = result.textNode;
-				endOffset = result.offset;
-			// markup
-			} else if (range.parentStart) {
-				var entityNode = $('#'+range.parentStart, body);
-				startNode = entityNode[0].previousSibling;
-				if (startNode != null) {
-					if (startNode.nodeType === Node.TEXT_NODE) {
-						startOffset = startNode.length;
-					} else if (startNode.nodeType === Node.ELEMENT_NODE) {
+			if (range != null) {
+				// just rdf, no markup
+				if (range.parentEnd) {
+					var parent = $('#'+range.parentStart, body);
+					var result = _getTextNodeFromParentAndOffset(parent, range.startOffset);
+					startNode = result.textNode;
+					startOffset = result.offset;
+					parent = $('#'+range.parentEnd, body);
+					result = _getTextNodeFromParentAndOffset(parent, range.endOffset);
+					endNode = result.textNode;
+					endOffset = result.offset;
+				// markup
+				} else if (range.parentStart) {
+					var entityNode = $('#'+range.parentStart, body);
+					startNode = entityNode[0].previousSibling;
+					if (startNode != null) {
+						if (startNode.nodeType === Node.TEXT_NODE) {
+							startOffset = startNode.length;
+						} else if (startNode.nodeType === Node.ELEMENT_NODE) {
+							startOffset = 0;
+						}
+					} else {
+						startNode = entityNode[0];
 						startOffset = 0;
 					}
-				} else {
-					startNode = entityNode[0];
-					startOffset = 0;
+					endNode = entityNode[0].nextSibling;
+					if (endNode != null) {
+						endOffset = 0;
+					} else {
+						endNode = entityNode[0];
+						endOffset = endNode.childNodes.length;
+					}
+					
+					entityNodes.push(entityNode);
 				}
-				endNode = entityNode[0].nextSibling;
-				if (endNode != null) {
-					endOffset = 0;
-				} else {
-					endNode = entityNode[0];
-					endOffset = endNode.childNodes.length;
-				}
-				
-				entityNodes.push(entityNode);
 			}
 			
 			if (startNode != null && endNode != null) {
