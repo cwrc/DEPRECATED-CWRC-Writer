@@ -120,6 +120,9 @@ return function(writer) {
 	u.isSelectionValid = function(isStructTag, structAction) {
 		var sel = w.editor.selection;
 		
+		// disallow empty entities
+		if (sel.isCollapsed()) return w.NO_SELECTION;
+		
 		var range = sel.getRng(true);
 		// next line commented out as it messes up the selection in IE
 //		range.commonAncestorContainer.normalize(); // normalize/collapse separate text nodes
