@@ -127,7 +127,6 @@ return function(config) {
 		if (rootData != null) {
 			rootData.attr.id = 'cwrc_tree_root';
 			_doUpdate(rootNode.children(), rootData, 0);
-			
 			var settings = treeRef._get_settings();
 			settings.json_data.data = rootData;
 			treeRef._set_settings(settings);
@@ -326,9 +325,10 @@ return function(config) {
 		} else if (node.attr('_entity') && node.hasClass('start')) {
 			var id = node.attr('name');
 			var type = node.attr('_type');
+			var tag = w.entitiesModel.getParentTag(type, w.schemaManager.schemaId);
 			
 			nodeData = {
-				data: type,
+				data: tag,
 				attr: {name: id}, // 'class': type}
 				state: level < 2 ? 'open' : null
 			};
