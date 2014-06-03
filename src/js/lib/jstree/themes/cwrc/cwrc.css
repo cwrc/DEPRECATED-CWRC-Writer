@@ -1,0 +1,147 @@
+/* jstree overrides */
+#vakata-dragged {
+	display: block;
+	overflow: hidden;
+	background-color: #fff;
+    border: 1px solid #D4D0C8;
+    border-radius: 4px;
+    padding: 4px !important;
+}
+
+#vakata-dragged ins {
+	background-image: url("../smoothness/images/ui-icons_ffffff_256x240.png") !important;
+	background-repeat: no-repeat !important;
+	position: relative !important;
+	display: inline-block !important;
+	margin-right: 4px !important;
+	top: 0 !important;
+	left: 0 !important;
+	vertical-align: bottom;
+}
+
+#vakata-dragged ins.jstree-ok {
+	background-position: -64px -144px;
+}
+
+#vakata-dragged ins.jstree-invalid {
+	background-position: -96px -128px;
+}
+
+#vakata-dragged span.jstree-copy {
+	background: url("../smoothness/images/ui-icons_222222_256x240.png") -16px -128px no-repeat !important;
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	margin-left: -2px;
+	vertical-align: bottom;
+}
+
+#jstree-marker {
+	background: url("../smoothness/images/ui-icons_222222_256x240.png") -32px -16px no-repeat !important;
+	width: 16px !important;
+	height: 16px !important;
+	text-indent: -100px;
+}
+
+#vakata-contextmenu, #vakata-contextmenu ul li ul {
+	border: 1px solid #D4D0C8 !important;
+	background-color: #fff !important;
+	box-shadow: 1px 1px 2px #ccc;
+}
+#vakata-contextmenu, #vakata-contextmenu ul {
+	min-width: 165px !important;
+}
+
+#vakata-contextmenu li ins, #jqContextMenu li ins {
+	margin: 2px 2px 0 2px !important;
+}
+
+#vakata-contextmenu .submenu > a span {
+	background-image: url("../img/menu_arrow.gif");
+    color: #fff;
+    display: block;
+    float: right;
+    width: 20px;
+    height: 20px;
+}
+
+#vakata-contextmenu .submenu .filterParent {
+	position: absolute;
+	display: none;
+	background-color: #fff !important;
+	border: 1px solid #D4D0C8 !important;
+    box-shadow: 1px 1px 2px #CCCCCC;
+}
+
+#vakata-contextmenu .submenu .filterParent span {
+	margin: 2px 3px;
+	font-size: 11px;
+}
+
+#vakata-contextmenu .submenu .filterParent input {
+	margin: 2px 3px 2px 0;
+	width: 90px;
+	position: relative;
+	font-size: 11px;
+	border: 1px solid #D4D0C8;
+}
+
+#jqContextMenu li.separator {
+	border-top: 1px solid #DDDDDD !important;
+}
+
+#jqContextMenu li ins {
+	float: left;
+	height: 16px;
+	margin-right: 2px;
+	text-decoration: none;
+	width: 16px;
+}
+
+#vakata-contextmenu li a {
+	font-family: Tahoma,Verdana,Arial,Helvetica !important;
+	font-size: 11px !important;
+	color: #000 !important;
+	line-height: 22px !important;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+#vakata-contextmenu li a:hover, #vakata-contextmenu li.vakata-hover > a {
+	color: #000 !important;
+	background-color: #DBECF3 !important;
+}
+
+#tree.jstree li.person {
+	background-color: #FFCCCC;
+}
+#tree.jstree li.place {
+	background-color: #A9D6D6;
+}
+#tree.jstree li.date {
+	background-color: #FFD5B3;
+}
+#tree.jstree li.event {
+	background-color: #9FDF9F;
+}
+#tree.jstree li.org {
+	background-color: #BDB4D5;
+}
+#tree.jstree li.citation {
+	background-color: #E6B3CF;
+}
+#tree.jstree li.note {
+	background-color: #9CAFC4;
+}
+#tree.jstree li.title {
+	background-color: #F6E78D;
+}
+#tree.jstree li.correction {
+	background-color: #FFC2B3;
+}
+#tree.jstree li.keyword {
+	background-color: #8EECBD;
+}
+#tree.jstree li.link {
+	background-color: #94AFFF;
+}

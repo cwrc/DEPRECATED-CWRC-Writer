@@ -8,8 +8,7 @@ var require = {
 		'jquery.contextmenu': 'lib/jquery/jquery.contextmenu',
 		'jquery.tmpl': 'lib/jquery/jquery.tmpl.min',
 		'jquery.watermark': 'lib/jquery/jquery.watermark.min',
-		'jquery.hotkeys': 'lib/jstree/jquery.hotkeys',
-		'jquery.jstree': 'lib/jstree/jquery.jstree', // can't use jquery.jtree.min.js due to modification
+		'jquery.jstree': 'lib/jstree/jstree.3.0.0',
 		'jquery.snippet': 'lib/snippet/jquery.snippet.min',
 		
 		'tinymce': 'lib/tinymce/tiny_mce_src',
@@ -35,8 +34,6 @@ var require = {
 		'jquery.contextmenu': ['jquery'],
 		'jquery.tmpl': ['jquery'],
 		'jquery.watermark': ['jquery'],
-		'jquery.hotkeys': ['jquery'],
-		'jquery.jstree': ['jquery.hotkeys'],
 		'jquery.snippet': ['jquery'],
 		'tinymce': {
 			exports: 'tinymce',

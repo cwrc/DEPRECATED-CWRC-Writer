@@ -32,11 +32,6 @@
 						parentContainer.wrap('<div class="cwrc" />');
 					}
 					
-					// TODO move this to an event
-					if (t.editor.writer.tree) {
-						t.editor.writer.tree.disableHotkeys();
-					}
-					
 					var filterKey;
 					// get the node from currentBookmark if available, otherwise use currentNode
 					if (t.editor.currentBookmark != null) {
@@ -80,12 +75,8 @@
 					}
 				});
 				
-				menu.onHideMenu.add(function(m) {
-					// TODO move this to an event
-					if (t.editor.writer.tree) {
-						t.editor.writer.tree.enableHotkeys();
-					}
-				});
+//				menu.onHideMenu.add(function(m) {
+//				});
 				
 				t.buildMenu(menu, node, config);
 				
@@ -248,10 +239,6 @@
 			var w = t.editor.writer;
 			
 			t.editor.getBody().blur(); // lose keyboard focus in editor
-			// TODO move this to an event
-			if (w.tree) {
-				w.tree.disableHotkeys();
-			}
 			
 			var structsEntry = null;
 			if (t.mode == t.EDIT) {
@@ -424,11 +411,6 @@
 					$('ins', parent).tooltip('destroy');
 				} catch (e) {
 					if (console) console.log('error destroying tooltip');
-				}
-				
-				// TODO move this to an event
-				if (t.editor.writer.tree) {
-					t.editor.writer.tree.enableHotkeys();
 				}
 				
 				switch (t.mode) {

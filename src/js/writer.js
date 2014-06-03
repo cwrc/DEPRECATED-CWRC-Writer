@@ -408,7 +408,7 @@ return function(config) {
 		var target = $(evt.target);
 		// hide structure tree menu
 		// TODO move to structure tree
-		if ($.vakata && $.vakata.context.vis && target.parents('#vakata-contextmenu').length == 0) {
+		if ($.vakata && $.vakata.context && target.parents('.vakata-context').length === 0) {
 			$.vakata.context.hide();
 		}
 		// hide editor menu

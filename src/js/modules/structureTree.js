@@ -1,7 +1,62 @@
 define(['jquery', 'jquery-ui', 'jquery.jstree'], function($, jqueryUi, jsTree) {
+
+// overwrite show submenu, add our custom filter input
+$.vakata.context._show_submenu = function (o) {
+	o = $(o);
+	o.parent().find('.filterParent').hide();
+	if(!o.length || !o.children("ul").length) { return; }
+	var e = o.children("ul"),
+		x = o.offset().left + o.outerWidth(),
+		y = o.offset().top,
+		w = e.width(),
+		h = e.height(),
+		dw = $(window).width() + $(window).scrollLeft(),
+		dh = $(window).height() + $(window).scrollTop();
+	o[x + w + 10 > dw ? "addClass" : "removeClass"]("vakata-context-right");
+	if(y + h + 10 > dh) {
+		e.css("bottom","-1px");
+	}
+	var filterParent = o.find('.filterParent');
+	if (filterParent.length === 0) {
+		filterParent = $('<div class="filterParent"><span>Filter</span> <input type="text"/></div>').insertBefore(e);
+		filterParent.find('input').on('keydown', function(e) {
+			e.stopPropagation(); // stop context menu from cancelling event
+		}).on('keyup', function(e) {
+			if (e.which == 40) {
+				// down arrow
+				// TODO not working yet
+				$(this).blur();
+				var menu = $(this).parent().next('ul');
+				var li = menu.find('li.vakata-context-hover').removeClass('vakata-context-hover').end().find('li:first');
+				li.addClass('vakata-context-hover').focus();
+			} else {
+				var query = $(this).val().toLowerCase();
+				$(this).parent().next('ul').children('li').each(function(index, el) {
+					if (query == '' || $(el).find('span:last').text().toLowerCase().indexOf(query) != -1) {
+						$(el).show();
+					} else {
+						$(el).hide();
+					}
+				});
+				//$.vakata.context.updateHeight($(this).parent().parent());
+			}
+		});
+	}
+	e.show();
+	filterParent.show().offset({
+		left: e.offset().left,
+		top: (e.offset().top-22)
+	}).width(e.outerWidth()-2);
+};
+$(document).on('context_hide.vakata', function(e) {
+	var filterParent = $('.filterParent', e.element);
+	filterParent.hide();
+});
 	
 return function(config) {
 	var w = config.writer;
+	
+	var id = 'tree';
 	
 	var tree = {
 		currentlySelectedNode: null, // id of the currently selected node
@@ -114,10 +169,10 @@ return function(config) {
 	 * @memberOf tree
 	 */
 	tree.update = function() {
-		var treeRef = $.jstree._reference('#tree');
+		var treeRef = $.jstree.reference('#'+id);
 		// store open nodes to re-open after updating
 		var openNodes = [];
-		$('#tree #cwrc_tree_root').find('li.jstree-open').each(function () {
+		$('#cwrc_tree_root', $tree).find('li.jstree-open').each(function () {
 			var id = $(this).attr('name');
 			openNodes.push(id);
 		});
@@ -125,14 +180,11 @@ return function(config) {
 		var rootNode = $('[_tag="'+w.root+'"]', w.editor.getBody());
 		var rootData = _processNode(rootNode, 0);
 		if (rootData != null) {
-			rootData.attr.id = 'cwrc_tree_root';
+			rootData.li_attr.id = 'cwrc_tree_root';
 			_doUpdate(rootNode.children(), rootData, 0);
-			var settings = treeRef._get_settings();
-			settings.json_data.data = rootData;
-			treeRef._set_settings(settings);
-			treeRef.load_node_json(-1, false, false);
-			treeRef._themeroller();
-			_onNodeLoad($('#tree #cwrc_tree_root').first());
+			treeRef.create_node(null, rootData);
+//			treeRef._themeroller();
+			_onNodeLoad($('#cwrc_tree_root', $tree).first());
 			
 			$.each(openNodes, function (i, val) {
 				treeRef.open_node($('li[name='+val+']', $tree), false, true); 
@@ -154,10 +206,10 @@ return function(config) {
 		// expand the corresponding nodes in the tree
 		for (var i = 0; i < parents.length; i++) {
 			var parentId = parents[i];
-			var parentNode = $('#tree [name="'+parentId+'"]');
+			var parentNode = $('[name="'+parentId+'"]', $tree);
 			var isOpen = $tree.jstree('is_open', parentNode);
 			if (!isOpen) {
-				$tree.jstree('open_node', parentNode, false, true);
+				$tree.jstree('open_node', parentNode, null, false);
 			}
 		}
 	}
@@ -174,14 +226,17 @@ return function(config) {
 				if (id == 'entityHighlight') {
 					id = $(node).find('[_entity]').first().attr('name');
 				}
-				var treeNode = $('#tree [name="'+id+'"]');
+				var treeNode = $('[name="'+id+'"]', $tree);
 				if (treeNode.length === 0) {
 					_expandParentsForNode(node);
-					treeNode = $('#tree [name="'+id+'"]');
+					treeNode = $('[name="'+id+'"]', $tree);
 				}
+				$tree.jstree('deselect_all');
 				_onNodeDeselect(); // manually trigger deselect behaviour, primarily to clear currentlySelectedNode
-				var result = $tree.jstree('select_node', treeNode, true);
-				if (result.attr('id') == 'tree') ignoreSelect = false;
+				var result = $tree.jstree('select_node', treeNode);
+				//if (result === false || result.attr('id') == 'tree') {
+					ignoreSelect = false;
+				//}
 			}
 		} else {
 			_onNodeDeselect();
@@ -200,10 +255,10 @@ return function(config) {
 				if (id == 'entityHighlight') {
 					id = $(node).find('[_entity]').first().attr('name');
 				}
-				var treeNode = $('#tree [name="'+id+'"]');
+				var treeNode = $('[name="'+id+'"]', $tree);
 				if (treeNode.length === 0) {
 					_expandParentsForNode(node);
-					treeNode = $('#tree [name="'+id+'"]');
+					treeNode = $('[name="'+id+'"]', $tree);
 				}
 				selectNode(treeNode, selectionType);
 			}
@@ -217,7 +272,7 @@ return function(config) {
 	 */
 	function selectNode(node, selectionType) {
 		_removeCustomClasses();
-		var activeNode = $('a[class*=ui-state-active]', '#tree');
+		var activeNode = $('a[class*=ui-state-active]', '#'+id);
 		activeNode.removeClass('jstree-clicked ui-state-active');
 		
 		var aChildren = node.children('a');
@@ -239,7 +294,7 @@ return function(config) {
 			if (w.structs[id]._tag == w.header) {
 				w.dialogManager.show('header');
 			} else {
-				ignoreSelect = true; // set to true so tree.highlightNode code isn't run by editor's onNodeChange handler 
+				ignoreSelect = true; // set to true so tree.highlightNode code isn't run by editor's onNodeChange handler
 				w.selectStructureTag(id, selectContents);
 			}
 		} else if (w.entities[id] != null) {
@@ -252,13 +307,6 @@ return function(config) {
 		}
 		ignoreSelect = false;
 	}
-	tree.enableHotkeys = function() {
-		$.jstree._reference('#tree').enable_hotkeys();
-	};
-	
-	tree.disableHotkeys = function() {
-		$.jstree._reference('#tree').disable_hotkeys();
-	};
 	
 	/**
 	 * Processes an element in the editor and returns relevant data for the tree
@@ -316,9 +364,9 @@ return function(config) {
 			}
 			if (info) {
 				nodeData = {
-					data: info._tag,
-					attr: {name: id},
-					state: level < 2 ? 'open' : null
+					text: info._tag,
+					li_attr: {name: id},
+					state: {opened: level < 3}
 				};
 			}
 		// entity tag
@@ -328,9 +376,9 @@ return function(config) {
 			var tag = w.entitiesModel.getParentTag(type, w.schemaManager.schemaId);
 			
 			nodeData = {
-				data: tag,
-				attr: {name: id}, // 'class': type}
-				state: level < 2 ? 'open' : null
+				text: tag,
+				li_attr: {name: id}, // 'class': type}
+				state: {opened: level < 3}
 			};
 		}
 		
@@ -371,10 +419,13 @@ return function(config) {
 	
 	function _onNodeSelect(event, data) {
 		if (!ignoreSelect) {
-			var node = data.rslt.obj;
-			var id = node.attr('name');
-			var aChildren = node.children('a');
-			var selectContents = aChildren.hasClass('contentsSelected');
+			var id = data.node.li_attr.name;
+			var children = data.node.children;
+			children = $.map(children, function(id, index) {
+				return '#'+id;
+			});
+			var $children = $(children.join(',')); 
+			var selectContents = $children.hasClass('contentsSelected');
 			_removeCustomClasses();
 			if (id) {
 				// already selected node, toggle selection type
@@ -383,9 +434,9 @@ return function(config) {
 				}
 				
 				if (selectContents) {
-					aChildren.addClass('contentsSelected').removeClass('nodeSelected');
+					$children.addClass('contentsSelected').removeClass('nodeSelected');
 				} else {
-					aChildren.addClass('nodeSelected').removeClass('contentsSelected');
+					$children.addClass('nodeSelected').removeClass('contentsSelected');
 				}
 				
 				tree.currentlySelectedNode = id;
@@ -396,14 +447,14 @@ return function(config) {
 					if (w.structs[id]._tag == w.header) {
 						w.dialogManager.show('header');
 					} else {
-						ignoreSelect = true; // set to true so tree.highlightNode code isn't run by editor's onNodeChange handler 
+						ignoreSelect = true; // set to true so tree.highlightNode code isn't run by editor's onNodeChange handler
 						w.selectStructureTag(id, selectContents);
 					}
 				} else if (w.entities[id] != null) {
 					tree.currentlySelectedEntity = id;
 					tree.currentlySelectedNode = null;
 					tree.selectionType = null;
-					aChildren.addClass('nodeSelected').removeClass('contentsSelected');
+					$children.addClass('nodeSelected').removeClass('contentsSelected');
 					ignoreSelect = true;
 					w.highlightEntity(id, null, true);
 				}
@@ -419,32 +470,35 @@ return function(config) {
 		tree.selectionType = null;
 	}
 	
-	function _onDragDrop(event, data) {
-		var params = data.rslt.obj;
-		var dropNode = $('#'+params.dropNode.attr('name'), w.editor.getBody());
-		var dragNode = $('#'+params.dragNode.attr('name'), w.editor.getBody());
-		if (params.isCopy) {
-			dragNode = dragNode.clone();
+	function _onDragDrop(data, isCopy) {
+		var dragNode = data.node;
+		var dropNode = $tree.jstree('get_node', data.parent);
+		
+		var dragNodeEditor = $('#'+dragNode.li_attr.name, w.editor.getBody());
+		var dropNodeEditor = $('#'+dropNode.li_attr.name, w.editor.getBody());
+		
+		if (isCopy) {
+			dragNodeEditor = dragNodeEditor.clone();
 		}
-		switch (params.dropType) {
-			case 'before':
-				dropNode.before(dragNode);
-				break;
-			case 'after':
-				dropNode.after(dragNode);
-				break;
-			case 'inside':
-				dropNode.append(dragNode);
+		
+		if (data.position === 0) {
+			dropNodeEditor.prepend(dragNodeEditor);
+		} else {
+			var prevSiblingId = dropNode.children[data.position - 1];
+			var prevSibling = $tree.jstree('get_node', prevSiblingId);
+			dropNodeEditor = $('#'+prevSibling.li_attr.name, w.editor.getBody());
+			dropNodeEditor.after(dragNodeEditor);
 		}
+
 		tree.update();
-		if (params.isCopy) {
+		if (isCopy) {
 			w.tagger.findDuplicateTags();
 			w.entitiesList.update();
 		}
 	}
 	
 	function _removeCustomClasses() {
-		var nodes = $('a[class*=Selected]', '#tree');
+		var nodes = $('a[class*=Selected]', '#'+id);
 		nodes.removeClass('nodeSelected contentsSelected');
 	}
 	
@@ -472,21 +526,18 @@ return function(config) {
 			inserts[key] = {
 				label: '<span title="'+doc+'">'+key+'</span>',
 				icon: w.cwrcRootUrl+'img/tag_blue.png',
+				key: key,
 				action: function(obj) {
-					var actionType = obj.parents('li.submenu').children('a').attr('rel');
-					var key = obj.text();
-					var offset = $('#vakata-contextmenu').offset();
-					var pos = {
-						x: offset.left,
-						y: offset.top
-					};
+					// FIXME hack to get actionType
+					var parentText = obj.element.find('.submenu.vakata-context-hover').find('a:first').text();
+					var actionType = parentText.match(/\w+$/)[0].toLowerCase();
 					if (actionType == 'change') {
-						var id = $('#tree a.ui-state-active').closest('li').attr('name');
-						w.tagger.changeTag({key: key, pos: pos, id: id});
+						var id = obj.reference.parent('li').attr('name');
+						w.tagger.changeTag({key: obj.item.key, id: id});
 					} else {
 						w.editor.currentBookmark = w.editor.selection.getBookmark(1);
 						w.editor.currentBookmark.tagId = tagInfo.id;
-						w.editor.execCommand('addSchemaTag', {key: key, pos: pos, action: actionType});
+						w.editor.execCommand('addSchemaTag', {key: obj.item.key, action: actionType});
 					}
 				}
 			};
@@ -502,16 +553,12 @@ return function(config) {
 	}
 	
 	$('#'+config.parentId).append('<div id="structure" class="tabWithLayout">'+
-			'<div id="tree" class="ui-layout-center"></div>'+
-//			'<div id="structureTreeActions" class="ui-layout-south tabButtons">'+
-//			'<button>Edit Tag</button><button>Remove Tag</button><button>Remove Tag and All Content</button>'+
-//			'</div>'+
+		'<div id="'+id+'" class="ui-layout-center"></div>'+
 	'</div>');
-//	$(document.body).append('<div id="tree_popup"></div>');
 	
-	$tree = $('#tree');
+	$tree = $('#'+id);
 	
-	$tree.bind('loaded.jstree', function(event, data) {
+	$tree.on('loaded.jstree', function(event, data) {
 		tree.layout = $('#structure').layout({
 			defaults: {
 				resizable: false,
@@ -525,42 +572,41 @@ return function(config) {
 		});
 	});
 	
-	$.vakata.dnd.helper_left = 15;
-	$.vakata.dnd.helper_top = 20;
+//	$.vakata.dnd.settings.helper_left = 15;
+//	$.vakata.dnd.settings.helper_top = 20;
 	
 	$tree.jstree({
-		core: {},
-		themeroller: {},
-		ui: {
-			select_limit: 1
-		},
-		json_data: {
-			data: {
-				data: 'Tags',
-				attr: {id: 'cwrc_tree_root'},
-				state: 'open'
+		plugins: ['wholerow','dnd','contextmenu'],
+		core: {
+			check_callback: true, // enable tree modifications
+			themes: {
+				name: 'cwrc',
+				icons: false,
+				url: true,
+				dir: 'js/lib/jstree/themes'
 			},
-			progressive_render: true
-		},
-		dnd: {
-			drag_target: false
+			data: {
+				text: 'Tags',
+				li_attr: {id: 'cwrc_tree_root'},
+				state: {opened: true}
+			}
 		},
 		contextmenu: {
 			select_node: false,
 			show_at_node: false,
 			items: function(node) {
 				_hidePopup();
-				if (node.attr('id') == 'cwrc_tree_root') return {};
+				if (node.li_attr.id === 'cwrc_tree_root') return {};
 				
-				var parentNode = node.parents('li:first');
+				var parentNode = $tree.jstree('get_node', node.parents[0]);
 				
-				var info = w.structs[node.attr('name')];
+				var info = w.structs[node.li_attr.name];
 
 				// structure tag
 				if (info) {
 					if (info._tag == w.root || info._tag == w.header) return {};
 					
-					var parentInfo = w.structs[parentNode.attr('name')];
+					var parentInfo = w.structs[parentNode.li_attr.name];
 					
 					var validKeys = w.utilities.getChildrenForTag({tag: info._tag, type: 'element', returnType: 'array'});
 	//				var parentKeys = w.utilities.getParentsForTag({tag: info._tag, returnType: 'array'});
@@ -576,12 +622,14 @@ return function(config) {
 						'before': {
 							label: 'Insert Tag Before',
 							icon: w.cwrcRootUrl+'img/tag_blue_add.png',
+							actionType: 'before',
 							_class: 'submenu',
 							submenu: siblingSubmenu
 						},
 						'after': {
 							label: 'Insert Tag After',
 							icon: w.cwrcRootUrl+'img/tag_blue_add.png',
+							actionType: 'after',
 							_class: 'submenu',
 							submenu: siblingSubmenu
 						},
@@ -594,6 +642,7 @@ return function(config) {
 						'inside': {
 							label: 'Insert Tag Inside',
 							icon: w.cwrcRootUrl+'img/tag_blue_add.png',
+							actionType: 'inside',
 							_class: 'submenu',
 							separator_after: true,
 							submenu: submenu
@@ -601,6 +650,7 @@ return function(config) {
 						'change': {
 							label: 'Change Tag',
 							icon: w.cwrcRootUrl+'img/tag_blue_edit.png',
+							actionType: 'change',
 							_class: 'submenu',
 							submenu: siblingSubmenu
 						},
@@ -609,33 +659,32 @@ return function(config) {
 							icon: w.cwrcRootUrl+'img/tag_blue_edit.png',
 							separator_after: true,
 							action: function(obj) {
-								var offset = $('#vakata-contextmenu').offset();
-								var pos = {
-									x: offset.left,
-									y: offset.top
-								};
-								w.tagger.editTag(obj.attr('name'), pos);
+								var id = obj.reference.parent('li').attr('name');
+								w.tagger.editTag(id);
 							}
 						},
 						'delete': {
 							label: 'Remove Tag Only',
 							icon: w.cwrcRootUrl+'img/tag_blue_delete.png',
 							action: function(obj) {
-								w.tagger.removeStructureTag(obj.attr('name'), false);
+								var id = obj.reference.parent('li').attr('name');
+								w.tagger.removeStructureTag(id, false);
 							}
 						},
 						'delete_content': {
 							label: 'Remove Content Only',
 							icon: w.cwrcRootUrl+'img/tag_blue_delete.png',
 							action: function(obj) {
-								w.tagger.removeStructureTagContents(obj.attr('name'));
+								var id = obj.reference.parent('li').attr('name');
+								w.tagger.removeStructureTagContents(id);
 							}
 						},
 						'delete_all': {
 							label: 'Remove Tag and All Content',
 							icon: w.cwrcRootUrl+'img/tag_blue_delete.png',
 							action: function(obj) {
-								w.tagger.removeStructureTag(obj.attr('name'), true);
+								var id = obj.reference.parent('li').attr('name');
+								w.tagger.removeStructureTag(id, true);
 							}
 						}
 					};
@@ -643,117 +692,43 @@ return function(config) {
 					return items;
 				} else {
 					// entity tag
-					w.highlightEntity(node.attr('name')); // highlight the entity, otherwise editing will not function
+					w.highlightEntity(node.li_attr.name); // highlight the entity, otherwise editing will not function
 					return {
 						'editEntity': {
 							label: 'Edit Entity',
 							icon: w.cwrcRootUrl+'img/tag_blue_edit.png',
 							action: function(obj) {
-								var offset = $('#vakata-contextmenu').offset();
-								var pos = {
-									x: offset.left,
-									y: offset.top
-								};
-								w.tagger.editTag(obj.attr('name'), pos);
+								var id = obj.reference.parent('li').attr('name');
+								w.tagger.editTag(id);
 							}
 						},
 						'copyEntity': {
 							label: 'Copy Entity',
 							icon: w.cwrcRootUrl+'img/tag_blue_copy.png',
 							action: function(obj) {
-								w.tagger.copyEntity(obj.attr('name'));
+								var id = obj.reference.parent('li').attr('name');
+								w.tagger.copyEntity(id);
 							}
 						}
 					};
 				}
 			}
-		},
-		hotkeys: {
-			del: function(e) {
-				if (this.is_selected()) {
-					var node = this.get_selected();
-					var id = node.attr('name');
-					if (id) {
-						w.tagger.removeStructureTag(id);
-					}
-				}
-			},
-			f2: false
-		},
-		plugins: ['json_data', 'ui', 'contextmenu', 'hotkeys', 'dnd', 'themeroller']
+		}
 	});
-	$tree.bind('select_node.jstree', _onNodeSelect);
-	$tree.bind('deselect_node.jstree', _onNodeDeselect);
-	$tree.bind('dnd_finish.jstree', _onDragDrop);
-	$tree.bind('load_node.jstree', function(event, data) {
-		_onNodeLoad(data.rslt.obj);
+	$tree.on('select_node.jstree', _onNodeSelect);
+	$tree.on('deselect_node.jstree', _onNodeDeselect);
+	$tree.on('copy_node.jstree', function(e, data) {
+		_onDragDrop(data, true);
 	});
-//	$tree.mousemove(function(e) {
-//		$('#tree_popup').offset({left: e.pageX+15, top: e.pageY+5});
-//	});
-//	$tree.bind('hover_node.jstree', function(event, data) {
-//		if ($('#vakata-contextmenu').css('visibility') == 'visible') return;
-//		
-//		var node = data.rslt.obj;
-//		
-//		if (node.attr('id') == 'cwrc_tree_root') return;
-//		
-//		var id = node.attr('name');
-//		var info = w.structs[id];
-//		var content = '<ul>';
-//		for (var key in info) {
-//			if (key.indexOf('_') != 0) {
-//				content += '<li>'+key+': '+info[key]+'</li>';
-//			}
-//		}
-//		content += '</ul>';
-//		_showPopup(content);
-//	});
-//	$tree.bind('dehover_node.jstree', function(event, data) {
-//		_hidePopup();
-//	});
-	
-//	$('#structureTreeActions button:eq(0)').button().click(function() {
-//		if (tree.currentlySelectedNode != null || tree.currentlySelectedEntity != null) {
-//			w.tagger.editTag(tree.currentlySelectedNode || tree.currentlySelectedEntity);
-//		} else {
-//			w.dialogManager.show('message', {
-//				title: 'No Tag Selected',
-//				msg: 'You must first select a tag to edit.',
-//				type: 'error'
-//			});
-//		}
-//	});
-//	$('#structureTreeActions button:eq(1)').button().click(function() {
-//		if (tree.currentlySelectedNode != null) {
-//			w.tagger.removeStructureTag(tree.currentlySelectedNode, false);
-//			_onNodeDeselect();
-//		} else if (tree.currentlySelectedEntity != null) {
-//			w.tagger.removeEntity(tree.currentlySelectedEntity);
-//			_onNodeDeselect();
-//		} else {
-//			w.dialogManager.show('message', {
-//				title: 'No Tag Selected',
-//				msg: 'You must first select a tag to remove.',
-//				type: 'error'
-//			});
-//		}
-//	});
-//	$('#structureTreeActions button:eq(2)').button().click(function() {
-//		if (tree.currentlySelectedNode != null) {
-//			w.tagger.removeStructureTag(tree.currentlySelectedNode, true);
-//			_onNodeDeselect();
-//		} else if (tree.currentlySelectedEntity != null) {
-//			w.tagger.removeEntity(tree.currentlySelectedEntity);
-//			_onNodeDeselect();
-//		} else {
-//			w.dialogManager.show('message', {
-//				title: 'No Tag Selected',
-//				msg: 'You must first select a tag to remove.',
-//				type: 'error'
-//			});
-//		}
-//	});
+	$tree.on('move_node.jstree', function(e, data) {
+		_onDragDrop(data, false);
+	});
+	$tree.on('load_node.jstree', function(event, data) {
+		_onNodeLoad(data.node);
+	});
+	$tree.on('keydown.jstree', function(e) {
+		//console.log(e.which);
+	});
 	
 	// add to writer
 	w.tree = tree;
