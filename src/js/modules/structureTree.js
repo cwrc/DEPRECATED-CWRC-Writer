@@ -420,12 +420,8 @@ return function(config) {
 	function _onNodeSelect(event, data) {
 		if (!ignoreSelect) {
 			var id = data.node.li_attr.name;
-			var children = data.node.children;
-			children = $.map(children, function(id, index) {
-				return '#'+id;
-			});
-			var $children = $(children.join(',')); 
-			var selectContents = $children.hasClass('contentsSelected');
+			var $target = $(data.event.currentTarget);
+			var selectContents = $target.hasClass('contentsSelected');
 			_removeCustomClasses();
 			if (id) {
 				// already selected node, toggle selection type
@@ -434,9 +430,9 @@ return function(config) {
 				}
 				
 				if (selectContents) {
-					$children.addClass('contentsSelected').removeClass('nodeSelected');
+					$target.addClass('contentsSelected').removeClass('nodeSelected');
 				} else {
-					$children.addClass('nodeSelected').removeClass('contentsSelected');
+					$target.addClass('nodeSelected').removeClass('contentsSelected');
 				}
 				
 				tree.currentlySelectedNode = id;
@@ -454,7 +450,7 @@ return function(config) {
 					tree.currentlySelectedEntity = id;
 					tree.currentlySelectedNode = null;
 					tree.selectionType = null;
-					$children.addClass('nodeSelected').removeClass('contentsSelected');
+					$target.addClass('nodeSelected').removeClass('contentsSelected');
 					ignoreSelect = true;
 					w.highlightEntity(id, null, true);
 				}

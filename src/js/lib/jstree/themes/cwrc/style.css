@@ -72,6 +72,17 @@
 	background-color: #DBECF3 !important;
 }
 
+
+
+#tree.jstree a.nodeSelected {
+	font-weight: bold;
+}
+
+#tree.jstree a.contentsSelected {
+	font-weight: bold;
+	font-style: italic;
+}
+
 #tree.jstree li.person {
 	background-color: #FFCCCC;
 }
@@ -105,9 +116,6 @@
 #tree.jstree li.link {
 	background-color: #94AFFF;
 }
-
-
-
 
 
 
