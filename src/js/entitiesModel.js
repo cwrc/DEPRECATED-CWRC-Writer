@@ -77,6 +77,10 @@ return function(writer) {
 		return str;
 	}
 	
+	function getResp() {
+		return 'PLACEHOLDER_USER';
+	}
+	
 	var entities = {
 		person: {
 			title: 'Person',
@@ -95,6 +99,7 @@ return function(writer) {
 					if (offsetId) xml += ' offsetId="'+offsetId+'"';
 					if (info.certainty) xml += ' cert="'+info.certainty+'"';
 					if (info.role) xml += ' role="'+info.role+'"';
+					if (info.cwrcInfo && info.cwrcInfo.id) xml += ' ref="'+info.cwrcInfo.id+'"';
 					
 					var atts = info.attributes.persName;
 					xml += getAttributeString(atts);
@@ -109,6 +114,103 @@ return function(writer) {
 			annotation: function(entity) {
 				var data = entity.annotation;
 				return commonAnnotation(data, 'foaf:Person');
+			}
+		},
+		org: {
+			title: 'Organization',
+			parentTag: {
+				tei: 'orgName',
+				events: 'ORGNAME'
+			},
+			mapping: {
+				tei: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '<orgName';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					if (info.certainty) xml += ' cert="'+info.certainty+'"';
+					if (info.cwrcInfo && info.cwrcInfo.id) xml += ' ref="'+info.cwrcInfo.id+'"';
+					
+					var atts = info.attributes.orgName;
+					xml += getAttributeString(atts);
+					
+					xml += '>'+TEXT_SELECTION+'</orgName>';
+					return xml;
+				},
+				events: '<ORGNAME>'+TEXT_SELECTION+'</ORGNAME>'
+			},
+			annotation: function(entity) {
+				var data = entity.annotation;
+				return commonAnnotation(data, 'foaf:Organization');
+			}
+		},
+		place: {
+			title: 'Place',
+			parentTag: {
+				tei: 'placeName',
+				events: 'PLACE'
+			},
+			textTag: {
+				tei: 'placeName'
+			},
+			mapping: {
+				tei: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '<placeName';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					if (info.certainty) xml += ' cert="'+info.certainty+'"';
+					if (info.cwrcInfo && info.cwrcInfo.id) xml += ' ref="'+info.cwrcInfo.id+'"';
+					xml += '>'+TEXT_SELECTION+'';
+					if (info.precision) {
+						xml += '<precision';
+						if (id) xml += ' annotationId="'+id+'"';
+						xml += ' precision="'+info.precision+'" />';
+					}
+					xml += '</placeName>';
+					return xml;
+				},
+				events: '<PLACE>'+TEXT_SELECTION+'</PLACE>'
+			},
+			annotation: function(entity) {
+				var data = entity.annotation;
+				return commonAnnotation(data, 'geo:SpatialThing');
+			}
+		},
+		title: {
+			title: 'Text/Title',
+			parentTag: {
+				tei: 'title',
+				events: 'TITLE'
+			},
+			mapping: {
+				tei: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '<title';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					if (info.cwrcInfo && info.cwrcInfo.id) xml += ' ref="'+info.cwrcInfo.id+'"';
+					if (info.certainty) xml += ' cert="'+info.certainty+'"';
+					if (info.level) xml += ' level="'+info.level+'"';
+					xml += '>'+TEXT_SELECTION+'</title>';
+					return xml;
+				},
+				events: '<TITLE TITLETYPE="${info.level}">'+TEXT_SELECTION+'</TITLE>'
+			},
+			annotation: function(entity) {
+				var data = entity.annotation;
+				var anno = commonAnnotation(data, 'cnt:ContentAsText');
+				anno.motivation = 'oa:identifying';
+				return anno;
 			}
 		},
 		date: {
@@ -160,41 +262,6 @@ return function(writer) {
 				return anno;
 			}
 		},
-		place: {
-			title: 'Place',
-			parentTag: {
-				tei: 'placeName',
-				events: 'PLACE'
-			},
-			textTag: {
-				tei: 'placeName'
-			},
-			mapping: {
-				tei: function(entity) {
-					var info = entity.info;
-					var id = entity.annotation.range.cwrcAnnotationId;
-					var offsetId = entity.annotation.range.cwrcOffsetId;
-					
-					var xml = '<placeName';
-					if (id) xml += ' annotationId="'+id+'"';
-					if (offsetId) xml += ' offsetId="'+offsetId+'"';
-					if (info.certainty) xml += ' cert="'+info.certainty+'"';
-					xml += '>'+TEXT_SELECTION+'';
-					if (info.precision) {
-						xml += '<precision';
-						if (id) xml += ' annotationId="'+id+'"';
-						xml += ' precision="'+info.precision+'" />';
-					}
-					xml += '</placeName>';
-					return xml;
-				},
-				events: '<PLACE>'+TEXT_SELECTION+'</PLACE>'
-			},
-			annotation: function(entity) {
-				var data = entity.annotation;
-				return commonAnnotation(data, 'geo:SpatialThing');
-			}
-		},
 		event: {
 			title: 'Event',
 			parentTag: {
@@ -202,37 +269,6 @@ return function(writer) {
 			},
 			mapping: {
 				tei: '<event cert="${info.certainty}">'+TEXT_SELECTION+'</event>'
-			}
-		},
-		org: {
-			title: 'Organization',
-			parentTag: {
-				tei: 'orgName',
-				events: 'ORGNAME'
-			},
-			mapping: {
-				tei: function(entity) {
-					var info = entity.info;
-					var id = entity.annotation.range.cwrcAnnotationId;
-					var offsetId = entity.annotation.range.cwrcOffsetId;
-					
-					var xml = '<orgName';
-					if (id) xml += ' annotationId="'+id+'"';
-					if (offsetId) xml += ' offsetId="'+offsetId+'"';
-					if (info.certainty) xml += ' cert="'+info.certainty+'"';
-					if (info.cwrcInfo) xml += ' ref="'+info.cwrcInfo.id+'"';
-					
-					var atts = info.attributes.orgName;
-					xml += getAttributeString(atts);
-					
-					xml += '>'+TEXT_SELECTION+'</orgName>';
-					return xml;
-				},
-				events: '<ORGNAME>'+TEXT_SELECTION+'</ORGNAME>'
-			},
-			annotation: function(entity) {
-				var data = entity.annotation;
-				return commonAnnotation(data, 'foaf:Organization');
 			}
 		},
 		citation: {
@@ -249,6 +285,7 @@ return function(writer) {
 					var xml = '<note';
 					if (id) xml += ' annotationId="'+id+'"';
 					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					xml += ' resp="'+getResp()+'"';
 					xml += ' type="citation"><bibl>';
 					if (info.content) {
 						var xmlDoc = w.utilities.stringToXML(info.content);
@@ -280,6 +317,7 @@ return function(writer) {
 					var xml = '<note';
 					if (id) xml += ' annotationId="'+id+'"';
 					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					xml += ' resp="'+getResp()+'"';
 					if (info.type) {
 						xml += ' type="'+info.type+'"';
 					}
@@ -362,6 +400,7 @@ return function(writer) {
 						xml += '<note type="keyword"';
 						if (id) xml += ' annotationId="'+id+'"';
 						if (offsetId) xml += ' offsetId="'+offsetId+'"';
+						xml += ' resp="'+getResp()+'"';
 						xml +='><term>'+info.keywords[i]+'</term></note>';
 					}
 					return xml;
@@ -401,35 +440,6 @@ return function(writer) {
 				var anno = commonAnnotation(data, 'cnt:ContentAsText');
 				anno.motivation = 'oa:linking';
 				anno.hasBody = entity.info.url;
-				return anno;
-			}
-		},
-		title: {
-			title: 'Text/Title',
-			parentTag: {
-				tei: 'title',
-				events: 'TITLE'
-			},
-			mapping: {
-				tei: function(entity) {
-					var info = entity.info;
-					var id = entity.annotation.range.cwrcAnnotationId;
-					var offsetId = entity.annotation.range.cwrcOffsetId;
-					
-					var xml = '<title';
-					if (id) xml += ' annotationId="'+id+'"';
-					if (offsetId) xml += ' offsetId="'+offsetId+'"';
-					if (info.certainty) xml += ' cert="'+info.certainty+'"';
-					if (info.level) xml += ' level="'+info.level+'"';
-					xml += '>'+TEXT_SELECTION+'</title>';
-					return xml;
-				},
-				events: '<TITLE TITLETYPE="${info.level}">'+TEXT_SELECTION+'</TITLE>'
-			},
-			annotation: function(entity) {
-				var data = entity.annotation;
-				var anno = commonAnnotation(data, 'cnt:ContentAsText');
-				anno.motivation = 'oa:identifying';
 				return anno;
 			}
 		}
