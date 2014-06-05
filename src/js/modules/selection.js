@@ -1,4 +1,4 @@
-define(['jquery'], function($) {
+define(['jquery','jquery.snippet'], function($, snippet) {
 	
 return function(config) {
 	
