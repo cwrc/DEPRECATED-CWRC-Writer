@@ -48,6 +48,13 @@ return function(writer) {
 								repository: 'cwrc'
 							};
 						}
+						
+						if (result.repository === 'viaf') {
+							result.id = 'http://viaf.org/viaf/'+result.id;
+						} else {
+							result.id = 'http://cwrc-dev-01.srv.ualberta.ca/islandora/object/'+result.id;
+						}
+						
 						if ($.isArray(result.name)) {
 							result.name = result.name[0];
 						}

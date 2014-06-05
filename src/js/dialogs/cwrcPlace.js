@@ -45,11 +45,22 @@ return function(writer) {
 					success: function(result) {
 						if (result.id == null) {
 							result = {
-								id: 'cwrc:3b92364f-0e16-4599-bd8c-92c95a409a00',
-								name: ['Test Place'],
-								repository: 'cwrc'
+								id: '0',
+								data: '<geoname><name>Hamilton</name><asciiName>Hamilton</asciiName><lat>44.0501200</lat><lng>-78.2328200</lng><countryCode>CA</countryCode><countryName>Canada</countryName><fcl>A</fcl><fcode>ADM2</fcode><geonameid>5969784</geonameid><granularity>Province/State</granularity></geoname>',
+								name: 'Test Place',
+								repository: 'geonames'
 							};
 						}
+						
+						var xmlData = w.utilities.stringToXML(result.data);
+						
+						if (result.repository === 'geonames') {
+							var id = $('geonameid', xmlData).text();
+							result.id = 'http://www.geonames.org/'+id;
+						} else {
+							result.id = 'http://cwrc-dev-01.srv.ualberta.ca/islandora/object/'+result.id;
+						}
+						
 						if ($.isArray(result.name)) {
 							result.name = result.name[0];
 						}
