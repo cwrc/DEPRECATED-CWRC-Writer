@@ -5,8 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 		<title>CWRC-Writer</title>
 		
-		<script type="text/javascript" src="js/config.js"></script>
-		<script type="text/javascript" src="js/lib/require/require.js"></script>
+		<script type="text/javascript" data-main="js/config.js" src="js/lib/require/require.js"></script>
 		<script type="text/javascript" src="js/layout.js"></script>
 
 		<link type="text/css" rel="stylesheet" href="css/style.css" />
@@ -30,8 +29,8 @@
 					writer = new Writer(config);
 					writer.event('writerInitialized').subscribe(function(writer) {
 						// load modules then do the setup
-						require(['modules/entitiesList', 'modules/relations',
-						         'modules/selection', 'modules/structureTree', 'modules/validation'
+						require(['modules/entitiesList','modules/relations','modules/selection',
+						         'modules/structureTree','modules/validation'
 						], function(EntitiesList, Relations, Selection, StructureTree, Validation) {
 							setupLayoutAndModules(writer, EntitiesList, Relations, Selection, StructureTree, Validation);
 							writer.fileManager.loadInitialDocument(window.location.hash);

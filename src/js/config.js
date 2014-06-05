@@ -1,9 +1,11 @@
-var require = {
+require.config({
 	baseUrl: 'js',
 	paths: {
-		'jquery': 'lib/jquery/jquery-1.9.1',
-		'jquery-ui': 'lib/jquery/jquery-ui-1.10.4.custom',
-		'jquery.layout': 'lib/jquery/jquery.layout-latest.min',
+		'text': 'lib/require/text', // requirejs text plugin
+		
+		'jquery': ['http://code.jquery.com/jquery-1.9.1.min','lib/jquery/jquery-1.9.1'],
+		'jquery-ui': ['http://code.jquery.com/ui/1.10.4/jquery-ui.min','lib/jquery/jquery-ui-1.10.4.custom'],
+		'jquery.layout': ['http://cdnjs.cloudflare.com/ajax/libs/jquery-layout/1.3.0-rc-30.79/jquery.layout.min','lib/jquery/jquery.layout-latest.min'],
 		'jquery.tablayout': 'lib/jquery/jquery.layout.resizeTabLayout-1.3',
 		'jquery.contextmenu': 'lib/jquery/jquery.contextmenu',
 		'jquery.tmpl': 'lib/jquery/jquery.tmpl.min',
@@ -18,11 +20,10 @@ var require = {
 		'moment': 'lib/moment/moment.min',
 		
 		'attributeWidget': 'dialogs/attributeWidget',
-		'searchWidget': 'dialogs/searchWidget',
 		
 		// cwrcDialogs
-		'knockout': 'lib/knockout/knockout-2.3.0',
-		'bootstrap': 'lib/bootstrap/bootstrap',
+		'knockout': ['http://cdnjs.cloudflare.com/ajax/libs/knockout/2.3.0/knockout-min','lib/knockout/knockout-2.3.0'],
+		'bootstrap': ['http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min','lib/bootstrap/bootstrap'],
 		'bootstrap-datepicker': 'lib/bootstrap/bootstrap-datepicker',
 		'cwrc-api': 'cwrcDialogs/cwrc-api',
 		'cwrcDialogs': 'cwrcDialogs/cD'
@@ -49,25 +50,21 @@ var require = {
 		'cwrcDialogs': {
 			deps: ['jquery', 'jquery-ui', 'knockout', 'bootstrap', 'bootstrap-datepicker', 'cwrc-api']
 		}
-	},
+	}
 	// cache busting
 //	urlArgs: "bust=" +  (new Date()).getTime(),
+});
+
+require(['jquery', 'knockout'], function($, knockout) {
+	window.ko = knockout; // requirejs shim isn't working for knockout
 	
-	// initial dependencies
-	deps: ['jquery',
-	       'knockout'],
-	callback: function($, knockout) {
-		window.ko = knockout; // requirejs shim isn't working for knockout
-		
-		require(['writer',
-		         'delegator',
-		         'jquery.layout',
-		         'jquery.tablayout',
-		         'jquery.snippet' // need to move to viewsource plugin
-		], function(Writer, Delegator) {
-			$(function() {
-				cwrcWriterInit.call(window, Writer, Delegator);
-			});
+	require(['writer',
+	         'delegator',
+	         'jquery.layout',
+	         'jquery.tablayout'
+	], function(Writer, Delegator) {
+		$(function() {
+			cwrcWriterInit.call(window, Writer, Delegator);
 		});
-	}
-};
+	});
+});
