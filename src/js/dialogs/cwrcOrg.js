@@ -18,7 +18,7 @@ return function(writer) {
 					});
 				} else {
 					result = {
-						id: result.response.pid,
+						id: 'http://cwrc-dev-01.srv.ualberta.ca/islandora/object/'+result.response.pid,
 						data: result.data
 					};
 					w.dialogManager.show('tagOrg', {
