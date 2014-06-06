@@ -14,9 +14,12 @@ return function(writer, config) {
 	
 	var defaultSettings = {
 		mode: w.mode,
+		allowOverlap: w.allowOverlap,
 		validationSchema: w.schemaManager.schemaId
 	};
 	$.extend(defaultSettings, settings);
+	
+	var $settingsDialog;
 	
 	$('#headerButtons').append(''+
 	'<div id="helpLink"><h2>Help</h2></div>'+
@@ -58,8 +61,9 @@ return function(writer, config) {
 	'<div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #aaa;">'+
 	'<label>Editor Mode</label>'+
 		'<select name="editormode">'+
-			'<option value="0">XML & RDF (overlapping entities)</option>'+
-			'<option value="1">XML (no overlap)</option>'+
+			'<option value="xml">XML only (no overlap)</option>'+
+			'<option value="xmlrdf">XML and RDF (no overlap)</option>'+
+			'<option value="xmlrdfoverlap">XML and RDF (overlapping entities)</option>'+
 		'</select>'+
 	'</div>'+
 	'<div style="margin-top: 10px;">'+
@@ -73,26 +77,36 @@ return function(writer, config) {
 		'<p>For help with CWRC-Writer click <a href="https://drive.google.com/a/ualberta.ca/?tab=mo#folders/0B3fHpXyQEt3bXzZiT3ppWEdMODQ" target="_blank">here</a>.</p>'+
 	'</div>');
 	
+	$settingsDialog = $('#settingsDialog');
+	
 	buildSchema();
-	$('select[name="schema"]', $('#settingsDialog')).nextAll('button').button().click(function() {
+	$('select[name="schema"]', $settingsDialog).nextAll('button').button().click(function() {
 		w.dialogManager.show('addschema');
 	});
 	
 	$('#settingsLink').click(function() {
-		$('select[name="fontsize"] > option[value="'+settings.fontSize+'"]', $('#settingsDialog')).attr('selected', true);
-		$('select[name="fonttype"] > option[value="'+settings.fontFamily+'"]', $('#settingsDialog')).attr('selected', true);
+		$('select[name="fontsize"] > option[value="'+settings.fontSize+'"]', $settingsDialog).attr('selected', true);
+		$('select[name="fonttype"] > option[value="'+settings.fontFamily+'"]', $settingsDialog).attr('selected', true);
 		$('#showentitybrackets').prop('checked', settings.showEntityBrackets);
 		$('#showstructbrackets').prop('checked', settings.showStructBrackets);
-		$('select[name="editormode"] > option[value="'+w.mode+'"]', $('#settingsDialog')).attr('selected', true);
-		$('select[name="schema"] > option[value="'+w.schemaManager.schemaId+'"]', $('#settingsDialog')).attr('selected', true);
-		$('#settingsDialog').dialog('open');
+		if (w.mode === w.XML) {
+			$('select[name="editormode"] > option[value="xml"]', $settingsDialog).attr('selected', true);
+		} else if (w.mode === w.XMLRDF){
+			if (w.allowOverlap) {
+				$('select[name="editormode"] > option[value="xmlrdfoverlap"]', $settingsDialog).attr('selected', true);
+			} else {
+				$('select[name="editormode"] > option[value="xmlrdf"]', $settingsDialog).attr('selected', true);
+			}
+		}		
+		$('select[name="schema"] > option[value="'+w.schemaManager.schemaId+'"]', $settingsDialog).attr('selected', true);
+		$settingsDialog.dialog('open');
 	});
 	
 	$('#helpLink').click(function() {
 		$('#helpDialog').dialog('open');
 	});
 	
-	$('#settingsDialog').dialog({
+	$settingsDialog.dialog({
 		title: 'Settings',
 		modal: true,
 		resizable: false,
@@ -107,18 +121,18 @@ return function(writer, config) {
 			click: function() {
 				setDefaults();
 				applySettings();
-				$('#settingsDialog').dialog('close');
+				$settingsDialog.dialog('close');
 			},
 		},{
 			text: 'Cancel',
 			click: function() {
-				$('#settingsDialog').dialog('close');
+				$settingsDialog.dialog('close');
 			}
 		},{
 			text: 'Ok',
 			click: function() {
 				applySettings();
-				$('#settingsDialog').dialog('close');
+				$settingsDialog.dialog('close');
 			}
 		}]
 	});
@@ -144,32 +158,57 @@ return function(writer, config) {
 			schemasHTML += '<option value="' + schema + '">' + w.schemaManager.schemas[schema]['name'] + '</option>';
 		}
 		if(schemasHTML) {
-			$('select[name="schema"]', $('#settingsDialog')).html(schemasHTML);
+			$('select[name="schema"]', $settingsDialog).html(schemasHTML);
 		}
 	}
 	
 	function applySettings() {
-		var editorMode = parseInt($('select[name="editormode"]', $('#settingsDialog')).val());
-		if (editorMode != w.mode) {
-			var doModeChange = true;
-			if (w.mode == w.XMLRDF && editorMode == w.XML) {
+		var editorMode = $('select[name="editormode"]', $settingsDialog).val();
+		var doModeChange = false;
+		if (editorMode === 'xml') {
+			if (w.mode !== w.XML) {
+				doModeChange = true;
+			}
+		} else if (editorMode === 'xmlrdf') {
+			if (w.mode !== w.XMLRDF || w.allowOverlap === true) {
+				doModeChange = true;
+			}
+		} else if (editorMode === 'xmlrdfoverlap') {
+			if (w.mode !== w.XMLRDF) {
+				doModeChange = true;
+			}
+		}
+		
+		if (doModeChange) {
+			if (w.allowOverlap && editorMode !== 'xmlrdfoverlap') {
 				var overlaps = _doEntitiesOverlap();
 				if (overlaps) {
 					doModeChange = false;
-					w.dialogManager.show('message', {
-						title: 'Error',
-						msg: 'You have overlapping entities and are trying to change to XML mode (which doesn\'t permit overlaps).  Please remove the overlapping entities and try again.',
-						type: 'error'
+					$settingsDialog.one('dialogclose', function() {
+						w.dialogManager.show('message', {
+							title: 'Error',
+							msg: 'You have overlapping entities and are trying to change to a mode which doesn\'t permit overlaps.  Please remove the overlapping entities and try again.',
+							type: 'error'
+						});
 					});
 				}
 			}
 			if (doModeChange) {
-				w.mode = editorMode;
+				if (editorMode === 'xml') {
+					w.mode = w.XML;
+					w.allowOverlap = false;
+				} else if (editorMode === 'xmlrdf') {
+					w.mode = w.XMLRDF;
+					w.allowOverlap = false;
+				} else if (editorMode === 'xmlrdfoverlap') {
+					w.mode = w.XMLRDF;
+					w.allowOverlap = true;
+				}
 			}
 		}
 		
-		settings.fontSize = $('select[name="fontsize"]', $('#settingsDialog')).val();
-		settings.fontFamily = $('select[name="fonttype"]', $('#settingsDialog')).val();
+		settings.fontSize = $('select[name="fontsize"]', $settingsDialog).val();
+		settings.fontFamily = $('select[name="fonttype"]', $settingsDialog).val();
 		
 		if (settings.showEntityBrackets != $('#showentitybrackets').prop('checked')) {
 			w.editor.$('body').toggleClass('showEntityBrackets');
@@ -182,7 +221,7 @@ return function(writer, config) {
 		settings.showStructBrackets = $('#showstructbrackets').prop('checked');
 		
 		// TODO add handling for schemaChanged
-		w.schemaManager.schemaId = $('select[name="schema"]', $('#settingsDialog')).val();
+		w.schemaManager.schemaId = $('select[name="schema"]', $settingsDialog).val();
 		w.event('schemaChanged').publish(w.schemaManager.schemaId);
 		
 		var styles = {
@@ -193,13 +232,13 @@ return function(writer, config) {
 	};
 	
 	function setDefaults() {
-		$('select[name="fontsize"]', $('#settingsDialog')).val(defaultSettings.fontSize);
-		$('select[name="fonttype"]', $('#settingsDialog')).val(defaultSettings.fontFamily);
+		$('select[name="fontsize"]', $settingsDialog).val(defaultSettings.fontSize);
+		$('select[name="fonttype"]', $settingsDialog).val(defaultSettings.fontFamily);
 		$('#showentitybrackets').prop('checked', defaultSettings.showEntityBrackets);
 		$('#showstructbrackets').prop('checked', defaultSettings.showStructBrackets);
 		
-		$('select[name="editormode"]', $('#settingsDialog')).val(defaultSettings.mode);
-		$('select[name="schema"]', $('#settingsDialog')).val(defaultSettings.validationSchema);
+		$('select[name="editormode"]', $settingsDialog).val(defaultSettings.mode);
+		$('select[name="schema"]', $settingsDialog).val(defaultSettings.validationSchema);
 	};
 	
 	function _doEntitiesOverlap() {

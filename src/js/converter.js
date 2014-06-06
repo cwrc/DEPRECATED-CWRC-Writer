@@ -22,9 +22,10 @@ return function(writer) {
 	/**
 	 * Gets the content of the document, converted from internal format to the schema format
 	 * @param includeRDF True to include RDF in the header
-	 * @returns {String}
+	 * @param separateRDF True to return RDF as a separate string (in an object)
+	 * @returns {String|Object}
 	 */
-	converter.getDocumentContent = function(includeRDF) {
+	converter.getDocumentContent = function(includeRDF, separateRDF) {
 		// remove highlights
 		w.highlightEntity();
 		
@@ -35,22 +36,8 @@ return function(writer) {
 		
 		_htmlEntitiesToUnicode(body);
 		
-		// rdf
-//		var rdfString = '';
-//		if (w.mode == w.XMLRDF && includeRDF) {
-//			rdfString = buildAnnotations();
-//		}
-		
-//		if (w.mode == w.XMLRDF) {
-			// remove the entity tags since they'll be in the rdf
-//			body.find('[_entity]').remove();
-//		} else {
-		
-		
-		// always convert to tags, for now
-		
-		// get the entity IDs, in order that they appear in the document
-		// have to be order so that conversion and overlapping is done properly
+		// get the entity IDs, in the order that they appear in the document.
+		// have to be in order so that conversion and overlapping is done properly.
 		var entNodes = $('[_entity]', writer.editor.getBody()).filter(function() {
 			return $(this).hasClass('start');
 		});
@@ -58,21 +45,20 @@ return function(writer) {
 			return $(val).attr('name');
 		});
 		
+		// convert entity boundaries to tags
 		var overlappingEntities = [];
 		$.each(entIds, function(index, id) {
-			var success = convertEntityToTag(id, body[0]);
+			var success = convertEntityToTag(id, body[0]); // need to do conversion before building RDF
 			if (!success) {
 				overlappingEntities.push(id);
 			}
 		});
-			
-//		}
 		
+		// rdf
 		var rdfString = '';
-		if (includeRDF) {
+		if (w.mode === w.XMLRDF && includeRDF) {
 			rdfString = buildAnnotations();
 		}
-		
 		
 		var root = body.children('[_tag='+w.root+']');
 		// make sure TEI has the right namespace for validation purposes
@@ -96,11 +82,15 @@ return function(writer) {
 		});
 		bodyString = bodyString.replace(/\uFEFF/g, ''); // remove characters inserted by node selecting
 		
-		xmlString += rdfString + bodyString;
-		
-		xmlString += tags[1];
 		body.replaceWith(clone);
-		return xmlString;
+		
+		if (separateRDF) {
+			xmlString += bodyString + tags[1];
+			return {xml: xmlString, rdf: rdfString};
+		} else {
+			xmlString += rdfString + bodyString + tags[1];
+			return xmlString;
+		}
 	};
 	
 	/**

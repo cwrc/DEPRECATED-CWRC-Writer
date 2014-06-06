@@ -258,7 +258,7 @@ return function(writer) {
 		}
 		
 		// extra check to make sure we're not overlapping with an entity
-		if (isStructTag || w.mode == w.XML) {
+		if (isStructTag || w.allowOverlap === false) {
 			var c;
 			var currentNode = range.startContainer;
 			var ents = {};

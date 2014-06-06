@@ -52,15 +52,26 @@ return function(config) {
 	w.idName = '';
 	
 	// possible editor modes
-	w.XMLRDF = 0; // allows for overlapping elements, i.e. entities
-	w.XML = 1; // standard xml, no overlapping elements
+	w.XMLRDF = 0; // XML + RDF
+	w.XML = 1; // XML only
+	w.RDF = 2; // RDF only (not currently used)
 	
 	// editor mode
 	w.mode = config.mode;
-	if (w.mode != null && w.mode == 'xml') {
+	if (w.mode != null && w.mode === 'xml') {
 		w.mode = w.XML;
 	} else {
 		w.mode = w.XMLRDF;
+	}
+	
+	// can entities overlap?
+	w.allowOverlap = false;
+	if (config.allowOverlap != null && typeof config.allowOverlap === 'boolean') {
+		w.allowOverlap = config.allowOverlap;
+	}
+	if (w.allowOverlap && w.mode === w.XML) {
+		w.allowOverlap = false;
+		alert('XML cannot overlap!');
 	}
 	
 	// possible results when trying to add entity
