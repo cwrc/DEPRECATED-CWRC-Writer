@@ -50,6 +50,19 @@ return function(config) {
 			
 			if (elementId != '') {
 				id = elementId;
+			} else if (path != '') {
+				var editorPath = '';
+				var tags = path.split('/');
+				for (var i = 0; i < tags.length; i++) {
+					var tag = tags[i];
+					var tagName = tag.match(/^\w+(?=\[)?/);
+					var index = tag.match(/\d+/);
+					if (index === null) index = 0;
+					editorPath += '*[_tag="'+tagName+'"]:eq('+index+') > ';
+				}
+				editorPath = editorPath.substr(0, editorPath.length-3);
+				var docEl = $(editorPath, w.editor.getBody());
+				id = docEl.attr('id');
 			} else if (!isNaN(column)) {
 				var docSubstring = docString.substring(0, column);
 				var tags = docSubstring.match(/<.*?>/g);
