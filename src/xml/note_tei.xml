@@ -8,7 +8,9 @@
 </rdf:RDF>
     <text>
         <body>
-            <note></note>            
+            <note>
+            	<p></p>
+            </note>            
         </body>
     </text>
 </TEI>
