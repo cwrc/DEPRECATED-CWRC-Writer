@@ -1,51 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="http://cwrc.ca/schema/CWRC-TEIBasic.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
-<TEI xmlns="http://www.tei-c.org/ns/1.0">
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:w="http://cwrctc.artsrn.ualberta.ca/#">
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:w="http://cwrctc.artsrn.ualberta.ca/#">
-<rdf:Description rdf:about="http://localhost:8080/editor/documents/null">
+<rdf:Description rdf:about="http://apps.testing.cwrc.ca/editor/documents/null">
 	<w:mode>0</w:mode>
 </rdf:Description>
+<rdf:Description rdf:datatype="http://www.w3.org/TR/json-ld/"><![CDATA[
+{
+	"@context": "http://www.w3.org/ns/oa/oa.ttl",
+	"@id": "http://id.cwrc.ca/annotation/1c44a7cc-9835-402e-a2ef-40375d2c4ac3",
+	"@type": "oa:Annotation",
+	"motivation": [
+		"oa:identifying",
+		"oa:tagging"
+	],
+	"annotatedAt": "2014-06-17T17:37:28.293Z",
+	"annotatedBy": {
+		"@id": "http://id.cwrc.ca/user/120f6e54-cf96-4fe0-98c2-96734fee4ac4",
+		"@type": "foaf:Person",
+		"mbox": {
+			"@id": ""
+		},
+		"name": ""
+	},
+	"hasBody": {
+		"@id": "http://id.cwrc.ca/person/dc088d58-97d1-4135-b6b8-e3acfe709883",
+		"@type": [
+			"oa:SemanticTag",
+			"foaf:Person"
+		]
+	},
+	"hasTarget": {
+		"@id": "http://id.cwrc.ca/doc/6309dd00-0f53-4c44-a2a0-4a68bfaf0d85",
+		"@type": "oa:SpecificResource",
+		"hasSource": {
+			"@id": "http://id.cwrc.ca/doc/6309dd00-0f53-4c44-a2a0-4a68bfaf0d85",
+			"@type": "dctypes:Text",
+			"format": "text/xml"
+		},
+		"hasSelector": {
+			"@id": "http://id.cwrc.ca/selector/425b6e2b-7001-4249-8fef-71acbf60c769",
+			"@type": "oa:FragmentSelector",
+			"dcterms:conformsTo": "http://tools.ietf.org/rfc/rfc3023",
+			"rdf:value": "xpointer(//persName[@annotationId=\"ent_35\"])"
+		}
+	},
+	"cwrcAttributes": {
+		"cwrcInfo": {
+			"id": "http://viaf.org/viaf/39569752",
+			"name": "Brown, Miquel",
+			"repository": "viaf"
+		},
+		"certainty": "definite",
+		"type": "real",
+		"attributes": {}
+	},
+	"cwrcType": "person"
+}
+]]></rdf:Description>
+<rdf:Description rdf:datatype="http://www.w3.org/TR/json-ld/"><![CDATA[
+{
+	"@context": "http://www.w3.org/ns/oa/oa.ttl",
+	"@id": "http://id.cwrc.ca/annotation/12367381-c92c-40d0-8bc1-266a8714b509",
+	"@type": "oa:Annotation",
+	"motivation": [
+		"oa:identifying",
+		"oa:tagging"
+	],
+	"annotatedAt": "2014-06-17T17:37:28.294Z",
+	"annotatedBy": {
+		"@id": "http://id.cwrc.ca/user/22baebb8-bb03-468c-8db9-3693f876e7a7",
+		"@type": "foaf:Person",
+		"mbox": {
+			"@id": ""
+		},
+		"name": ""
+	},
+	"hasBody": {
+		"@id": "http://id.cwrc.ca/person/e6bb3535-97ef-4078-b216-b31386daa1ff",
+		"@type": [
+			"oa:SemanticTag",
+			"foaf:Person"
+		]
+	},
+	"hasTarget": {
+		"@id": "http://id.cwrc.ca/doc/2b17c9c3-e0f1-47d5-98cb-256d88e64179",
+		"@type": "oa:SpecificResource",
+		"hasSource": {
+			"@id": "http://id.cwrc.ca/doc/2b17c9c3-e0f1-47d5-98cb-256d88e64179",
+			"@type": "dctypes:Text",
+			"format": "text/xml"
+		},
+		"hasSelector": {
+			"@id": "http://id.cwrc.ca/selector/2fc30e96-740c-49f4-9008-6f7e9f854f02",
+			"@type": "oa:FragmentSelector",
+			"dcterms:conformsTo": "http://tools.ietf.org/rfc/rfc3023",
+			"rdf:value": "xpointer(//persName[@annotationId=\"ent_36\"])"
+		}
+	},
+	"cwrcAttributes": {
+		"cwrcInfo": {
+			"id": "http://cwrc-dev-01.srv.ualberta.ca/islandora/object/cwrc:f943360e-a757-41a6-b544-a8391fc378fd",
+			"name": "Bertrand Russell",
+			"repository": "cwrc"
+		},
+		"certainty": "speculative",
+		"type": "real",
+		"attributes": {}
+	},
+	"cwrcType": "person"
+}
+]]></rdf:Description>
 </rdf:RDF>
-    <teiHeader>
-        <fileDesc>
-            <titleStmt>
-                <title>Sample Document Title</title>
-            </titleStmt>
-            <publicationStmt>
-                <p/>
-            </publicationStmt>
-            <sourceDesc sameAs="http://www.cwrc.ca">
-                <p>Created from original research by members of CWRC/CS&#201;C unless otherwise
-                    noted.</p>
-            </sourceDesc>
-        </fileDesc>
-    </teiHeader>
-    <text>
-        <body>
-            <div type="letter">
-                <head>
-                    <title>Sample Letter Title</title>
-                </head>
-                <opener>
-                    <note type="setting">
-                        <p>Some opening note describing the writing setting</p>
-                    </note>
-                    <dateline>
-                        <date>Some date (set date value in attribute).</date>
-                    </dateline>
-                    <salute>Some salutation, e.g. "Dearest <persName
-                            sameAs="http://www.freebase.com/view/en/miquel_brown"
-                        >Miquel</persName>"</salute>
-                </opener>
-                <p>Sample letter content</p>
-                <closer>
-                    <salute>Some closing salutation, e.g. "With love..."</salute>
-                    <signed>
-                        <persName sameAs="http://www.example.org/bertrand_russell">Sender name
-                            and/or signature.</persName>
-                    </signed>
-                </closer>
-            </div>            
-        </body>
-    </text>
-</TEI>
+<teiHeader><fileDesc><titleStmt> <title>Sample Document Title</title> </titleStmt><publicationStmt><p></p></publicationStmt><sourceDesc sameAs="http://www.cwrc.ca"><p>Created from original research by members of CWRC/CSÉC unless otherwise noted.</p></sourceDesc></fileDesc></teiHeader><text><body><div type="letter"><head><title>Sample Letter Title</title></head><opener><note type="setting"><p>Some opening note describing the writing setting</p></note><dateline><date>Some date (set date value in attribute).</date></dateline><salute>Some salutation, e.g. "Dearest <persName annotationId="ent_35" cert="definite" ref="http://viaf.org/viaf/39569752">Miquel</persName>"</salute></opener><p>Sample letter content</p><closer><salute>Some closing salutation, e.g. "With love..."</salute><signed><persName annotationId="ent_36" cert="speculative" ref="http://cwrc-dev-01.srv.ualberta.ca/islandora/object/cwrc:f943360e-a757-41a6-b544-a8391fc378fd">Sender name and/or signature.</persName></signed></closer></div></body></text></TEI>
