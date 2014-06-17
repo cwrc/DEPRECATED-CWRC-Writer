@@ -3,6 +3,11 @@
 <?xml-stylesheet type="text/css" href="http://cwrc.ca/templates/css/orlando.css"?>
 
 <BIOGRAPHY PERSON="BRWWRITER" SEX="FEMALE">
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:w="http://cwrctc.artsrn.ualberta.ca/#">
+<rdf:Description rdf:about="http://localhost:8080/editor/documents/null">
+	<w:mode>0</w:mode>
+</rdf:Description>
+</rdf:RDF>
     <ORLANDOHEADER>
         <FILEDESC>
             <TITLESTMT>
