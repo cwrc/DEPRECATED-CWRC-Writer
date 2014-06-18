@@ -1,73 +1,158 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="http://cwrc.ca/schema/CWRC-TEIBasic.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
-<TEI xmlns:xi="http://www.w3.org/2001/XInclude" xmlns="http://www.tei-c.org/ns/1.0">
+<TEI xmlns:xi="http://www.w3.org/2001/XInclude" xmlns="http://www.tei-c.org/ns/1.0" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:w="http://cwrctc.artsrn.ualberta.ca/#">
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:w="http://cwrctc.artsrn.ualberta.ca/#">
-<rdf:Description rdf:about="http://localhost:8080/editor/documents/null">
-	<w:mode>0</w:mode>
+<rdf:Description rdf:about="http://apps.testing.cwrc.ca/editor/documents/null">
+  <w:mode>0</w:mode>
 </rdf:Description>
+<rdf:Description rdf:datatype="http://www.w3.org/TR/json-ld/"><![CDATA[
+{
+  "@context": "http://www.w3.org/ns/oa/oa.ttl",
+  "@id": "http://id.cwrc.ca/annotation/0fc670c6-c5fa-4e00-a6bd-5d785afabcb8",
+  "@type": "oa:Annotation",
+  "motivation": [
+    "oa:identifying",
+    "oa:tagging"
+  ],
+  "annotatedAt": "2014-06-18T13:53:19.340Z",
+  "annotatedBy": {
+    "@id": "http://id.cwrc.ca/user/38973bd3-1fd9-4f41-97da-3d4cbde6d37e",
+    "@type": "foaf:Person",
+    "mbox": {
+      "@id": ""
+    },
+    "name": ""
+  },
+  "hasBody": {
+    "@id": "http://id.cwrc.ca/person/f4f2146c-9801-4eb0-b2b0-d0440ddfeeb4",
+    "@type": [
+      "oa:SemanticTag",
+      "foaf:Person"
+    ]
+  },
+  "hasTarget": {
+    "@id": "http://id.cwrc.ca/doc/1338581a-9fdc-455a-91b0-4bafe028973b",
+    "@type": "oa:SpecificResource",
+    "hasSource": {
+      "@id": "http://id.cwrc.ca/doc/1338581a-9fdc-455a-91b0-4bafe028973b",
+      "@type": "dctypes:Text",
+      "format": "text/xml"
+    },
+    "hasSelector": {
+      "@id": "http://id.cwrc.ca/selector/e71cb071-b83f-4db9-a5b6-4d73edaae220",
+      "@type": "oa:FragmentSelector",
+      "dcterms:conformsTo": "http://tools.ietf.org/rfc/rfc3023",
+      "rdf:value": "xpointer(//persName[@annotationId=\"ent_61\"])"
+    }
+  },
+  "cwrcAttributes": {
+    "cwrcInfo": {
+      "id": "http://cwrc-dev-01.srv.ualberta.ca/islandora/object/cwrc:057e679b-5610-4739-a899-98fd07ef7c02",
+      "data": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><?xml-model href=\"http://cwrc.ca/schema/person.rng\" type=\"application/xml\" schematypens=\"http://relaxng.org/ns/structure/1.0\"?><entity><person><recordInfo><accessCondition type=\"use and reproduction\"/><originInfo><recordCreationDate>2014-06-18</recordCreationDate><recordChangeDate>2014-06-18</recordChangeDate><projectId>undefined</projectId></originInfo><personTypes><personType>writer</personType></personTypes></recordInfo><identity><preferredForm><namePart>Kenneth</namePart><namePart>Leslie</namePart></preferredForm></identity><relations><relation><personRef><name>undefined</name></personRef></relation></relations></person></entity>"
+    },
+    "certainty": "definite",
+    "type": "real",
+    "attributes": {}
+  },
+  "cwrcType": "person"
+}
+]]></rdf:Description>
+<rdf:Description rdf:datatype="http://www.w3.org/TR/json-ld/"><![CDATA[
+{
+  "@context": "http://www.w3.org/ns/oa/oa.ttl",
+  "@id": "http://id.cwrc.ca/annotation/24535424-450d-40b2-aada-1867af5920d7",
+  "@type": "oa:Annotation",
+  "motivation": "oa:commenting",
+  "annotatedAt": "2014-06-18T13:53:19.341Z",
+  "annotatedBy": {
+    "@id": "http://id.cwrc.ca/user/9cb546f7-693a-458f-b55e-01cb5a017347",
+    "@type": "foaf:Person",
+    "mbox": {
+      "@id": ""
+    },
+    "name": ""
+  },
+  "hasBody": {
+    "@id": "http://id.cwrc.ca/note/a26c176b-093c-4395-aad9-ad10cb73d87e",
+    "@type": [
+      "oa:SemanticTag",
+      "cnt:ContentAsText"
+    ]
+  },
+  "hasTarget": {
+    "@id": "http://id.cwrc.ca/doc/7cc24ded-5b29-4b7c-b3f0-b0cc57118ef3",
+    "@type": "oa:SpecificResource",
+    "hasSource": {
+      "@id": "http://id.cwrc.ca/doc/7cc24ded-5b29-4b7c-b3f0-b0cc57118ef3",
+      "@type": "dctypes:Text",
+      "format": "text/xml"
+    },
+    "hasSelector": {
+      "@id": "http://id.cwrc.ca/selector/a0cda7f0-091b-45b6-9f1a-d6ce32d4a47f",
+      "@type": "oa:FragmentSelector",
+      "dcterms:conformsTo": "http://tools.ietf.org/rfc/rfc3023",
+      "rdf:value": "xpointer(//note[@annotationId=\"ent_62\"])"
+    }
+  },
+  "cwrcAttributes": {
+    "type": "researchNote",
+    "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TEI xmlns=\"http://www.tei-c.org/ns/1.0\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:w=\"http://cwrctc.artsrn.ualberta.ca/#\"><text><body><note><p>This poem has a suggestion of the magical imagery of <persName cert=\"definite\" ref=\"http://cwrc-dev-01.srv.ualberta.ca/islandora/object/cwrc:3b92364f-0e16-4599-bd8c-92c95a409a00\">Kenneth Leslie</persName>’s By Stubborn Stars.</p></note></body></text></TEI>"
+  },
+  "cwrcType": "note"
+}
+]]></rdf:Description>
+<rdf:Description rdf:datatype="http://www.w3.org/TR/json-ld/"><![CDATA[
+{
+  "@context": "http://www.w3.org/ns/oa/oa.ttl",
+  "@id": "http://id.cwrc.ca/annotation/0240f34a-399d-4956-ba69-41cd0552d894",
+  "@type": "oa:Annotation",
+  "motivation": [
+    "oa:identifying",
+    "oa:tagging"
+  ],
+  "annotatedAt": "2014-06-18T13:53:19.341Z",
+  "annotatedBy": {
+    "@id": "http://id.cwrc.ca/user/add4601c-352e-4da5-9da5-35bb63edd24c",
+    "@type": "foaf:Person",
+    "mbox": {
+      "@id": ""
+    },
+    "name": ""
+  },
+  "hasBody": {
+    "@id": "http://id.cwrc.ca/person/3fab362a-9838-4211-8bf6-9c808bce7386",
+    "@type": [
+      "oa:SemanticTag",
+      "foaf:Person"
+    ]
+  },
+  "hasTarget": {
+    "@id": "http://id.cwrc.ca/doc/2370713b-9c3f-45eb-a2c7-b0c2d7eab765",
+    "@type": "oa:SpecificResource",
+    "hasSource": {
+      "@id": "http://id.cwrc.ca/doc/2370713b-9c3f-45eb-a2c7-b0c2d7eab765",
+      "@type": "dctypes:Text",
+      "format": "text/xml"
+    },
+    "hasSelector": {
+      "@id": "http://id.cwrc.ca/selector/f80c058e-4bc5-4e9d-83c4-67c2e0c87dab",
+      "@type": "oa:FragmentSelector",
+      "dcterms:conformsTo": "http://tools.ietf.org/rfc/rfc3023",
+      "rdf:value": "xpointer(//persName[@annotationId=\"ent_510\"])"
+    }
+  },
+  "cwrcAttributes": {
+    "cwrcInfo": {
+      "id": "http://cwrc-dev-01.srv.ualberta.ca/islandora/object/cwrc:7983b50a-c7d9-4938-8108-b48c8de1392c",
+      "name": "Floris Clark McLaren",
+      "repository": "cwrc",
+      "data": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<?xml-model href=\"http://cwrc.ca/schema/person.rng\" type=\"application/xml\" schematypens=\"http://relaxng.org/ns/structure/1.0\"?>\n<entity>\n      <person>\n         <recordInfo>\n            <originInfo>\n               <projectId>ceww</projectId>\n            </originInfo>\n            <personTypes/>\n            <accessCondition type=\"use and reproduction\">Use of this public-domain resource is governed by the <a href=\"http://creativecommons.org/licenses/by-nc/3.0/\" rel=\"license\">Creative Commons Attribution-NonCommercial 3.0 Unported License</a>.</accessCondition>\n         </recordInfo>\n         <identity>\n            <preferredForm>\n               <namePart partType=\"surname\">McLaren</namePart>\n               <namePart partType=\"forename\">Floris Clark</namePart>\n            </preferredForm>\n            <variantForms/>\n         </identity>\n         <description>\n            <descriptiveNotes>\n               <note>Included in CEWW</note>\n            </descriptiveNotes>\n         </description>\n      </person>\n   </entity>\n"
+    },
+    "certainty": "definite",
+    "type": "real",
+    "attributes": {}
+  },
+  "cwrcType": "person"
+}
+]]></rdf:Description>
 </rdf:RDF>
- <teiHeader>
-  <fileDesc>
-   <titleStmt>
-    <title>Sample Document Title</title>
-    <editor sameAs="www.cwrc.ca/person/someID">Editor Name</editor>
-   </titleStmt>
-   <publicationStmt>
-    <p/>
-   </publicationStmt>
-   <sourceDesc sameAs="http://www.cwrc.ca">
-    <p>Created by members of CWRC/CS&#201;C unless otherwise noted.</p>
-   </sourceDesc>
-  </fileDesc>
- </teiHeader>
- <text>
-  <body>
-   <div type="poem">
-    <head type="poem">
-     <title level="a">Sample Poem Title</title>
-     <title type="subtitle">Sample Subtitle</title>
-    </head>
-    <lg>
-     <l>Verse line</l>
-     <l>Verse line</l>
-     <l>Verse line</l>
-    </lg>
-    <lg>
-     <l>Verse line</l>
-     <l>Verse line</l>
-     <l>Verse line</l>
-    </lg>
-   </div>
-   <div type="poem">
-    <head type="poem">     
-     <bibl>
-      <title level="a">Glimpse</title>
-      <title type="subtitle">Sample Poem</title>
-      <author sameAs="www.cwrc.ca/person/someID">Floris Clark McLaren</author>
-     </bibl>
-    </head>
-    <lg>
-     <l>Against the blue of spruce, and the gray</l>
-     <l>Of bare-boughed poplar, suddenly</l>
-     <l>As though a snowdrift burst in scattering fragments,</l>
-     <l>Ptarmigan rise with heavy whir of wings,</l>
-     <l>Show for a moment clear among the branches,</l>
-     <l>Then disappear,</l>
-     <l>White lost on white again.</l>
-    </lg>
-    <bibl>
-     <author>McLaren, Floris Clark</author>. <title level="a">Glimpse</title>. <title
-      level="j">Canadian Poetry Magazine</title> <biblScope type="vol">1.1</biblScope> <biblScope
-       type="issue"><date>(1936)</date></biblScope>: <biblScope type="pp">23</biblScope>.
-    </bibl>
-    <note type="researchNote">This poem has a suggestion of the magical imagery of <persName
-     sameAs="www.cwrc.ca/person/someID">Kenneth Leslie</persName>’s <title level="a">By Stubborn
-     Stars</title>.</note>
-    <note type="link">Poem featured in <ref
-     target="http://ceww.wordpress.com/2012/03/21/glimpse-by-floris-clark-mclaren/"><title
-      sameAs="http://ceww.wordpress.com" level="m">Canada's Early
-      Women Writers</title></ref></note> 
-   </div>
-  </body>
- </text>
-</TEI>
+<teiHeader><fileDesc><titleStmt> <title>Sample Document Title</title> <editor sameAs="www.cwrc.ca/person/someID">Editor Name</editor> </titleStmt><publicationStmt><p></p></publicationStmt><sourceDesc sameAs="http://www.cwrc.ca"><p>Created by members of CWRC/CSÉC unless otherwise noted.</p></sourceDesc></fileDesc></teiHeader><text><body><div type="poem"><head type="poem"><title level="a">Sample Poem Title</title> <title type="subtitle">Sample Subtitle</title></head><lg><l>Verse line</l><l>Verse line</l><l>Verse line</l></lg><lg><l>Verse line</l><l>Verse line</l><l>Verse line</l></lg></div><div type="poem"><head type="poem"><bibl><title level="a">Glimpse</title> <title type="subtitle">Sample Poem</title> <author sameAs="www.cwrc.ca/person/someID"><persName annotationId="ent_510" cert="definite" ref="http://cwrc-dev-01.srv.ualberta.ca/islandora/object/cwrc:7983b50a-c7d9-4938-8108-b48c8de1392c">Floris Clark McLaren</persName></author></bibl></head><lg><l>Against the blue of spruce, and the gray</l><l>Of bare-boughed poplar, suddenly</l><l>As though a snowdrift burst in scattering fragments,</l><l>Ptarmigan rise with heavy whir of wings,</l><l>Show for a moment clear among the branches,</l><l>Then disappear,</l><l>White lost on white again.</l></lg><bibl><author>McLaren, Floris Clark</author>. <title level="a">Glimpse</title>. <title level="j">Canadian Poetry Magazine</title><biblScope type="vol">1.1</biblScope><biblScope type="issue"><date>(1936)</date></biblScope>:<biblScope type="pp">23</biblScope>.</bibl>This poem has a suggestion of the magical imagery of <persName annotationId="ent_61" cert="definite" ref="http://cwrc-dev-01.srv.ualberta.ca/islandora/object/cwrc:057e679b-5610-4739-a899-98fd07ef7c02">Kenneth Leslie</persName>’s <title level="a">By Stubborn Stars</title>.<note annotationId="ent_62" resp="PLACEHOLDER_USER" type="researchNote">undefined</note><note type="link">Poem featured in <ref target="http://ceww.wordpress.com/2012/03/21/glimpse-by-floris-clark-mclaren/"><title sameAs="http://ceww.wordpress.com" level="m">Canada's Early Women Writers</title></ref></note></div></body></text></TEI>
