@@ -606,14 +606,14 @@ l {
     display : block;
     white-space : nowrap;
 }
-l:after {
+/*l:after {
     content:counter(line);
     counter-increment: line;
     text-align:right;
     float: right;
     color:silver;
     margin-right:50px;
-}
+}*/
 label {
     display : inline;
     font-weight : bold;
