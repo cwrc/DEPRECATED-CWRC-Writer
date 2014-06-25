@@ -113,7 +113,7 @@
 *[_tag="keywords"] { display: block; margin-bottom: 0.5em; }
 *[_tag="kw"] { display: inline; font-style: italic; }
 *[_tag="l"] { display: block; white-space: nowrap; }
-*[_tag="l"]:after { content: counter(line, decimal); counter-increment: line; text-align: right; float: right; color: silver; margin-right: 50px; }
+/**[_tag="l"]:after { content: counter(line, decimal); counter-increment: line; text-align: right; float: right; color: silver; margin-right: 50px; }*/
 *[_tag="label"] { display: inline; font-weight: bold; }
 *[_tag="Label"] { display: inline; font-weight: bold; color: rgb(47, 79, 79); background-color: inherit; }
 *[_tag="argument"] > *[_tag="label"], *[_tag="body"] > *[_tag="label"], *[_tag="div"] > *[_tag="label"], *[_tag="div0"] > *[_tag="label"], *[_tag="div1"] > *[_tag="label"], *[_tag="div2"] > *[_tag="label"], *[_tag="div3"] > *[_tag="label"], *[_tag="div4"] > *[_tag="label"], *[_tag="div5"] > *[_tag="label"], *[_tag="div6"] > *[_tag="label"], *[_tag="div7"] > *[_tag="label"], *[_tag="epigraph"] > *[_tag="label"] { display: block; font-weight: bold; }
