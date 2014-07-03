@@ -346,7 +346,7 @@ return function(config) {
 			if (e.nodeType != 1) {
 				ed.currentNode = w.utilities.getRootTag()[0];
 			} else {
-				if (e.getAttribute('_tag') == null) {
+				if (e.getAttribute('_tag') == null && e.getAttribute('id') != 'entityHighlight') {
 					if (e.getAttribute('data-mce-bogus') != null) {
 						// artifact from selectStructureTag
 						var sibling;
