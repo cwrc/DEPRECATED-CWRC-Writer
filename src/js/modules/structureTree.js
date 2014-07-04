@@ -112,21 +112,22 @@ return function(config) {
 				// remove the selected node and set the focus to the closest node
 				if (tree.selectionType == tree.NODE_SELECTED) {
 					var currNode = $('#'+tree.currentlySelectedNode, w.editor.getBody());
-					var closestNode = currNode.prev();
-					if (closestNode.length == 0) {
-						closestNode = currNode.next();
+					var collapseToStart = true;
+					var newCurrentNode = currNode.nextAll('[_tag]')[0];
+					if (newCurrentNode == null) {
+						newCurrentNode = currNode.parent().nextAll('[_tag]')[0];
+						if (newCurrentNode == null) {
+							collapseToStart = false;
+							newCurrentNode = currNode.prevAll('[_tag]')[0];
+						}
 					}
-					var rng = w.editor.selection.getRng(true);
-					if (closestNode.length == 0) {
-						closestNode = currNode.parent();
-						w.tagger.removeStructureTag(tree.currentlySelectedNode, true);
-						rng.selectNodeContents(closestNode[0]);
-					} else {
-						w.tagger.removeStructureTag(tree.currentlySelectedNode, true);
-						rng.selectNode(closestNode[0]);
+					w.tagger.removeStructureTag(tree.currentlySelectedNode, true);
+					if (newCurrentNode != null) {
+						var rng = w.editor.selection.getRng(true);
+						rng.selectNodeContents(newCurrentNode);
+						rng.collapse(collapseToStart);
+						w.editor.selection.setRng(rng);
 					}
-					rng.collapse(true);
-					w.editor.selection.setRng(rng);
 				}
 			}
 		}
@@ -575,6 +576,7 @@ return function(config) {
 		plugins: ['wholerow','dnd','contextmenu'],
 		core: {
 			check_callback: true, // enable tree modifications
+			animation: false,
 			themes: {
 				name: 'cwrc',
 				icons: false,

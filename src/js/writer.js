@@ -134,43 +134,50 @@ return function(config) {
 		var node = $('#'+id, w.editor.getBody());
 		var nodeEl = node[0];
 		
-		var rng = w.editor.dom.createRng();
-		if (selectContentsOnly) {
-			if (tinymce.isWebKit) {
-//				$('[data-mce-bogus]', node).remove();
-//				node.prepend('<span data-mce-bogus="1">\uFEFF</span>').append('<span data-mce-bogus="1">\uFEFF</span>');
-//				rng.setStart(nodeEl.firstChild, 0);
-//				rng.setEnd(nodeEl.lastChild, nodeEl.lastChild.length);
-				if (nodeEl.firstChild == null) {
-					node.append('\uFEFF');
+		if (nodeEl != null) {
+			var rng = w.editor.dom.createRng();
+			if (selectContentsOnly) {
+				if (tinymce.isWebKit) {
+	//				$('[data-mce-bogus]', node).remove();
+	//				node.prepend('<span data-mce-bogus="1">\uFEFF</span>').append('<span data-mce-bogus="1">\uFEFF</span>');
+	//				rng.setStart(nodeEl.firstChild, 0);
+	//				rng.setEnd(nodeEl.lastChild, nodeEl.lastChild.length);
+					if (nodeEl.firstChild == null) {
+						node.append('\uFEFF');
+					}
+					rng.selectNodeContents(nodeEl);
+				} else {
+					rng.selectNodeContents(nodeEl);
 				}
-				rng.selectNodeContents(nodeEl);
 			} else {
-				rng.selectNodeContents(nodeEl);
+				$('[data-mce-bogus]', node.parent()).remove();
+				
+				if (tinymce.isWebKit) {
+					// if no nextElementSibling then only the contents will be copied in webkit
+					if (nodeEl.nextElementSibling == null) {
+						// sibling needs to be visible otherwise it doesn't count
+						node.after('<span data-mce-bogus="1" style="display: inline;">\uFEFF</span>');
+					}
+					node.before('<span data-mce-bogus="1" style="display: inline;">\uFEFF</span>').after('<span data-mce-bogus="1" style="display: inline;">\uFEFF</span>');
+					rng.setStart(nodeEl.previousSibling.firstChild, 0);
+					rng.setEnd(nodeEl.nextSibling.firstChild, 0);
+				} else {
+					rng.selectNode(nodeEl);
+				}
 			}
-		} else {
-			$('[data-mce-bogus]', node.parent()).remove();
+			w.editor.selection.setRng(rng);
 			
-			// if no nextElementSibling then only the contents will be copied in webkit
-			if (tinymce.isWebKit && nodeEl.nextElementSibling == null) {
-				// sibling needs to be visible otherwise it doesn't count
-				node.after('<span data-mce-bogus="1" style="display: inline;">\uFEFF</span>');
-			}
-			node.before('<span data-mce-bogus="1">\uFEFF</span>').after('<span data-mce-bogus="1">\uFEFF</span>');
+			// scroll node into view
+			$(w.editor.getDoc()).scrollTop(node.position().top - $(w.editor.getContentAreaContainer()).height()*0.25);
 			
-			rng.setStart(nodeEl.previousSibling, 0);
-			rng.setEnd(nodeEl.nextSibling, 0);
+			w._fireNodeChange(nodeEl);
+			
+			// need focus to happen after timeout, otherwise it doesn't always work (in FF)
+			window.setTimeout(function() {
+				w.editor.focus();
+				w.event('tagSelected').publish(id, selectContentsOnly);
+			}, 0);
 		}
-		w.editor.selection.setRng(rng);
-		
-		// scroll node into view
-		$(w.editor.getDoc()).scrollTop(node.position().top - $(w.editor.getContentAreaContainer()).height()*0.25);
-		
-		w._fireNodeChange(nodeEl);
-		
-		w.editor.focus();
-		
-		w.event('tagSelected').publish(id, selectContentsOnly);
 	};
 	
 	w.removeHighlights = function() {
@@ -272,6 +279,37 @@ return function(config) {
 		}
 		
 		if (ed.currentNode) {
+			// check if the node still exists in the document
+			if (ed.currentNode.parentNode === null) {
+				var rng = w.editor.selection.getRng(true);
+				var parent = rng.commonAncestorContainer.parentNode;
+				// trying to type inside a bogus node?
+				// (this can happen on webkit when typing "over" a selected structure tag)
+				if (parent.getAttribute('data-mce-bogus') != null) {
+					var $parent = $(parent);
+					var collapseToStart = true;
+					
+					var newCurrentNode = $parent.nextAll('[_tag]')[0];
+					if (newCurrentNode == null) {
+						newCurrentNode = $parent.parent().nextAll('[_tag]')[0];
+						if (newCurrentNode == null) {
+							collapseToStart = false;
+							newCurrentNode = $parent.prevAll('[_tag]')[0];
+						}
+					}
+					
+					if (newCurrentNode != null) {
+						rng.selectNodeContents(newCurrentNode);
+						rng.collapse(collapseToStart);
+						ed.selection.setRng(rng);
+						
+						window.setTimeout(function(){
+							w._fireNodeChange(newCurrentNode);
+						}, 0);
+					}
+				}
+			}
+			
 			// check if text is allowed in this node
 			if (ed.currentNode.getAttribute('_textallowed') == 'false') {
 				if (evt.ctrlKey || evt.which == 17) {
@@ -348,6 +386,7 @@ return function(config) {
 			} else {
 				if (e.getAttribute('_tag') == null && e.getAttribute('id') != 'entityHighlight') {
 					if (e.getAttribute('data-mce-bogus') != null) {
+						console.log('bogus', e);
 						// artifact from selectStructureTag
 						var sibling;
 						var rng = ed.selection.getRng(true);
@@ -605,6 +644,7 @@ return function(config) {
 				ed.contextMenuPos = null; // the position of the context menu (used to position related dialog box)
 				ed.copiedElement = {selectionType: null, element: null}; // the element that was copied (when first selected through the structure tree)
 				ed.lastKeyPress = null; // the last key the user pressed
+				
 				ed.onInit.add(function(ed) {
 					// modify isBlock method to check _tag attributes
 					ed.dom.isBlock = function(node) {
