@@ -386,7 +386,6 @@ return function(config) {
 			} else {
 				if (e.getAttribute('_tag') == null && e.getAttribute('id') != 'entityHighlight') {
 					if (e.getAttribute('data-mce-bogus') != null) {
-						console.log('bogus', e);
 						// artifact from selectStructureTag
 						var sibling;
 						var rng = ed.selection.getRng(true);
