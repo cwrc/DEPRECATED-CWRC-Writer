@@ -215,6 +215,29 @@ return function(writer) {
 		var body = w.editor.getBody();
 		for (var key in w.entities) {
 			var entry = w.entities[key];
+			
+			// TODO temp fix for entities that don't have URIs
+			if (entry.annotation.annotationId == null) {
+				// generate the URIs
+				$.when(
+					w.delegator.getUriForEntity(entry),
+					w.delegator.getUriForAnnotation(),
+					w.delegator.getUriForDocument(),
+					w.delegator.getUriForTarget(),
+					w.delegator.getUriForSelector(),
+					w.delegator.getUriForUser()
+				).then(function(entityUri, annoUri, docUri, targetUri, selectorUri, userUri) {
+					entry.annotation = {
+						entityId: entityUri,
+						annotationId: annoUri,
+						docId: docUri,
+						targetId: targetUri,
+						selectorId: selectorUri,
+						userId: userUri,
+						range: {}
+					};
+				});
+			}
 			var annotation = getAnnotationForEntity(key, format);
 			
 			if (format === 'xml') {
