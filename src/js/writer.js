@@ -19,6 +19,7 @@ return function(config) {
 	 * Entities store.
 	 * Each entry contains 3 properties:
 	 * info: tag info about the entity
+	 * info.cwrcInfo: info from the cwrcDialogs lookups
 	 * props: metadata for use by CWRCWriter
 	 * annotation: annotation uris and object
 	 */

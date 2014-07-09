@@ -205,7 +205,10 @@ return function(writer) {
 				
 				$('#'+id+'_certainty input[value="'+data.certainty+'"]').prop('checked', true).button('refresh');
 				$('#'+id+'_type input[value="'+data.type+'"]').prop('checked', true).button('refresh');
-				$('#'+id+'_role select').val(data.role);
+				if (data.role) {
+					$('#'+id+'_role select').val(data.role);
+					$('#'+id+'_role').accordion('option', 'active', 0);
+				}
 			}
 			
 			dialog.dialog('open');

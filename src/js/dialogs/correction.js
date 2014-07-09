@@ -1,7 +1,16 @@
-define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+define([
+    'jquery',
+    'jquery-ui',
+    'attributeWidget'
+], function($, jqueryUi, AttributeWidget) {
 	
 return function(writer) {
 	var w = writer;
+	
+	var id = 'correctionDialog';
+	
+	var attWidgetInit = false;
+	var attributeWidget;
 	
 	var mode = null;
 	var ADD = 0;
@@ -9,10 +18,33 @@ return function(writer) {
 	
 	var sicText = null;
 	
+	var initAttributeWidget = function() {
+		var corrAtts = w.utilities.getChildrenForTag({tag: 'corr', type: 'attribute', returnType: 'array'});
+		for (var i = 0; i < corrAtts.length; i++) {
+			corrAtts[i].parent = 'corr';
+		}
+		attributeWidget.buildWidget(corrAtts);
+		attWidgetInit = true;
+	};
+	
 	$(document.body).append(''+
-	'<div id="correctionDialog">'+
-	    '<div><p>Correction</p><textarea id="correctionInput" name="correction"></textarea></div>'+
+	'<div id="'+id+'" class="annotationDialog">'+
+	    '<div>'+
+	    	'<p>Correction</p><textarea id="correctionInput" name="correction"></textarea>'+
+	    '</div>'+
+	    '<div>'+
+		    '<h3>Markup options</h3>'+
+		    '<div id="'+id+'_teiParent" style="position: relative; height: 200px;">'+
+		    '</div>'+
+		'</div>'+
 	'</div>');
+	
+	$('#'+id+'_teiParent').parent().accordion({
+		heightStyle: 'content',
+		animate: false,
+		collapsible: true,
+		active: false
+	});
 	
 	var correction = $('#correctionDialog');
 	correction.dialog({
@@ -22,7 +54,7 @@ return function(writer) {
 		open: function(event, ui) {
 			$('#correctionDialog').parent().find('.ui-dialog-titlebar-close').hide();
 		},
-		height: 220,
+		height: 385,
 		width: 385,
 		autoOpen: false,
 		buttons: {
@@ -43,6 +75,7 @@ return function(writer) {
 				corrText: correctionInput.value,
 				sicText: sicText
 			};
+			data.attributes = attributeWidget.getData();
 		}
 		if (mode == EDIT && data != null) {
 			if (sicText == null) {
@@ -64,9 +97,20 @@ return function(writer) {
 		correction.dialog('close');
 	};
 	
+	attributeWidget = new AttributeWidget({writer: w, parentId: id+'_teiParent'});
+	
 	return {
 		show: function(config) {
 			mode = config.entry ? EDIT : ADD;
+			
+			if (attWidgetInit == false) {
+				initAttributeWidget();
+			}
+			
+			correctionInput.value = '';
+			attributeWidget.reset();
+			$('#'+id+'_teiParent').parent().accordion('option', 'active', false);
+			
 			var prefix = 'Add ';
 			
 			if (mode == ADD) {
@@ -74,10 +118,17 @@ return function(writer) {
 				if (sicText == '') sicText = null;
 				correctionInput.value = '';
 			} else {
+				var data = config.entry.info;
+				
 				prefix = 'Edit ';
-				if (config.entry.info.sicText) sicText = config.entry.info.sicText;
+				if (data.sicText) sicText = data.sicText;
 				else sicText = null;
-				correctionInput.value = config.entry.info.corrText;
+				correctionInput.value = data.corrText;
+				
+				var showWidget = attributeWidget.setData(data.attributes);
+				if (showWidget) {
+					$('#'+id+'_teiParent').parent().accordion('option', 'active', 0);
+				}
 			}
 			
 			var title = prefix+config.title;

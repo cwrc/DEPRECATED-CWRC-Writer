@@ -8,6 +8,8 @@ return function(config) {
 	var EDIT = 1;
 	var mode = ADD;
 	
+	var disallowedAttributes = ['id', 'xml:id', 'annotationid', 'offsetid'];
+	
 	var isDirty = false;
 	
 	var parent = $('#'+parentId);
@@ -50,7 +52,7 @@ return function(config) {
 					isLevel1 = false;
 				}
 				
-				if (att.name.toLowerCase() != 'id' && att.name.toLowerCase() != 'xml:id') {
+				if (disallowedAttributes.indexOf(att.name.toLowerCase()) === -1) {
 					var display = 'block';
 					var requiredClass = att.required ? ' required' : '';
 					if (isLevel1 || (mode == EDIT && previousVals[att.name])) {

@@ -16,8 +16,7 @@ return function(writer) {
 					});
 				} else {
 					result = {
-						id: 'http://cwrc-dev-01.srv.ualberta.ca/islandora/object/'+result.response.pid,
-						data: result.data
+						id: 'http://cwrc-dev-01.srv.ualberta.ca/islandora/object/'+result.response.pid
 					};
 					w.dialogManager.show('tagTitle', {
 						cwrcInfo: result
@@ -43,7 +42,7 @@ return function(writer) {
 					success: function(result) {
 						if (result.id == null) {
 							result = {
-								id: 'cwrc:3b92364f-0e16-4599-bd8c-92c95a409a00',
+								id: w.utilities.createGuid(),
 								name: ['Test Title'],
 								repository: 'cwrc'
 							};
@@ -58,6 +57,9 @@ return function(writer) {
 						if ($.isArray(result.name)) {
 							result.name = result.name[0];
 						}
+						
+						delete result.data;
+						
 						w.dialogManager.show('tagTitle', {
 							cwrcInfo: result
 						});
