@@ -156,13 +156,13 @@
 					ed.execCommand('addEntity', 'date');
 				}
 			}).setDisabled(col);
-			m.add({
-				title: 'Tag Event',
-				icon_src: url+'cake.png',
-				onclick : function() {
-					ed.execCommand('addEntity', 'event');
-				}
-			}).setDisabled(col);
+//			m.add({
+//				title: 'Tag Event',
+//				icon_src: url+'cake.png',
+//				onclick : function() {
+//					ed.execCommand('addEntity', 'event');
+//				}
+//			}).setDisabled(col);
 			m.add({
 				title: 'Tag Organization',
 				icon_src: url+'group.png',
