@@ -1,73 +1,147 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="http://cwrc.ca/schema/CWRC-TEIBasic.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
-<TEI xmlns:xi="http://www.w3.org/2001/XInclude" xmlns="http://www.tei-c.org/ns/1.0">
+<TEI xmlns:xi="http://www.w3.org/2001/XInclude" xmlns="http://www.tei-c.org/ns/1.0" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:w="http://cwrctc.artsrn.ualberta.ca/#">
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:w="http://cwrctc.artsrn.ualberta.ca/#">
-<rdf:Description rdf:about="http://localhost:8080/editor/documents/null">
+<rdf:Description rdf:about="http://apps.testing.cwrc.ca/editor/documents/null">
 	<w:mode>0</w:mode>
 </rdf:Description>
+<rdf:Description rdf:datatype="http://www.w3.org/TR/json-ld/"><![CDATA[
+{
+	"@context": "http://www.w3.org/ns/oa/oa.ttl",
+	"@id": "http://id.cwrc.ca/annotation/160388bf-8a4a-4093-93be-1337a831da73",
+	"@type": "oa:Annotation",
+	"motivation": [
+		"oa:identifying",
+		"oa:tagging"
+	],
+	"annotatedAt": "2014-06-26T20:35:02.724Z",
+	"annotatedBy": {
+		"@id": "http://id.cwrc.ca/user/1b2f0afd-9cdd-4092-9567-2e32c221e681",
+		"@type": "foaf:Person",
+		"mbox": {
+			"@id": ""
+		},
+		"name": ""
+	},
+	"hasBody": {
+		"@id": "http://id.cwrc.ca/person/493ce607-7ea6-41db-9622-8d90124c63ec",
+		"@type": [
+			"oa:SemanticTag",
+			"foaf:Person"
+		]
+	},
+	"hasTarget": {
+		"@id": "http://id.cwrc.ca/doc/059a54de-9204-4b90-a171-2ce6c786445c",
+		"@type": "oa:SpecificResource",
+		"hasSource": {
+			"@id": "http://id.cwrc.ca/doc/059a54de-9204-4b90-a171-2ce6c786445c",
+			"@type": "dctypes:Text",
+			"format": "text/xml"
+		},
+		"hasSelector": {
+			"@id": "http://id.cwrc.ca/selector/02ce367d-fe5f-46be-ad9c-808456d0e921",
+			"@type": "oa:FragmentSelector",
+			"dcterms:conformsTo": "http://tools.ietf.org/rfc/rfc3023",
+			"rdf:value": "xpointer(//persName[@annotationId=\"ent_103\"])"
+		}
+	},
+	"cwrcAttributes": {
+		"cwrcInfo": {
+			"id": "http://viaf.org/viaf/78272387",
+			"name": "McLaren, Floris Clark",
+			"repository": "viaf"
+		},
+		"certainty": "definite",
+		"type": "real",
+		"attributes": {}
+	},
+	"cwrcType": "person"
+}
+]]></rdf:Description>
+<rdf:Description rdf:datatype="http://www.w3.org/TR/json-ld/"><![CDATA[
+{
+	"@context": "http://www.w3.org/ns/oa/oa.ttl",
+	"@id": "http://id.cwrc.ca/annotation/4a99ab97-ca9a-453f-80b7-20c9958d5560",
+	"@type": "oa:Annotation",
+	"motivation": [
+		"oa:identifying",
+		"oa:tagging"
+	],
+	"annotatedAt": "2014-06-26T20:35:02.725Z",
+	"annotatedBy": {
+		"@id": "http://id.cwrc.ca/user/c711c8e6-9be1-4f25-992a-af9e9f6e3194",
+		"@type": "foaf:Person",
+		"mbox": {
+			"@id": ""
+		},
+		"name": ""
+	},
+	"hasBody": {
+		"@id": "http://id.cwrc.ca/date/03244eb7-5d45-48c7-a7da-90d16188c5ae",
+		"@type": [
+			"oa:SemanticTag",
+			"cnt:ContentAsText"
+		],
+		"cnt:chars": "1936"
+	},
+	"hasTarget": {
+		"@id": "http://id.cwrc.ca/doc/eb824319-6c72-4c8c-b87d-cde5a66be119",
+		"@type": "oa:SpecificResource",
+		"hasSource": {
+			"@id": "http://id.cwrc.ca/doc/eb824319-6c72-4c8c-b87d-cde5a66be119",
+			"@type": "dctypes:Text",
+			"format": "text/xml"
+		},
+		"hasSelector": {
+			"@id": "http://id.cwrc.ca/selector/6e6d3e0f-687a-46cf-81d0-04ee00287add",
+			"@type": "oa:FragmentSelector",
+			"dcterms:conformsTo": "http://tools.ietf.org/rfc/rfc3023",
+			"rdf:value": "xpointer(//date[@annotationId=\"ent_104\"])"
+		}
+	},
+	"cwrcAttributes": {
+		"date": "1936",
+		"certainty": "definite",
+		"attributes": {}
+	},
+	"cwrcType": "date"
+}
+]]></rdf:Description>
+<rdf:Description rdf:datatype="http://www.w3.org/TR/json-ld/"><![CDATA[
+{
+	"@context": "http://www.w3.org/ns/oa/oa.ttl",
+	"@id": "http://id.cwrc.ca/annotation/288d77b0-2bb3-4d38-9576-cde24e1ae17c",
+	"@type": "oa:Annotation",
+	"motivation": "oa:linking",
+	"annotatedAt": "2014-06-26T20:35:02.725Z",
+	"annotatedBy": {
+		"@id": "http://id.cwrc.ca/user/89319e80-786a-4f33-b1d5-edd42e0a26f1",
+		"@type": "foaf:Person",
+		"mbox": {
+			"@id": ""
+		},
+		"name": ""
+	},
+	"hasBody": "http://cufts2.lib.sfu.ca/CRDB4/BVAS/resource/5724",
+	"hasTarget": {
+		"@id": "http://id.cwrc.ca/doc/11cd20d4-918e-4565-a4ec-86732a5739b5",
+		"@type": "oa:SpecificResource",
+		"hasSource": {
+			"@id": "http://id.cwrc.ca/doc/11cd20d4-918e-4565-a4ec-86732a5739b5",
+			"@type": "dctypes:Text",
+			"format": "text/xml"
+		},
+		"hasSelector": {
+			"@id": "http://id.cwrc.ca/selector/0a02667e-3d4b-4ab0-b060-5838f88179f5",
+			"@type": "oa:FragmentSelector",
+			"dcterms:conformsTo": "http://tools.ietf.org/rfc/rfc3023",
+			"rdf:value": "xpointer(//ref[@annotationId=\"ent_105\"])"
+		}
+	},
+	"cwrcAttributes": {
+		"url": "http://cufts2.lib.sfu.ca/CRDB4/BVAS/resource/5724"
+	},
+	"cwrcType": "link"
+}
+]]></rdf:Description>
 </rdf:RDF>
- <teiHeader>
-  <fileDesc>
-   <titleStmt>
-    <title>Sample Document Title</title>
-    <editor sameAs="www.cwrc.ca/person/someID">Editor name</editor>
-   </titleStmt>
-   <publicationStmt>
-    <p/>
-   </publicationStmt>
-   <sourceDesc sameAs="http://www.cwrc.ca">
-    <p>Created by members of CWRC/CS&#201;C unless otherwise noted.</p>
-   </sourceDesc>
-  </fileDesc>
- </teiHeader>
- <text>
-  <body>
-   <div type="poem">
-    <head type="poem">
-     <title level="a">Sample Poem Title</title>
-     <title type="subtitle">Sample Subtitle</title>
-    </head>
-    <lg>
-     <l>Verse line</l>
-     <l>Verse line</l>
-     <l>Verse line</l>
-    </lg>
-    <lg>
-     <l>Verse line</l>
-     <l>Verse line</l>
-     <l>Verse line</l>
-    </lg>
-   </div>
-   <div type="poem">
-    <head type="poem">     
-     <bibl>
-      <title level="a">Glimpse</title>
-      <title type="subtitle">Sample Poem</title>
-      <author sameAs="www.cwrc.ca/person/someID">Floris Clark McLaren</author>
-     </bibl>
-    </head>
-    <lg>
-     <l>Against the blue of spruce, and the gray</l>
-     <l>Of bare-boughed poplar, suddenly</l>
-     <l>As though a snowdrift burst in scattering fragments,</l>
-     <l>Ptarmigan rise with heavy whir of wings,</l>
-     <l>Show for a moment clear among the branches,</l>
-     <l>Then disappear,</l>
-     <l>White lost on white again.</l>
-    </lg>
-    <bibl>
-     <author>McLaren, Floris Clark</author>. <title level="a">Glimpse</title>. <title
-      level="j">Canadian Poetry Magazine</title> <biblScope type="vol">1.1</biblScope> <biblScope
-       type="issue"><date>(1936)</date></biblScope>: <biblScope type="pp">23</biblScope>.
-    </bibl>
-    <note type="researchNote">This poem has a suggestion of the magical imagery of <persName
-     sameAs="www.cwrc.ca/person/someID">Kenneth Leslie</persName>’s <title level="a">By Stubborn
-     Stars</title>.</note>
-    <note type="link">Poem featured in <ref
-     target="http://ceww.wordpress.com/2012/03/21/glimpse-by-floris-clark-mclaren/"><title
-      sameAs="http://ceww.wordpress.com" level="m">Canada's Early
-      Women Writers</title></ref></note> 
-   </div>
-  </body>
- </text>
-</TEI>
+<teiHeader><fileDesc><titleStmt> <title>Sample Document Title</title> <editor sameAs="www.cwrc.ca/person/someID">Editor name</editor> </titleStmt><publicationStmt><p></p></publicationStmt><sourceDesc sameAs="http://www.cwrc.ca"><p>Created by members of CWRC/CSÉC unless otherwise noted.</p></sourceDesc></fileDesc></teiHeader><text><body><div type="poem"><head type="poem"><title level="a">Sample Poem Title</title> <title type="subtitle">Sample Subtitle</title></head><lg><l>Verse line</l><l>Verse line</l><l>Verse line</l></lg><lg><l>Verse line</l><l>Verse line</l><l>Verse line</l></lg></div><div type="poem"><head type="poem">Glimpse Sample Poem <persName annotationId="ent_103" cert="definite" ref="http://viaf.org/viaf/78272387">Floris Clark McLaren</persName></head><lg><l>Against the blue of spruce, and the gray</l><l>Of bare-boughed poplar, suddenly</l><l>As though a snowdrift burst in scattering fragments,</l><l>Ptarmigan rise with heavy whir of wings,</l><l>Show for a moment clear among the branches,</l><l>Then disappear,</l><l>White lost on white again.</l></lg><note>McLaren, Floris Clark. Glimpse. Canadian Poetry Magazine1.1(<date annotationId="ent_104" cert="definite" when="1936">1936</date>):23</note><note type="researchNote">This poem has a suggestion of the magical imagery of Kenneth Leslie’s By Stubborn Stars.</note><note type="link">Poem featured in <ref annotationId="ent_105" target="http://cufts2.lib.sfu.ca/CRDB4/BVAS/resource/5724">Canada's Early Women Writers</ref></note></div></body></text></TEI>

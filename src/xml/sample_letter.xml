@@ -1,89 +1,327 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="http://cwrc.ca/schema/CWRC-TEIBasic.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
-<TEI xmlns="http://www.tei-c.org/ns/1.0">
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:w="http://cwrctc.artsrn.ualberta.ca/#">
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:w="http://cwrctc.artsrn.ualberta.ca/#">
-<rdf:Description rdf:about="http://localhost:8080/editor/documents/null">
+<rdf:Description rdf:about="http://apps.testing.cwrc.ca/editor/documents/null">
 	<w:mode>0</w:mode>
 </rdf:Description>
+<rdf:Description rdf:datatype="http://www.w3.org/TR/json-ld/"><![CDATA[
+{
+	"@context": "http://www.w3.org/ns/oa/oa.ttl",
+	"@type": "oa:Annotation",
+	"motivation": [
+		"oa:identifying",
+		"oa:tagging"
+	],
+	"annotatedAt": "2014-06-26T20:46:30.487Z",
+	"annotatedBy": {
+		"@type": "foaf:Person",
+		"mbox": {
+			"@id": ""
+		},
+		"name": ""
+	},
+	"hasBody": {
+		"@type": [
+			"oa:SemanticTag",
+			"geo:SpatialThing"
+		]
+	},
+	"hasTarget": {
+		"@type": "oa:SpecificResource",
+		"hasSource": {
+			"@type": "dctypes:Text",
+			"format": "text/xml"
+		},
+		"hasSelector": {
+			"@type": "oa:FragmentSelector",
+			"dcterms:conformsTo": "http://tools.ietf.org/rfc/rfc3023",
+			"rdf:value": "xpointer(//placeName[@annotationId=\"ent_63\"])"
+		}
+	},
+	"cwrcAttributes": {
+		"cwrcInfo": {
+			"id": 5,
+			"name": "Bergen, Norway",
+			"repository": "geonames",
+			"data": "<geoname><name>Bergen</name><asciiName>Bergen</asciiName><lat>60.3920000</lat><lng>5.3280000</lng><countryCode>NO</countryCode><countryName>Norway</countryName><fcl>A</fcl><fcode>ADM2</fcode><geonameid>3161733</geonameid><granularity>Province/State</granularity></geoname>"
+		},
+		"certainty": "probable"
+	},
+	"cwrcType": "place"
+}
+]]></rdf:Description>
+<rdf:Description rdf:datatype="http://www.w3.org/TR/json-ld/"><![CDATA[
+{
+	"@context": "http://www.w3.org/ns/oa/oa.ttl",
+	"@type": "oa:Annotation",
+	"motivation": "oa:editing",
+	"annotatedAt": "2014-06-26T20:46:30.487Z",
+	"annotatedBy": {
+		"@type": "foaf:Person",
+		"mbox": {
+			"@id": ""
+		},
+		"name": ""
+	},
+	"hasBody": {
+		"@type": [
+			"oa:SemanticTag",
+			"cnt:ContentAsText"
+		],
+		"cnt:chars": "when"
+	},
+	"hasTarget": {
+		"@type": "oa:SpecificResource",
+		"hasSource": {
+			"@type": "dctypes:Text",
+			"format": "text/xml"
+		},
+		"hasSelector": {
+			"@type": "oa:FragmentSelector",
+			"dcterms:conformsTo": "http://tools.ietf.org/rfc/rfc3023",
+			"rdf:value": "xpointer(//choice[@annotationId=\"ent_65\"])"
+		}
+	},
+	"cwrcAttributes": {
+		"corrText": "when",
+		"sicText": "when"
+	},
+	"cwrcType": "correction"
+}
+]]></rdf:Description>
+<rdf:Description rdf:datatype="http://www.w3.org/TR/json-ld/"><![CDATA[
+{
+	"@context": "http://www.w3.org/ns/oa/oa.ttl",
+	"@type": "oa:Annotation",
+	"motivation": [
+		"oa:identifying",
+		"oa:tagging"
+	],
+	"annotatedAt": "2014-06-26T20:46:30.487Z",
+	"annotatedBy": {
+		"@type": "foaf:Person",
+		"mbox": {
+			"@id": ""
+		},
+		"name": ""
+	},
+	"hasBody": {
+		"@type": [
+			"oa:SemanticTag",
+			"geo:SpatialThing"
+		]
+	},
+	"hasTarget": {
+		"@type": "oa:SpecificResource",
+		"hasSource": {
+			"@type": "dctypes:Text",
+			"format": "text/xml"
+		},
+		"hasSelector": {
+			"@type": "oa:FragmentSelector",
+			"dcterms:conformsTo": "http://tools.ietf.org/rfc/rfc3023",
+			"rdf:value": "xpointer(//placeName[@annotationId=\"ent_67\"])"
+		}
+	},
+	"cwrcAttributes": {
+		"cwrcInfo": {
+			"id": 0,
+			"name": "Stockholm, Sweden",
+			"repository": "geonames",
+			"data": "<geoname><name>Stockholm</name><asciiName>Stockholm</asciiName><lat>59.5000000</lat><lng>18.0000000</lng><countryCode>SE</countryCode><countryName>Sweden</countryName><fcl>A</fcl><fcode>ADM1</fcode><geonameid>2673722</geonameid><granularity>Province/State</granularity></geoname>"
+		},
+		"certainty": "definite"
+	},
+	"cwrcType": "place"
+}
+]]></rdf:Description>
+<rdf:Description rdf:datatype="http://www.w3.org/TR/json-ld/"><![CDATA[
+{
+	"@context": "http://www.w3.org/ns/oa/oa.ttl",
+	"@type": "oa:Annotation",
+	"motivation": [
+		"oa:identifying",
+		"oa:tagging"
+	],
+	"annotatedAt": "2014-06-26T20:46:30.487Z",
+	"annotatedBy": {
+		"@type": "foaf:Person",
+		"mbox": {
+			"@id": ""
+		},
+		"name": ""
+	},
+	"hasBody": {
+		"@type": [
+			"oa:SemanticTag",
+			"cnt:ContentAsText"
+		],
+		"cnt:chars": "1935-10-21"
+	},
+	"hasTarget": {
+		"@type": "oa:SpecificResource",
+		"hasSource": {
+			"@type": "dctypes:Text",
+			"format": "text/xml"
+		},
+		"hasSelector": {
+			"@type": "oa:FragmentSelector",
+			"dcterms:conformsTo": "http://tools.ietf.org/rfc/rfc3023",
+			"rdf:value": "xpointer(//date[@annotationId=\"ent_69\"])"
+		}
+	},
+	"cwrcAttributes": {
+		"date": "1935-10-21",
+		"certainty": "definite",
+		"attributes": {}
+	},
+	"cwrcType": "date"
+}
+]]></rdf:Description>
+<rdf:Description rdf:datatype="http://www.w3.org/TR/json-ld/"><![CDATA[
+{
+	"@context": "http://www.w3.org/ns/oa/oa.ttl",
+	"@type": "oa:Annotation",
+	"motivation": [
+		"oa:identifying",
+		"oa:tagging"
+	],
+	"annotatedAt": "2014-06-26T20:46:30.487Z",
+	"annotatedBy": {
+		"@type": "foaf:Person",
+		"mbox": {
+			"@id": ""
+		},
+		"name": ""
+	},
+	"hasBody": {
+		"@type": [
+			"oa:SemanticTag",
+			"geo:SpatialThing"
+		]
+	},
+	"hasTarget": {
+		"@type": "oa:SpecificResource",
+		"hasSource": {
+			"@type": "dctypes:Text",
+			"format": "text/xml"
+		},
+		"hasSelector": {
+			"@type": "oa:FragmentSelector",
+			"dcterms:conformsTo": "http://tools.ietf.org/rfc/rfc3023",
+			"rdf:value": "xpointer(//placeName[@annotationId=\"ent_71\"])"
+		}
+	},
+	"cwrcAttributes": {
+		"cwrcInfo": {
+			"id": 0,
+			"name": "Oslo, Norway",
+			"repository": "geonames",
+			"data": "<geoname><name>Oslo</name><asciiName>Oslo</asciiName><lat>59.9118300</lat><lng>10.7336700</lng><countryCode>NO</countryCode><countryName>Norway</countryName><fcl>A</fcl><fcode>ADM2</fcode><geonameid>6453366</geonameid><granularity>Province/State</granularity></geoname>"
+		},
+		"certainty": "definite"
+	},
+	"cwrcType": "place"
+}
+]]></rdf:Description>
+<rdf:Description rdf:datatype="http://www.w3.org/TR/json-ld/"><![CDATA[
+{
+	"@context": "http://www.w3.org/ns/oa/oa.ttl",
+	"@type": "oa:Annotation",
+	"motivation": [
+		"oa:identifying",
+		"oa:tagging"
+	],
+	"annotatedAt": "2014-06-26T20:46:30.487Z",
+	"annotatedBy": {
+		"@type": "foaf:Person",
+		"mbox": {
+			"@id": ""
+		},
+		"name": ""
+	},
+	"hasBody": {
+		"@type": [
+			"oa:SemanticTag",
+			"foaf:Person"
+		]
+	},
+	"hasTarget": {
+		"@type": "oa:SpecificResource",
+		"hasSource": {
+			"@type": "dctypes:Text",
+			"format": "text/xml"
+		},
+		"hasSelector": {
+			"@type": "oa:FragmentSelector",
+			"dcterms:conformsTo": "http://tools.ietf.org/rfc/rfc3023",
+			"rdf:value": "xpointer(//persName[@annotationId=\"ent_73\"])"
+		}
+	},
+	"cwrcAttributes": {
+		"cwrcInfo": {
+			"id": "279399399",
+			"name": "Russell, Patricia",
+			"repository": "viaf"
+		},
+		"certainty": "probable",
+		"attributes": {}
+	},
+	"cwrcType": "person"
+}
+]]></rdf:Description>
+<rdf:Description rdf:datatype="http://www.w3.org/TR/json-ld/"><![CDATA[
+{
+	"@context": "http://www.w3.org/ns/oa/oa.ttl",
+	"@id": "http://id.cwrc.ca/annotation/b4e2afd5-c5ac-4ea3-809b-c48ce600b0d4",
+	"@type": "oa:Annotation",
+	"motivation": [
+		"oa:identifying",
+		"oa:tagging"
+	],
+	"annotatedAt": "2014-06-26T20:46:30.487Z",
+	"annotatedBy": {
+		"@id": "http://id.cwrc.ca/user/a00c63b7-db7c-47e7-b790-74ee8701fa86",
+		"@type": "foaf:Person",
+		"mbox": {
+			"@id": ""
+		},
+		"name": ""
+	},
+	"hasBody": {
+		"@id": "http://id.cwrc.ca/person/d110e858-b235-497a-99e5-1464af49d2f9",
+		"@type": [
+			"oa:SemanticTag",
+			"foaf:Person"
+		]
+	},
+	"hasTarget": {
+		"@id": "http://id.cwrc.ca/doc/b2edba09-8951-44aa-be63-c09142b2c79f",
+		"@type": "oa:SpecificResource",
+		"hasSource": {
+			"@id": "http://id.cwrc.ca/doc/b2edba09-8951-44aa-be63-c09142b2c79f",
+			"@type": "dctypes:Text",
+			"format": "text/xml"
+		},
+		"hasSelector": {
+			"@id": "http://id.cwrc.ca/selector/dfb4183a-8add-498c-b4a4-833237b20df1",
+			"@type": "oa:FragmentSelector",
+			"dcterms:conformsTo": "http://tools.ietf.org/rfc/rfc3023",
+			"rdf:value": "xpointer(//persName[@annotationId=\"ent_109\"])"
+		}
+	},
+	"cwrcAttributes": {
+		"cwrcInfo": {
+			"id": "http://viaf.org/viaf/36924137",
+			"name": "Russell, Bertrand",
+			"repository": "viaf"
+		},
+		"certainty": "definite",
+		"type": "real",
+		"attributes": {}
+	},
+	"cwrcType": "person"
+}
+]]></rdf:Description>
 </rdf:RDF>
-    <teiHeader>
-        <fileDesc>
-            <titleStmt>
-                <title>Sample Document Title</title>
-            </titleStmt>
-            <publicationStmt>
-                <p/>
-            </publicationStmt>
-            <sourceDesc sameAs="http://www.cwrc.ca">
-                <p>Created from original research by members of CWRC/CS&#201;C unless otherwise
-                    noted.</p>
-            </sourceDesc>
-        </fileDesc>
-    </teiHeader>
-    <text>
-        <body>
-            <div type="letter">
-                <head>
-                    <title>Sample Letter - Bertrand Russell to Patricia Spence - October 21,
-                        1935</title>
-                </head>
-                <opener>
-                    <note>
-                        <p>Bad writing due to shaky train</p>
-                        <p>In train</p>
-                        <p><placeName sameAs="http://www.freebase.com/view/en/oslo" cert="definite"
-                            source="http://www,somesource.org/source/123456">Oslo</placeName>
-                            to <placeName sameAs="http://www.freebase.com/view/en/bergen"
-                                >Bergen</placeName></p>
-                    </note>
-                    <dateline>
-                        <date when="1935-10-21">21.10.35</date>
-                    </dateline>
-                    <salute>Dearest - </salute>
-                </opener>
-
-                <p>I have had no letter from you since I left <placeName
-                        sameAs="http://www.freebase.com/view/en/stockholm" cert="definite"
-                        >Stockholm</placeName>, but I had a nice one from <persName
-                        sameAs="http://cwrc.ca/person/123456" cert="definite">John</persName> in an
-                    envelope you had sent him. I had sent him one addressed to <placeName
-                        sameAs="http://www.freebase.com/view/en/copenhagen">Copenhagen</placeName>
-                    but he hadn't used it.</p>
-                <p>When I reached Oslo yesterday evening, Brynjulf Bull should have been there to
-                    meet me, but wasn't. He is not on the telephone, so I took a taxi to his
-                    address, which turned out to be a students' club with no one about on Sundays,
-                    so I went to a hotel feeling rather non-plussed. But presently he turned up. He
-                    had got the <pb n="2"/> time of my arrival wrong, and <corr>when</corr> he had found he had
-                    missed me he phoned to every hotel in Oslo till he hit on the right one. He left
-                    me at 10, and then I had to do a <title
-                        sameAs="http://www.freebase.com/view/en/sunday_referee" cert="definite"
-                        level="j">Sunday Referee</title> article. <listEvent><event><desc><date
-                            cert="definite" when="1935-10-21">Today</date> my
-                            journey lasts from 9 till 9 - fortunately one of the most beautiful
-                                railway journeys in the world.</desc></event>
-                            <event when="1935-10-22"><desc> <date type="event:time" calendar="gregorian"
-                                cert="definite" when="1935-10-22">Tomorrow</date> I lecture at
-                                <placeName type="event:place">Bergen</placeName> to the <orgName
-                                    sameAs="http://cwrc.ca/organization/6545466" cert="probable"
-                                    >Anglo-Norwegian Society</orgName>.</desc></event>
-                        <event><desc>Next day I go back to Oslo, lecture there Fri. and
-                            Sat.</desc></event>
-                        <event><desc>and then start for home via
-                    Bergen</desc></event></listEvent>.</p>
-                <pb n="3"/>
-                <p>Bull is a nice young man but incompetent - can't quite stand the communists, but
-                    finds the socialists too mild.</p>
-
-                <p>I am unhappily wondering what you are feeling about me.</p>
-
-                <closer>
-                    <salute>I love you very much -</salute>
-                    <signed>
-                        <persName sameAs="http://www.freebase.com/view/en/bertrand_russell"
-                            >B</persName>
-                    </signed>
-                </closer>
-            </div>
-        </body>
-    </text>
-</TEI>
+<teiHeader><fileDesc><titleStmt> <title>Sample Document Title</title> </titleStmt><publicationStmt><p></p></publicationStmt><sourceDesc sameAs="http://www.cwrc.ca"><p>Created from original research by members of CWRC/CSÉC unless otherwise noted.</p></sourceDesc></fileDesc></teiHeader><text><body><div type="letter"><head><title>Sample Letter - Bertrand Russell to <persName annotationId="ent_73" cert="probable" ref="279399399">Patricia Spence</persName> - October 21, 1935</title></head><opener><note><p>Bad writing due to shaky train</p><p>In train</p><p><placeName annotationId="ent_71" cert="definite">Oslo</placeName> to Bergen</p></note><dateline><date annotationId="ent_69" cert="definite" when="1935-10-21">21.10.35</date></dateline><salute>Dearest -</salute></opener><p>I have had no letter from you since I left <placeName annotationId="ent_67" cert="definite">Stockholm</placeName>, but I had a nice one from John in an envelope you had sent him. I had sent him one addressed to Copenhagen but he hadn't used it.</p><p>When I reached Oslo yesterday evening, Brynjulf Bull should have been there to meet me, but wasn't. He is not on the telephone, so I took a taxi to his address, which turned out to be a students' club with no one about on Sundays, so I went to a hotel feeling rather non-plussed. But presently he turned up. He had got the <pb n="2"></pb> time of my arrival wrong, and <corr><choice annotationId="ent_65"><sic annotationId="ent_65">when</sic><corr annotationId="ent_65">when</corr></choice></corr> he had found he had missed me he phoned to every hotel in Oslo till he hit on the right one. He left me at 10, and then I had to do a Sunday Referee article. Today my journey lasts from 9 till 9 - fortunately one of the most beautiful railway journeys in the world. Tomorrow I lecture at <placeName annotationId="ent_63" cert="probable" ref="5">Bergen</placeName> to the Anglo-Norwegian Society. Next day I go back to Oslo, lecture there Fri. and Sat. and then start for home via Bergen.</p><pb n="3"></pb><p>Bull is a nice young man but incompetent - can't quite stand the communists, but finds the socialists too mild.</p><p>I am unhappily wondering what you are feeling about me.</p><closer><salute>I love you very much -</salute><signed><persName sameAs="http://www.freebase.com/view/en/bertrand_russell"><persName annotationId="ent_109" cert="definite" ref="http://viaf.org/viaf/36924137">B</persName></persName></signed></closer></div></body></text></TEI>
