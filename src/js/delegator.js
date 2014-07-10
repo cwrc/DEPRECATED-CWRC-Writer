@@ -56,6 +56,9 @@ return function(writer) {
 					case 'org':
 						queryPrefix += 'local.corporateNames+all+"';
 						break;
+					case 'title':
+						queryPrefix += 'local.uniformTitleWorks+all+"';
+						break;
 					default:
 						queryPrefix += 'cql.any+all+"';
 				}
@@ -140,7 +143,7 @@ return function(writer) {
 	 * @returns {Promise} The promise object
 	 */
 	del.getUriForEntity = function(entity) {
-		var guid = createGuid();
+		var guid = w.utilities.createGuid();
 		var uri = 'http://id.cwrc.ca/'+entity.props.type+'/'+guid;
 		var dfd = new $.Deferred();
 		dfd.resolve(uri);
@@ -153,7 +156,7 @@ return function(writer) {
 	 * @returns {Promise} The promise object
 	 */
 	del.getUriForAnnotation = function() {
-		var guid = createGuid();
+		var guid = w.utilities.createGuid();
 		var uri = 'http://id.cwrc.ca/annotation/'+guid;
 		var dfd = new $.Deferred();
 		dfd.resolve(uri);
@@ -166,8 +169,21 @@ return function(writer) {
 	 * @returns {Promise} The promise object
 	 */
 	del.getUriForDocument = function() {
-		var guid = createGuid();
+		var guid = w.utilities.createGuid();
 		var uri = 'http://id.cwrc.ca/doc/'+guid;
+		var dfd = new $.Deferred();
+		dfd.resolve(uri);
+		return dfd.promise();
+	};
+	
+	/**
+	 * Gets the URI for the target
+	 * @param {Object} entity The entity object
+	 * @returns {Promise} The promise object
+	 */
+	del.getUriForTarget = function() {
+		var guid = w.utilities.createGuid();
+		var uri = 'http://id.cwrc.ca/target/'+guid;
 		var dfd = new $.Deferred();
 		dfd.resolve(uri);
 		return dfd.promise();
@@ -179,7 +195,7 @@ return function(writer) {
 	 * @returns {Promise} The promise object
 	 */
 	del.getUriForSelector = function() {
-		var guid = createGuid();
+		var guid = w.utilities.createGuid();
 		var uri = 'http://id.cwrc.ca/selector/'+guid;
 		var dfd = new $.Deferred();
 		dfd.resolve(uri);
@@ -192,19 +208,12 @@ return function(writer) {
 	 * @returns {Promise} The promise object
 	 */
 	del.getUriForUser = function() {
-		var guid = createGuid();
+		var guid = w.utilities.createGuid();
 		var uri = 'http://id.cwrc.ca/user/'+guid;
 		var dfd = new $.Deferred();
 		dfd.resolve(uri);
 		return dfd.promise();
 	};
-	
-	function createGuid() {
-	    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-	        var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
-	        return v.toString(16);
-	    });
-	}
 	
 	del.validate = function(callback) {
 		var docText = w.converter.getDocumentContent(false);

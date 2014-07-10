@@ -164,6 +164,10 @@
 *[_tag="q"][rend="display"], *[_tag="argument"] > *[_tag="q"], *[_tag="body"] > *[_tag="q"], *[_tag="cit"] > *[_tag="q"], *[_tag="div"] > *[_tag="q"], *[_tag="div0"] > *[_tag="q"], *[_tag="div1"] > *[_tag="q"], *[_tag="div2"] > *[_tag="q"], *[_tag="div3"] > *[_tag="q"], *[_tag="div4"] > *[_tag="q"], *[_tag="div5"] > *[_tag="q"], *[_tag="div6"] > *[_tag="q"], *[_tag="div7"] > *[_tag="q"], *[_tag="epigraph"] > *[_tag="q"] { display: block; margin-bottom: 0.5em; margin-left: 3em; margin-right: 3em; quotes: none; }
 *[_tag="q"]:before { content: open-quote; }
 *[_tag="q"]:after { content: close-quote; }
+*[_tag="quote"] { display: inline; quotes: "\"" "\"" "\'" "\'"; margin: 0em; }
+*[_tag="quote"][rend="display"], *[_tag="argument"] > *[_tag="quote"], *[_tag="body"] > *[_tag="quote"], *[_tag="cit"] > *[_tag="quote"], *[_tag="div"] > *[_tag="quote"], *[_tag="div0"] > *[_tag="quote"], *[_tag="div1"] > *[_tag="quote"], *[_tag="div2"] > *[_tag="quote"], *[_tag="div3"] > *[_tag="quote"], *[_tag="div4"] > *[_tag="quote"], *[_tag="div5"] > *[_tag="quote"], *[_tag="div6"] > *[_tag="quote"], *[_tag="div7"] > *[_tag="quote"], *[_tag="epigraph"] > *[_tag="quote"] { display: block; margin-bottom: 0.5em; margin-left: 3em; margin-right: 3em; quotes: none; }
+*[_tag="quote"]:before { content: open-quote; }
+*[_tag="quote"]:after { content: close-quote; }
 *[_tag="ref"] { display: inline; color: blue; background-color: inherit; }
 *[_tag="ref"]:before { color: gray; background-color: inherit; text-decoration: underline; }
 *[_tag="reg"] { display: inline; font-style: italic; }

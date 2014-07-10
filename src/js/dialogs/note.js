@@ -3,11 +3,14 @@ define(['jquery', 'jquery-ui', 'tinymce'], function($, jqueryUi, tinymce) {
 return function(writer) {
 	var w = writer;
 	
+	var iframe = null;
 	var cwrcWriter = null;
 	
 	var mode = null;
 	var ADD = 0;
 	var EDIT = 1;
+	
+	var currentData = null;
 	
 	$(document.body).append(''+
 	'<div id="noteDialog">'+
@@ -39,44 +42,49 @@ return function(writer) {
 				noteResult();
 			},
 			'Cancel': function() {
-				noteResult(true);
+				cwrcWriter.editor.remove();
+				cwrcWriter.editor.destroy();
+				currentData = null;
+				note.dialog('close');
 			}
 		}
 	});
 	$('#note_type').buttonset();
 	
-	function noteResult(cancelled) {
-		var data = null;
-		if (!cancelled) {
-			var content = cwrcWriter.converter.getDocumentContent();
-			var data = {
-				type: $('#note_type input:checked').val(),
-				content: content
-			};
-		}
+	function noteResult() {
+		tinymce.DOM.counter = iframe.contentWindow.tinymce.DOM.counter + 1;
 		
+		currentData.type = $('#note_type input:checked').val();
+		var content = cwrcWriter.converter.getDocumentContent(true);
+		currentData.content = content;
+		currentData.entities = cwrcWriter.entities;
+	
 		if (mode == EDIT && data != null) {
-			w.tagger.editEntity(w.editor.currentEntity, data);
+			w.tagger.editEntity(w.editor.currentEntity, currentData);
 		} else {
-			w.tagger.finalizeEntity('note', data);
+			w.tagger.finalizeEntity('note', currentData);
 		}
 		
 		cwrcWriter.editor.remove();
 		cwrcWriter.editor.destroy();
+		currentData = null;
 		note.dialog('close');
 	};
 	
 	return {
 		show: function(config) {
-			var iframe = note.find('iframe')[0];
+			iframe = note.find('iframe')[0];
 			if (iframe.src == '') {
 				iframe.src = 'note.htm';
 			}
+			
+			currentData = {};
 			
 			mode = config.entry ? EDIT : ADD;
 			var prefix = 'Add ';
 			if (mode == EDIT) {
 				prefix = 'Edit ';
+				currentData = config.entry;
 			}
 			
 			var title = prefix+'Note';
@@ -92,7 +100,6 @@ return function(writer) {
 			
 			// hack to get the writer
 			function getCwrcWriter() {
-				var iframe = note.find('iframe')[0];
 				cwrcWriter = iframe.contentWindow.writer;
 				if (cwrcWriter == null) {
 					setTimeout(getCwrcWriter, 50);
@@ -103,7 +110,13 @@ return function(writer) {
 			
 			function postSetup() {
 				if (w.schemaManager.schemaId == 'tei') {
+					iframe.contentWindow.tinymce.DOM.counter = tinymce.DOM.counter + 1;
+					
 					cwrcWriter.event('documentLoaded').subscribe(function() {
+						// match parent settings
+						cwrcWriter.mode = cwrcWriter.XMLRDF; // force XMLRDF until XML only mode is working
+						cwrcWriter.allowOverlap = w.allowOverlap;
+						
 						cwrcWriter.editor.focus();
 					});
 					

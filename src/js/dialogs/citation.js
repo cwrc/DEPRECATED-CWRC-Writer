@@ -3,6 +3,7 @@ define(['jquery', 'jquery-ui', 'tinymce'], function($, jqueryUi, tinymce) {
 return function(writer) {
 	var w = writer;
 	
+	var iframe = null;
 	var cwrcWriter = null;
 	
 	var mode = null;
@@ -48,7 +49,14 @@ return function(writer) {
 	});
 	
 	function citationResult() {
-		var content = cwrcWriter.converter.getDocumentContent();
+		tinymce.DOM.counter = iframe.contentWindow.tinymce.DOM.counter + 1;
+		
+		var newEntities = cwrcWriter.entities;
+		for (var entId in newEntities) {
+			w.entities[entId] = newEntities[entId];
+		}
+		
+		var content = cwrcWriter.converter.getDocumentContent(true, true);
 		currentData.content = content;
 		
 		if (mode == EDIT && currentData != null) {
@@ -65,7 +73,7 @@ return function(writer) {
 	
 	return {
 		show: function(config) {
-			var iframe = citation.find('iframe')[0];
+			iframe = citation.find('iframe')[0];
 			if (iframe.src == '') {
 				iframe.src = 'citation.htm';
 			}
@@ -97,7 +105,6 @@ return function(writer) {
 			
 			// hack to get the writer
 			function getCwrcWriter() {
-				var iframe = citation.find('iframe')[0];
 				cwrcWriter = iframe.contentWindow.writer;
 				if (cwrcWriter == null) {
 					setTimeout(getCwrcWriter, 50);
@@ -108,6 +115,8 @@ return function(writer) {
 			
 			function postSetup() {
 				if (w.schemaManager.schemaId == 'tei') {
+					iframe.contentWindow.tinymce.DOM.counter = tinymce.DOM.counter + 1;
+					
 					cwrcWriter.event('documentLoaded').subscribe(function() {
 						cwrcWriter.editor.focus();
 						if (mode == ADD) {

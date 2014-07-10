@@ -316,13 +316,19 @@ return function(writer) {
 				w.delegator.getUriForEntity(w.entities[id]),
 				w.delegator.getUriForAnnotation(),
 				w.delegator.getUriForDocument(),
+				w.delegator.getUriForTarget(),
 				w.delegator.getUriForSelector(),
 				w.delegator.getUriForUser()
-			).then(function(entityUri, annoUri, docUri, selectorUri, userUri) {
+			).then(function(entityUri, annoUri, docUri, targetUri, selectorUri, userUri) {
+				if (info.cwrcInfo && info.cwrcInfo.id) {
+					// use the id already provided
+					entityUri = info.cwrcInfo.id;
+				}
 				w.entities[id].annotation = {
 					entityId: entityUri,
 					annotationId: annoUri,
 					docId: docUri,
+					targetId: targetUri,
 					selectorId: selectorUri,
 					userId: userUri,
 					range: {}

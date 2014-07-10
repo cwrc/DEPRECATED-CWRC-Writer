@@ -18,8 +18,7 @@ return function(writer) {
 					});
 				} else {
 					result = {
-						id: 'http://cwrc-dev-01.srv.ualberta.ca/islandora/object/'+result.response.pid,
-						data: result.data
+						id: 'http://cwrc-dev-01.srv.ualberta.ca/islandora/object/'+result.response.pid
 					};
 					w.dialogManager.show('tagPlace', {
 						cwrcInfo: result
@@ -44,9 +43,10 @@ return function(writer) {
 				cD.popSearchPlace({
 					success: function(result) {
 						if (result.id == null) {
+							var id = w.utilities.createGuid();
 							result = {
-								id: '0',
-								data: '<geoname><name>Hamilton</name><asciiName>Hamilton</asciiName><lat>44.0501200</lat><lng>-78.2328200</lng><countryCode>CA</countryCode><countryName>Canada</countryName><fcl>A</fcl><fcode>ADM2</fcode><geonameid>5969784</geonameid><granularity>Province/State</granularity></geoname>',
+								id: id,
+								data: '<geoname><name>Hamilton</name><asciiName>Hamilton</asciiName><lat>44.0501200</lat><lng>-78.2328200</lng><countryCode>CA</countryCode><countryName>Canada</countryName><fcl>A</fcl><fcode>ADM2</fcode><geonameid>'+w.utilities.createGuid()+'</geonameid><granularity>Province/State</granularity></geoname>',
 								name: 'Test Place',
 								repository: 'geonames'
 							};
@@ -64,6 +64,9 @@ return function(writer) {
 						if ($.isArray(result.name)) {
 							result.name = result.name[0];
 						}
+						
+						delete result.data;
+						
 						w.dialogManager.show('tagPlace', {
 							cwrcInfo: result
 						});
