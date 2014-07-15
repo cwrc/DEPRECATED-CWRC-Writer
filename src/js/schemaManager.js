@@ -53,8 +53,12 @@ return function(writer, config) {
 			success: function(data, status, xhr) {
 				sm.schemaXML = data;
 				// get root element
-				var startName = $('start ref:first', sm.schemaXML).attr('name');
-				var startEl = $('define[name="'+startName+'"] element', sm.schemaXML).attr('name');
+				var startEl = $('start element:first', sm.schemaXML).attr('name');
+				if (!startEl) {
+					var startName = $('start ref:first', sm.schemaXML).attr('name');
+					startEl = $('define[name="'+startName+'"] element', sm.schemaXML).attr('name');
+				}
+				
 				w.root = startEl;
 //				w.editor.settings.forced_root_block = w.root;
 //				w.editor.schema.addCustomElements(w.root);
