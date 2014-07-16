@@ -56,9 +56,11 @@ return function(config) {
 				for (var i = 0; i < tags.length; i++) {
 					var tag = tags[i];
 					var tagName = tag.match(/^\w+(?=\[)?/);
-					var index = tag.match(/\d+/);
-					if (index === null) index = 0;
-					editorPath += '*[_tag="'+tagName+'"]:eq('+index+') > ';
+					if (tagName != null) {
+						var index = tag.match(/\d+/);
+						if (index === null) index = 0;
+						editorPath += '*[_tag="'+tagName+'"]:eq('+index+') > ';
+					}
 				}
 				editorPath = editorPath.substr(0, editorPath.length-3);
 				var docEl = $(editorPath, w.editor.getBody());
