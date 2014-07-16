@@ -66,7 +66,7 @@ return function(writer) {
 	// log in for CWRC-Dialogs
 	cD.initializeWithLogin('mark_test', 'P4ssw0rd!');
 	
-	dialogs.event = dialogs.search;
+	dialogs.event = dialogs.addevent;
 	
 	var pm = {
 		/**

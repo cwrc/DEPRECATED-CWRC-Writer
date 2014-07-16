@@ -179,15 +179,20 @@ return function(writer) {
 	
 	return {
 		show: function(config) {
-			toggleDate('date');
-			$('#add_type_date').attr('checked', true);
-			
-			$(dateInput).css({borderBottom: ''});
-			$(startDate).css({borderBottom: ''});
-			$(endDate).css({borderBottom: ''});
-			
-			$('#addEventDialog input').val('');
-			d.dialog('open');
+//			toggleDate('date');
+//			$('#add_type_date').attr('checked', true);
+//			
+//			$(dateInput).css({borderBottom: ''});
+//			$(startDate).css({borderBottom: ''});
+//			$(endDate).css({borderBottom: ''});
+//			
+//			$('#addEventDialog input').val('');
+//			d.dialog('open');
+			w.dialogManager.show('message', {
+				title: 'Event Under Development',
+				msg: 'The Event dialog is currently under development and cannot be used at this time.',
+				type: 'info'
+			});
 		},
 		hide: function() {
 			d.dialog('close');
