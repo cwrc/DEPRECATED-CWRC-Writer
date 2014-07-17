@@ -234,6 +234,24 @@ return function(writer) {
 		return str;
 	}
 	
+	/**
+	 * Gets entity markup attributes from xml. Assumes all other attributes have been removed.
+	 * @param xml {xml} The xml
+	 * @returns {Object} key/value pairs
+	 */
+	function getAttributesFromXml(xml) {
+		var attrs = {};
+		var nodeAttrs = attrs[xml.nodeName] = {};
+		$.map(xml.attributes, function(att) {
+			if (att.name === 'annotationId' || att.name === 'offsetId' || att.name === 'cwrcStructId') {
+				// don't include
+			} else {
+				nodeAttrs[att.name] = att.value;
+			}
+		});
+		return attrs;
+	}
+	
 	function getResp() {
 		return 'PLACEHOLDER_USER';
 	}
@@ -248,13 +266,14 @@ return function(writer) {
 			mapping: {
 				tei: function(entity) {
 					var info = entity.info;
-					var id = entity.annotation.range.cwrcAnnotationId;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
 					var offsetId = entity.annotation.range.cwrcOffsetId;
 					
 					var xml = '<persName';
 					if (id) xml += ' annotationId="'+id+'"';
 					if (offsetId) xml += ' offsetId="'+offsetId+'"';
 					if (info.certainty) xml += ' cert="'+info.certainty+'"';
+					if (info.type) xml += ' type="'+info.type+'"';
 					if (info.role) xml += ' role="'+info.role+'"';
 					if (info.cwrcInfo && info.cwrcInfo.id) xml += ' ref="'+info.cwrcInfo.id+'"';
 					
@@ -266,6 +285,23 @@ return function(writer) {
 				},
 				events: function(entity) {
 					return '<NAME>'+TEXT_SELECTION+'</NAME>';
+				}
+			},
+			reverseMapping: {
+				tei: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					obj.cwrcInfo = {id: $xml.attr('ref')};
+					obj.certainty = $xml.attr('cert');
+					obj.type = $xml.attr('type');
+					obj.role = $xml.attr('role');
+					
+					$xml.removeAttr('ref').removeAttr('cert').removeAttr('type').removeAttr('role');
+					
+					obj.attributes = getAttributesFromXml(xml);
+					
+					return obj;
 				}
 			},
 			annotationType: 'foaf:Person',
@@ -290,7 +326,7 @@ return function(writer) {
 			mapping: {
 				tei: function(entity) {
 					var info = entity.info;
-					var id = entity.annotation.range.cwrcAnnotationId;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
 					var offsetId = entity.annotation.range.cwrcOffsetId;
 					
 					var xml = '<orgName';
@@ -306,6 +342,21 @@ return function(writer) {
 					return xml;
 				},
 				events: '<ORGNAME>'+TEXT_SELECTION+'</ORGNAME>'
+			},
+			reverseMapping: {
+				tei: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					obj.cwrcInfo = {id: $xml.attr('ref')};
+					obj.certainty = $xml.attr('cert');
+					
+					$xml.removeAttr('ref').removeAttr('cert');
+					
+					obj.attributes = getAttributesFromXml(xml);
+					
+					return obj;
+				}
 			},
 			annotationType: 'foaf:Organization',
 			annotation: function(entity, format) {
@@ -331,7 +382,7 @@ return function(writer) {
 			mapping: {
 				tei: function(entity) {
 					var info = entity.info;
-					var id = entity.annotation.range.cwrcAnnotationId;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
 					var offsetId = entity.annotation.range.cwrcOffsetId;
 					
 					var xml = '<placeName';
@@ -349,6 +400,23 @@ return function(writer) {
 					return xml;
 				},
 				events: '<PLACE>'+TEXT_SELECTION+'</PLACE>'
+			},
+			reverseMapping: {
+				tei: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					obj.cwrcInfo = {id: $xml.attr('ref')};
+					obj.certainty = $xml.attr('cert');
+					obj.precision = $xml.children('precision').attr('precision');
+					
+					$xml.removeAttr('ref').removeAttr('cert');
+					$xml.children('precision').remove();
+					
+					obj.attributes = getAttributesFromXml(xml);
+					
+					return obj;
+				}
 			},
 			annotationType: 'geo:SpatialThing',
 			annotation: function(entity, format) {
@@ -370,7 +438,7 @@ return function(writer) {
 			mapping: {
 				tei: function(entity) {
 					var info = entity.info;
-					var id = entity.annotation.range.cwrcAnnotationId;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
 					var offsetId = entity.annotation.range.cwrcOffsetId;
 					
 					var xml = '<title';
@@ -383,6 +451,22 @@ return function(writer) {
 					return xml;
 				},
 				events: '<TITLE TITLETYPE="${info.level}">'+TEXT_SELECTION+'</TITLE>'
+			},
+			reverseMapping: {
+				tei: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					obj.cwrcInfo = {id: $xml.attr('ref')};
+					obj.certainty = $xml.attr('cert');
+					obj.level = $xml.attr('level');
+					
+					$xml.removeAttr('ref').removeAttr('cert').removeAttr('level');
+					
+					obj.attributes = getAttributesFromXml(xml);
+					
+					return obj;
+				}
 			},
 			annotationType: 'dcterms:title',
 			annotation: function(entity, format) {
@@ -412,7 +496,7 @@ return function(writer) {
 			mapping: {
 				tei: function(entity) {
 					var info = entity.info;
-					var id = entity.annotation.range.cwrcAnnotationId;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
 					var offsetId = entity.annotation.range.cwrcOffsetId;
 					
 					var xml = '<date';
@@ -439,6 +523,28 @@ return function(writer) {
 						xml += '<DATERANGE FROM="'+info.startDate+'" TO="'+info.endDate+'">'+TEXT_SELECTION+'</DATERANGE>';
 					}
 					return xml;
+				}
+			},
+			reverseMapping: {
+				tei: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					obj.certainty = $xml.attr('cert');
+					$xml.removeAttr('cert');
+					
+					if ($xml.attr('when')) {
+						obj.date = $xml.attr('when');
+						$xml.removeAttr('when');
+					} else {
+						obj.startDate = $xml.attr('from');
+						obj.endDate = $xml.attr('to');
+						$xml.removeAttr('from').removeAttr('to');
+					}
+					
+					obj.attributes = getAttributesFromXml(xml);
+					
+					return obj;
 				}
 			},
 			annotationType: 'time:TemporalEntity',
@@ -497,14 +603,16 @@ return function(writer) {
 			mapping: {
 				tei: function(entity) {
 					var info = entity.info;
-					var id = entity.annotation.range.cwrcAnnotationId;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
 					var offsetId = entity.annotation.range.cwrcOffsetId;
 					
 					var xml = '<note';
 					if (id) xml += ' annotationId="'+id+'"';
 					if (offsetId) xml += ' offsetId="'+offsetId+'"';
 					xml += ' resp="'+getResp()+'"';
-					xml += ' type="citation"><bibl>';
+					xml += ' type="citation"><bibl';
+					if (info.cwrcInfo && info.cwrcInfo.id) xml += ' ref="'+info.cwrcInfo.id+'"';
+					xml += '>';
 					if (info.content) {
 						var xmlDoc = w.utilities.stringToXML(info.content);
 						var biblContent = $('bibl', xmlDoc)[0];
@@ -512,6 +620,18 @@ return function(writer) {
 					}
 					xml += '</bibl></note>';
 					return xml;
+				}
+			},
+			reverseMapping: {
+				tei: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					obj.cwrcInfo = {id: $xml.children('bibl').attr('ref')};
+					obj.resp = $xml.attr('resp');
+					obj.content = w.utilities.xmlToString(xml);
+					
+					return obj;
 				}
 			},
 			annotationType: 'dcterms:BibliographicResource',
@@ -532,7 +652,7 @@ return function(writer) {
 			mapping: {
 				tei: function(entity) {
 					var info = entity.info;
-					var id = entity.annotation.range.cwrcAnnotationId;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
 					var offsetId = entity.annotation.range.cwrcOffsetId;
 					
 					var xml = '<note';
@@ -552,9 +672,24 @@ return function(writer) {
 					return xml;
 				}
 			},
+			reverseMapping: {
+				tei: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					obj.resp = $xml.attr('resp');
+					obj.type = $xml.attr('type');
+					obj.content = w.utilities.xmlToString(xml);
+					
+					return obj;
+				}
+			},
 			annotationType: 'bibo:Note',
 			annotation: function(entity, format) {
 				var data = entity.annotation;
+				data.cwrcAttributes = {
+					type: entity.info.type
+				};
 				
 				var anno = commonAnnotation({data: data, types: 'bibo:Note', motivations: 'oa:commenting'}, format);
 				
@@ -573,7 +708,7 @@ return function(writer) {
 			mapping: {
 				tei: function(entity) {
 					var info = entity.info;
-					var id = entity.annotation.range.cwrcAnnotationId;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
 					var offsetId = entity.annotation.range.cwrcOffsetId;
 					
 					var xml;
@@ -627,7 +762,7 @@ return function(writer) {
 			mapping: {
 				tei: function(entity) {
 					var info = entity.info;
-					var id = entity.annotation.range.cwrcAnnotationId;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
 					var offsetId = entity.annotation.range.cwrcOffsetId;
 					
 					var xml = '';
@@ -641,6 +776,17 @@ return function(writer) {
 					return xml;
 				},
 				events: '<KEYWORDCLASS>'+TEXT_SELECTION+'</KEYWORDCLASS>'
+			},
+			reverseMapping: {
+				tei: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					obj.resp = $xml.attr('resp');
+					obj.keywords = [$xml.children('term').text()];
+					
+					return obj;
+				}
 			},
 			annotationType: 'skos:Concept',
 			annotation: function(entity, format) {
@@ -671,7 +817,7 @@ return function(writer) {
 			mapping: {
 				tei: function(entity) {
 					var info = entity.info;
-					var id = entity.annotation.range.cwrcAnnotationId;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
 					var offsetId = entity.annotation.range.cwrcOffsetId;
 					
 					var xml = '<ref';
@@ -682,6 +828,16 @@ return function(writer) {
 					return xml;
 				},
 				events: '<XREF URL="${info.url}">'+TEXT_SELECTION+'</XREF>'
+			},
+			reverseMapping: {
+				tei: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					obj.url = $xml.attr('target');
+					
+					return obj;
+				}
 			},
 			annotationType: 'oa:linking',
 			annotation: function(entity, format) {
@@ -715,8 +871,11 @@ return function(writer) {
 		} else {
 			schema = 'events';
 		}
+		var testTag;
+		// TODO need way to differentiate between citation and note
 		for (var e in entities) {
-			if (entities[e].parentTag[schema] == tag) {
+			testTag = entities[e].parentTag[schema];
+			if (testTag === tag) {
 				return e;
 			}
 		}
@@ -770,6 +929,30 @@ return function(writer) {
 			}
 		}
 		return ['', '']; // return array of empty strings if there is no mapping
+	};
+	
+	/**
+	 * Returns the mapping of xml to an entity object.
+	 * @param xml {XML} The xml.
+	 * @param type {String} The entity type.
+	 * @param schema {String} The schema to use for the mapping.
+	 * @returns {Object} The entity object.
+	 */
+	entmod.getReverseMapping = function(xml, type, schema) {
+		var e = entities[type];
+		if (e) {
+			if (schema.indexOf('tei') != -1) {
+				schema = 'tei';
+			} else {
+				schema = 'events';
+			}
+			
+			if (e.reverseMapping && e.reverseMapping[schema]) {
+				var entityObj = e.reverseMapping[schema](xml);
+				return entityObj;
+			}
+		}
+		return {};
 	};
 	
 	/**

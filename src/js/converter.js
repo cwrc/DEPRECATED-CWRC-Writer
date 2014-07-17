@@ -206,11 +206,16 @@ return function(writer) {
 	function buildAnnotations(format) {
 		format = format || 'xml';
 		
-		var rdfString = '\n<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:w="http://cwrctc.artsrn.ualberta.ca/#">';
+		var namespaces = {
+			'rdf': 'xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"',
+			'cw': 'xmlns:cw="http://cwrc.ca/ns/cw#"'
+		};
+		
+		var rdfString = '';
 		
 		// xml mode
 		var uri = w.baseUrl+'editor/documents/'+w.currentDocId;
-		rdfString += '\n<rdf:Description rdf:about="'+uri+'">\n\t<w:mode>'+w.mode+'</w:mode>\n</rdf:Description>';
+		rdfString += '<rdf:Description rdf:about="'+uri+'">\n\t<cw:mode>'+w.mode+'</cw:mode>\n</rdf:Description>';
 		
 		var body = w.editor.getBody();
 		for (var key in w.entities) {
@@ -241,6 +246,13 @@ return function(writer) {
 			var annotation = getAnnotationForEntity(key, format);
 			
 			if (format === 'xml') {
+				// process namespaces
+				$(annotation.attributes).each(function(index, el) {
+					if (el.prefix === 'xmlns') {
+						namespaces[el.localName] = el.value;
+					}
+				});
+				
 				// get the child descriptions
 				$('rdf\\:Description, Description', annotation).each(function(index, el) {
 					rdfString += w.utilities.xmlToString(el);
@@ -265,14 +277,19 @@ return function(writer) {
 		// triples
 		for (var i = 0; i < w.triples.length; i++) {
 			var t = w.triples[i];
-			rdfString += '\n<rdf:Description rdf:about="'+t.subject.uri+'" w:external="'+t.subject.external+'">'+
-			'\n\t<w:'+t.predicate.name+' w:text="'+t.predicate.text+'" w:external="'+t.predicate.external+'">'+
-			'\n\t\t<rdf:Description rdf:about="'+t.object.uri+'" w:external="'+t.object.external+'" />'+
-			'\n\t</w:'+t.predicate.name+'>'+
+			rdfString += '\n<rdf:Description rdf:about="'+t.subject.uri+'" cw:external="'+t.subject.external+'">'+
+			'\n\t<cw:'+t.predicate.name+' cw:text="'+t.predicate.text+'" cw:external="'+t.predicate.external+'">'+
+			'\n\t\t<rdf:Description rdf:about="'+t.object.uri+'" cw:external="'+t.object.external+'" />'+
+			'\n\t</cw:'+t.predicate.name+'>'+
 			'\n</rdf:Description>';
 		}
 		
-		rdfString += '\n</rdf:RDF>\n';
+		var rdfHead = '<rdf:RDF';
+		for (var name in namespaces) {
+			rdfHead += ' xmlns:'+name+'="'+namespaces[name]+'"';
+		}
+		
+		rdfString = rdfHead + '>\n' + rdfString + '\n</rdf:RDF>\n';
 		
 		return rdfString;
 	}
@@ -534,26 +551,24 @@ return function(writer) {
 		
 		var rdfs = $(doc).find('rdf\\:RDF, RDF');
 
+		// process RDF and/or entities
 		if (rdfs.length) {
-			var mode = parseInt(rdfs.find('w\\:mode, mode').first().text());
+			var mode = parseInt(rdfs.find('cw\\:mode, mode').first().text());
+			// TODO determine overlap
 			if (mode === w.XML) {
 				w.mode = w.XML;
+//				w.allowOverlap = false;
 			} else {
 				w.mode = w.XMLRDF;
+//				w.allowOverlap = true;
 			}
 			processRdf(rdfs);
+			rdfs.remove();
 		} else {
 			w.mode = w.XML;
+			w.allowOverlap = false;
+			processEntities($(doc.firstChild));
 		}
-		
-		// process RDF and/or entities
-		// TODO add processEntities back in
-		//if (w.mode == w.XMLRDF) {
-		//	processRdf(rdfs);
-		//} else {
-		//	processEntities($(doc.firstChild));
-		//}
-		$(doc).find('rdf\\:RDF, RDF').remove();
 
 		// FIXME temp fix until document format is correct
 		var root = $(w.root+', '+w.root.toLowerCase(), doc)[0];
@@ -631,7 +646,6 @@ return function(writer) {
 				}
 				
 				return {
-					xpath: xpath,
 					el: xpathEl,
 					parentId: parentId,
 					offset: offset
@@ -673,10 +687,8 @@ return function(writer) {
 								range: {
 									id: id,
 									parentStart: xpathStart.parentId,
-									start: xpathStart.xpath,
 									startOffset: xpathStart.offset,
 									parentEnd: xpathEnd.parentId,
-									end: xpathEnd.xpath,
 									endOffset: xpathEnd.offset
 								}
 							};
@@ -689,8 +701,8 @@ return function(writer) {
 							w.entities[id].annotation = {
 								range: {
 									id: id,
-									parentStart: xpathObj.parentId,
-									start: xpathObj.xpath
+									el: xpathObj.el,
+									parentStart: xpathObj.parentId
 								}
 							};
 						}
@@ -698,7 +710,7 @@ return function(writer) {
 				}
 				
 			// triple
-			} else if (rdf.attr('w:external')){
+			} else if (rdf.attr('cw:external')){
 				var subject = $(this);
 				var subjectUri = subject.attr('rdf:about');
 				var predicate = rdf.children().first();
@@ -709,18 +721,18 @@ return function(writer) {
 					var triple = {
 						subject: {
 							uri: subjectUri,
-							text: subject.attr('w:external') == 'false' ? w.entities[subjectUri].props.title : subjectUri,
-							external: subject.attr('w:external, external')
+							text: subject.attr('cw:external') == 'false' ? w.entities[subjectUri].props.title : subjectUri,
+							external: subject.attr('cw:external, external')
 						},
 						predicate: {
-							text: predicate.attr('w:text'),
+							text: predicate.attr('cw:text'),
 							name: predicate[0].nodeName.split(':')[1].toLowerCase(),
-							external: predicate.attr('w:external')
+							external: predicate.attr('cw:external')
 						},
 						object: {
 							uri: objectUri,
-							text: object.attr('w:external') == 'false' ? w.entities[objectUri].props.title : objectUri,
-							external: object.attr('w:external')
+							text: object.attr('cw:external') == 'false' ? w.entities[objectUri].props.title : objectUri,
+							external: object.attr('cw:external')
 						}
 					};
 					w.triples.push(triple);
@@ -780,6 +792,8 @@ return function(writer) {
 							break;
 					}
 					
+					var infoObj = {};
+					
 					// certainty
 					var certainty = rdf.find('cw\\:hasCertainty, hasCertainty').attr('rdf:resource');
 					if (certainty && certainty != '') {
@@ -788,6 +802,7 @@ return function(writer) {
 							// fix for discrepancy between schemas
 							certainty = 'reasonably certain';
 						}
+						infoObj.certainty = certainty;
 					}
 					
 					// cwrcInfo (from cwrcDialogs lookups)
@@ -797,6 +812,7 @@ return function(writer) {
 					} else {
 						cwrcInfo = {};
 					}
+					infoObj.cwrcInfo = cwrcInfo;
 					
 					// cwrcAttributes (catch-all for properties not fully supported in rdf yet
 					var cwrcAttributes = rdf.find('cw\\:cwrcAttributes, cwrcAttributes').text();
@@ -827,8 +843,8 @@ return function(writer) {
 						if (xpathObj != null) {
 							annotationObj.range = {
 								id: id,
-								parentStart: xpathObj.parentId,
-								start: xpathObj.xpath
+								el: xpathObj.el,
+								parentStart: xpathObj.parentId
 							};
 						}
 					} else {
@@ -841,12 +857,21 @@ return function(writer) {
 							annotationObj.range = {
 								id: id,
 								parentStart: xpathStart.parentId,
-								start: xpathStart.xpath,
 								startOffset: xpathStart.offset,
 								parentEnd: xpathEnd.parentId,
-								end: xpathEnd.xpath,
 								endOffset: xpathEnd.offset
 							};
+						}
+					}
+					
+					if (type === 'note' || type === 'citation') {
+						var el = annotationObj.range.el;
+						if (el != null) {
+							if (type === 'citation') {
+								el = el.children('bibl');
+							}
+							typeInfo.content = w.utilities.xmlToString(el[0]);
+							annotationObj.range.el.contents().remove();
 						}
 					}
 					
@@ -855,10 +880,7 @@ return function(writer) {
 							id: id,
 							type: type
 						},
-						info: {
-							certainty: certainty,
-							cwrcInfo: cwrcInfo
-						},
+						info: infoObj,
 						annotation: annotationObj
 					};
 					
@@ -873,21 +895,41 @@ return function(writer) {
 	 * Recursively builds offset info from entity tags.
 	 */
 	function processEntities(parent) {
-		// TODO update this function
 		var currentOffset = 0;
 		parent.contents().each(function(index, element) {
-			if (this.nodeType == Node.TEXT_NODE) {
+			if (this.nodeType === Node.TEXT_NODE) {
 				currentOffset += this.length;
 			} else {
-				var entityType = w.entitiesModel.getEntityTypeForTag(this.nodeName.toLowerCase(), w.schemaManager.schemaId);
-				if (entityType != null) {
-					var ent = $(this);
-					var id = ent.attr(w.idName);
-					if (id == null) {
-						id = tinymce.DOM.uniqueId('ent_');
+				var node = $(this);
+				if (node.attr('annotationId')) {
+					var id = tinymce.DOM.uniqueId('ent_');
+					
+					var structId = tinymce.DOM.uniqueId('struct_');
+					node.attr('cwrcStructId', structId);
+					
+					var entityType;
+					var isNote = false;
+					if (this.nodeName === 'note') {
+						// multiple possible types for note
+						entityType = 'note';
+						isNote = true;
+						if (this.firstChild.nodeType === Node.ELEMENT_NODE) {
+							switch (this.firstChild.nodeName) {
+								case 'bibl':
+									entityType = 'citation';
+									break;
+								case 'term':
+									entityType = 'keyword';
+									break;
+							}
+						}
+					} else {
+						entityType = w.entitiesModel.getEntityTypeForTag(this.nodeName, w.schemaManager.schemaId);
 					}
 					
-					var content = ent.text();
+					var content = node.text();
+					var info = w.entitiesModel.getReverseMapping(this, entityType, w.schemaManager.schemaId);
+					
 					w.entities[id] = {
 						props: {
 							id: id,
@@ -895,27 +937,28 @@ return function(writer) {
 							content: content,
 							title: w.utilities.getTitleFromContent(content)
 						},
-						info: {},
+						info: info,
 						annotation: {
 							range: {
 								id: id,
-								parentStart: $(parent).attr(w.idName),
-								startOffset: currentOffset,
-								length: ent.text().length
+								parentStart: structId
 							}
 						}
 					};
-					$(this.attributes).each(function(index, att) {
-						w.entities[id].info[att.name] = att.value;
-					});
 					
-//					ent.contents().unwrap();
+//					$(this.attributes).each(function(index, att) {
+//						w.entities[id].info[att.name] = att.value;
+//					});
 					
-//					processEntities(ent);
+//					node.contents().unwrap();
+					
+					if (!isNote) {
+						processEntities(node);
+					}
 					
 					currentOffset += content.length;
 				} else {
-					processEntities($(this));
+					processEntities(node);
 				}
 			}
 		});
@@ -935,14 +978,14 @@ return function(writer) {
 
 		function doBuild(currentNode, forceInline) {
 			var tag = currentNode.nodeName;
-			var jQNode = $(currentNode);
+			var $node = $(currentNode);
 			
 			// TODO ensure that block level elements aren't inside inline level elements, the inline parent will be removed by the browser
 			// temp fix: force inline level for children if parent is inline
 			
-			var isEntity = jQNode.attr('annotationId') != null; // temp entity tag needs to be inline, otherwise spaces around entity text will disappear
+			var isEntity = $node.attr('annotationId') != null; // temp entity tag needs to be inline, otherwise spaces around entity text will disappear
 			var tagName;
-			if (forceInline || isEntity) {
+			if (forceInline) {
 				tagName = 'span';
 			} else {
 				tagName = w.utilities.getTagForEditor(tag);
@@ -953,16 +996,21 @@ return function(writer) {
 			// create structs entries while we build the string
 			
 			// determine the ID
-			// first check the ID attribute, then our special cwrcStructId attribute, finally generate a new one
-			var id = jQNode.attr(w.idName);
-			if (id == null) {
-				id = jQNode.attr('cwrcStructId');
-				jQNode.removeAttr('cwrcStructId');
-				if (id == null) {
-					id = tinymce.DOM.uniqueId('struct_');
+			// first check our special cwrcStructId attribute, finally generate a new one
+			var id = $node.attr('id');
+			if (id != null) {
+				if (window.console) {
+					console.warn('Node already had ID!', id);
 				}
-				editorString += ' id="'+id+'"';
+				$node.removeAttr('id');
 			}
+			id = $node.attr('cwrcStructId');
+			$node.removeAttr('cwrcStructId');
+			if (id == null) {
+				id = tinymce.DOM.uniqueId('struct_');
+			}
+			editorString += ' id="'+id+'"';
+
 			var idNum = parseInt(id.split('_')[1]);
 			if (idNum >= tinymce.DOM.counter) tinymce.DOM.counter = idNum+1;
 			
@@ -977,7 +1025,6 @@ return function(writer) {
 			};
 			$(currentNode.attributes).each(function(index, att) {
 				var attName = att.name;
-				if (attName == w.idName) attName = 'id';
 				if (attName === 'annotationId') {
 					editorString += ' annotationId="'+att.value+'"';
 				} else if (attName === 'offsetId') {
@@ -988,7 +1035,7 @@ return function(writer) {
 				
 				// TODO consider adding in all attributes here to expand CSS options
 				
-				if (attName == 'id' || attName.match(/^_/) != null) {
+				if (attName.match(/^_/) != null) {
 					editorString += ' '+attName+'="'+att.value+'"';
 				}
 			});
@@ -996,7 +1043,7 @@ return function(writer) {
 			
 			var isInline = forceInline || !w.utilities.isTagBlockLevel(tag);
 			
-			jQNode.contents().each(function(index, el) {
+			$node.contents().each(function(index, el) {
 				if (el.nodeType == 1) {
 					doBuild(el, isInline);
 				} else if (el.nodeType == 3) {
@@ -1064,7 +1111,7 @@ return function(writer) {
 						endOffset = endNode.childNodes.length;
 					}
 					
-					entityNodes.push(entityNode);
+					entityNodes.push({entity: entry, node: entityNode});
 				}
 			}
 			
@@ -1092,16 +1139,20 @@ return function(writer) {
 		
 		// TODO figure out how to not remove all correction entity markup
 		// remove all the entity markup
-		$.each(entityNodes, function(index, node) {
-			var id = $(node).attr('annotationId');
+		$.each(entityNodes, function(index, info) {
+			var entity = info.entity;
+			var node = info.node;
 			
-			var tag = $(node).attr('_tag');
-			var type = w.entitiesModel.getEntityTypeForTag(tag, w.schemaManager.schemaId);
+			var type = entity.props.type;
+			//	var tag = $(node).attr('_tag');
+			//	var type = w.entitiesModel.getEntityTypeForTag(tag, w.schemaManager.schemaId);
+			
 			var textTag = w.entitiesModel.getTextTag(type, w.schemaManager.schemaId);
 			if (textTag != '') {
 				$('[_tag="'+textTag+'"]', node).contents().unwrap(); // keep the text inside the textTag
 			}
 			
+			var id = $(node).attr('annotationId');
 			$('[annotationId="'+id+'"]', node).remove(); // remove all child elements with matching ID
 			$(node).contents().unwrap();
 		});

@@ -42,8 +42,12 @@ return function(writer) {
 				noteResult();
 			},
 			'Cancel': function() {
-				cwrcWriter.editor.remove();
-				cwrcWriter.editor.destroy();
+				try {
+					cwrcWriter.editor.remove();
+					cwrcWriter.editor.destroy();
+				} catch (e) {
+					// editor wasn't fully initialized
+				}
 				currentData = null;
 				note.dialog('close');
 			}
@@ -55,11 +59,10 @@ return function(writer) {
 		tinymce.DOM.counter = iframe.contentWindow.tinymce.DOM.counter + 1;
 		
 		currentData.type = $('#note_type input:checked').val();
-		var content = cwrcWriter.converter.getDocumentContent(true);
+		var content = cwrcWriter.converter.getDocumentContent();
 		currentData.content = content;
-		currentData.entities = cwrcWriter.entities;
 	
-		if (mode == EDIT && data != null) {
+		if (mode == EDIT) {
 			w.tagger.editEntity(w.editor.currentEntity, currentData);
 		} else {
 			w.tagger.finalizeEntity('note', currentData);
@@ -84,7 +87,7 @@ return function(writer) {
 			var prefix = 'Add ';
 			if (mode == EDIT) {
 				prefix = 'Edit ';
-				currentData = config.entry;
+				currentData = config.entry.info;
 			}
 			
 			var title = prefix+'Note';
@@ -113,9 +116,9 @@ return function(writer) {
 					iframe.contentWindow.tinymce.DOM.counter = tinymce.DOM.counter + 1;
 					
 					cwrcWriter.event('documentLoaded').subscribe(function() {
-						// match parent settings
-						cwrcWriter.mode = cwrcWriter.XMLRDF; // force XMLRDF until XML only mode is working
-						cwrcWriter.allowOverlap = w.allowOverlap;
+						// TODO remove forced XML/no overlap
+						cwrcWriter.mode = cwrcWriter.XML;
+						cwrcWriter.allowOverlap = false;
 						
 						cwrcWriter.editor.focus();
 					});
@@ -136,6 +139,13 @@ return function(writer) {
 						var data = config.entry.info;
 						$('#note_type input[value="'+data.type+'"]').prop('checked', true).button('refresh');
 						var xmlDoc = cwrcWriter.utilities.stringToXML(data.content);
+						if (xmlDoc.firstChild.nodeName === 'note') {
+							// remove the annotationId attribute
+							xmlDoc.firstChild.removeAttribute('annotationId');
+							// insert the appropriate wrapper tags
+							var xml = $.parseXML('<TEI><text><body/></text></TEI>');
+							xmlDoc = $(xml).find('body').append(xmlDoc.firstChild).end()[0];
+						}
 						cwrcWriter.fileManager.loadDocumentFromXml(xmlDoc);
 					}
 				} else {

@@ -40,8 +40,12 @@ return function(writer) {
 				citationResult();
 			},
 			'Cancel': function() {
-				cwrcWriter.editor.remove();
-				cwrcWriter.editor.destroy();
+				try {
+					cwrcWriter.editor.remove();
+					cwrcWriter.editor.destroy();
+				} catch (e) {
+					// editor wasn't fully initialized
+				}
 				currentData = null;
 				citation.dialog('close');
 			}
@@ -51,15 +55,10 @@ return function(writer) {
 	function citationResult() {
 		tinymce.DOM.counter = iframe.contentWindow.tinymce.DOM.counter + 1;
 		
-		var newEntities = cwrcWriter.entities;
-		for (var entId in newEntities) {
-			w.entities[entId] = newEntities[entId];
-		}
-		
-		var content = cwrcWriter.converter.getDocumentContent(true, true);
+		var content = cwrcWriter.converter.getDocumentContent();
 		currentData.content = content;
 		
-		if (mode == EDIT && currentData != null) {
+		if (mode == EDIT) {
 			w.tagger.editEntity(w.editor.currentEntity, currentData);
 		} else {
 			w.tagger.finalizeEntity('citation', currentData);
@@ -80,16 +79,17 @@ return function(writer) {
 			
 			currentData = {};
 			
-			if (config.cwrcInfo != null) {
-				$('#citationDialog .tagAs').html(config.cwrcInfo.name);
-				currentData.cwrcInfo = config.cwrcInfo;
-			}
-			var content = config.query || '';
-			
 			mode = config.entry ? EDIT : ADD;
 			var prefix = 'Add ';
 			if (mode == EDIT) {
 				prefix = 'Edit ';
+				currentData = config.entry.info;
+			}
+			
+			// cwrcInfo means we're coming from the cwrcDialog
+			if (config.cwrcInfo != null) {
+				$('#citationDialog .tagAs').html(config.cwrcInfo.name);
+				currentData.cwrcInfo = config.cwrcInfo;
 			}
 			
 			var title = prefix+'Citation';
@@ -118,10 +118,11 @@ return function(writer) {
 					iframe.contentWindow.tinymce.DOM.counter = tinymce.DOM.counter + 1;
 					
 					cwrcWriter.event('documentLoaded').subscribe(function() {
+						// TODO remove forced XML/no overlap
+						cwrcWriter.mode = cwrcWriter.XML;
+						cwrcWriter.allowOverlap = false;
+						
 						cwrcWriter.editor.focus();
-						if (mode == ADD) {
-							$('[_tag="bibl"]', cwrcWriter.editor.getBody()).html(content);
-						}
 					});
 					
 					// in case document is loaded before tree
@@ -138,6 +139,11 @@ return function(writer) {
 					} else {
 						var data = config.entry.info;
 						var xmlDoc = cwrcWriter.utilities.stringToXML(data.content);
+						if (xmlDoc.firstChild.nodeName === 'bibl') {
+							// insert the appropriate wrapper tags
+							var xml = $.parseXML('<TEI><text><body/></text></TEI>');
+							xmlDoc = $(xml).find('body').append(xmlDoc.firstChild).end()[0];
+						}
 						cwrcWriter.fileManager.loadDocumentFromXml(xmlDoc);
 					}
 				} else {
