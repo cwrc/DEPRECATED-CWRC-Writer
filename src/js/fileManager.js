@@ -136,7 +136,7 @@ return function(writer) {
 	};
 	
 	fm.loadInitialDocument = function(start) {
-		if (start.match('load')) {
+		if (start === '#load') {
 			w.dialogManager.filemanager.showLoader();
 		} else if (start.match('sample_') || start.match('template_') || start.match('blank_')) {
 			var name = start.substr(1);
