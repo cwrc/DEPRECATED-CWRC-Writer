@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="http://cwrc.ca/schema/writing.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://cwrc.ca/schemas/orlando_writing.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-stylesheet type="text/css" href="http://cwrc.ca/templates/css/orlando.css"?>
 
-<WRITING SEX="FEMALE" PERSON="WRITER">
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:w="http://cwrctc.artsrn.ualberta.ca/#">
-<rdf:Description rdf:about="http://localhost:8080/editor/documents/null">
-	<w:mode>0</w:mode>
-</rdf:Description>
-</rdf:RDF>
+<WRITING PERSON="WRITER" SEX="FEMALE">
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cw="http://cwrc.ca/ns/cw#">
+        <rdf:Description rdf:about="http://localhost:8080/editor/documents/null">
+            <cw:mode>0</cw:mode>
+        </rdf:Description>
+    </rdf:RDF>
     <ORLANDOHEADER TYPE="text">
         <FILEDESC>
             <TITLESTMT>
@@ -288,8 +288,7 @@
         <STANDARD>Johnson, Pauline</STANDARD>
         <AUTHORSUMMARY>
             <SHORTPROSE>
-                <P><GENERICRANGE>PJ is best remembered for the <TGENRE GENRENAME="POETRY">poem</TGENRE>
-                        <TITLE TITLETYPE="ANALYTIC">The Song My Paddle Sings</TITLE>, published in
+                <P><GENERICRANGE>PJ is best remembered for the <TGENRE GENRENAME="POETRY">poem</TGENRE> <TITLE TITLETYPE="ANALYTIC">The Song My Paddle Sings</TITLE>, published in
                         1892, which has been memorized by generations of Canadian school children,
                         but she also wrote <TGENRE GENRENAME="SHORTSTORY">short stories</TGENRE> and
                             <TGENRE GENRENAME="JOURNALISM">journalism</TGENRE>, and recorded the
@@ -339,8 +338,7 @@
                     <CHRONSTRUCT RESP="KDC" CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="DECADE">
                         <DATE>16 April 1885</DATE>
                         <CHRONPROSE>
-                            <PPERIODICALPUBLICATION>PJ's <TGENRE GENRENAME="POETRY">poem</TGENRE>
-                                <TITLE TITLETYPE="ANALYTIC">The Sea Queen</TITLE>, published this
+                            <PPERIODICALPUBLICATION>PJ's <TGENRE GENRENAME="POETRY">poem</TGENRE> <TITLE TITLETYPE="ANALYTIC">The Sea Queen</TITLE>, published this
                                 day in <TITLE TITLETYPE="JOURNAL">The Week</TITLE>, attracted the
                                 attention of its former editor, <NAME>Charles G. D. Roberts</NAME>;
                                 they began to correspond.</PPERIODICALPUBLICATION>
@@ -366,8 +364,7 @@
                         <CHRONPROSE>
                             <PPERIODICALPUBLICATION>Between the two surrenders which ended the North
                                 West Rebellion (that of <NAME>Poundmaker</NAME> on <DATE VALUE="1885-05-26">26 May</DATE> and that of <NAME STANDARD="Big Bear">Big Bear</NAME> on <DATE VALUE="1885-07-02">2 July</DATE>), PJ published in <TITLE TITLETYPE="JOURNAL">The
-                                    Week</TITLE> her <TGENRE GENRENAME="POETRY">poem</TGENRE>
-                                <TITLE TITLETYPE="ANALYTIC">A Cry from an Indian
+                                    Week</TITLE> her <TGENRE GENRENAME="POETRY">poem</TGENRE> <TITLE TITLETYPE="ANALYTIC">A Cry from an Indian
                                 Wife</TITLE>.</PPERIODICALPUBLICATION>
                         </CHRONPROSE>
                         <BIBCITS>
@@ -429,8 +426,7 @@
                         <CHRONPROSE>
                             <PSUBMISSIONSREJECTIONS>
                                 <PPERIODICALPUBLICATION>PJ published <TITLE TITLETYPE="ANALYTIC">In
-                                        the Shadows</TITLE>, a <TTHEMETOPIC>canoeing</TTHEMETOPIC>
-                                    <TGENRE GENRENAME="POETRY">poem</TGENRE>, in <TITLE TITLETYPE="JOURNAL">The Week</TITLE> after it had been
+                                        the Shadows</TITLE>, a <TTHEMETOPIC>canoeing</TTHEMETOPIC> <TGENRE GENRENAME="POETRY">poem</TGENRE>, in <TITLE TITLETYPE="JOURNAL">The Week</TITLE> after it had been
                                     rejected by her mother's cousin <NAME>William Dean
                                         Howells</NAME>, then editor at <TITLE TITLETYPE="JOURNAL" REG="Harper's Weekly">Harper's</TITLE>.</PPERIODICALPUBLICATION>
                             </PSUBMISSIONSREJECTIONS>
@@ -440,8 +436,7 @@
                         </BIBCITS>
                     </CHRONSTRUCT>
                     <SHORTPROSE>
-                        <P><PPERIODICALPUBLICATION>It re-appeared later in the <TITLE TITLETYPE="JOURNAL">Athenæum</TITLE>.</PPERIODICALPUBLICATION>
-                            <PINFLUENCESHER INFLUENCETYPE="FAMILIAL">PJ was particularly annoyed
+                        <P><PPERIODICALPUBLICATION>It re-appeared later in the <TITLE TITLETYPE="JOURNAL">Athenæum</TITLE>.</PPERIODICALPUBLICATION> <PINFLUENCESHER INFLUENCETYPE="FAMILIAL">PJ was particularly annoyed
                                 that her own relation had responded negatively to her
                                 work.</PINFLUENCESHER> Howells allegedly boasted of his connection
                             to the Johnson family (as exotics) while he was the US consul in Venice,
@@ -507,8 +502,7 @@
                             (about the <TTHEMETOPIC><PLACE><REGION>Grand River</REGION><GEOG REG="Canada"/></PLACE><PLACE><REGION REG="Ontario"/><GEOG REG="Canada"/></PLACE></TTHEMETOPIC>).
                                     <PANTHOLOGIZATION><PCIRCULATION>Wider circulation resulted when
                                     her poetry was included in an 1893 anthology meant for school
-                                    use,</PCIRCULATION>
-                                <NAME STANDARD="Wetherell, James Elgin">J. E.
+                                    use,</PCIRCULATION> <NAME STANDARD="Wetherell, James Elgin">J. E.
                                 Wetherell</NAME>'s <TITLE TITLETYPE="MONOGRAPHIC">Later
                                     Canadian Poems</TITLE></PANTHOLOGIZATION>. It is possible that
                             PJ herself persuaded Wetherell to add women poets to the
@@ -606,8 +600,7 @@
                                     performance), but also combines the paddler and her canoe into a
                                         <QUOTE DIRECT="Y">we</QUOTE>, challenging male narratives
                                     which see the landscape as something to be
-                                    conquered.</TVOICENARRATION></TTECHNIQUES>
-                            <TTECHNIQUES TECHNIQUETYPE="IMAGERY">Critics Gerson and Strong Boag
+                                    conquered.</TVOICENARRATION></TTECHNIQUES> <TTECHNIQUES TECHNIQUETYPE="IMAGERY">Critics Gerson and Strong Boag
                                 identify the canoe as a Canadian equivalent to the iconographic
                                 bicycle of the New Woman.</TTECHNIQUES> Unlike a bicycle, a canoe
                             can be a site of sexual encounters, as implied in other verses by PJ. In
@@ -749,8 +742,7 @@
                     <SHORTPROSE>
                         <P><PRARITIESFEATURESDECORATIONS>It was a slim volume with a light blue
                                 cover and featured a picture of PJ in native
-                                costume.</PRARITIESFEATURESDECORATIONS>
-                            <PDEDICATION>An inscription addressed the book to anyone Canadian born,
+                                costume.</PRARITIESFEATURESDECORATIONS> <PDEDICATION>An inscription addressed the book to anyone Canadian born,
                                     <QUOTE DIRECT="Y">whether he be my paleface compatriot who has
                                     given to me his right hand of good fellowship . . . or whether
                                     he be that dear Red brother of whatsoever tribe or
@@ -820,8 +812,7 @@
                         <CHRONPROSE>
                             <PPERIODICALPUBLICATION>
                                 <RRECOGNITIONS>PJ's <TGENRE GENRENAME="SHORTSTORY">short
-                                        story</TGENRE>
-                                    <TITLE TITLETYPE="ANALYTIC">Red Girl's Reasoning</TITLE>
+                                        story</TGENRE> <TITLE TITLETYPE="ANALYTIC">Red Girl's Reasoning</TITLE>
                                     was published in <TITLE TITLETYPE="JOURNAL">Dominion
                                         Illustrated</TITLE> after winning first prize for fiction in
                                     their contest the previous year.</RRECOGNITIONS>
@@ -904,8 +895,7 @@
                                 after he is dissuaded from marrying her by his uncle,
                                     <TCHARACTERTYPEROLE>a priest</TCHARACTERTYPEROLE> named
                                     <TCHARACTERNAME REG="Father Paul">Father
-                                Paul</TCHARACTERNAME>.</TPLOT>
-                            <TSETTINGPLACE>The story begins with Esther's removal to a
+                                Paul</TCHARACTERNAME>.</TPLOT> <TSETTINGPLACE>The story begins with Esther's removal to a
                                 residential school run by Father Paul where she experiences culture
                                 shock mitigated only by her friendship with Lawrence, who later
                                 wishes to marry her.</TSETTINGPLACE> The priest warns Lawrence that
@@ -1068,10 +1058,7 @@
                     <SHORTPROSE>
                         <P><TCHARACTERIZATION>The essay questions why Native women are portrayed by
                                 a single stereotype in the literature of the
-                                time</TCHARACTERIZATION>, as <QUOTE DIRECT="Y"><QUOTE DIRECT="N">dog-like,</QUOTE>
-                                <QUOTE DIRECT="N">fawn-like,</QUOTE>
-                                <QUOTE DIRECT="N">crouching,</QUOTE>
-                                <QUOTE DIRECT="N">fire-eyed</QUOTE> [and] <QUOTE DIRECT="N">submissive</QUOTE>.</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 188" DBREF="9599" QTDIN="QTDINYES">188</BIBCIT></BIBCITS> In particular, PJ
+                                time</TCHARACTERIZATION>, as <QUOTE DIRECT="Y"><QUOTE DIRECT="N">dog-like,</QUOTE> <QUOTE DIRECT="N">fawn-like,</QUOTE> <QUOTE DIRECT="N">crouching,</QUOTE> <QUOTE DIRECT="N">fire-eyed</QUOTE> [and] <QUOTE DIRECT="N">submissive</QUOTE>.</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 188" DBREF="9599" QTDIN="QTDINYES">188</BIBCIT></BIBCITS> In particular, PJ
                             criticizes the novel <TITLE TITLETYPE="MONOGRAPHIC">An Algonquin
                                 Maiden</TITLE> by <NAME>G. Mercer Adam</NAME> and <NAME STANDARD="Wetherald, Ethelwyn">A. Ethelwyn
                                     Wetherald</NAME>.<BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 187" DBREF="9599">187</BIBCIT></BIBCITS></P>
@@ -1116,8 +1103,7 @@
                                 <QUOTE DIRECT="Y">beautiful old-fashioned womanliness;</QUOTE> for
                             them <QUOTE DIRECT="Y">the grace of
                                     <TTHEMETOPIC>motherhood</TTHEMETOPIC> is a primitive
-                                glory.</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Keller 115" DBREF="9598" QTDIN="QTDINYES">115</BIBCIT></BIBCITS>
-                            <TCHARACTERIZATION>This portrayal did little to represent such women as
+                                glory.</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Keller 115" DBREF="9598" QTDIN="QTDINYES">115</BIBCIT></BIBCITS> <TCHARACTERIZATION>This portrayal did little to represent such women as
                                 fully realized individuals.</TCHARACTERIZATION></P>
                     </SHORTPROSE>
                 </TEXTUALFEATURES>
@@ -1214,8 +1200,7 @@
                                 suggests that the results of her interpretations were not <QUOTE DIRECT="Y">deliberate falsifications</QUOTE>, but rather a
                                 result of her inability to <QUOTE DIRECT="Y">give a direct
                                     translation because she reacted mainly to the dramatic parts of
-                                    any tale.</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Keller 250" DBREF="9598">250</BIBCIT></BIBCITS>
-                                <TGENREISSUE><TINTERTEXTUALITY INTERTEXTTYPE="ADAPTATION-UPDATE">It
+                                    any tale.</QUOTE><BIBCITS><BIBCIT PLACEHOLDER="Keller 250" DBREF="9598">250</BIBCIT></BIBCITS> <TGENREISSUE><TINTERTEXTUALITY INTERTEXTTYPE="ADAPTATION-UPDATE">It
                                         was, oddly enough, one of her few introductions to the oral
                                         tradition of First Nations people, and her re-tellings
                                         mediated between oral and literary traditions of
@@ -1342,4 +1327,3 @@
         </WORKSCITED>
     </DIV0>
 </WRITING>
-

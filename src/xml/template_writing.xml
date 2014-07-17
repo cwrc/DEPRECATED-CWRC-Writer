@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="http://cwrc.ca/schema/writing.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://cwrc.ca/schemas/orlando_writing.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-stylesheet type="text/css" href="http://cwrc.ca/templates/css/orlando.css"?>
 
-<WRITING>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:w="http://cwrctc.artsrn.ualberta.ca/#">
-<rdf:Description rdf:about="http://localhost:8080/editor/documents/null">
-	<w:mode>0</w:mode>
-</rdf:Description>
-</rdf:RDF>
+<WRITING PERSON="BRWWRITER" SEX="FEMALE">
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cw="http://cwrc.ca/ns/cw#">
+        <rdf:Description rdf:about="http://localhost:8080/editor/documents/null">
+            <cw:mode>0</cw:mode>
+        </rdf:Description>
+    </rdf:RDF>
     <ORLANDOHEADER>
         <FILEDESC>
             <TITLESTMT>
@@ -30,13 +30,13 @@
         <HEADING>Writing</HEADING>
         <STANDARD>[InsertAuthorStandardName]</STANDARD>
         <AUTHORSUMMARY>
-            <RESEARCHNOTE>This subsection (AUTHORSUMMARY) usually encloses summary
-                statements about an author (a short preface) before opening the writing
-                document of each woman writer. This element can contain a short writer
-                profile, or an entry summary (similar to an abstract). It is useful both for
-                minor writers about whom little is known, and for major writers whose work
-                needs to be sumarized before launching into the details. </RESEARCHNOTE>
             <SHORTPROSE>
+                <RESEARCHNOTE>This subsection (AUTHORSUMMARY) usually encloses summary
+                    statements about an author (a short preface) before opening the writing
+                    document of each woman writer. This element can contain a short writer
+                    profile, or an entry summary (similar to an abstract). It is useful both for
+                    minor writers about whom little is known, and for major writers whose work
+                    needs to be sumarized before launching into the details. </RESEARCHNOTE>
                 <P>[Insert author summary here]</P>
             </SHORTPROSE>
         </AUTHORSUMMARY>
@@ -54,8 +54,7 @@
                             publication, circulation, press run, advertising,
                             anthologization, media, manuscript history, current archival
                             locations, etc.</RESEARCHNOTE>
-                        <CHRONSTRUCT CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="SELECTIVE"
-                            RESP="SYS">
+                        <CHRONSTRUCT CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="SELECTIVE" RESP="SYS">
                             <DATE>DD Month YYY</DATE>
                             <CHRONPROSE>[Event Prose (publication, prize, any literary
                                 activity)]</CHRONPROSE>
@@ -74,12 +73,12 @@
                         </SHORTPROSE>
                     </TEXTUALFEATURES>
                     <RECEPTION>
-                        <RESEARCHNOTE>RECEPTION: Responses to his/her work: reviews,
-                            self-description, fictionalized treatments of the author,
-                            recognitions with name and value where appropriate, penalties,
-                            destruction of work, influence exerted, best known work,
-                            landmark text (if any)</RESEARCHNOTE>
                         <SHORTPROSE>
+                            <RESEARCHNOTE>RECEPTION: Responses to his/her work: reviews,
+                                self-description, fictionalized treatments of the author,
+                                recognitions with name and value where appropriate, penalties,
+                                destruction of work, influence exerted, best known work,
+                                landmark text (if any)</RESEARCHNOTE>
                             <P>[Reception prose here]</P>
                         </SHORTPROSE>
                     </RECEPTION>
@@ -91,8 +90,7 @@
             <DIV2>
                 <TEXTSCOPE>
                     <PRODUCTION>
-                        <CHRONSTRUCT CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="SELECTIVE"
-                            RESP="SYS">
+                        <CHRONSTRUCT CHRONCOLUMN="WRITINGCLIMATE" RELEVANCE="SELECTIVE" RESP="SYS">
                             <DATE>DD Month YYY</DATE>
                             <CHRONPROSE>[Event Prose (publication, prize, literary
                                 activity)]</CHRONPROSE>
