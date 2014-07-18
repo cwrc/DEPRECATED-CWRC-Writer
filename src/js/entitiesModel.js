@@ -771,7 +771,9 @@ return function(writer) {
 						if (id) xml += ' annotationId="'+id+'"';
 						if (offsetId) xml += ' offsetId="'+offsetId+'"';
 						xml += ' resp="'+getResp()+'"';
-						xml +='><term>'+info.keywords[i]+'</term></note>';
+						xml +='><term';
+						if (id) xml += ' annotationId="'+id+'"';
+						xml +='>'+info.keywords[i]+'</term></note>';
 					}
 					return xml;
 				},

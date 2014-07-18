@@ -105,15 +105,20 @@ return function(writer) {
 		var markers = $('[name="' + id + '"]', el);
 		var start = markers[0];
 		var end = markers[1];
-
-		var overlap = true;
+		
 		var nodes = [start];
-		var currentNode = start;
-		while (currentNode != end && currentNode != null) {
-			currentNode = currentNode.nextSibling;
-			nodes.push(currentNode);
-			if (currentNode == end) {
-				overlap = false; // we've used nextSibling to reach the end so there's no overlap
+		var overlap = true;
+		if (end == null) {
+			// note type entity
+			overlap = false;
+		} else {
+			var currentNode = start;
+			while (currentNode != end && currentNode != null) {
+				currentNode = currentNode.nextSibling;
+				nodes.push(currentNode);
+				if (currentNode == end) {
+					overlap = false; // we've used nextSibling to reach the end so there's no overlap
+				}
 			}
 		}
 		
@@ -927,8 +932,15 @@ return function(writer) {
 						entityType = w.entitiesModel.getEntityTypeForTag(this.nodeName, w.schemaManager.schemaId);
 					}
 					
-					var content = node.text();
 					var info = w.entitiesModel.getReverseMapping(this, entityType, w.schemaManager.schemaId);
+					
+					var content = '';
+					if (isNote) {
+						content = $($.parseXML(info.content).text());
+					} else {
+						content = node.text();
+					}
+					
 					
 					w.entities[id] = {
 						props: {
@@ -1039,19 +1051,24 @@ return function(writer) {
 					editorString += ' '+attName+'="'+att.value+'"';
 				}
 			});
-			editorString += '>';
 			
-			var isInline = forceInline || !w.utilities.isTagBlockLevel(tag);
-			
-			$node.contents().each(function(index, el) {
-				if (el.nodeType == 1) {
-					doBuild(el, isInline);
-				} else if (el.nodeType == 3) {
-					editorString += el.data;
-				}
-			});
-			
-			editorString += '</'+tagName+'>';
+			if ($node.is(':empty')) {
+				editorString += '>\uFEFF</'+tagName+'>'; // need \uFEFF otherwise a <br> gets inserted
+			} else {
+				editorString += '>';
+				
+				var isInline = forceInline || !w.utilities.isTagBlockLevel(tag);
+				
+				$node.contents().each(function(index, el) {
+					if (el.nodeType == 1) {
+						doBuild(el, isInline);
+					} else if (el.nodeType == 3) {
+						editorString += el.data;
+					}
+				});
+				
+				editorString += '</'+tagName+'>';
+			}
 		}
 		
 		doBuild(node, false);
@@ -1120,12 +1137,20 @@ return function(writer) {
 				try {
 					range.setStart(startNode, startOffset);
 					range.setEnd(endNode, endOffset);
-					w.tagger.insertBoundaryTags(id, entry.props.type, range);
+					var type = entry.props.type;
+					w.tagger.insertBoundaryTags(id, type, range);
 					if (entry.props.content == null) {
 						// get and set the text content
-						w.highlightEntity(id);
-						var content = $('#entityHighlight', w.editor.getBody()).text();
-						w.highlightEntity();
+						var content = '';
+						if (type === 'note' || type === 'citation') {
+							content = $($.parseXML(entry.info.content)).text();
+						} else if (type === 'keyword') {
+							content = entry.info.keywords.join(', ');
+						} else {
+							w.highlightEntity(id);
+							content = $('#entityHighlight', w.editor.getBody()).text();
+							w.highlightEntity();
+						}
 						entry.props.content = content;
 						entry.props.title = w.utilities.getTitleFromContent(content);
 					}
@@ -1141,7 +1166,7 @@ return function(writer) {
 		// remove all the entity markup
 		$.each(entityNodes, function(index, info) {
 			var entity = info.entity;
-			var node = info.node;
+			var $node = info.node;
 			
 			var type = entity.props.type;
 			//	var tag = $(node).attr('_tag');
@@ -1149,12 +1174,25 @@ return function(writer) {
 			
 			var textTag = w.entitiesModel.getTextTag(type, w.schemaManager.schemaId);
 			if (textTag != '') {
-				$('[_tag="'+textTag+'"]', node).contents().unwrap(); // keep the text inside the textTag
+				$('[_tag="'+textTag+'"]', $node).contents().unwrap(); // keep the text inside the textTag
 			}
 			
-			var id = $(node).attr('annotationId');
-			$('[annotationId="'+id+'"]', node).remove(); // remove all child elements with matching ID
-			$(node).contents().unwrap();
+			var annotationId = $node.attr('annotationId');
+			$('[annotationId="'+annotationId+'"]', $node).remove(); // remove all child elements with matching ID
+			
+			var id = $node.attr('id');
+			var structsEntry = w.structs[id];
+			if (structsEntry != null) {
+				delete structsEntry;
+			}
+			
+			var contents = $node.contents();
+			if (contents.length === 0) {
+				// no contents so just remove the node
+				$node.remove();
+			} else {
+				contents.unwrap();
+			}
 		});
 	}
 	

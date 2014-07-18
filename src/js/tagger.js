@@ -15,19 +15,33 @@ return function(writer) {
 	tagger.insertBoundaryTags = function(id, type, range) {
 		var sel = w.editor.selection;
 		sel.setRng(range);
-		var bm = sel.getBookmark();
 		
-		var start = w.editor.dom.create('span', {'_entity': true, '_type': type, 'class': 'entity '+type+' start', 'name': id}, '');
-		range.insertNode(start);
-		w.editor.dom.bind(start, 'click', _doMarkerClick);
-		
-		w.editor.selection.moveToBookmark(bm);
-		
-		var end = w.editor.dom.create('span', {'_entity': true, '_type': type, 'class': 'entity '+type+' end', 'name': id}, '');
-		sel.collapse(false);
-		range = sel.getRng(true);
-		range.insertNode(end);
-		w.editor.dom.bind(end, 'click', _doMarkerClick);
+		if (type === 'note' || type === 'citation' || type === 'keyword') {
+			var tag = w.editor.dom.create('span', {'_entity': true, '_type': type, 'class': 'entity '+type+' start', 'name': id}, '');
+			sel.collapse(false);
+			range = sel.getRng(true);
+			range.insertNode(tag);
+			
+			w.editor.dom.bind(tag, 'click', function(e) {
+				var marker = w.editor.dom.get(e.target);
+				var tagId = marker.getAttribute('name');
+				tagger.editTag(tagId);
+			});
+		} else {
+			var bm = sel.getBookmark();
+			
+			var start = w.editor.dom.create('span', {'_entity': true, '_type': type, 'class': 'entity '+type+' start', 'name': id}, '');
+			range.insertNode(start);
+			w.editor.dom.bind(start, 'click', _doMarkerClick);
+			
+			w.editor.selection.moveToBookmark(bm);
+			
+			var end = w.editor.dom.create('span', {'_entity': true, '_type': type, 'class': 'entity '+type+' end', 'name': id}, '');
+			sel.collapse(false);
+			range = sel.getRng(true);
+			range.insertNode(end);
+			w.editor.dom.bind(end, 'click', _doMarkerClick);
+		}
 	};
 	
 	// prevents the user from moving the caret inside a marker
@@ -310,10 +324,18 @@ return function(writer) {
 //			}
 			
 			var id = tagger.addEntityTag(type);
-			w.entities[id].info = info;
+			var entry = w.entities[id];
+			entry.info = info;
+			if (type === 'note' || type === 'citation') {
+				var content = $($.parseXML(entry.info.content)).text();
+				entry.props.title = w.utilities.getTitleFromContent(content);
+			} else if (type === 'keyword') {
+				var content = entry.info.keywords.join(', ');
+				entry.props.title = w.utilities.getTitleFromContent(content);
+			}
 			
 			$.when(
-				w.delegator.getUriForEntity(w.entities[id]),
+				w.delegator.getUriForEntity(entry),
 				w.delegator.getUriForAnnotation(),
 				w.delegator.getUriForDocument(),
 				w.delegator.getUriForTarget(),
@@ -324,7 +346,7 @@ return function(writer) {
 					// use the id already provided
 					entityUri = info.cwrcInfo.id;
 				}
-				w.entities[id].annotation = {
+				entry.annotation = {
 					entityId: entityUri,
 					annotationId: annoUri,
 					docId: docUri,

@@ -58,24 +58,12 @@ body {
 	background-color: #3914AF; 
 }
 
-#entityHighlight.citation {
-	background-color: #CD0074;
-}
-
-#entityHighlight.note {
-	background-color: #0D56A6;
-}
-
 #entityHighlight.title {
 	background-color: #debb00;
 }
 
 #entityHighlight.correction {
 	background-color: #FF3300;
-}
-
-#entityHighlight.keyword {
-	background-color: #008040;
 }
 
 #entityHighlight.link {
@@ -102,14 +90,6 @@ body {
 	border-color: #3914AF; 
 }
 
-.showEntityBrackets .citation {
-	border-color: #CD0074;
-}
-
-.showEntityBrackets .note {
-	border-color: #0D56A6;
-}
-
 .showEntityBrackets .title {
 	border-color: #debb00;
 }
@@ -118,13 +98,34 @@ body {
 	border-color: #FF3300;
 }
 
-.showEntityBrackets .keyword {
-	border-color: #008040;
-}
-
 .showEntityBrackets .link {
 	border-color: #3366ff;
 }
+
+/* special handling for note type entities */
+.citation, .note, .keyword {
+	height: 16px !important;
+	width: 16px !important;
+	cursor: pointer;
+}
+
+.note::after {
+	content: url(../img/note_inline_large.png);
+}
+
+.citation::after {
+	content: url(../img/citation_inline_large.png);
+}
+
+.keyword::after {
+	content: url(../img/keyword_inline_large.png);
+}
+
+.showEntityBrackets .citation.start, .showEntityBrackets .note.start, .showEntityBrackets .keyword.start {
+	border: none !important;
+}
+
+
 
 span[data-mce-bogus] {
 	height: 0px;
