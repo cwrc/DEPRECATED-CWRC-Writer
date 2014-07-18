@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="http://cwrc.ca/schema/biography.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://cwrc.ca/schemas/orlando_biography.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-stylesheet type="text/css" href="http://cwrc.ca/templates/css/orlando.css"?>
 
 <BIOGRAPHY PERSON="BRWWRITER" SEX="FEMALE">
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:w="http://cwrctc.artsrn.ualberta.ca/#">
-<rdf:Description rdf:about="http://localhost:8080/editor/documents/null">
-	<w:mode>0</w:mode>
-</rdf:Description>
-</rdf:RDF>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cw="http://cwrc.ca/ns/cw#">
+        <rdf:Description rdf:about="http://localhost:8080/editor/documents/null">
+            <cw:mode>0</cw:mode>
+        </rdf:Description>
+    </rdf:RDF>
     <ORLANDOHEADER>
         <FILEDESC>
             <TITLESTMT>
@@ -91,8 +91,7 @@
             <HEADING>Birth</HEADING>
             <BIRTH>
                 <DIV2>
-                    <CHRONSTRUCT RESP="SYS" RELEVANCE="SELECTIVE"
-                        CHRONCOLUMN="WRITINGCLIMATE">
+                    <CHRONSTRUCT RESP="SYS" RELEVANCE="SELECTIVE" CHRONCOLUMN="WRITINGCLIMATE">
                         <DATE>[Insert date]</DATE>
                         <CHRONPROSE>[Insert summary of birth here]. <BIRTHPOSITION> [Insert
                             prose on birth position] </BIRTHPOSITION></CHRONPROSE>
@@ -104,9 +103,7 @@
                             the DBREF attributes. Note that the plural BIBCITS tag is
                             used to group any number of BIBCIT tags. Please insert at
                             least one BIBCIT at the end of each paragraph or
-                            CHRONSTRUCT.</RESEARCHNOTE><BIBCITS>
-                                <BIBCIT>Insert citation information here</BIBCIT>
-                            </BIBCITS></P>
+                            CHRONSTRUCT.</RESEARCHNOTE><BIBCITS> <BIBCIT>Insert citation information here</BIBCIT> </BIBCITS></P>
                     </SHORTPROSE>
                 </DIV2>
             </BIRTH>
@@ -177,8 +174,7 @@
             <HEADING>Death</HEADING>
             <DEATH>
                 <DIV2>
-                    <CHRONSTRUCT RESP="SYS" RELEVANCE="SELECTIVE"
-                        CHRONCOLUMN="WRITINGCLIMATE">
+                    <CHRONSTRUCT RESP="SYS" RELEVANCE="SELECTIVE" CHRONCOLUMN="WRITINGCLIMATE">
                         <DATE>[InsertDate]</DATE>
                         <CHRONPROSE>[Insert summary of event here]</CHRONPROSE>
                     </CHRONSTRUCT>

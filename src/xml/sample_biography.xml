@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="http://cwrc.ca/schema/biography.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://cwrc.ca/schemas/orlando_biography.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-stylesheet type="text/css" href="http://cwrc.ca/templates/css/orlando.css"?>
 
 <BIOGRAPHY SEX="FEMALE" PERSON="WRITER">
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:w="http://cwrctc.artsrn.ualberta.ca/#">
-<rdf:Description rdf:about="http://localhost:8080/editor/documents/null">
-	<w:mode>0</w:mode>
-</rdf:Description>
-</rdf:RDF>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cw="http://cwrc.ca/ns/cw#">
+        <rdf:Description rdf:about="http://localhost:8080/editor/documents/null">
+            <cw:mode>0</cw:mode>
+        </rdf:Description>
+    </rdf:RDF>
     <ORLANDOHEADER TYPE="text">
         <FILEDESC>
             <TITLESTMT>
@@ -361,8 +361,7 @@
                             occasions. Biographers <NAME>Carole Gerson</NAME> and <NAME>Veronica
                                 Strong-Boag</NAME> describe the Six Nations Reserve at that time as
                             a <QUOTE DIRECT="Y">centre of Native resistance</QUOTE> and an <QUOTE DIRECT="Y">extraordinary community</QUOTE>.<BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 32, 49" DBREF="9599">32,
-                                    49</BIBCIT></BIBCITS>
-                            <NATIONALHERITAGE REG="Iroquois">The <NATIONALITY SELF-DEFINED="SELFYES">Iroquois</NATIONALITY> people of the reserve were noted for
+                                    49</BIBCIT></BIBCITS> <NATIONALHERITAGE REG="Iroquois">The <NATIONALITY SELF-DEFINED="SELFYES">Iroquois</NATIONALITY> people of the reserve were noted for
                                 being vigorously intellectual and respectful of matrilineal
                                 traditions.</NATIONALHERITAGE><BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 33, 50" DBREF="9599">33,
                                     50</BIBCIT><BIBCIT PLACEHOLDER="Keller 23, 28" DBREF="9598">23,
@@ -911,8 +910,7 @@
                         <CHRONPROSE><NAME STANDARD="Su-à-pu-luck">Chief Joe Capilano</NAME>
                                 (<NAME STANDARD="Su-à-pu-luck">Su-à-pu-luck</NAME>) of
                             the Squamish nation arrived in
-                                    <PLACE><SETTLEMENT>London</SETTLEMENT>,<REGION REG="Middlesex"/>
-                                <GEOG>England</GEOG></PLACE>, where he met PJ; after this meeting
+                                    <PLACE><SETTLEMENT>London</SETTLEMENT>,<REGION REG="Middlesex"/> <GEOG>England</GEOG></PLACE>, where he met PJ; after this meeting
                             they formed a lasting friendship.</CHRONPROSE>
                         <BIBCITS>
                             <BIBCIT PLACEHOLDER="Keller 219, 223" DBREF="9598">219, 223</BIBCIT>
@@ -1018,8 +1016,7 @@
                         <P>In Vancouver, she lived in a small apartment and paddled around the bays
                             of the city. She resumed her friendship with <NAME STANDARD="Su-à-pu-luck">Chief Joe Capilano</NAME>, whom she
                             had met in 1906.<BIBCITS><BIBCIT PLACEHOLDER="Gerson and Strong-Boag 17, 65" DBREF="9599">17,
-                                    65</BIBCIT><BIBCIT PLACEHOLDER="McMaster, life" DBREF="9746"/></BIBCITS>
-                        </P>
+                                    65</BIBCIT><BIBCIT PLACEHOLDER="McMaster, life" DBREF="9746"/></BIBCITS> </P>
                     </SHORTPROSE>
                     <CHRONSTRUCT RELEVANCE="COMPREHENSIVE" CHRONCOLUMN="WRITINGCLIMATE" RESP="KDC">
                         <DATESTRUCT CERTAINTY="C" VALUE="1909-10-">
@@ -1147,5 +1144,3 @@
         </WORKSCITED>
     </DIV0>
 </BIOGRAPHY>
-
-
