@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://cwrc.ca/schema/CWRC-TEIBasic.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:w="http://cwrctc.artsrn.ualberta.ca/#">
+<rdf:Description rdf:about="http://localhost:8080/editor/documents/null">
+	<w:mode>0</w:mode>
+</rdf:Description>
+</rdf:RDF>
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Blank Document</title>
+            </titleStmt>
+        </fileDesc>
+    </teiHeader>
+    <text>
+        <body>
+            <div></div>            
+        </body>
+    </text>
+</TEI>
