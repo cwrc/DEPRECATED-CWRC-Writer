@@ -36,8 +36,8 @@ $(function(){
 		var dialogType = "";
 
 		// fix conflicts with jquery ui
-		// var datepicker = $.fn.datepicker.noConflict();
-		// $.fn.bsDatepicker = datepicker;
+		var datepicker = $.fn.datepicker.noConflict();
+		$.fn.bsDatepicker = datepicker;
 		var button = $.fn.button.noConflict();
 		$.fn.bsButton = button;
 		var tooltip = $.fn.tooltip.noConflict();
