@@ -400,7 +400,16 @@ return function(writer) {
 			var sel = w.editor.selection;
 			sel.collapse();
 			var rng = sel.getRng(true);
-			var text = w.editor.getDoc().createTextNode(newEntity.props.content);
+			
+			var type = newEntity.props.type;
+			var content;
+			if (type === 'note' || type === 'citation' || type === 'keyword') {
+				content = '\uFEFF';
+			} else {
+				content = newEntity.props.content;
+			}
+			
+			var text = w.editor.getDoc().createTextNode(content);
 			rng.insertNode(text);
 			sel.select(text);
 			
