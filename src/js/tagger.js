@@ -168,13 +168,16 @@ return function(writer) {
 					delete w.entities[id];
 					break;
 				case 1:
-					updateRequired = true;
-					w.editor.dom.remove(nodes[0]);
-					if (w.entitiesList) {
-						w.entitiesList.remove(id);
+					var type = w.entities[id].props.type;
+					if (type !== 'note' && type !== 'citation' && type !== 'keyword') {
+						updateRequired = true;
+						w.editor.dom.remove(nodes[0]);
+						if (w.entitiesList) {
+							w.entitiesList.remove(id);
+						}
+						w.deletedEntities[id] = w.entities[id];
+						delete w.entities[id];
 					}
-					w.deletedEntities[id] = w.entities[id];
-					delete w.entities[id];
 			}
 		}
 		for (var id in w.structs) {
