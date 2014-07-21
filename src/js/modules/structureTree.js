@@ -381,6 +381,35 @@ return function(config) {
 				li_attr: {name: id}, // 'class': type}
 				state: {opened: level < 3}
 			};
+			
+			if (type === 'note' || type === 'citation') {
+				var content = w.utilities.stringToXML(w.entities[id].info.content);
+				var root = $(tag, content).first();
+				
+				function processChildren(children, parent, id) {
+					children.each(function(index, el) {
+						if (parent.children == null) parent.children = [];
+						var childData = {
+							text: el.nodeName,
+							li_attr: {name: id}
+						};
+						parent.children.push(childData);
+						
+						processChildren($(el).children(), childData, id);
+					});
+				}
+				
+				processChildren(root.children(), nodeData, id);
+			} else if (type === 'keyword') {
+				nodeData.children = [];
+				var keywords = w.entities[id].info.keywords;
+				for (var i = 0; i < keywords.length; i++) {
+					nodeData.children.push({
+						text: 'keyword',
+						li_attr: {name: id}
+					});
+				}
+			}
 		}
 		
 		return nodeData;
