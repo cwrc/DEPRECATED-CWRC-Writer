@@ -36,17 +36,32 @@
 					// get the node from currentBookmark if available, otherwise use currentNode
 					if (t.editor.currentBookmark != null) {
 						node = t.editor.currentBookmark.rng.commonAncestorContainer;
-						while (node.nodeType == 3 || (node.nodeType == 1 && !node.hasAttribute('_tag'))) {
+						while (node.nodeType === 3) {
 							node = node.parentNode;
 						}
 					} else {
 						node = t.editor.currentNode;
 					}
-					if (node.nodeType == 9) {
+					if (node.nodeType === 9) {
 						node = $('body > [_tag]', node)[0]; // we're at the document level so select the root instead
 					}
 					
 					filterKey = node.getAttribute('_tag');
+					
+					if (filterKey == null) {
+						// probably in an entity
+						var id = node.getAttribute('id');
+						if (id === 'entityHighlight') {
+							var w = t.editor.writer;
+							id = t.editor.currentEntity;
+							var type = w.entities[id].props.type;
+							filterKey = w.entitiesModel.getParentTag(type, w.schemaManager.schemaId);
+						} else {
+							if (window.console) {
+								console.warn('In unknown tag', node);
+							}
+						}
+					}
 					
 					if (mode == 'change') {
 						filterKey = $(node).parent().attr('_tag');
