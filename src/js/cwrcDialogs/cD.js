@@ -3,10 +3,25 @@
 $(function(){
 	cD = {};
 	(function(){
-		var cwrcApi = new CwrcApi('http://apps.testing.cwrc.ca/services/ccm-api/', $);
+		// Cwrc Api
+		var cwrcApi = null;
+		cD.setCwrcApi = function(url){
+			cwrcApi = new CwrcApi(url, $);
+		}
+		cD.setCwrcApi('http://apps.testing.cwrc.ca/services/ccm-api/');
 		//var cwrcApi = new CwrcApi('http://localhost/cwrc/', $);
 		
+		// Geonames Url
 		var geonameUrl = "http://apps.testing.cwrc.ca/cwrc-mtp/geonames/";
+		cD.setGeonameUrl = function(url){
+			geonameUrl = url;
+		}
+		
+		// Viaf Url
+		var viafUrl = "http://apps.testing.cwrc.ca/services/viaf/";
+		cD.setViafUrl = function(url){
+			viafUrl = url;
+		}
 		
 		// parameters
 
@@ -16,13 +31,13 @@ $(function(){
 			show: false,
 			keyboard: true,
 			backdrop: false,
-			maxHeight: 500,
+			// maxHeight: 500,
 		}
 		var dialogType = "";
 
 		// fix conflicts with jquery ui
-		var datepicker = $.fn.datepicker.noConflict();
-		$.fn.bsDatepicker = datepicker;
+		// var datepicker = $.fn.datepicker.noConflict();
+		// $.fn.bsDatepicker = datepicker;
 		var button = $.fn.button.noConflict();
 		$.fn.bsButton = button;
 		var tooltip = $.fn.tooltip.noConflict();
@@ -50,11 +65,29 @@ $(function(){
 			});
 			// $('.dpYears').bsDatepicker();
 
-			$('.input-append.date').bsDatepicker({
-				format: "yyyy-mm-dd",
-				startView: 2,
-				autoclose: true
-			});
+			// $('.input-append.date').datepicker({
+			// 	format: "yyyy-mm-dd",
+			// 	viewMode: 2,
+			// 	autoclose: true
+			// })
+
+			// .on('changeDate', function (ev) {
+				// for (i in ev) {
+				// 	if (ev.hasOwnProperty(i)) {
+				// 		console.log(i)
+				// 	}
+				// }
+				// console.log(ev.target)
+				// console.log(ko.toJSON(ev.date).substr(1, 10));	
+				// $(ev.target).find("input").first().val(ko.toJSON(ev.date).substr(1, 10));
+
+				// console.log($(ev.target).find("input").first().val())
+				// if($(ev.target).find("input").first().val()) {
+				// 	$(ev.target).find("input").first().val(ko.toJSON(ev.date).substr(1, 10));
+				// }
+				
+				// console.log($(ev.target).find("input")[0].val(ko.toJSON(ev.date).substr(1, 10)))
+			// });
 		};
 
 
@@ -68,9 +101,12 @@ $(function(){
 		entity.viewModel().interfaceFields = ko.observableArray([]);
 		entity.viewModel().dialogTitle = ko.observable("");
 		entity.viewModel().validated = ko.observable(true);
+		entity.viewModel().showSavingMessage = ko.observable(false);
 		entity.selfWorking = $.parseXML('<entity></entity>');
 		entity.elementPath = [];
-		
+		entity.startValuePath = [];
+		entity.currentPadding = "0";
+
 		entity.viewModel().modsFields = ko.observable({
 			modsTypes: [
 			{name:'Audio'},
@@ -183,18 +219,18 @@ $(function(){
 
 			var entityTemplates = '' +
 			'		<script type="text/htmlify" id="quantifier">' +
-			'			<div class="quantifier">' +
+			'			<div class="quantifier" data-bind="style:{margin : fieldPadding()}">' +
 			'			<div>' +
 			// '				<h2><span data-bind="text: header"></span></h2>' +
 			'				<span data-bind="text: label"></span>' +
 			'				<span  data-bind="if: isGrowable()">' +
 			'					<span data-bind="if: showAddButton()">' +
-			'						<button data-bind="click: addGroup" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus"</span></button>' +
+			'						<button data-bind="click: addGroup" class="btn btn-default btn-xs"><span class="fa fa-plus"</span></button>' +
 			'					</span>' +
 			'				</span>' +
+			'			</div>' +			
 			'			</div>' +
 			'			<div class="interfaceFieldsContainer" data-bind="template:{name: $root.displayMode, foreach: interfaceFields}"> ' +
-			'			</div>' +
 			'			</div>' +
 			'		</script>' +
 			'		<script type="text/html" id="seed">' +
@@ -203,25 +239,25 @@ $(function(){
 			'				<span data-bind="template:{name: $root.displayMode, foreach: interfaceFields}"></span>' +
 			'				<span data-bind="if: $parent.showRemoveThisButton()">' +
 			'					<button data-bind="click: $parent.removeThisGroup" class="btn btn-default btn-xs">' +
-			'						<span class="glyphicon glyphicon-minus"></span>' +
+			'						<span class="fa fa-minus"></span>' +
 			'					</button>' +
 			'				</span>' +
 			'			</div>' +
 			'		</script>' +
 			'		<script type="text/html" id="textField">' +
 			'			<!--textField-->' +
-			'			<span>' +
+			'			<span data-bind="style:{margin : fieldPadding()}">' +
 			'				<span data-bind="text: label"></span> ' +
 			'				<input data-bind="value: value" /> ' +
-			'				<span class="cwrc-help glyphicon glyphicon-question-sign" data-bind="attr:{\'title\': help}"></span>'+
+			'				<span class="cwrc-help fa fa-question-circle" data-bind="attr:{\'title\': help}"></span>'+
 			'				<div class="label" data-bind="text:nodeMessage, attr:{class: nodeMessageClass}"></div>' +
 			'			</span>' +
 			'		</script>' +
 			
 			'		<script type="text/html" id="header">' +
 			'			<!--header-->' +
-			'			<span>' +
-			'				<h4><span data-bind="text: label"></span></h4>' +
+			'			<span>' + 
+			'				<h4><span data-bind="text: label, style:{margin : fieldPadding()}"></span></h4>' +
 			'			</span>' +
 			'		</script>' +
 
@@ -229,31 +265,31 @@ $(function(){
 			'			<!-- datePicker -->' +
 			'			<span>' +
 			'				<span data-bind="text: label"></span> ' +
-			'				<div class="input-append date">' +
-			'					<input placeholder="YYYY-MM-DD" type="text" class="span2" data-bind="value: value">' +
-			'					<button class=" add-on btn btn-default btn-xs"><span class="glyphicon glyphicon-calendar"></span></button>' +
-			'					<span class="cwrc-help glyphicon glyphicon-question-sign" data-bind="attr:{\'title\': help}"></span>'+
+			'				<div class="input-append date" data-date="2014-01-01">' +
+			'					<input placeholder="YYYY-MM-DD" type="text" class="span2" data-date="2014-01-01" data-bind="datepicker: value">' +
+			'					<button data-date="2014-01-01" class=" add-on btn btn-default btn-xs"><span class="fa fa-calendar"></span></button>' +
+			'					<span class="cwrc-help fa fa-question-circle" data-bind="attr:{\'title\': help}"></span>'+
 			'				</div>' +
 			'				<div class="label" data-bind="text:nodeMessage, attr:{class: nodeMessageClass}"></div>' +
 			'			</span>' +
 			'		</script>' +
 			'		<script type="text/html" id="dialogue">' +
 			'			<!--dialogue-->' +
-			'			<span>' +
+			'			<span data-bind="style:{margin : fieldPadding()}">' +
 			'				<span class="cwrc-help" data-bind="text: label, attr:{\'title\': help}"></span> ' +
 			'			</span>' +
 			'		</script>' +
 			'		<script type="text/html" id="textArea">' +
 			'			<!--textArea-->' +
-			'			<span>' +
+			'			<span data-bind="style:{margin : fieldPadding()}">' +
 			'				<span data-bind="text: label"></span> ' +
 			'				<textarea rows="4" cols="50" data-bind="value: value"></textarea> ' +
-			'				<span class="cwrc-help glyphicon glyphicon-question-sign" data-bind="attr:{\'title\': help}"></span>'+
+			'				<span class="cwrc-help fa fa-question-circle" data-bind="attr:{\'title\': help}"></span>'+
 			'				<div class="label" data-bind="text:nodeMessage, attr:{class: nodeMessageClass}"></div>' +
 			'			</span>' +
 			'		</script>' +
 			'		<script type="text/html" id="radioButton">' +
-			'			<span>' +
+			'			<span data-bind="style:{margin : fieldPadding()}">' +
 			'				<span data-bind="text: label"></span>' +
 			'				<ul data-bind="foreach: options">' +
 			'					<li>' +
@@ -261,11 +297,11 @@ $(function(){
 			'						<span data-bind="text:content"></span> ' +
 			'					</li>' +
 			'				</ul>' +
-			'				<span class="cwrc-help glyphicon glyphicon-question-sign" data-bind="attr:{\'title\': help}"></span>'+
+			'				<span class="cwrc-help fa fa-question-circle" data-bind="attr:{\'title\': help}"></span>'+
 			'			</span>' +
 			'		</script>' +
 			'		<script type="text/html" id="dynamicCheckbox">' +
-			'			<span>' +
+			'			<span data-bind="style:{margin : fieldPadding()}">' +
 			'				<span data-bind="text: label"></span>' +
 			'				<ul data-bind="foreach: options">' +
 			'					<li>' +
@@ -273,12 +309,14 @@ $(function(){
 			'						<span data-bind="text:content"></span> ' +
 			'					</li>' +
 			'				</ul>' +
-			'				<span class="cwrc-help glyphicon glyphicon-question-sign" data-bind="attr:{\'title\': help}"></span>'+
+			'				<span class="cwrc-help fa fa-question-circle" data-bind="attr:{\'title\': help}"></span>'+
 			'			</span>' +
 			'		</script>' +
 			'		<script type="text/html" id="dropDown">' +
+			'			<span data-bind="style:{margin : fieldPadding()}">' +
 			'			<select data-bind="value: value, options: options, optionsText: \'content\', optionsValue: \'value\'"></select>' +
-			'				<span class="cwrc-help glyphicon glyphicon-question-sign" data-bind="attr:{\'title\': help}"></span>'+
+			'				<span class="cwrc-help fa fa-question-circle" data-bind="attr:{\'title\': help}"></span>'+
+			'			</span>' +
 			'		</script>';
 
 
@@ -290,6 +328,7 @@ $(function(){
 			'		<div class="modal-content">' +
 			'			<div class="modal-header">' +
 			'				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+			'				<span data-bind="visible: showSavingMessage"><h5 class="modal-title pull-right"><span>Saving</span> <i class="fa fa-spin fa-refresh"></i>&nbsp;</h5></span>' +
 			'				<h4 class="modal-title"><span data-bind="text: dialogTitle"></span></h4>' +
 			'			</div>' +
 			'			<div class="modal-body modal-body-area">' +
@@ -313,6 +352,7 @@ $(function(){
 			'		<div class="modal-content">' +
 			'			<div class="modal-header">' +
 			'				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+			'				<span data-bind="visible: showSavingMessage"><h5 class="modal-title pull-right"><span>Saving</span> <i class="fa fa-spin fa-refresh"></i>&nbsp;</h5></span>' +
 			'				<h4 class="modal-title"><span data-bind="text: dialogTitle"></span></h4>' +
 			'			</div>' +
 			'			<div class="modal-body modal-body-area" data-bind="with: modsFields">' +
@@ -343,7 +383,7 @@ $(function(){
 			'						<span>Author</span>' +
 			'							<span>' +
 			'								<span>' +
-			'									<button data-bind="click: addNewAuthor" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus"</span></button>' +
+			'									<button data-bind="click: addNewAuthor" class="btn btn-default btn-xs"><span class="fa fa-plus"</span></button>' +
 			'								</span>' +
 			'							</span>' +
 			'						</div>' +
@@ -355,7 +395,7 @@ $(function(){
 			'							</span>' +
 			'							<span data-bind="if: $index">' +
 			'								<button data-bind="click: $parent.removeThisAuthor" class="btn btn-default btn-xs">' +
-			'									<span class="glyphicon glyphicon-minus"></span>' +
+			'									<span class="fa fa-minus"></span>' +
 			'								</button>' +
 			'							</span>' +
 			'						</div>' +	
@@ -369,8 +409,8 @@ $(function(){
 			'					<div class="interfaceFieldsContainer"> ' +
 			//'						<div class="input-append date">' +
 			'							<input placeholder="YYYY-MM-DD" type="text" class="span2" data-bind="value: date">' +
-			//'							<button class=" add-on btn btn-default btn-xs"><span class="glyphicon glyphicon-calendar"></span></button>' +
-			'							<span class="cwrc-help glyphicon glyphicon-question-sign" title="Date must be in the form of YYYY, YYYY-MM or YYYY-MM-DD."></span>'+
+			//'							<button class=" add-on btn btn-default btn-xs"><span class="fa fa-calendar"></span></button>' +
+			'							<span class="cwrc-help fa fa-question-circle" title="Date must be in the form of YYYY, YYYY-MM or YYYY-MM-DD."></span>'+
 			//'						</div>' +
 			'						<div class="label label-danger" data-bind="ifnot:validation.date">Invalid date</div>' +
 			'					</div>' +
@@ -410,8 +450,23 @@ $(function(){
 				handle: ".modal-header"
 			});
 
+			$("#cwrcEntityModal").on('show.bs.modal', function () {
+				$('.modal-body-area').css('max-height',$( window ).height()*0.7);
+			});
+			$("#cwrcTitleModal").on('show.bs.modal', function () {
+				$('.modal-body-area').css('max-height',$( window ).height()*0.7);
+			});
+
 			ko.applyBindings(entity.viewModel, $("#newDialogue")[0]);
 			ko.applyBindings(entity.viewModel, $("#newTitleDialogue")[0]);
+		}
+
+		var savingMessageOn = function() {
+			entity.viewModel().showSavingMessage(true);
+		}
+
+		var savingMessageOff = function() {
+			entity.viewModel().showSavingMessage(false);
 		}
 
 		var initializeQuantifiers = function() {
@@ -427,13 +482,13 @@ $(function(){
 		};
 		
 		var completeTitleDialog = function(opts, data) {
-			entity[dialogType].success = typeof opts.success === undefined ? function(){} : opts.success;
-			entity[dialogType].error = typeof opts.error === undefined ? function(){} : opts.error;
-			newTitleDialog(data);
+			entity[dialogType].success = opts.success ? opts.success : function(){}; //typeof opts.success === undefined ? function(){} : opts.success;
+			entity[dialogType].error = opts.error ? opts.error : function(){};//typeof opts.error === undefined ? function(){} : opts.error;
+			newTitleDialog(opts, data);
 			setHelp();
 		};
 		
-		var newTitleDialog = function(data) {
+		var newTitleDialog = function(opts, data) {
 			initializeQuantifiers();
 			
 			var modsFields = entity.viewModel().modsFields();
@@ -454,7 +509,11 @@ $(function(){
 				}
 			}else{
 				modsFields.modsType("Audio");
-				modsFields.title("");
+				if (opts.startValue && opts.startValue.trim() !== "") {
+					modsFields.title(opts.startValue);
+				} else {
+					modsFields.title("");	
+				}				
 				modsFields.author([]);
 				modsFields.date("");
 				modsFields.project("");
@@ -655,8 +714,12 @@ $(function(){
 			// ADD WIDGET HERE
 			var appInfoNode = $(node).children("xs\\:appinfo");
 			// check all children for path XXX
+			var isStartValue = "";
+			var leftPadding = "";
 			$(appInfoNode).children("interface-field").each(function(i,e){
 				var currentPath = $(e).attr('path').split('/');
+				isStartValue = $(e).attr('startValue');
+				leftPadding = $(e).attr("leftPadding");
 				if (isSamePath(currentPath)) {
 					// if same path XXX
 					// check what widget to add XXX
@@ -728,6 +791,18 @@ $(function(){
 						if (lastContainer.isRequired()) {
 							newInput.nodeMessage("Required value");
 						}
+						
+						if (isStartValue === "true") {
+							entity.startValuePath = currentPath;
+						}
+
+						if (leftPadding && leftPadding.trim() !== "") {
+							entity.currentPadding = leftPadding;
+						}
+						// console.log(entity.currentPadding)
+						// XXX in progress
+						// newInput.fieldPadding("0px 0px 0px "+entity.currentPadding+"px")
+
 						lastContainer.seed.interfaceFields.push(newInput);
 
 					}
@@ -789,14 +864,6 @@ $(function(){
 
 			if (lastContainer.seed.interfaceFields().length >= 1) {
 				lastContainer.hasInterface = true;
-
-				// $.each(lastContainer.seed.interfaceFields(), function(index, item){
-				// 	var path = item.path;
-				// 	if (item.attributeName !== "") {
-				// 		path += "," + item.attributeName;
-				// 	}
-				// 	lastContainer.elements.push(path);
-				// });
 			}
 
 			if (lastContainer.hasInterface) {
@@ -816,15 +883,7 @@ $(function(){
 			$.each(lastContainer.seed.interfaceFields(), function(index, item){
 		
 				if (isInterfaceIsPresent(item)) {
-					lastContainer.hasInterface = true;
-					
-					// var path = item.path;
-					// if (item.attributeName !== "") {
-					// 	path += "," + item.attributeName;
-					// }
-				
-					// lastContainer.elements.push(path);
-					
+					lastContainer.hasInterface = true;			
 				}
 			});
 
@@ -834,7 +893,8 @@ $(function(){
 				lastContainer.seed.interfaceFields()[0].label = "";
 				
 				if (lastContainer.minItems === 1) {
-					lastContainer.interfaceFields.push(lastContainer.seed.clone());
+					// lastContainer.interfaceFields.push(lastContainer.seed.clone());
+					lastContainer.addGroup();
 				}
 				entity[dialogType].workingContainers.pop();
 			} else {
@@ -847,9 +907,11 @@ $(function(){
 		var moveInterfaceElements = function(from, to) {
 			$.each(from.seed.interfaceFields(), function(index, item){
 				// if (item.hasInterface) {
+				
 				to.seed.interfaceFields.push(item);
-				// }
+
 			});
+			
 			// XXX Needed ?
 			if (to.label === "") {
 				to.label = from.label;
@@ -882,16 +944,14 @@ $(function(){
 				}
 			} else if (node.input !== "label" && node.input !== "header") {
 				// CREATE NODE
-				// if (node.input == "datePicker") {
-				// 	alert("picker!!! ");
-				// }
+				
 				var validate = last(entity[dialogType].shouldValidate);
 				if (validate && $.trim(node.value()) === ""){
-					// node.nodeMessage("Required value");
+			
 					node.nodeMessageClass("label label-danger");
 					entity.viewModel().validated(false);
 				} else {
-					// node.nodeMessage("");
+					
 					node.nodeMessageClass("label label-info");
 				}
 				createNode(node);
@@ -906,7 +966,13 @@ $(function(){
 				thisPathString,
 				selectior,
 				newElement;
-				
+			
+			if (node.attributeName !== "") {
+				fullPath.pop();
+				pathString = fullPath.toString();
+				maxDepth = fullPath.length;
+			}
+
 			if (node.attributeName !== "") {
 				--maxDepth;
 			}
@@ -1041,9 +1107,11 @@ $(function(){
 			}
 			
 			// create access condition
+	
 			var accessCondition = entity.selfWorking.createElement("accessCondition");
 			accessCondition.setAttribute("type", "use and reproduction");
-			accessCondition.appendChild(entity.selfWorking.createTextNode(accessConditionText));
+			$(accessCondition).html(accessConditionText);
+
 			mods.append(accessCondition);
 			
 			// create record info
@@ -1113,14 +1181,10 @@ $(function(){
 			var startingXML = '<?xml version="1.0" encoding="UTF-8"?>';
 
 			switch (dialogType) {
-				case 'person' :
-					startingXML += '<?xml-model href="http://cwrc.ca/schema/person.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>';
-					break;
-				case 'organization' :
-					startingXML += '<?xml-model href="http://cwrc.ca/schema/organization.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>';
-					break;
+				case 'person' :					
+				case 'organization' :					
 				case 'place' :
-					startingXML += '<?xml-model href="http://cwrc.ca/schema/place.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>';
+					startingXML += '<?xml-model href="http://cwrc.ca/schemas/entities.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>';
 					break;
 				case 'title' :
 					startingXML += '<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/mods.xsd">';
@@ -1148,9 +1212,10 @@ $(function(){
 		};
 
 		cD.processCallback = function() {
+			savingMessageOn();
 			entity.viewModel().validated(true);
 			var xml = getWorkingXML();
-			console.log(xml);
+			// console.log(xml);
 			if (entity.viewModel().validated()) {
 				var response;
 				if (entity.editing) {
@@ -1173,6 +1238,7 @@ $(function(){
 			} else {
 				entity[dialogType].error("Form not valid");
 			}
+			savingMessageOff();
 		};
 
 		var xmlToString = function(xmlData) {
@@ -1223,6 +1289,7 @@ $(function(){
 			that.maxItems = Number.MAX_VALUE; // infinity;
 			that.interfaceFields = ko.observableArray();
 			that.seed = seedModel();
+			that.fieldPadding = ko.observable("0px 0px 0px 0px")
 			// 1 1 Interleave
 			// 0 1 Optional
 			// 1 INF One or more
@@ -1259,6 +1326,7 @@ $(function(){
 				if (that.interfaceFields().length < that.maxItems) {
 					// that.interfaceFields.push(that.seed.clone());	//XXX SEED
 					var newClone = that.seed.clone();
+					
 					newClone.interfaceFields()[0].label = "";
 					that.interfaceFields.push(newClone);
 					setHelp();
@@ -1317,6 +1385,7 @@ $(function(){
 				result.path = this.path;
 				result.label = this.label;
 				result.header = this.header;
+				result.fieldPadding = ko.observable(this.fieldPadding);
 				// result.elements = this.elements;
 				// take label
 				// result.label = result.seed.interfaceFields()[0].label;
@@ -1388,6 +1457,8 @@ $(function(){
 			that.nodeMessage = ko.observable("");
 			that.nodeMessageClass = ko.observable("label label-info");
 			that.options = [];
+			that.isSet = false;
+			that.fieldPadding = ko.observable("0px 0px 0px 0px")
 			that.clone = function() {
 				var result = that.constructor();
 				result.label = that.label;
@@ -1398,6 +1469,8 @@ $(function(){
 				result.defaultValue = that.defaultValue;
 				result.nodeMessage = ko.observable(that.nodeMessage());
 				result.nodeMessageClass = ko.observable(that.nodeMessageClass());
+				result.isSet = that.isSet;
+				result.fieldPadding = ko.observable(that.fieldPadding());
 				if (result.defaultValue) {
 					result.value(that.value());
 				}
@@ -1511,16 +1584,34 @@ $(function(){
 
 		}
 
+		var visitChildrenPopulate = function(children, path) {
+			for (var i=0; i< children.length; ++i) {
+
+				if (path.length > 0 && children[i].nodeName == last(path).name) {
+					last(path).count++;
+				} else {
+					path.push({name: children[i].nodeName, count: 1});	
+				}
+				
+				visitNodeCWRCPopulate(children[i], path);
+				
+				if ((path.length > 0 && i < children.length-1 && children[i+1].nodeName != last(path).name) ||
+					i === children.length - 1) {
+						path.pop();	
+				}
+
+				
+			}
+		}
+
 		var populateCWRC = function(opts) {
 			// cwrc
 			
-			var workingXML = $.parseXML(opts.data);
-			
-			children = workingXML.childNodes;
+			var workingXML = $.parseXML(opts.data);			
 			var path = [];
-			for (var i=0; i< children.length; ++i) {
-				visitNodeCWRCPopulate(children[i], path, null);
-			}
+
+			visitChildrenPopulate(workingXML.childNodes, path);
+		
 		}
 		
 		var extractTitleMODS = function(opts){
@@ -1572,38 +1663,90 @@ $(function(){
 			return result;
 		}
 
-		var visitNodeCWRCPopulate = function (node, path, parentNode) {
-			path.push(node.nodeName);
+		var visitNodeCWRCPopulate = function(node, path) {
 			
-			var children = node.childNodes;	
-			for (var i=0; i< children.length; ++i) {		
-				var currentNode = children[i]
-				visitNodeCWRCPopulate(currentNode, path, node);
-			}
+			// path.push(node.nodeName);
+				
+			visitChildrenPopulate(node.childNodes, path);
 
 			var parentPath = path.slice(0, path.length-1);
 			var nodeValue = $.trim(node.nodeValue);
 			if (node.nodeType === 3 && nodeValue !== "") {
 				foundAndFilled(nodeValue, parentPath, entity.viewModel().interfaceFields());
 
-				var atts =parentNode.attributes;
+				var atts = node.parentNode.attributes;
 				for (var attIndex =0; attIndex < atts.length; ++attIndex) {
 					var currentAtt = atts.item(attIndex);
-					parentPath.push(currentAtt.name);
-					
+					parentPath.push({name: currentAtt.name, count : 1});					
 					foundAndFilled(currentAtt.value, parentPath, entity.viewModel().interfaceFields());
 					parentPath.pop();
 				}
 
 			} 
 
-			path.pop();
+			// path.pop();
 		}
+
+		var GetFromFields = function(currentSection, fields) {
+			var nodeNumber = currentSection.count;
+			var currentCount = 0;
+
+
+
+			
+			console.log(fields.input) // first one is a quantifier
+			$.each(fields, function(i, field){
+				console.log(field.toSource())
+				console.log(field.input)
+				if (field.input){
+					console.log(field.path)
+					var fieldPath = field.path.split(',');
+					if (last(fieldPath) === currentSection.name) {
+						++currentCount;
+	
+						if (currentCount === nodeNumber) {
+							return field;
+						}
+					}
+				}
+			});
+			
+			// not found, look for in seed
+
+
+
+		}
+
+		var NEW_foundAndFilled = function(nodeValue, parentPath) {
+			var pathNames = parentPath.map(function(p){
+				return p.name;
+			});
+
+			var field = entity.viewModel().interfaceFields().interfaceFields();
+
+			for (var i=0; i<parentPath.length; ++i) {
+				console.log(parentPath[i]);
+				var currentSection = parentPath[i];
+				field = GetFromFields(currentSection, field);
+			}
+
+			// field should be where the value goes
+			if (field.input == "radioButton" || field.input == "dynamicCheckbox") {
+				field.value(nodeValue.split(","));
+			} else {
+				field.value(nodeValue);
+			}
+
+		}
+
 
 		var foundOnSeed = function(field, parentPath) {
 			var result = false;
+			var pathNames = parentPath.map(function(p){
+				return p.name;
+			});
 			$.each(field.seed.interfaceFields(), function(i, currentField) {
-				if (parentPath.toString().indexOf(currentField.path) === 0) {
+				if (pathNames.toString().indexOf(currentField.path) === 0) {
 					result = true;
 					return false;
 				}
@@ -1616,18 +1759,17 @@ $(function(){
 		// XXX same problem ?
 
 		var foundAndFilled = function(nodeValue, parentPath, field) {
-			// 
+			var pathNames = parentPath.map(function(p){
+				return p.name;
+			});
 			if (field.input === "quantifier") {
 				// check path if sub continue
 
-
-				// if (parentPath.toString().indexOf(field.path) > -1) {
-				if (parentPath.toString().indexOf(field.path) === 0) {
+				if (pathNames.toString().indexOf(field.path) === 0) {
 					var foundOnFields = false;
 					// alert(field.interfaceFields().length)
-					$.each(field.interfaceFields(), function(i, currentField) {
-						
-						if(foundAndFilled(nodeValue, parentPath, currentField)) {							
+					$.each(field.interfaceFields(), function(i, currentField) {						
+						if(foundAndFilled(nodeValue, parentPath, currentField)) {
 							foundOnFields = true;
 							return false; // break out of loop
 						}
@@ -1640,13 +1782,11 @@ $(function(){
 
 							field.addGroup();
 
-							var lastfield = last(field.interfaceFields()) ; 					
+							var lastfield = last(field.interfaceFields());						
 							return foundAndFilled(nodeValue, parentPath, lastfield);
 						}
-					}
-					
+					}					
 				}
-
 
 			} else if(field.input === "seed") {
 				var foundOnSeedCheck = false;
@@ -1663,34 +1803,58 @@ $(function(){
 					return true;
 				}
 
-			}else if (field.input !== " header") {				
-				if (field.path == parentPath) {
-					// console.log(field.input + " " + nodeValue);
-					if (field.input == "radioButton" || field.input == "dynamicCheckbox") {
-						field.value(nodeValue.split(","));
-					} else {
-						field.value(nodeValue);		
-					}
+			}else if (field.input !== "header") {				
+				if (field.path == pathNames) {
 					
-					
-					// XXX need to add another group in previous container
+					if (! field.isSet) {
+						field.isSet = true;
+						if (field.input == "radioButton" || field.input == "dynamicCheckbox") {
+							field.value(nodeValue.split(","));
+						} else {
+							field.value(nodeValue);
+						}
+					} else if (field.isSet) {				
+						return false;
+					} 				
 					return true;
-				}
-				// return true;
+				}				
 			}
+		}
+
+		var addStartValue = function(value, path) {
+			// clear ors |
+			for (var i=0; i< path.length; ++i) {
+				if (path[i].indexOf("|") != -1) {
+					path[i] = dialogType;
+				}
+			}
+			foundAndFilled(value, path, entity.viewModel().interfaceFields());
 		}
 
 		// pop create		
 
-		var popCreatePerson = function(opts) {
-			dialogType = "person";
-			entity.viewModel().dialogTitle("Add Person");
+		var popCreateEntity = function(opts) {
+			if (!opts.editing) {
+				entity.editing = false;
+				entity.editingPID = "";	
+			}
 			completeDialog(opts);
+			// set default value			
+			if (opts.startValue && opts.startValue.trim() != "") {
+				addStartValue(opts.startValue, entity.startValuePath);	
+			}			
 			$('#cwrcEntityModal').modal('show');
 			// hackish
 			setTimeout(function(){
 				$(".modal-body-area").scrollTop(0);
 			},5);
+		}
+
+		var popCreatePerson = function(opts) {
+			dialogType = "person";
+			entity.viewModel().dialogTitle("Add Person");
+			popCreateEntity(opts);
+			
 		};
 
 		cD.popCreatePerson = popCreatePerson;
@@ -1698,12 +1862,7 @@ $(function(){
 		var popCreateOrganization = function(opts) {
 			dialogType = "organization";
 			entity.viewModel().dialogTitle("Add Organization");
-			completeDialog(opts);
-			$('#cwrcEntityModal').modal('show');
-			// hackish
-			setTimeout(function(){
-				$(".modal-body-area").scrollTop(0);
-			},5);
+			popCreateEntity(opts);
 			
 		};
 
@@ -1712,12 +1871,7 @@ $(function(){
 		var popCreatePlace = function(opts) {
 			dialogType = "place";
 			entity.viewModel().dialogTitle("Add Place");
-			completeDialog(opts);
-			$('#cwrcEntityModal').modal('show');
-			// hackish
-			setTimeout(function(){
-				$(".modal-body-area").scrollTop(0);
-			},5);
+			popCreateEntity(opts);
 			
 		};
 
@@ -1725,6 +1879,10 @@ $(function(){
 		
 		var popCreateTitle = function(opts, data) {
 			dialogType = "title";
+			if (!opts.editing) {
+				entity.editing = false;
+				entity.editingPID = "";	
+			}
 			entity.viewModel().dialogTitle(entity.editing ? "Edit " + data.title : "Add Title");
 			completeTitleDialog(opts, data);
 			$('#cwrcTitleModal').modal('show');
@@ -1748,9 +1906,14 @@ $(function(){
 		
 		// pop edit
 
-		var popEditPerson = function(opts) {
+		var prepareEditingDialog = function(opts) {
 			entity.editing = true;
 			entity.editingPID = opts.id;
+			opts.editing = entity.editing;
+		}
+
+		var popEditPerson = function(opts) {
+			prepareEditingDialog(opts);
 			cD.popCreatePerson(opts);
 			populateDialog(opts);
 		};
@@ -1758,8 +1921,7 @@ $(function(){
 		cD.popEditPerson = popEditPerson;
 
 		var popEditOrganization = function(opts) {
-			entity.editing = true;
-			entity.editingPID = opts.id;
+			prepareEditingDialog(opts);
 			cD.popCreateOrganization(opts);
 			populateDialog(opts);
 		};
@@ -1767,8 +1929,7 @@ $(function(){
 		cD.popEditOrganization = popEditOrganization;
 
 		var popEditPlace = function(opts) {
-			entity.editing = true;
-			entity.editingPID = opts.id;
+			prepareEditingDialog(opts);
 			cD.popCreatePlace(opts);
 			populateDialog(opts);
 		}
@@ -1776,11 +1937,18 @@ $(function(){
 		cD.popEditPlace = popEditPlace;
 		
 		var popEditTitle = function(opts) {
-			entity.editing = true;
+			prepareEditingDialog(opts);
 			cD.popCreateTitle(opts, extractTitleMODS(opts));
 		}
 
 		cD.popEditTitle = popEditTitle;
+
+		cD.popEdit = {
+			person: popEditPerson,
+			organization : popEditOrganization,
+			place : popEditPlace,
+			title : popEditTitle
+		}
 
 		///////////////////////////////////////////////////////////////////////
 		// Search
@@ -1803,20 +1971,58 @@ $(function(){
 				// scrape : specs.scrape,
 				htmlify : specs.htmlify,
 				datatype: specs.datatype,
-				showPanel: ko.observable(true)
+				showPanel: ko.observable(true),
+				page: ko.observable(0),
+				paginate: specs.paginate === null ? function(e){} : function(scope, event){
+					var page = parseInt($(event.currentTarget).attr("data"));
+					
+					if(page <= that.maxPage() && page >= 0){
+						specs.paginate(page, that);
+					}
+				},
+				maxPage: ko.observable(0),
+				showPaginate: ko.observable(specs.paginate != null),
+				paginateNumber: function(index){
+					if(that.page() < 3){
+						return index;
+					}else if(that.page() >= (that.maxPage() - 3) ){
+						return index + that.maxPage() - 5;
+					}
+					
+					return index - 2 + that.page();
+				}
 			}
 
 			return that;
 		}
 
-		search.processCWRCSearch = function(queryString) {
+		search.processCWRCSearch = function(queryString, page) {
+			var perPage = 100;
+			search.linkedDataSources.cwrc.page(page);
+			
+			$(".linkedDataMessage").text("");
+			$(".linkedDataMessage").removeClass("fa fa-spin fa-refresh");
+			$("#CWRCDataMessage").addClass("fa fa-spin fa-refresh");
 			search.processData = cwrcApi[dialogType].getEntity;
 			search.linkedDataSources.cwrc.ajaxRequest = cwrcApi[dialogType].searchEntity({
+				limit: perPage,
+				page: page ? page : 0,
 				query : queryString,
 				success : function(result){
 					$.each(result["response"]["objects"], function(i, doc){
 						search.linkedDataSources.cwrc.results.push(search.getResultFromCWRC(doc));
 					});
+					$(".linkedDataMessage").removeClass("fa fa-spin fa-refresh");
+					//$("#CWRCDataMessage").text("Results: " + search.linkedDataSources.cwrc.results().length );
+					
+					// Calculate the range displayed in the message
+					var bottom = 1 + (perPage * page);
+					var top = (page + 1) * perPage;
+					top = result["response"]["numFound"] < top ? result["response"]["numFound"] : top;
+					
+					$("#CWRCDataMessage").text("Results: " +  bottom + " - " + top);	
+					
+					search.linkedDataSources.cwrc.maxPage(Math.floor(result["response"]["numFound"] / perPage))
 				},
 				error: function(result) {
 					console.log(result);
@@ -1830,7 +2036,7 @@ $(function(){
 		}
 
 		search.processViafData = function(id) {
-			var url = "http://apps.testing.cwrc.ca/services/viaf/" + id + "/viaf.xml";
+			var url = viafUrl + "/" + id + "/viaf.xml";
 			var result = "";
 			$.ajax({
 				url: url,
@@ -1847,9 +2053,17 @@ $(function(){
 			return result;
 		}
 
-		search.processVIAFSearch = function(queryString) {
+		search.processVIAFSearch = function(queryString, page) {
+			// Calculate Page Information
+			var perPage = 100;
+			var bottom = 1 + (page * perPage);
+			search.linkedDataSources.viaf.page(page);
+			
+			$(".linkedDataMessage").text("");
+			$(".linkedDataMessage").removeClass("fa fa-spin fa-refresh");
+			$("#VIAFDataMessage").addClass("fa fa-spin fa-refresh");
 			search.processData = search.processViafData;
-			var viafUrl = "http://apps.testing.cwrc.ca/services/viaf/search";
+			var viafSearchUrl = viafUrl + "/search";
 			var viafPrefix = "";
 
 			switch (dialogType) {
@@ -1868,15 +2082,26 @@ $(function(){
 			}
 			var quotedQueryString = '"' + queryString + '"';
 			search.linkedDataSources.viaf.ajaxRequest = $.ajax({
-				url: viafUrl,
+				url: viafSearchUrl,
 				// dataType : 'json',
 				dataType : "xml",
 				processData : false,
-				data : "query=" + viafPrefix + quotedQueryString + "&httpAccept=text/xml",
+				data : "query=" + viafPrefix + quotedQueryString + "&maximumRecords=" + perPage + "&startRecord=" + bottom + "&httpAccept=text/xml",
 				success: function(response) {
 					$('searchRetrieveResponse record', response).each(function(index, spec) {
 						search.linkedDataSources.viaf.results.push(search.getResultFromVIAF(spec, index));
 					});
+					$(".linkedDataMessage").removeClass("fa fa-spin fa-refresh");
+					$("#VIAFDataMessage").text("Results: " + search.linkedDataSources.viaf.results().length );
+					
+					// Calculate the range displayed in the message
+					var totalResults = parseInt($('searchRetrieveResponse numberOfRecords', response).text());
+					var top = (page + 1) * perPage;
+					top = totalResults < top ? totalResults : top;
+					
+					$("#VIAFDataMessage").text("Results: " +  bottom + " - " + top);	
+					
+					search.linkedDataSources.viaf.maxPage(Math.floor(totalResults / perPage));
 				},
 				error : function(xhr, ajaxOptions, thrownError) {
 					if (ajaxOptions !== "abort") {
@@ -1887,8 +2112,10 @@ $(function(){
 		}
 		
 		search.processGeoNameSearch = function(queryString) {
+			$(".linkedDataMessage").text("");
+			$(".linkedDataMessage").removeClass("fa fa-spin fa-refresh");
+			$("#GeoNamesDataMessage").addClass("fa fa-spin fa-refresh");
 			search.processData = search.processGeoNameData;
-			
 			var quotedQueryString = encodeURI(queryString);
 			search.linkedDataSources.viaf.ajaxRequest = $.ajax({
 				url: geonameUrl,
@@ -1902,6 +2129,8 @@ $(function(){
 						search.linkedDataSources.geonames.results.push(search.getResultFromGeoName(spec, index));
 						search.linkedDataSources.geonames.response.push(spec);
 					});
+					$(".linkedDataMessage").removeClass("fa fa-spin fa-refresh");
+					$("#GeoNamesDataMessage").text("Results: " + search.linkedDataSources.geonames.results().length);
 				},
 				error : function(xhr, ajaxOptions, thrownError) {
 					if (ajaxOptions !== "abort") {
@@ -1938,20 +2167,36 @@ $(function(){
 			// if (birthValue !== "" && deathValue !== "") {
 			// 	data.birthDeath = birthValue + "-" + deathValue;	
 			// }
-			data.birthDeath = "";
 
-			if (birthValue !== "") {
-				data.birthDeath += birthValue;
-			}
-			data.birthDeath += " - ";
-			if (deathValue !== "") {
-				data.birthDeath += deathValue;
-			}
-
-			if (data.birthDeath === " - ") {
-				data.birthDeath = "";
-			}
+			var dateSpacer = '...';
 			
+			birthValue = birthValue === "" ? dateSpacer : birthValue;
+			deathValue = deathValue === "" ? dateSpacer : deathValue;
+
+			if(birthValue == dateSpacer && deathValue == dateSpacer) {
+				data.birthDeath = '';
+			} else {
+				data.birthDeath = birthValue + " - " + deathValue;				
+			}
+
+			// data.birthDeath = birthValue + " - " + deathValue;
+			// data.birthdeath = data.birthDeath === "... - ..." ?  : data.birthDeath;
+			
+			// data.birthDeath = "";
+
+			// if (birthValue !== "") {
+			// 	data.birthDeath += birthValue;
+			// }
+			// data.birthDeath += " - ";
+			// if (deathValue !== "") {
+			// 	data.birthDeath += deathValue;
+			// }
+
+			// if (data.birthDeath === " - ") {
+			// 	data.birthDeath = "";
+			// }
+			
+
 			// gender
 			var genderSelector = "entity > person > description > genders > gender";
 			data.gender = $(workingXML).find(genderSelector).first().text();
@@ -2139,32 +2384,73 @@ $(function(){
 
 
 		search.htmlifyVIAFTitle = function(){
-			var result = "";
-			var data = search.selectedData;
+			// var result = "";
+			// var data = search.selectedData;
 
-			result += "<div><ul>";		
-			if (data.url !== "") {
-				result += "<li>URL: <a href='" + data.url + "'>" + data.url +"</a></li>";
+			// result += "<div><ul>";		
+			// if (data.url !== "") {
+			// 	result += "<li>URL: <a href='" + data.url + "'>" + data.url +"</a></li>";
+			// }
+			// result += "</ul></div>";
+			// return result;
+			var data = search.selectedData;
+			var head = $("<div></div>");
+			var list = $("<ul></ul>");
+			var listItem;
+			
+			if (data.authors) {
+				listItem = $("<li></li>");	
+				listItem.append("Author: " + data.authors[0]);
+				list.append(listItem);
 			}
-			result += "</ul></div>";
-			return result;
+
+			if (data.date) {
+				listItem = $("<li></li>");	
+				listItem.append("Date: " + data.date);
+				list.append(listItem);
+			}
+
+			if (data.url) {
+				listItem = $("<li></li>");	
+				listItem.append(search.getAnchor(data.url));
+				list.append(listItem);
+			}
+			
+			head.append(list);
+			
+			return xmlToString(head[0]);
+		};
+		
+		search.paginateSearch = function(page, dataSource){
+			for (var key in search.linkedDataSources) {
+				var lds = search.linkedDataSources[key];
+				lds.results.removeAll();
+			}
+			
+			var queryString = search.queryString();
+			if(queryString && queryString != null && queryString.length > 0){
+				dataSource.processSearch(search.queryString(), page);
+			}
 		};
 
 		search.linkedDataSources = {
 			"cwrc": search.getLinkedDataSource({
 				"name": "CWRC", 
 				"processSearch": search.processCWRCSearch,
-				"datatype": ["person", "place", "organization", "title"]
+				"datatype": ["person", "place", "organization", "title"],
+				"paginate": search.paginateSearch
 			}),
 			"viaf": search.getLinkedDataSource({
 				"name": "VIAF", 
 				"processSearch": search.processVIAFSearch,
-				"datatype": ["person", "organization", "title"]
+				"datatype": ["person", "organization", "title"],
+				"paginate": search.paginateSearch
 			}),
 			"geonames": search.getLinkedDataSource({
 				"name": "GeoNames",
 				"processSearch": search.processGeoNameSearch,
-				"datatype": ["place"]
+				"datatype": ["place"],
+				"paginate": null
 			})
 		}
 
@@ -2183,17 +2469,37 @@ $(function(){
 				result +=
 				'										<div class="panel panel-default" data-bind="visible: $root.linkedDataSources.' + key+ '.showPanel">' +
 				'											<div data-name="'+key+'" class="panel-heading panel-title" data-toggle="collapse" data-parent="#accordion" href="#collapse'+key+'" data-bind="{click:$root.selectLinkedDataSource}">' +
-				'														' + lds.name +
+				'														' + lds.name +'<span class="pull-right linkedDataMessage" id="'+lds.name+'DataMessage"></span>' +
 				'											</div>' +
 				'											<div id="collapse'+key+'"" class="panel-collapse collapse '+(function(){return index ===0 ? "in" : ""})()+'">' +
-				'												<div class="panel-body">' +
+				'												<div class="panel-body">' +				
+				// paginator
+				'									<div class="paginatorArea" id="'+lds.name+'Paginator" data-bind="{if: $root.linkedDataSources[\'' + key + '\'].showPaginate}">' +
+				//'									<span data-bind="{text: $root.linkedDataSources[\'' + key + '\'].page}">Results 100</span>'+
+				// '									<select class="form-control">' +
+				// '										<option>1</option>' +
+				// '										<option>2</option>' +
+				// '										<option>3</option>' +
+				// '										<option>4</option>' +
+				// '										<option>5</option>' +
+				// '									</select>' +
+				'									<ul class="pagination  pagination-sm nomargin" data-bind="with: $root.linkedDataSources[\'' + key + '\']">' +
+				'										<li data-bind="{css: {disabled: page() <= 0}}"><a href="#" data-bind="{attr: {data: page() - 1}, click: paginate}">&laquo;</a></li>' +
+				'										<li data-bind="{css: {active: page() == paginateNumber(0), disabled: paginateNumber(0) > maxPage()}}"><a href="#" data-bind="{attr: {data: paginateNumber(0)}, text: paginateNumber(0) + 1, click: paginate}" data="0">1</a></li>' +
+				'										<li data-bind="{css: {active: page() == paginateNumber(1), disabled: paginateNumber(1) > maxPage()}}"><a href="#" data-bind="{attr: {data: paginateNumber(1)}, text: paginateNumber(1) + 1, click: paginate}" data="1">2</a></li>' +
+				'										<li data-bind="{css: {active: page() == paginateNumber(2), disabled: paginateNumber(2) > maxPage()}}"><a href="#" data-bind="{attr: {data: paginateNumber(2)}, text: paginateNumber(2) + 1, click: paginate}" data="2">3</a></li>' +
+				'										<li data-bind="{css: {active: page() == paginateNumber(3), disabled: paginateNumber(3) > maxPage()}}"><a href="#" data-bind="{attr: {data: paginateNumber(3)}, text: paginateNumber(3) + 1, click: paginate}" data="3">4</a></li>' +
+				'										<li data-bind="{css: {active: page() == paginateNumber(4), disabled: paginateNumber(4) > maxPage()}}"><a href="#" data-bind="{attr: {data: paginateNumber(4)}, text: paginateNumber(4) + 1, click: paginate}" data="4">5</a></li>' +
+				'										<li data-bind="{css: {disabled: page() >= maxPage()}}"><a href="#" data-bind="{attr: {data: page() + 1}, click: paginate}">&raquo;</a></li>' +
+				'									</ul>' +
+				'									</div>' +
 				// content
 				'									<div class="list-group cwrc-result-area">' +
 				'										<!-- ko foreach: linkedDataSources.'+key+'.results -->' +
 				'										<a href="#" class="list-group-item" data-bind="{click:$root.selectResult, event: { dblclick: $root.returnAndHide }, css: {active: selected}}" >' +
 				'											<h5 class="list-group-item-heading">' +
 				'												<span data-bind="text: name"></span>' +
-				'												<span class="cwrc-entity-info pull-right glyphicon glyphicon-info-sign" data-bind="click: $root.showInfoPopOver" data-content="Test content" data-original-title="Test title"></span>' +
+				'												<span class="cwrc-entity-info pull-right fa fa-info-circle" data-bind="click: $root.showInfoPopOver" data-content="Test content" data-original-title="Test title"></span>' +
 				'											</h5>' +
 				// '											<h5 class="list-group-item-heading"> <span data-bind="text:data[\'dc.title\']"></span> - <span data-bind="text:source"></span></h5>' +
 				// '											<p class="list-group-item-text"><span data-bind="text:data.id"></span></p>' +
@@ -2225,12 +2531,6 @@ $(function(){
 			'												<div class="panel-body">' +
 			// content
 			'									<div class="list-group cwrc-result-area">' +
-			// '										<!-- ko foreach: results.cwrc -->' +
-			// '										<a href="#" class="list-group-item" data-bind="{click:$root.selectResult, css: {active: selected}}" >' +
-			// '											<h5 class="list-group-item-heading"> <span data-bind="text:data[\'dc.title\']"></span> - <span data-bind="text:source"></span></h5>' +
-			// '											<p class="list-group-item-text"><span data-bind="text:data.id"></span></p>' +
-			// '										</a>' +
-			// '										<!-- /ko -->' +
 			'									</div>' +
 			// end of content
 			'												</div>' +
@@ -2295,6 +2595,40 @@ $(function(){
 			$('body').append(searchTemplates);
 
 
+			ko.bindingHandlers.datepicker = {
+				init: function(element, valueAccessor, allBindingsAccessor) {
+			
+					var options = {
+						format: "yyyy-mm-dd",
+						viewMode: 2,
+						autoclose: true
+					}
+				
+					$(element).siblings(':button').first().datepicker(options);
+				
+					ko.utils.registerEventHandler($(element).siblings(':button').first(), "changeDate", function(event) {
+						var value = valueAccessor();
+						if (ko.isObservable(value)) {
+							var dateVal = ko.toJSON(event.date).substr(1, 10);
+							value(dateVal);					
+							$(element).val(dateVal)
+						}
+
+					});
+
+					ko.utils.registerEventHandler(element, 'keyup', function(event) {
+						var value = valueAccessor();
+						if (ko.isObservable(value)) {
+							var dateVal = event.target.value
+							value(dateVal);				
+						}
+					});
+				},
+				update: function(element, valueAccessor) {
+					var value = valueAccessor();
+					$(element).val(ko.unwrap(value));
+				}
+			};
 
 			
 
@@ -2308,11 +2642,14 @@ $(function(){
 
 			ko.applyBindings(search, $("#cDSearch")[0]);
 			$("#cwrcSearchDialog").modal(params.modalOptions);
+			
+
 			$("#cwrcSearchDialog").draggable({	
 				handle: ".modal-header"
 			});
-			$("#cwrcSearchDialog").on('hidden.bs.modal', function () {
+			$("#cwrcSearchDialog").on('hidden.bs.modal', function (e) { 
   				// stop ajax call if exists
+  				search.clear();
 				for(var key in search.linkedDataSources) {
 					var lds = search.linkedDataSources[key];
 					if (lds.ajaxRequest) {
@@ -2320,6 +2657,10 @@ $(function(){
 					}
 				}
 				search.clear();
+			});
+
+			$("#cwrcSearchDialog").on('show.bs.modal', function (e) { 
+				$('.modal-body-area').css('max-height',$( window ).height()*0.7);
 			});
 
 		}
@@ -2335,6 +2676,9 @@ $(function(){
 			search.queryString("");
 			search.initiateInfo();
 			search.removeInfoPopOver();
+			$(".linkedDataMessage").text("");
+			$(".linkedDataMessage").removeClass("fa fa-spin fa-refresh");
+			$("#searchEntityInput").val("");
 		};
 
 		// search.delayedTimeout;
@@ -2530,6 +2874,15 @@ $(function(){
 		}
 		
 		search.completeViafTitleResult = function(that, specs, i) {
+			var authorSelector = search.viafSelectorHelper("recordData > ns"+i+"\\:VIAFCluster > ns"+i+"\\:mainHeadings > ns"+i+"\\:mainHeadingEl > ns"+i+"\\:datafield > ns"+i+"\\:subfield[code='a']");
+			var dateSelector = search.viafSelectorHelper("recordData > ns"+i+"\\:VIAFCluster > ns"+i+"\\:mainHeadings > ns"+i+"\\:mainHeadingEl > ns"+i+"\\:datafield > ns"+i+"\\:subfield[code='d']");
+			
+			var date = $(specs).find(dateSelector).first().text();
+			that.date = date;
+			
+			var authors = [];
+			authors.push($(specs).find(authorSelector).first().text());			
+			that.authors = authors;
 			
 		}
 
@@ -2538,6 +2891,11 @@ $(function(){
 				entry.selected(false) ;
 			});
 			result.selected(true);
+
+			if (search.selectedData != undefined && search.selectedData != null && search.selectedData != result) {
+				search.removeInfoPopOver();
+			}
+
 			search.selectedData = result;
 		};
 
@@ -2564,7 +2922,7 @@ $(function(){
 						lds.ajaxRequest.abort();	
 					}
 				}
-				search.linkedDataSources[search.selectedLinkedDataSource].processSearch(queryString);
+				search.linkedDataSources[search.selectedLinkedDataSource].processSearch(queryString, 0);
 			}
 		};
 
@@ -2616,7 +2974,8 @@ $(function(){
 		}
 
 		search.showInfoPopOver = function(clicked) {
-			search.selectResult(clicked);
+			// search.selectResult(clicked);
+			search.selectedData = clicked;
 			$("#search-modal").popover("show");
 			$(".popover").find(".arrow").removeClass("arrow");
 		}
@@ -2659,6 +3018,11 @@ $(function(){
 			// alert(search.buttons[0].label)
 			search.success = typeof opts.success === undefined ? function(){} : opts.success;
 			search.error = typeof opts.error === undefined ? function(){} : opts.error;
+
+			if (opts.query) {
+				$("#searchEntityInput").val(opts.query);
+				search.performSearch(opts.query);
+			}
 		}
 
 		var popSearchPerson = function(opts) {
@@ -2703,10 +3067,10 @@ $(function(){
 		cD.popSearchTitle = popSearchTitle;
 
 		var popSearch = {
-			person: popSearchPerson,
-			organization : popSearchOrganization,
-			place : popSearchPlace,
-			title: popSearchTitle
+			person: cD.popSearchPerson,
+			organization : cD.popSearchOrganization,
+			place : cD.popSearchPlace,
+			title: cD.popSearchTitle
 		};
 
 		cD.popSearch = popSearch;

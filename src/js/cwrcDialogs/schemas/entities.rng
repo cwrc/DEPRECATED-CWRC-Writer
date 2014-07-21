@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
+     MRB: Tue 27-May-2014: Added schema code and interface annotation code for a <factuality> element in /entity/*/
+     description/factuality, with values of real, fictional, or both (i.e., a mixture of both real and fictional)
      MRB: Tue 22-Apr-2014: Added interface annotation code to render header labels for the four top-level element
      sections: recordInfo, identity, description, and relations
      MRB: Fri 14-Mar-2014: Added two new values to the <gender> element: "transgendered male-to-female", and
@@ -227,7 +229,7 @@
                 other FOXML datastreams.</a:documentation>
             <xs:annotation>
                 <xs:appinfo>
-                    <interface-field path="entity/person/recordInfo">
+                    <interface-field leftPadding="40" path="entity/person/recordInfo">
                         <label xml:lang="en">Record information</label>
                         <input>header</input>
                     </interface-field>
@@ -410,12 +412,12 @@
             <a:documentation>This section captures descriptive data about a CWRC entity record</a:documentation>
             <xs:annotation>
                 <xs:appinfo>
-                    <interface-field path="entity/person/description">             
+                    <interface-field path="entity/person/description">
                         <label xml:lang="en">Description</label>
                         <input>header</input>
                     </interface-field>
                 </xs:appinfo>
-            </xs:annotation> 
+            </xs:annotation>
             <optional>
                 <ref name="id-attribute"/>
             </optional>
@@ -444,6 +446,9 @@
                 <optional>
                     <ref name="relatedResources-element"/>
                 </optional>
+                <optional>
+                    <ref name="factuality-element"/>
+                </optional>
             </interleave>
         </element>
     </define>
@@ -454,12 +459,12 @@
             <a:documentation>This section captures descriptive data about a CWRC entity record</a:documentation>
             <xs:annotation>
                 <xs:appinfo>
-                    <interface-field path="entity/organization/description">             
+                    <interface-field path="entity/organization/description">
                         <label xml:lang="en">Description</label>
                         <input>header</input>
                     </interface-field>
                 </xs:appinfo>
-            </xs:annotation> 
+            </xs:annotation>
             <optional>
                 <ref name="id-attribute"/>
             </optional>
@@ -471,13 +476,13 @@
                     <ref name="existDates-element"/>
                 </optional>
                 <optional>
-                    <ref name="researchInterests-element"/>
-                </optional>
-                <optional>
                     <ref name="descriptiveNotes-element"/>
                 </optional>
                 <optional>
                     <ref name="relatedResources-element"/>
+                </optional>
+                <optional>
+                    <ref name="factuality-element"/>
                 </optional>
             </interleave>
         </element>
@@ -490,12 +495,12 @@
             <a:documentation>This section captures descriptive data about a CWRC entity record</a:documentation>
             <xs:annotation>
                 <xs:appinfo>
-                    <interface-field path="entity/place/description">             
+                    <interface-field path="entity/place/description">
                         <label xml:lang="en">Description</label>
                         <input>header</input>
                     </interface-field>
                 </xs:appinfo>
-            </xs:annotation> 
+            </xs:annotation>
             <optional>
                 <ref name="id-attribute"/>
             </optional>
@@ -539,6 +544,9 @@
                 <optional>
                     <ref name="timeZoneOffset-element"/>
                 </optional>
+                <optional>
+                    <ref name="factuality-element"/>
+                </optional>
             </interleave>
         </element>
     </define>
@@ -566,7 +574,7 @@
 
     <define name="researchInterests-element">
         <element name="researchInterests">
-            <a:documentation>A group of research interest terms associated with a CWRC entity record.
+            <a:documentation>A group of research interest terms associated with a CWRC person entity record.
                 For more information see interest element.</a:documentation>
             <zeroOrMore>
                 <ref name="interest-element"/>
@@ -635,10 +643,41 @@
 
     <define name="interest-element">
         <element name="interest">
-            <a:documentation>This field can capture a topic of interest associated with an entity (person
-                or organization).</a:documentation>
+            <a:documentation>This field can capture a topic of interest associated with a person entity.</a:documentation>
             <optional>
                 <ref name="term-element"/>
+            </optional>
+        </element>
+    </define>
+
+    <!-- MRB: Tue 27-May-2014: Added a new factuality element -->
+    <define name="factuality-element">
+        <element name="factuality">
+            <a:documentation>Factuality captures whether or not the entity (person, organization, or place) is
+                real, fictional, or both (i.e., a mixture of both real and fictional).</a:documentation>
+            <xs:annotation>
+                <xs:appinfo>
+                    <interface-field path="entity/person|organization|place/description/factuality">
+                        <help-text xml:lang="en">Factuality captures whether or not the entity (person, organization, or place) is
+                            real, fictional, or both (i.e., a mixture of both real and fictional).</help-text>
+                        <label xml:lang="en">Factuality</label>
+                        <input>combobox</input>
+                    </interface-field>
+                    <values>
+                        <choice>
+                            <value a:en="real">real</value>
+                            <value a:en="fictional">fictional</value>
+                            <value a:en="both">both</value>
+                        </choice>
+                    </values>
+                </xs:appinfo>
+            </xs:annotation>
+            <optional>
+                <choice>
+                    <value a:en="real">real</value>
+                    <value a:en="fictional">fictional</value>
+                    <value a:en="both">both</value>
+                </choice>
             </optional>
         </element>
     </define>
@@ -720,9 +759,9 @@
                         <input>textField</input>
                     </interface-field>
 
-                    <interface-field path="entity/person|organization/description/researchInterests/interest/term">
+                    <interface-field path="entity/person/description/researchInterests/interest/term">
                         <help-text xml:lang="en">This field can capture a topic of interest to the
-                            present entity. </help-text>
+                            person entity. </help-text>
                         <label xml:lang="en">Research Interest</label>
                         <input>textField</input>
                     </interface-field>
@@ -1437,7 +1476,7 @@
             <xs:annotation>
                 <xs:appinfo>
 
-                    <interface-field path="entity/person|organization|place/identity/preferredForm">
+                    <interface-field leftPadding="40" path="entity/person|organization|place/identity/preferredForm">
                         <label xml:lang="en">Standard Name</label>
                         <help-text xml:lang="en">Use this section to flag a name as a preferred form
                             to identify a person, organization, or place.</help-text>
@@ -1475,7 +1514,7 @@
             <xs:annotation>
                 <xs:appinfo>
 
-                    <interface-field path="entity/person|organization|place/identity/preferredForm/namePart">
+                    <interface-field leftPadding="20" startValue="true" path="entity/person|organization|place/identity/preferredForm/namePart">
                         <label xml:lang="en">Name Part</label>
                         <help-text xml:lang="en">Required. Provide the person's, organization's, or place's
                             standard name, by part, in natural order. Add more name parts if
@@ -1740,7 +1779,7 @@
             <xs:annotation>
                 <xs:appinfo>
 
-                    <interface-field path="entity/person|organization/description/existDates">
+                    <interface-field path="entity/person|organization|place/description/existDates">
                         <help-text xml:lang="en">If known, enter dates of existence (i.e. birth,
                             death, fl., incorporation, establishment, etc.), of the present 
                             entity.</help-text>
@@ -2287,15 +2326,15 @@
                     </interface-field>
 
                     <interface-field path="entity/person|organization|place/description/existDates/dateRange/fromDate/standardDate">
-                        <help-text xml:lang="en">If known, add date ranges of existence (i.e. birth,
-                            death, fl., incorporation, establishment, etc.).</help-text>
+                        <help-text xml:lang="en">Select a date from date picker or enter a date in
+                            the format yyyy-mm-dd, yyyy-mm, or yyyy.</help-text>
                         <label xml:lang="en">From</label>
                         <input>datePicker</input>
                     </interface-field>
 
                     <interface-field path="entity/person|organization|place/description/existDates/dateRange/toDate/standardDate">
-                        <help-text xml:lang="en">If known, add date ranges of existence (i.e. birth,
-                            death, fl., incorporation, establishment, etc.).</help-text>
+                        <help-text xml:lang="en">Select a date from date picker or enter a date in
+                            the format yyyy-mm-dd, yyyy-mm, or yyyy.</help-text>
                         <label xml:lang="en">To</label>
                         <input>datePicker</input>
                     </interface-field>
@@ -2370,8 +2409,8 @@
         <element name="dateType" a:defaultValue="undefined">
             <a:documentation>Captures a date type in relation to its association with the entity described.
                 Recommended values - Person: birth, death, marriage, flourish, circa.
-                Organization, and place: start, end, flourish, circa. Works: original issuance, edition,
-                reprint.</a:documentation>
+                Organization, and place: start, end, flourish, circa, established. Works: original issuance,
+                edition, reprint.</a:documentation>
 
             <xs:annotation>
                 <xs:appinfo>
@@ -2867,9 +2906,9 @@
                 projects use the present name as a preferred form in their local
                 context.</a:documentation>
 
-            <oneOrMore>
+            <zeroOrMore>
                 <ref name="projectId-element"/>
-            </oneOrMore>
+            </zeroOrMore>
         </element>
     </define>
 
