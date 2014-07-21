@@ -134,11 +134,11 @@ return function(config) {
 	 */
 	w.selectStructureTag = function(id, selectContentsOnly) {
 		selectContentsOnly = selectContentsOnly == null ? false : selectContentsOnly;
-		w.editor.currentStruct = id;
+		
 		var node = $('#'+id, w.editor.getBody());
 		var nodeEl = node[0];
-		
 		if (nodeEl != null) {
+			w.editor.currentStruct = id;
 			var rng = w.editor.dom.createRng();
 			if (selectContentsOnly) {
 				if (tinymce.isWebKit) {
