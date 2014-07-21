@@ -88,7 +88,8 @@ return function(config) {
 			var parent = prevHighlight.parent()[0];
 			prevHighlight.contents().unwrap();
 			parent.normalize();
-			
+		}
+		if (w.editor.currentEntity != null) {
 			w.event('entityUnfocused').publish(w.editor.currentEntity);
 		}
 		
@@ -98,11 +99,12 @@ return function(config) {
 			w.editor.currentEntity = id;
 			var type = w.entities[id].props.type;
 			
+			
+			var markers = w.editor.dom.select('span[name="'+id+'"]');
+			var start = markers[0];
+			var end = markers[1];
+			
 			if (type !== 'note' && type !== 'citation' && type !== 'keyword') {
-				var markers = w.editor.dom.select('span[name="'+id+'"]');
-				var start = markers[0];
-				var end = markers[1];
-				
 				var nodes = [start];
 				var currentNode = start;
 				while (currentNode != end  && currentNode != null) {
@@ -111,19 +113,19 @@ return function(config) {
 				}
 				
 				$(nodes).wrapAll('<span id="entityHighlight" class="'+type+'"/>');
-				
-				// maintain the original caret position
-				if (bm) {
-					w.editor.selection.moveToBookmark(bm);
-				}
-				
-				if (doScroll) {
-					var val = $(start).offset().top;
-					$(w.editor.dom.doc.body).scrollTop(val);
-				}
-				
-				w.event('entityFocused').publish(id);
 			}
+			
+			// maintain the original caret position
+			if (bm) {
+				w.editor.selection.moveToBookmark(bm);
+			}
+			
+			if (doScroll) {
+				var val = $(start).offset().top;
+				$(w.editor.dom.doc.body).scrollTop(val);
+			}
+			
+			w.event('entityFocused').publish(id);
 		}
 	};
 	
