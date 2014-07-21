@@ -174,7 +174,7 @@ return function(writer, config) {
 				doModeChange = true;
 			}
 		} else if (editorMode === 'xmlrdfoverlap') {
-			if (w.mode !== w.XMLRDF) {
+			if (w.mode !== w.XMLRDF || w.allowOverlap === false) {
 				doModeChange = true;
 			}
 		}
