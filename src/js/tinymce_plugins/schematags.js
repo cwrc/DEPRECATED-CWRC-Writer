@@ -101,11 +101,18 @@
 			t.editor.addCommand('addSchemaTag', function(params) {
 				var key = params.key;
 				var pos = params.pos;
+				var w = t.editor.writer;
 				t.action = params.action;
-				if (key == t.editor.writer.header) {
+				if (key == w.header) {
 					t.editor.execCommand('addStructureTag', {bookmark: t.editor.currentBookmark, attributes: {_tag: key}, action: t.action});
-					t.editor.writer.d.show('header');
+					w.dialogManager.show('header');
 					return;
+				} else {
+					var type = w.entitiesModel.getEntityTypeForTag(key, w.schemaManager.schemaId);
+					if (type != null) {
+						w.tagger.addEntity(type);
+						return;
+					}
 				}
 				
 				var tagId = t.editor.currentBookmark.tagId;
@@ -113,7 +120,7 @@
 				
 				var valid = t.editor.execCommand('isSelectionValid', true, t.action);
 				if (valid != 2) {
-					t.editor.writer.dialogManager.show('message', {
+					w.dialogManager.show('message', {
 						title: 'Error',
 						msg: 'Please ensure that the beginning and end of your selection have a common parent.<br/>For example, your selection cannot begin in one paragraph and end in another, or begin in bolded text and end outside of that text.',
 						type: 'error'
