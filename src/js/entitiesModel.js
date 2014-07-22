@@ -699,7 +699,7 @@ return function(writer) {
 		correction: {
 			title: 'Correction',
 			parentTag: {
-				tei: 'choice', // TODO add corr option
+				tei: ['choice', 'corr'],
 				events: 'SIC'
 			},
 			textTag: {
@@ -732,6 +732,19 @@ return function(writer) {
 					return xml;
 				},
 				events: '<SIC CORR="${info.corrText}">'+TEXT_SELECTION+'</SIC>'
+			},
+			reverseMapping: {
+				tei: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					if (xml.nodeName === 'choice') {
+						obj.corrText = $xml.find('corr').text();
+						obj.sicText = $xml.find('sic').text();
+					}
+					
+					return obj;
+				}
 			},
 			annotationType: 'oa:editing',
 			annotation: function(entity, format) {
@@ -877,7 +890,7 @@ return function(writer) {
 		// TODO need way to differentiate between citation and note
 		for (var e in entities) {
 			testTag = entities[e].parentTag[schema];
-			if (testTag === tag) {
+			if (($.isArray(testTag) && testTag.indexOf(tag) !== -1) || testTag === tag) {
 				return e;
 			}
 		}
@@ -972,7 +985,11 @@ return function(writer) {
 				schema = 'events';
 			}
 			if (e.parentTag && e.parentTag[schema]) {
-				return e.parentTag[schema];
+				var tag = e.parentTag[schema];
+				if ($.isArray(tag)) {
+					tag = tag[0];
+				}
+				return tag;
 			}
 		}
 		return '';

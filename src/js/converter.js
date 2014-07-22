@@ -900,11 +900,8 @@ return function(writer) {
 	 * Recursively builds offset info from entity tags.
 	 */
 	function processEntities(parent) {
-		var currentOffset = 0;
 		parent.contents().each(function(index, element) {
-			if (this.nodeType === Node.TEXT_NODE) {
-				currentOffset += this.length;
-			} else {
+			if (this.nodeType !== Node.TEXT_NODE) {
 				var node = $(this);
 				if (node.attr('annotationId')) {
 					var id = tinymce.DOM.uniqueId('ent_');
@@ -934,20 +931,10 @@ return function(writer) {
 					
 					var info = w.entitiesModel.getReverseMapping(this, entityType, w.schemaManager.schemaId);
 					
-					var content = '';
-					if (isNote) {
-						content = $($.parseXML(info.content).text());
-					} else {
-						content = node.text();
-					}
-					
-					
 					w.entities[id] = {
 						props: {
 							id: id,
-							type: entityType,
-							content: content,
-							title: w.utilities.getTitleFromContent(content)
+							type: entityType
 						},
 						info: info,
 						annotation: {
@@ -958,17 +945,10 @@ return function(writer) {
 						}
 					};
 					
-//					$(this.attributes).each(function(index, att) {
-//						w.entities[id].info[att.name] = att.value;
-//					});
-					
-//					node.contents().unwrap();
-					
-					if (!isNote) {
+					// TODO need handling for entities tagged inside correction
+					if (!isNote && entityType !== 'correction') {
 						processEntities(node);
 					}
-					
-					currentOffset += content.length;
 				} else {
 					processEntities(node);
 				}
@@ -1146,6 +1126,8 @@ return function(writer) {
 							content = $($.parseXML(entry.info.content)).text();
 						} else if (type === 'keyword') {
 							content = entry.info.keywords.join(', ');
+						} else if (type === 'correction') {
+							content = entry.info.corrText;
 						} else {
 							w.highlightEntity(id);
 							content = $('#entityHighlight', w.editor.getBody()).text();
@@ -1162,7 +1144,6 @@ return function(writer) {
 			}
 		}
 		
-		// TODO figure out how to not remove all correction entity markup
 		// remove all the entity markup
 		$.each(entityNodes, function(index, info) {
 			var entity = info.entity;
@@ -1172,26 +1153,30 @@ return function(writer) {
 			//	var tag = $(node).attr('_tag');
 			//	var type = w.entitiesModel.getEntityTypeForTag(tag, w.schemaManager.schemaId);
 			
-			var textTag = w.entitiesModel.getTextTag(type, w.schemaManager.schemaId);
-			if (textTag != '') {
-				$('[_tag="'+textTag+'"]', $node).contents().unwrap(); // keep the text inside the textTag
-			}
-			
-			var annotationId = $node.attr('annotationId');
-			$('[annotationId="'+annotationId+'"]', $node).remove(); // remove all child elements with matching ID
-			
-			var id = $node.attr('id');
-			var structsEntry = w.structs[id];
-			if (structsEntry != null) {
-				delete structsEntry;
-			}
-			
-			var contents = $node.contents();
-			if (contents.length === 0) {
-				// no contents so just remove the node
+			if (type === 'note' || type === 'citation') {
 				$node.remove();
 			} else {
-				contents.unwrap();
+				var textTag = w.entitiesModel.getTextTag(type, w.schemaManager.schemaId);
+				if (textTag != '') {
+					$('[_tag="'+textTag+'"]', $node).contents().unwrap(); // keep the text inside the textTag
+				}
+				
+				var annotationId = $node.attr('annotationId');
+				$('[annotationId="'+annotationId+'"]', $node).remove(); // remove all child elements with matching ID
+				
+				var id = $node.attr('id');
+				var structsEntry = w.structs[id];
+				if (structsEntry != null) {
+					delete structsEntry;
+				}
+				
+				var contents = $node.contents();
+				if (contents.length === 0) {
+					// no contents so just remove the node
+					$node.remove();
+				} else {
+					contents.unwrap();
+				}
 			}
 		});
 	}

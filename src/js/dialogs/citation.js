@@ -143,7 +143,9 @@ return function(writer) {
 					} else {
 						var data = config.entry.info;
 						var xmlDoc = cwrcWriter.utilities.stringToXML(data.content);
-						if (xmlDoc.firstChild.nodeName === 'bibl') {
+						if (xmlDoc.firstChild.nodeName === 'note') {
+							// remove the annotationId attribute
+							xmlDoc.firstChild.removeAttribute('annotationId');
 							// insert the appropriate wrapper tags
 							var xml = $.parseXML('<TEI><text><body/></text></TEI>');
 							xmlDoc = $(xml).find('body').append(xmlDoc.firstChild).end()[0];

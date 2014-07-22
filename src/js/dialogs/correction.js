@@ -1,16 +1,12 @@
 define([
     'jquery',
-    'jquery-ui',
-    'attributeWidget'
-], function($, jqueryUi, AttributeWidget) {
+    'jquery-ui'
+], function($, jqueryUi) {
 	
 return function(writer) {
 	var w = writer;
 	
 	var id = 'correctionDialog';
-	
-	var attWidgetInit = false;
-	var attributeWidget;
 	
 	var mode = null;
 	var ADD = 0;
@@ -18,25 +14,11 @@ return function(writer) {
 	
 	var sicText = null;
 	
-	var initAttributeWidget = function() {
-		var corrAtts = w.utilities.getChildrenForTag({tag: 'corr', type: 'attribute', returnType: 'array'});
-		for (var i = 0; i < corrAtts.length; i++) {
-			corrAtts[i].parent = 'corr';
-		}
-		attributeWidget.buildWidget(corrAtts);
-		attWidgetInit = true;
-	};
-	
 	$(document.body).append(''+
 	'<div id="'+id+'" class="annotationDialog">'+
 	    '<div>'+
 	    	'<p>Correction</p><textarea id="correctionInput" name="correction"></textarea>'+
 	    '</div>'+
-	    '<div>'+
-		    '<h3>Markup options</h3>'+
-		    '<div id="'+id+'_teiParent" style="position: relative; height: 200px;">'+
-		    '</div>'+
-		'</div>'+
 	'</div>');
 	
 	$('#'+id+'_teiParent').parent().accordion({
@@ -54,7 +36,7 @@ return function(writer) {
 		open: function(event, ui) {
 			$('#correctionDialog').parent().find('.ui-dialog-titlebar-close').hide();
 		},
-		height: 385,
+		height: 250,
 		width: 385,
 		autoOpen: false,
 		buttons: {
@@ -75,7 +57,6 @@ return function(writer) {
 				corrText: correctionInput.value,
 				sicText: sicText
 			};
-			data.attributes = attributeWidget.getData();
 		}
 		if (mode == EDIT && data != null) {
 			if (sicText == null) {
@@ -97,18 +78,11 @@ return function(writer) {
 		correction.dialog('close');
 	};
 	
-	attributeWidget = new AttributeWidget({writer: w, parentId: id+'_teiParent'});
-	
 	return {
 		show: function(config) {
 			mode = config.entry ? EDIT : ADD;
 			
-			if (attWidgetInit == false) {
-				initAttributeWidget();
-			}
-			
 			correctionInput.value = '';
-			attributeWidget.reset();
 			$('#'+id+'_teiParent').parent().accordion('option', 'active', false);
 			
 			var prefix = 'Add ';
@@ -124,11 +98,6 @@ return function(writer) {
 				if (data.sicText) sicText = data.sicText;
 				else sicText = null;
 				correctionInput.value = data.corrText;
-				
-				var showWidget = attributeWidget.setData(data.attributes);
-				if (showWidget) {
-					$('#'+id+'_teiParent').parent().accordion('option', 'active', 0);
-				}
 			}
 			
 			var title = prefix+config.title;
