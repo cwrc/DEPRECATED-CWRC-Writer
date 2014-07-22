@@ -7,7 +7,7 @@ return function(writer) {
 	cD.setPersonSchema('js/cwrcDialogs/schemas/entities.rng');
 	
 	function createNewPerson(data) {
-		cD.popCreatePerson({
+		cD.popEditPerson({
 			success: function(result) {
 				if (result.data == null) {
 					var error = result.error || 'There was an error creating the entry.';
@@ -69,7 +69,7 @@ return function(writer) {
 					error: function(errorThrown) {
 					},
 					buttons: [{
-						label : "Create New Person",
+						label : "Edit",
 						action : createNewPerson
 					}]
 				});

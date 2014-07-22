@@ -5,7 +5,7 @@ return function(writer) {
 	var w = writer;
 	
 	function createNewTitle(data) {
-		cD.popCreateTitle({
+		cD.popEditTitle({
 			success: function(result) {
 				if (result.data == null) {
 					var error = result.error || 'There was an error creating the entry.';
@@ -68,7 +68,7 @@ return function(writer) {
 					error: function(errorThrown) {
 					},
 					buttons: [{
-						label : 'Create New Citation',
+						label : 'Edit',
 						action : createNewTitle
 					}]
 				});

@@ -7,7 +7,7 @@ return function(writer) {
 	cD.setPlaceSchema('js/cwrcDialogs/schemas/entities.rng');
 	
 	function createNewPlace(data) {
-		cD.popCreatePlace({
+		cD.popEditPlace({
 			success: function(result) {
 				if (result.data == null) {
 					var error = result.error || 'There was an error creating the entry.';
@@ -74,7 +74,7 @@ return function(writer) {
 					error: function(errorThrown) {
 					},
 					buttons: [{
-						label : "Create New Place",
+						label : "Edit",
 						action : createNewPlace
 					}]
 				});
