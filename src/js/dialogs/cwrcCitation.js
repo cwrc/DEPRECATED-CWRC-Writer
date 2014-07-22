@@ -36,9 +36,9 @@ return function(writer) {
 				});
 			} else {
 				var query = w.editor.currentBookmark.rng.toString();
-				$('#searchEntityInput').val(query);
 				
 				cD.popSearchTitle({
+					query: query,
 					success: function(result) {
 						if (result.id == null) {
 							result = {

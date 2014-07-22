@@ -38,9 +38,9 @@ return function(writer) {
 				});
 			} else {
 				var query = w.editor.currentBookmark.rng.toString();
-				$('#searchEntityInput').val(query);
 				
 				cD.popSearchPlace({
+					query: query,
 					success: function(result) {
 						if (result.id == null) {
 							var id = w.utilities.createGuid();
