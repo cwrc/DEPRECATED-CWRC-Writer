@@ -7,7 +7,7 @@ return function(writer) {
 	cD.setOrganizationSchema('js/cwrcDialogs/schemas/entities.rng');
 	
 	function createNewOrg(data) {
-		cD.popEditOrganization({
+		cD.popEditOrganization($.extend(data, {
 			success: function(result) {
 				if (result.data == null) {
 					var error = result.error || 'There was an error creating the entry.';
@@ -27,7 +27,7 @@ return function(writer) {
 			},
 			error: function(errorThrown) {
 			},
-		});
+		}));
 	}
 	
 	return {

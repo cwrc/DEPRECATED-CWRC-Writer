@@ -5,7 +5,7 @@ return function(writer) {
 	var w = writer;
 	
 	function createNewTitle(data) {
-		cD.popEditTitle({
+		cD.popEditTitle($.extend(data, {
 			success: function(result) {
 				if (result.data == null) {
 					var error = result.error || 'There was an error creating the entry.';
@@ -25,7 +25,7 @@ return function(writer) {
 			},
 			error: function(errorThrown) {
 			},
-		});
+		}));
 	}
 	
 	return {
@@ -36,9 +36,9 @@ return function(writer) {
 				});
 			} else {
 				var query = w.editor.currentBookmark.rng.toString();
-				$('#searchEntityInput').val(query);
 				
 				cD.popSearchTitle({
+					query: query,
 					success: function(result) {
 						if (result.id == null) {
 							result = {
