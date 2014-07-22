@@ -3109,7 +3109,7 @@ tbody.bootstrap-scope .collapse.in {
 .bootstrap-scope .dropdown-toggle:focus {
   outline: 0;
 }
-.bootstrap-scope .dropdown-menu {
+.bootstrap-scope.dropdown-menu {
   position: absolute;
   top: 100%;
   left: 0;

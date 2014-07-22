@@ -2604,7 +2604,7 @@ $(function(){
 						autoclose: true
 					}
 				
-					$(element).siblings(':button').first().datepicker(options);
+					$(element).siblings(':button').first().bsDatepicker(options);
 				
 					ko.utils.registerEventHandler($(element).siblings(':button').first(), "changeDate", function(event) {
 						var value = valueAccessor();
