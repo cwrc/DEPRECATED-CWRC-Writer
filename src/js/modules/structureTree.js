@@ -556,11 +556,11 @@ return function(config) {
 				action: function(obj) {
 					// FIXME hack to get actionType
 					var parentText = obj.element.find('.submenu.vakata-context-hover').find('a:first').text();
-					var actionType = parentText.match(/\w+$/)[0].toLowerCase();
-					if (actionType == 'change') {
+					if (parentText.indexOf('Change') !== -1) {
 						var id = obj.reference.parent('li').attr('name');
 						w.tagger.changeTag({key: obj.item.key, id: id});
 					} else {
+						var actionType = parentText.match(/\w+$/)[0].toLowerCase();
 						w.editor.currentBookmark = w.editor.selection.getBookmark(1);
 						w.editor.currentBookmark.tagId = tagInfo.id;
 						w.editor.execCommand('addSchemaTag', {key: obj.item.key, action: actionType});
