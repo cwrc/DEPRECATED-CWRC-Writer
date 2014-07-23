@@ -447,6 +447,10 @@ return function(writer) {
 					if (info.cwrcInfo && info.cwrcInfo.id) xml += ' ref="'+info.cwrcInfo.id+'"';
 					if (info.certainty) xml += ' cert="'+info.certainty+'"';
 					if (info.level) xml += ' level="'+info.level+'"';
+					
+					var atts = info.attributes.title;
+					xml += getAttributeString(atts);
+					
 					xml += '>'+TEXT_SELECTION+'</title>';
 					return xml;
 				},
@@ -473,6 +477,9 @@ return function(writer) {
 				var data = entity.annotation;
 				data.certainty = entity.info.certainty;
 				data.cwrcInfo = entity.info.cwrcInfo;
+				data.cwrcAttributes = {
+					attributes: entity.info.attributes
+				};
 				
 				var anno = commonAnnotation({data: data, types: ['dcterms:BibliographicResource', 'dcterms:title']}, format);
 				
@@ -595,55 +602,6 @@ return function(writer) {
 				tei: '<event cert="${info.certainty}">'+TEXT_SELECTION+'</event>'
 			}
 		},
-		citation: {
-			title: 'Citation',
-			parentTag: {
-				tei: 'note'
-			},
-			mapping: {
-				tei: function(entity) {
-					var info = entity.info;
-					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
-					var offsetId = entity.annotation.range.cwrcOffsetId;
-					
-					var xml = '<note';
-					if (id) xml += ' annotationId="'+id+'"';
-					if (offsetId) xml += ' offsetId="'+offsetId+'"';
-					xml += ' resp="'+getResp()+'"';
-					xml += ' type="citation"><bibl';
-					if (info.cwrcInfo && info.cwrcInfo.id) xml += ' ref="'+info.cwrcInfo.id+'"';
-					xml += '>';
-					if (info.content) {
-						var xmlDoc = w.utilities.stringToXML(info.content);
-						var biblContent = $('bibl', xmlDoc)[0];
-						xml += biblContent.innerHTML;
-					}
-					xml += '</bibl></note>';
-					return xml;
-				}
-			},
-			reverseMapping: {
-				tei: function(xml) {
-					var obj = {};
-					var $xml = $(xml);
-					
-					obj.cwrcInfo = {id: $xml.children('bibl').attr('ref')};
-					obj.resp = $xml.attr('resp');
-					obj.content = w.utilities.xmlToString(xml);
-					
-					return obj;
-				}
-			},
-			annotationType: 'dcterms:BibliographicResource',
-			annotation: function(entity, format) {
-				var data = entity.annotation;
-				data.cwrcInfo = entity.info.cwrcInfo;
-				
-				var anno = commonAnnotation({data: data, types: 'dcterms:BibliographicResource'}, format);
-				
-				return anno;
-			}
-		},
 		note: {
 			title: 'Note',
 			parentTag: {
@@ -692,6 +650,55 @@ return function(writer) {
 				};
 				
 				var anno = commonAnnotation({data: data, types: 'bibo:Note', motivations: 'oa:commenting'}, format);
+				
+				return anno;
+			}
+		},
+		citation: {
+			title: 'Citation',
+			parentTag: {
+				tei: 'note'
+			},
+			mapping: {
+				tei: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '<note';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					xml += ' resp="'+getResp()+'"';
+					xml += ' type="citation"><bibl';
+					if (info.cwrcInfo && info.cwrcInfo.id) xml += ' ref="'+info.cwrcInfo.id+'"';
+					xml += '>';
+					if (info.content) {
+						var xmlDoc = w.utilities.stringToXML(info.content);
+						var biblContent = $('bibl', xmlDoc)[0];
+						xml += biblContent.innerHTML;
+					}
+					xml += '</bibl></note>';
+					return xml;
+				}
+			},
+			reverseMapping: {
+				tei: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					obj.cwrcInfo = {id: $xml.children('bibl').attr('ref')};
+					obj.resp = $xml.attr('resp');
+					obj.content = w.utilities.xmlToString(xml);
+					
+					return obj;
+				}
+			},
+			annotationType: 'dcterms:BibliographicResource',
+			annotation: function(entity, format) {
+				var data = entity.annotation;
+				data.cwrcInfo = entity.info.cwrcInfo;
+				
+				var anno = commonAnnotation({data: data, types: 'dcterms:BibliographicResource'}, format);
 				
 				return anno;
 			}
