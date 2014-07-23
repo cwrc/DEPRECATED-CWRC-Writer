@@ -282,6 +282,7 @@ return function(writer) {
 		// triples
 		for (var i = 0; i < w.triples.length; i++) {
 			var t = w.triples[i];
+			
 			rdfString += '\n<rdf:Description rdf:about="'+t.subject.uri+'" cw:external="'+t.subject.external+'">'+
 			'\n\t<cw:'+t.predicate.name+' cw:text="'+t.predicate.text+'" cw:external="'+t.predicate.external+'">'+
 			'\n\t\t<rdf:Description rdf:about="'+t.object.uri+'" cw:external="'+t.object.external+'" />'+
@@ -663,6 +664,9 @@ return function(writer) {
 			}
 		}
 		
+		// store triples and process later
+		var triples = [];
+		
 		rdfs.children().each(function() {
 			var rdf = $(this);
 
@@ -716,32 +720,7 @@ return function(writer) {
 				
 			// triple
 			} else if (rdf.attr('cw:external')){
-				var subject = $(this);
-				var subjectUri = subject.attr('rdf:about');
-				var predicate = rdf.children().first();
-				var object = rdf.find('rdf\\:Description, Description');
-				var objectUri = object.attr('rdf:about');
-				
-				if (w.entities[subjectUri] != null && w.entities[objectUri] != null) {
-					var triple = {
-						subject: {
-							uri: subjectUri,
-							text: subject.attr('cw:external') == 'false' ? w.entities[subjectUri].props.title : subjectUri,
-							external: subject.attr('cw:external, external')
-						},
-						predicate: {
-							text: predicate.attr('cw:text'),
-							name: predicate[0].nodeName.split(':')[1].toLowerCase(),
-							external: predicate.attr('cw:external')
-						},
-						object: {
-							uri: objectUri,
-							text: object.attr('cw:external') == 'false' ? w.entities[objectUri].props.title : objectUri,
-							external: object.attr('cw:external')
-						}
-					};
-					w.triples.push(triple);
-				}
+				triples.push(rdf);
 				
 			// rdf/xml
 			} else if (rdf.attr('rdf:about')) {
@@ -894,6 +873,53 @@ return function(writer) {
 				}
 			}
 		});
+		
+		for (var i = 0; i < triples.length; i++) {
+			var subject = triples[i];
+			var subjectUri = subject.attr('rdf:about');
+			var predicate = subject.children().first();
+			var object = subject.find('rdf\\:Description, Description');
+			var objectUri = object.attr('rdf:about');
+			
+			var subEnt = null;
+			var objEnt = null;
+			for (var key in w.entities) {
+				var ent = w.entities[key];
+				if (ent.annotation.annotationId === subjectUri) {
+					subEnt = ent;
+				}
+				if (ent.annotation.annotationId === objectUri) {
+					objEnt = ent;
+				}
+				if (subEnt != null && objEnt != null) {
+					break;
+				}
+			}
+			
+			if (subEnt != null && objEnt != null) {
+				var subExt = subject.attr('cw:external') == 'true' ? true : false;
+				var predExt = predicate.attr('cw:external') == 'true' ? true : false;
+				var objExt = object.attr('cw:external') == 'true' ? true : false;
+				var triple = {
+					subject: {
+						uri: subjectUri,
+						text: subExt ? subjectUri : subEnt.props.title,
+						external: subExt
+					},
+					predicate: {
+						text: predicate.attr('cw:text'),
+						name: predicate[0].nodeName.split(':')[1],
+						external: predExt
+					},
+					object: {
+						uri: objectUri,
+						text: objExt ? objectUri : objEnt.props.title,
+						external: objExt
+					}
+				};
+				w.triples.push(triple);
+			}
+		}
 	}
 	
 	/**
@@ -1135,6 +1161,17 @@ return function(writer) {
 						}
 						entry.props.content = content;
 						entry.props.title = w.utilities.getTitleFromContent(content);
+						
+						// finish with triples
+						for (var i = 0; i < w.triples.length; i++) {
+							var trip = w.triples[i];
+							if (trip.subject.uri === entry.annotation.annotationId) {
+								trip.subject.text = entry.props.title;
+							}
+							if (trip.object.uri === entry.annotation.annotationId) {
+								trip.object.text = entry.props.title;
+							}
+						}
 					}
 				} catch (e) {
 					if (window.console) {
