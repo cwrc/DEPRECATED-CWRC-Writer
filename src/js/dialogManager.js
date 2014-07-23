@@ -14,11 +14,16 @@ define([
 ) {
 
 // add event listeners to all of our jquery ui dialogs
-// wrapping our dialogs in the cwrc css scope
 $.extend($.ui.dialog.prototype.options, {
 	create: function(event) {
 		$(event.target).on('dialogopen', function(event) {
+			// wrap our dialogs in the cwrc css scope
 			$(event.target).parent('.ui-dialog').prev('.ui-widget-overlay').andSelf().wrapAll('<div class="cwrc" />');
+			// resize if necessary
+			var docHeight = $(document).height();
+			if ($(this).dialog('option', 'height') >= docHeight) {
+				$(this).dialog('option', 'height', docHeight * 0.85);
+			}
 		}).on('dialogclose', function(event) {
 			$(event.target).parent('.ui-dialog').unwrap();
 		});
