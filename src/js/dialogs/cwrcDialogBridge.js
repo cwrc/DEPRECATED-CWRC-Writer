@@ -31,7 +31,7 @@ return function(writer, config) {
 	};
 	
 	function doEdit(data) {
-		cD.popEdit[cwrcType]($.extend(createEditOpts, data));
+		cD.popEdit[cwrcType]($.extend({}, createEditOpts, data));
 	}
 	
 	function doCreate() {
