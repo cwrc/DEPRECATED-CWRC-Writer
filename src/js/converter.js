@@ -1193,9 +1193,13 @@ return function(writer) {
 			if (type === 'note' || type === 'citation') {
 				$node.remove();
 			} else {
-				var textTag = w.entitiesModel.getTextTag(type, w.schemaManager.schemaId);
-				if (textTag != '') {
-					$('[_tag="'+textTag+'"]', $node).contents().unwrap(); // keep the text inside the textTag
+				var textTagName = w.entitiesModel.getTextTag(type, w.schemaManager.schemaId);
+				if (textTagName != '') {
+					var textTag = $('[_tag="'+textTagName+'"]', $node);
+					if (type === 'correction') {
+						entity.info.sicText = textTag.text();
+					}
+					textTag.contents().unwrap(); // keep the text inside the textTag
 				}
 				
 				var annotationId = $node.attr('annotationId');
