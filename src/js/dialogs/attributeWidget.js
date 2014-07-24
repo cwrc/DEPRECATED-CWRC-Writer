@@ -194,8 +194,6 @@ return function(config) {
 				return;
 			}
 			
-//			attributes._attsallowed = $('input[name="attsAllowed"]', parent).val() != 'false';
-			
 			return attributes;
 		},
 		destroy: function() {

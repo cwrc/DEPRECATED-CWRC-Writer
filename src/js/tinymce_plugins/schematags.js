@@ -176,7 +176,6 @@
 						'<div class="level1Atts"></div>'+
 						'<div class="highLevelAtts"></div>'+
 					'</div>'+
-					'<input type="hidden" name="attsAllowed" value="" />'+
 					'<div class="schemaHelp"></div>'+
 				'</div>'
 			);
@@ -282,9 +281,6 @@
 			
 			var atts = t.editor.writer.utilities.getChildrenForTag({tag: key, type: 'attribute', returnType: 'array'});
 			
-			var canTagContainAttributes = atts.length != 0;
-			
-			$('input[name="attsAllowed"]', parent).val(canTagContainAttributes);
 			// build atts
 			var level1Atts = '';
 			var highLevelAtts = '';
@@ -422,8 +418,6 @@
 				return;
 			}
 			
-			
-			attributes._attsallowed = $('input[name="attsAllowed"]', parent).val() != 'false';
 			attributes._tag = t.currentKey;
 			
 			t.schemaDialog.dialog('close');
