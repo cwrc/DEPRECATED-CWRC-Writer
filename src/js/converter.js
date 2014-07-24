@@ -12,6 +12,17 @@ return function(writer) {
 	
 	var converter = {};
 	
+	// a list of reserved attribute names that are used by the editor
+	converter.reservedAttributes = {
+		'_entity': true,
+		'_type': true,
+		'_tag': true,
+		'_textallowed': true,
+		'id': true,
+		'name': true,
+		'class': true
+	};
+	
 	
 	/////////////////////////////////////////////////////////////////////
 	// CWRCWriter -> XML Methods
@@ -1041,20 +1052,16 @@ return function(writer) {
 				_tag: tag,
 				_textallowed: canContainText
 			};
+
 			$(currentNode.attributes).each(function(index, att) {
 				var attName = att.name;
-				if (attName === 'annotationId') {
-					editorString += ' annotationId="'+att.value+'"';
-				} else if (attName === 'offsetId') {
-					editorString += ' offsetId="'+att.value+'"';
-				} else {
-					w.structs[id][attName] = att.value;
+				
+				if (converter.reservedAttributes[attName] !== true) {
+					editorString += ' '+attName+'="'+att.value+'"';
 				}
 				
-				// TODO consider adding in all attributes here to expand CSS options
-				
-				if (attName.match(/^_/) != null) {
-					editorString += ' '+attName+'="'+att.value+'"';
+				if (attName !== 'annotationId' && attName !== 'offsetId') {
+					w.structs[id][attName] = att.value;
 				}
 			});
 			

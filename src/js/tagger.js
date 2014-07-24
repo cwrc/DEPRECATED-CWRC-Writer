@@ -566,28 +566,46 @@ return function(writer) {
 		}
 	};
 	
+	/**
+	 * Change the attributes of a tag, or change the tag itself.
+	 * @param tag {jQuery} A jQuery representation of the tag
+	 * @param attributes {Object} An object of attribute names and values
+	 */
 	tagger.editStructureTag = function(tag, attributes) {
-		// TODO add support for span/div changing, add undo support
+		// TODO add undo support
 		var id = tag.attr('id');
 		attributes.id = id;
-		$.each($(tag[0].attributes), function(index, att) {
-			if (att.name != 'id') {
-				tag.removeAttr(att.name);
+		
+		if (tag.attr('_tag') != attributes._tag) {
+			// change the tag
+			var tagName;
+			if (tag.parent().is('span')) {
+				// force inline if parent is inline
+				tagName = 'span';
+			} else {
+				tagName = w.utilities.getTagForEditor(attributes._tag);
 			}
-		});
-		for (var key in attributes) {
-			if (key.match(/^_/) != null) {
-				tag.attr(key, attributes[key]);
+			tag.contents().unwrap().wrap('<'+tagName+' id="'+id+'" />');
+			tag = $('#'+id, w.editor.getBody());
+			for (var key in attributes) {
+				if (key.match(/^_/) != null || w.converter.reservedAttributes[key] !== true) {
+					tag.attr(key, attributes[key]);
+				}
+			}
+		} else {
+			$.each($(tag[0].attributes), function(index, att) {
+				if (w.converter.reservedAttributes[att.name] !== true) {
+					tag.removeAttr(att.name);
+				}
+			});
+			
+			for (var key in attributes) {
+				if (w.converter.reservedAttributes[key] !== true) {
+					tag.attr(key, attributes[key]);
+				}
 			}
 		}
-		if (attributes._tag == 'title') {
-			if (attributes.level != null) {
-				tag.attr('level', attributes.level);
-			}
-			if (attributes.type != null) {
-				tag.attr('type', attributes.type);
-			}
-		}
+		
 		w.structs[id] = attributes;
 		
 		w.event('tagEdited').publish(id);
