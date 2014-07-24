@@ -698,7 +698,7 @@ return function(writer) {
 				var data = entity.annotation;
 				data.cwrcInfo = entity.info.cwrcInfo;
 				
-				var anno = commonAnnotation({data: data, types: 'dcterms:BibliographicResource'}, format);
+				var anno = commonAnnotation({data: data, types: 'dcterms:BibliographicResource', motivations: 'cw:citing'}, format);
 				
 				return anno;
 			}
@@ -814,7 +814,7 @@ return function(writer) {
 			annotation: function(entity, format) {
 				var data = entity.annotation;
 				
-				var anno = commonAnnotation({data: data, types: ['oa:Tag', 'cnt:ContentAsText', 'skos:Concept']}, format);
+				var anno = commonAnnotation({data: data, types: ['oa:Tag', 'cnt:ContentAsText', 'skos:Concept'], motivations: 'oa:classifying'}, format);
 				
 				if (format === 'xml') {
 					var body = $('[rdf\\:about="'+data.entityId+'"]', anno);
