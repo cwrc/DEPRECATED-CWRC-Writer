@@ -92,6 +92,8 @@
 						configXHR,
 						projectXHR
 					).then(function(config, project) {
+						config = config[0];
+						project = project[0];
 						config.project = project;
 						config.cwrcRootUrl = window.location.protocol+'//'+window.location.host+'/editor/dev/';
 						doInit(config);
