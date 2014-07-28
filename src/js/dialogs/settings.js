@@ -249,11 +249,14 @@ return function(writer, config) {
 			var markers = w.editor.dom.select('[name="' + id + '"]');
 			var start = markers[0];
 			var end = markers[1];
-			var currentNode = start;
-			while (currentNode != end  && currentNode != null) {
-				currentNode = currentNode.nextSibling;
-				if (currentNode.nodeType == 1 && currentNode.hasAttribute('_entity') && currentNode != end) {
-					return true;
+			if (end != null) {
+				// check if end exists, if not, it's a note type entity
+				var currentNode = start;
+				while (currentNode != end  && currentNode != null) {
+					currentNode = currentNode.nextSibling;
+					if (currentNode.nodeType == 1 && currentNode.hasAttribute('_entity') && currentNode != end) {
+						return true;
+					}
 				}
 			}
 		}
