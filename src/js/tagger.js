@@ -299,20 +299,31 @@ return function(writer) {
 	
 	tagger.addEntity = function(type) {
 		var result = w.utilities.isSelectionValid();
-		if (result == w.VALID) {
+		if (result === w.VALID) {
 			w.editor.currentBookmark = w.editor.selection.getBookmark(1);
 			w.dialogManager.show(type, {type: type, title: w.entitiesModel.getTitle(type), pos: w.editor.contextMenuPos});
-		} else if (result == w.NO_SELECTION) {
+		} else if (result === w.NO_SELECTION) {
 			w.dialogManager.show('message', {
 				title: 'Error',
 				msg: 'Please select some text before adding an entity or tag.',
 				type: 'error'
 			});
-		} else if (result == w.NO_COMMON_PARENT) {
+		} else if (result === w.NO_COMMON_PARENT) {
 			w.dialogManager.show('message', {
 				title: 'Error',
 				msg: 'Please ensure that the beginning and end of your selection have a common parent.<br/>For example, your selection cannot begin in one paragraph and end in another, or begin in bolded text and end outside of that text.',
 				type: 'error'
+			});
+		} else if (result === w.OVERLAP) {
+			w.dialogManager.confirm({
+				title: 'Info',
+				msg: 'This annotation overlaps with other tags, so an XML tag for this annotation cannot be inserted in the document. The editor will create a stand-off semantic web annotation only.<br/>If you wish to insert an XML tag, select a portion of the text to annotate that does not overlap other XML tags.<br/>Do you still wish to insert this annotation?',
+				callback: function(confirmed) {
+					if (confirmed) {
+						w.editor.currentBookmark = w.editor.selection.getBookmark(1);
+						w.dialogManager.show(type, {type: type, title: w.entitiesModel.getTitle(type), pos: w.editor.contextMenuPos});
+					}
+				}
 			});
 		}
 	};

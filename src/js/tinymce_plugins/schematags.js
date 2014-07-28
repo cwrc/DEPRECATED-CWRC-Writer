@@ -119,7 +119,7 @@
 				t.editor.selection.moveToBookmark(t.editor.currentBookmark);
 				
 				var valid = t.editor.execCommand('isSelectionValid', true, t.action);
-				if (valid != 2) {
+				if (valid !== t.editor.writer.VALID) {
 					w.dialogManager.show('message', {
 						title: 'Error',
 						msg: 'Please ensure that the beginning and end of your selection have a common parent.<br/>For example, your selection cannot begin in one paragraph and end in another, or begin in bolded text and end outside of that text.',
@@ -132,19 +132,7 @@
 				t.editor.currentBookmark = t.editor.selection.getBookmark(1);
 				if (tagId != null) {
 					t.editor.currentBookmark.tagId = tagId;
-				}
-				
-				// isSelectionValid should perform this function
-//				var sel = t.editor.selection;
-//				var content = sel.getContent();
-//				var range = sel.getRng(true);
-//				if (range.startContainer == range.endContainer) {
-//					var leftTrimAmount = content.match(/^\s{0,1}/)[0].length;
-//					var rightTrimAmount = content.match(/\s{0,1}$/)[0].length;
-//					range.setStart(range.startContainer, range.startOffset+leftTrimAmount);
-//					range.setEnd(range.endContainer, range.endOffset-rightTrimAmount);
-//					sel.setRng(range);
-//				}				
+				}				
 				
 				t.mode = t.ADD;
 				t.showDialog(key, pos);

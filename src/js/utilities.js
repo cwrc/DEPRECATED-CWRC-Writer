@@ -272,7 +272,7 @@ return function(writer) {
 						if (ents[c.attr('name')]) {
 							delete ents[c.attr('name')];
 						} else {
-							return w.NO_COMMON_PARENT;
+							return w.OVERLAP;
 						}
 					}
 				}
@@ -281,7 +281,7 @@ return function(writer) {
 			for (var id in ents) {
 				count++;
 			}
-			if (count != 0) return w.NO_COMMON_PARENT;
+			if (count != 0) return w.OVERLAP;
 		}
 		
 		return w.VALID;

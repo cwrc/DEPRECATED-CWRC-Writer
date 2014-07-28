@@ -78,7 +78,8 @@ return function(config) {
 	// possible results when trying to add entity
 	w.NO_SELECTION = 0;
 	w.NO_COMMON_PARENT = 1;
-	w.VALID = 2;
+	w.OVERLAP = 2;
+	w.VALID = 3;
 	
 	w.emptyTagId = null; // stores the id of the entities tag to be added
 	
