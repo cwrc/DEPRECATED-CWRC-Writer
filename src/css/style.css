@@ -131,6 +131,13 @@ html, body {
 	overflow: auto;
 }
 
+.loading {
+	background-image: url('../img/loading.gif');
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+}
+
 #structureTreeActions {
 	overflow: hidden;
 }
