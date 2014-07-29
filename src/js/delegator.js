@@ -1,4 +1,4 @@
-define(['jquery'], function($) {
+define(['jquery', 'octokit'], function($, Octokit) {
 	
 return function(writer) {
 	var w = writer;
@@ -251,6 +251,49 @@ return function(writer) {
 			}
 		});
 	};
+	
+	function _getTemplateBranch() {
+		var octo = new Octokit({token: '15286e8222a7bc13504996e8b451d82be1cba397'});
+		var templateRepo = octo.getRepo('cwrc', 'CWRC-Writer-Templates');
+		var branch = templateRepo.getBranch('master');
+		return branch;
+	}
+	
+	/**
+	 * Gets the list of templates
+	 * @returns {Array} The list of templates
+	 */
+	del.getTemplates = function(callback) {
+		var branch = _getTemplateBranch();
+		branch.contents('templates').then(function(contents) {
+			contents = $.parseJSON(contents);
+			var templates = [];
+			for (var i = 0; i < contents.length; i++) {
+				var c = contents[i];
+				var path = c.path;
+				var name = c.name;
+				name = name.replace(/_/g, ' ').replace('.xml', '');
+				name = w.utilities.getCamelCase(name);
+				templates.push({name: name, path: path});
+			}
+			callback.call(w, templates);
+		});
+	};
+	
+	/**
+	 * Loads a template
+	 * @param {String} path The path to the template, relative to the templates repo
+	 * @param {Function} callback The function to call
+	 * @returns {XML} The template
+	 */
+	del.loadTemplate = function(path, callback) {
+		var branch = _getTemplateBranch();
+		branch.contents(path).then(function(template) {
+			var xml = $.parseXML(template);
+			callback.call(w, xml);
+		});
+	};
+	
 	
 	/**
 	 * Loads a document based on the currentDocId

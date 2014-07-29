@@ -55,6 +55,12 @@ return function(writer) {
 		return title;
 	};
 	
+	u.getCamelCase = function(str) {
+		return str.replace(/(?:^|\s)\w/g, function(match) {
+	        return match.toUpperCase();
+	    });
+	};
+	
 	u.escapeHTMLString = function(value) {
 		if (typeof value == 'string') {
 			return value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#039;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

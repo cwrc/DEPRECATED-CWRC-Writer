@@ -10,23 +10,11 @@ return function(writer) {
 	$(document.body).append(''+
 	'<div id="loaderDialog">'+
 		'<div id="files">'+
-		'<div class="column" style="left: 10px;">'+
+		'<div data-type="document" class="column" style="left: 10px;">'+
 		'<h2>Documents</h2><ul class="searchResults"></ul>'+
 		'</div>'+
-		'<div class="column" style="right: 10px;">'+
-		'<h2>Templates</h2><ul class="searchResults">'+
-		'<li class="unselectable" data-name="#template_biography"><span>Orlando Biography</span></li>'+
-		'<li class="unselectable" data-name="#template_writing"><span>Orlando Writing</span></li>'+
-		'<li class="unselectable" data-name="#template_letter"><span>Letter</span></li>'+
-		'<li class="unselectable" data-name="#template_poem"><span>Poem</span></li>'+
-		'<li class="unselectable" data-name="#template_prose"><span>Prose</span></li>'+
-		'<li class="unselectable" data-name="#template_event"><span>Event</span></li>'+
-		'<li class="unselectable" data-name="#sample_biography"><span>Sample Orlando Biography</span></li>'+
-		'<li class="unselectable" data-name="#sample_writing"><span>Sample Orlando Writing</span></li>'+
-		'<li class="unselectable" data-name="#sample_letter"><span>Sample Letter</span></li>'+
-		'<li class="unselectable" data-name="#sample_poem"><span>Sample Poem</span></li>'+
-		'<li class="unselectable last" data-name="#blank_tei"><span>Blank TEI Document</span></li>'+
-		'</ul>'+
+		'<div data-type="template" class="column" style="right: 10px;">'+
+		'<h2>Templates</h2><ul class="searchResults"></ul>'+
 		'</div>'+
 		'</div>'+
 	'</div>'+
@@ -39,6 +27,8 @@ return function(writer) {
 		'<p>You have unsaved changes.  Would you like to save?</p>'+
 	'</div>');
 	
+	var $files = $('#files');
+	
 	var loader = $('#loaderDialog');
 	loader.dialog({
 		title: 'Load Document',
@@ -50,14 +40,11 @@ return function(writer) {
 			text: 'Load',
 			id: 'cwrc_loaderDialog_loadButton',
 			click : function() {
-				var selected = $('#files ul li.selected');
-				var data = selected.data();
-				var isDoc = selected.parent('ul')[0] == $('#files ul:eq(0)')[0];
-				if (isDoc && data) {
-					w.fileManager.loadDocument(data.name);
-					loader.dialog('close');
-				} else if (data) {
-					w.fileManager.loadInitialDocument(data.name);
+				var selected = $files.find('ul li.selected');
+				var name = selected.data('uri');
+				var docType = selected.parents('div').data('type');
+				if (selected.length === 1) {
+					_doLoad(name, docType);
 					loader.dialog('close');
 				} else {
 					$('#files ul').css({borderColor: 'red'});
@@ -70,19 +57,6 @@ return function(writer) {
 				loader.dialog('close');
 			}
 		}]
-	});
-	
-	// templates events
-	$('#files ul').eq(1).find('li').click(function(event) {
-		$('#files ul').css({borderColor: '#fff'});
-		var remove = $(this).hasClass('selected');
-		$('#files li').removeClass('selected');
-		if (!remove) $(this).addClass('selected');
-	}).dblclick(function(event) {
-		$('#files li').removeClass('selected');
-		$(this).addClass('selected');
-		w.fileManager.loadInitialDocument($(this).data('name'));
-		loader.dialog('close');
 	});
 	
 	var saver = $('#saverDialog');
@@ -152,15 +126,35 @@ return function(writer) {
 		}
 	});
 	
+	$files.on('click', 'li', function() {
+		$files.find('ul').css({borderColor: '#fff'});
+		var remove = $(this).hasClass('selected');
+		$files.find('li').removeClass('selected');
+		if (!remove) $(this).addClass('selected');
+	});
+	$files.on('dblclick', 'li', function() {
+		var $this = $(this);
+		$files.find('li').removeClass('selected');
+		$this.addClass('selected');
+		loader.dialog('close');
+		var fileName = $this.data('uri');
+		var docType = $this.parents('div').data('type');
+		_doLoad(fileName, docType);
+	});
+	
 	/**
 	 * @memberOf dfm
 	 */
 	dfm.showLoader = function() {
-		$('#files').css({borderColor: '#fff'});
-		$('#files li').removeClass('selected');
-		_getDocuments(function() {
-			_populateLoader();
-			loader.dialog('open');
+		$files.css({borderColor: '#fff'});
+		$files.find('li').removeClass('selected');
+		$files.find('ul').html('<li class="unselectable last"><span class="loading" /></li>');
+		loader.dialog('open');
+		_getDocuments(function(docs) {
+			_populateLoader(docs, 0);
+		});
+		_getTemplates(function(docs) {
+			_populateLoader(docs, 1);
 		});
 	};
 	
@@ -173,6 +167,16 @@ return function(writer) {
 		unsaved.dialog('open');
 	};
 	
+	function _doLoad(filename, type) {
+		if (type === 'template') {
+			w.delegator.loadTemplate(filename, function(xml) {
+				w.fileManager.loadDocumentFromXml(xml);
+			});
+		} else {
+			w.fileManager.loadDocument(filename);
+		}
+	}
+	
 	function _getDocuments(callback) {
 		$.ajax({
 			url: w.baseUrl+'editor/documents',
@@ -180,49 +184,46 @@ return function(writer) {
 			dataType: 'json',
 			success: [function(data, status, xhr) {
 				docNames = data;
-			}, callback],
+			}, function() {
+				callback.call(w, docNames);
+			}],
 			error: function() {
-//				w.dialogManager.show('message', {
-//					title: 'Error',
-//					msg: 'Error getting documents.',
-//					type: 'error'
-//				});
 				docNames = [];
 				if (callback) {
-					callback.call();
+					callback.call(w, docNames);
 				}
 			}
 		});
 	};
 	
-	function _populateLoader() {
+	function _getTemplates(callback) {
+		w.delegator.getTemplates(callback);
+	}
+	
+	function _populateLoader(data, columnIndex) {
 		var formattedResults = '';
 		var last = '';
 		var d, i;
-		for (i = 0; i < docNames.length; i++) {
-			d = docNames[i];
+		for (i = 0; i < data.length; i++) {
+			d = data[i];
 			
-			if (i == docNames.length - 1) last = 'last';
+			if (i == data.length - 1) last = 'last';
 			else last = '';
 			
-			formattedResults += '<li class="unselectable '+last+'" data-name="'+d+'">';
-			formattedResults += '<span>'+d+'</span>';
+			var uri, label;
+			if ($.isPlainObject(d)) {
+				uri = d.path;
+				label = d.name;
+			} else {
+				uri = label = d;
+			}
+			
+			formattedResults += '<li class="unselectable '+last+'" data-uri="'+uri+'">';
+			formattedResults += '<span>'+label+'</span>';
 			formattedResults += '</li>';
 		}
 		
-		$('#files ul').eq(0).html(formattedResults);
-		
-		$('#files ul').eq(0).find('li').click(function(event) {
-			$('#files ul').css({borderColor: '#fff'});
-			var remove = $(this).hasClass('selected');
-			$('#files li').removeClass('selected');
-			if (!remove) $(this).addClass('selected');
-		}).dblclick(function(event) {
-			$('#files li').removeClass('selected');
-			$(this).addClass('selected');
-			w.fileManager.loadDocument($(this).data('name'));
-			loader.dialog('close');
-		});
+		$files.find('ul').eq(columnIndex).html(formattedResults);
 	};
 	
 	function _isNameValid(name) {
