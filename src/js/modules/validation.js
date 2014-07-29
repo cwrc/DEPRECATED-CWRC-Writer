@@ -20,7 +20,7 @@ return function(config) {
 		list.empty();
 		list.append(''+
 		'<li class="ui-state-default">'+
-			'<span class="ui-icon ui-icon-clock" style="float: left; margin-right: 4px;"></span>Validating...'+
+			'<span class="loading"></span> Validating...'+
 		'</li>');
 		showValidation();
 	});
