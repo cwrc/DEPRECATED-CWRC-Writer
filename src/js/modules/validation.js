@@ -4,17 +4,33 @@ return function(config) {
 	
 	var w = config.writer;
 	
-	$('#'+config.parentId).append('<div id="validation">'+
-			'<button>Validate</button><button>Clear</button><ul class="validationList"></ul>'+
+	var id = 'validation';
+	
+	$('#'+config.parentId).append('<div id="'+id+'">'+
+			'<div id="'+id+'_buttons"><button>Validate</button><button>Clear</button></div>'+
+			'<div id="'+id+'_indicator">Validating...</div>'+
+			'<ul class="validationList"></ul>'+
 		'</div>');
 	
 	w.event('documentLoaded').subscribe(function() {
 		validation.clearResult();
 	});
 	
+	w.event('validationInitiated').subscribe(function() {
+		validation.clearResult();
+		$('#'+id+'_indicator').show();
+		showValidation();
+	});
+	
 	w.event('documentValidated').subscribe(function(valid, resultDoc, docString) {
+		$('#'+id+'_indicator').hide();
 		validation.showValidationResult(resultDoc, docString);
 	});
+	
+	function showValidation() {
+		w.layout.center.children.layout1.open('south');
+		$('#southTabs').tabs('option', 'active', 0);
+	}
 	
 	var validation = {};
 	
@@ -25,7 +41,7 @@ return function(config) {
 	 * @param docString The doc string sent to the server for validation  
 	 */
 	validation.showValidationResult = function(resultDoc, docString) {
-		var list = $('#validation > ul');
+		var list = $('#'+id+' > ul');
 		list.empty();
 		
 		docString = docString.split('\n')[1]; // remove the xml header
@@ -146,19 +162,19 @@ return function(config) {
 			}
 		});
 		
-		w.layout.center.children.layout1.open('south');
-		$('#southTabs').tabs('option', 'active', 0);
+		showValidation();
 	};
 	
 	validation.clearResult = function() {
-		$('#validation > ul').empty();
+		$('#'+id+'_indicator').hide();
+		$('#'+id+' > ul').empty();
 	};
 	
 
-	$('#validation button:eq(0)').button().click(function() {
+	$('#'+id+'_buttons button:eq(0)').button().click(function() {
 		w.delegator.validate();
 	});
-	$('#validation button:eq(1)').button().click(function() {
+	$('#'+id+'_buttons button:eq(1)').button().click(function() {
 		validation.clearResult();
 	});
 	

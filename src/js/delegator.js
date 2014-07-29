@@ -219,6 +219,8 @@ return function(writer) {
 		var docText = w.converter.getDocumentContent(false);
 		var schemaUrl = w.schemaManager.schemas[w.schemaManager.schemaId].url;
 		
+		w.event('validationInitiated').publish();
+		
 		$.ajax({
 			url: w.baseUrl+'services/validator/validate.html',
 			type: 'POST',

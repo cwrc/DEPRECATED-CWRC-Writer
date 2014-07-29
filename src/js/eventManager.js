@@ -91,7 +91,10 @@ return function(writer) {
 	 */
 	w.event('schemaAdded');
 	
-	
+	/**
+	 * A document was sent to the validation service.
+	 */
+	w.event('validationInitiated');
 	/**
 	 * A document was validated.
 	 * @returns {Boolean} True if the doc is valid.
