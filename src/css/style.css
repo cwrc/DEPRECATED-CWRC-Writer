@@ -346,10 +346,6 @@ html, body {
 	color: #333333 !important;
 }
 
-#validation_indicator {
-	margin: 5px;
-}
-
 #validation button {
 	margin: 2px 0 2px 5px;
 }

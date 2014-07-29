@@ -8,7 +8,6 @@ return function(config) {
 	
 	$('#'+config.parentId).append('<div id="'+id+'">'+
 			'<div id="'+id+'_buttons"><button>Validate</button><button>Clear</button></div>'+
-			'<div id="'+id+'_indicator">Validating...</div>'+
 			'<ul class="validationList"></ul>'+
 		'</div>');
 	
@@ -17,8 +16,12 @@ return function(config) {
 	});
 	
 	w.event('validationInitiated').subscribe(function() {
-		validation.clearResult();
-		$('#'+id+'_indicator').show();
+		var list = $('#'+id+' > ul');
+		list.empty();
+		list.append(''+
+		'<li class="ui-state-default">'+
+			'<span class="ui-icon ui-icon-clock" style="float: left; margin-right: 4px;"></span>Validating...'+
+		'</li>');
 		showValidation();
 	});
 	
