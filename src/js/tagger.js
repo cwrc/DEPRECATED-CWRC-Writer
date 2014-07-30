@@ -15,7 +15,11 @@ return function(writer) {
 	tagger.insertBoundaryTags = function(id, type, range) {
 		var sel = w.editor.selection;
 		sel.setRng(range);
-		
+		if (tinymce.isWebKit) {
+			// chrome seems to mess up the range slightly if not set again
+			sel.setRng(range);
+		}
+
 		if (type === 'note' || type === 'citation' || type === 'keyword') {
 			var tag = w.editor.dom.create('span', {'_entity': true, '_type': type, 'class': 'entity '+type+' start', 'name': id}, '');
 			sel.collapse(false);
