@@ -185,7 +185,9 @@ return function(writer) {
 			success: [function(data, status, xhr) {
 				docNames = data;
 			}, function() {
-				callback.call(w, docNames);
+				if (callback) {
+					callback.call(w, docNames);
+				}
 			}],
 			error: function() {
 				docNames = [];
