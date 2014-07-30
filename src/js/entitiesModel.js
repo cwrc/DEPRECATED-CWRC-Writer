@@ -277,8 +277,10 @@ return function(writer) {
 					if (info.role) xml += ' role="'+info.role+'"';
 					if (info.cwrcInfo && info.cwrcInfo.id) xml += ' ref="'+info.cwrcInfo.id+'"';
 					
-					var atts = info.attributes.persName;
-					xml += getAttributeString(atts);
+					if (info.attributes) {
+						var atts = info.attributes.persName;
+						xml += getAttributeString(atts);
+					}
 					
 					xml += '>'+TEXT_SELECTION+'</persName>';
 					return xml;
@@ -335,8 +337,10 @@ return function(writer) {
 					if (info.certainty) xml += ' cert="'+info.certainty+'"';
 					if (info.cwrcInfo && info.cwrcInfo.id) xml += ' ref="'+info.cwrcInfo.id+'"';
 					
-					var atts = info.attributes.orgName;
-					xml += getAttributeString(atts);
+					if (info.attributes) {
+						var atts = info.attributes.orgName;
+						xml += getAttributeString(atts);
+					}
 					
 					xml += '>'+TEXT_SELECTION+'</orgName>';
 					return xml;
@@ -448,8 +452,10 @@ return function(writer) {
 					if (info.certainty) xml += ' cert="'+info.certainty+'"';
 					if (info.level) xml += ' level="'+info.level+'"';
 					
-					var atts = info.attributes.title;
-					xml += getAttributeString(atts);
+					if (info.attributes) {
+						var atts = info.attributes.title;
+						xml += getAttributeString(atts);
+					}
 					
 					xml += '>'+TEXT_SELECTION+'</title>';
 					return xml;
@@ -516,8 +522,10 @@ return function(writer) {
 						xml += ' from="'+info.startDate+'" to="'+info.endDate+'"';
 					}
 					
-					var atts = info.attributes.date;
-					xml += getAttributeString(atts);
+					if (info.attributes) {
+						var atts = info.attributes.date;
+						xml += getAttributeString(atts);
+					}
 					
 					xml += '>'+TEXT_SELECTION+'</date>';
 					return xml;
