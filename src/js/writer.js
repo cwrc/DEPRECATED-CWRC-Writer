@@ -84,49 +84,51 @@ return function(config) {
 	w.emptyTagId = null; // stores the id of the entities tag to be added
 	
 	w.highlightEntity = function(id, bm, doScroll) {
-		var prevHighlight = $('#entityHighlight', w.editor.getBody());
-		if (prevHighlight.length == 1) {
-			var parent = prevHighlight.parent()[0];
-			prevHighlight.contents().unwrap();
-			parent.normalize();
-		}
-		if (w.editor.currentEntity != null) {
-			w.event('entityUnfocused').publish(w.editor.currentEntity);
-		}
-		
-		w.editor.currentEntity = null;
-		
-		if (id) {
-			w.editor.currentEntity = id;
-			var type = w.entities[id].props.type;
+		if (id == null || id !== w.editor.currentEntity) {
+			var prevHighlight = $('#entityHighlight', w.editor.getBody());
+			if (prevHighlight.length === 1) {
+				var parent = prevHighlight.parent()[0];
+				prevHighlight.contents().unwrap();
+				parent.normalize();
+			}
+			if (w.editor.currentEntity != null) {
+				w.event('entityUnfocused').publish(w.editor.currentEntity);
+			}
 			
+			w.editor.currentEntity = null;
 			
-			var markers = w.editor.dom.select('span[name="'+id+'"]');
-			var start = markers[0];
-			var end = markers[1];
-			
-			if (type !== 'note' && type !== 'citation' && type !== 'keyword') {
-				var nodes = [start];
-				var currentNode = start;
-				while (currentNode != end  && currentNode != null) {
-					currentNode = currentNode.nextSibling;
-					nodes.push(currentNode);
+			if (id) {
+				w.editor.currentEntity = id;
+				var type = w.entities[id].props.type;
+				
+				
+				var markers = w.editor.dom.select('span[name="'+id+'"]');
+				var start = markers[0];
+				var end = markers[1];
+				
+				if (type !== 'note' && type !== 'citation' && type !== 'keyword') {
+					var nodes = [start];
+					var currentNode = start;
+					while (currentNode != end  && currentNode != null) {
+						currentNode = currentNode.nextSibling;
+						nodes.push(currentNode);
+					}
+					
+					$(nodes).wrapAll('<span id="entityHighlight" class="'+type+'"/>');
 				}
 				
-				$(nodes).wrapAll('<span id="entityHighlight" class="'+type+'"/>');
+				// maintain the original caret position
+				if (bm) {
+					w.editor.selection.moveToBookmark(bm);
+				}
+				
+				if (doScroll) {
+					var val = $(start).offset().top;
+					$(w.editor.dom.doc.body).scrollTop(val);
+				}
+				
+				w.event('entityFocused').publish(id);
 			}
-			
-			// maintain the original caret position
-			if (bm) {
-				w.editor.selection.moveToBookmark(bm);
-			}
-			
-			if (doScroll) {
-				var val = $(start).offset().top;
-				$(w.editor.dom.doc.body).scrollTop(val);
-			}
-			
-			w.event('entityFocused').publish(id);
 		}
 	};
 	
