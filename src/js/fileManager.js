@@ -63,7 +63,7 @@ return function(writer) {
 		} else {
 			w.delegator.validate(function (valid) {
 				if (valid) {
-					w.delegator.saveDocument();
+					w.delegator.saveDocument(w.currentDocId);
 				} else {
 					var doc = w.currentDocId;
 					if (doc == null) doc = 'The current document';
@@ -72,7 +72,7 @@ return function(writer) {
 						msg: doc+' is not valid. <b>Save anyways?</b>',
 						callback: function(yes) {
 							if (yes) {
-								w.delegator.saveDocument();
+								w.delegator.saveDocument(w.currentDocId);
 							}
 						}
 					});
@@ -83,7 +83,13 @@ return function(writer) {
 	
 	fm.loadDocument = function(docName) {
 		w.currentDocId = docName;
-		w.delegator.loadDocument(w.converter.processDocument);
+		w.delegator.loadDocument(docName, function(xml) {
+			if (xml != null) {
+				w.converter.processDocument(xml);
+			} else {
+				w.currentDocId = null;
+			}
+		});
 	};
 	
 	/**
@@ -136,40 +142,16 @@ return function(writer) {
 	};
 	
 	fm.loadInitialDocument = function(start) {
-		if (start === '#load') {
+		start = start.substr(1); // remove hash
+		if (start === 'load') {
 			w.dialogManager.filemanager.showLoader();
-		} else if (start.match('sample_') || start.match('template_') || start.match('blank_')) {
-			var name = start.substr(1);
-			_loadTemplate(w.cwrcRootUrl+'xml/'+name+'.xml', name);
-		} else if (start != '') {
-			fm.loadDocument(start.substr(1));
+		} else if (start.match(/^templates\//) !== null) {
+			w.delegator.loadTemplate(start, function(xml) {
+				w.converter.processDocument(xml);
+			});
+		} else if (start !== '') {
+			fm.loadDocument(start);
 		}
-	};
-	
-	function _loadTemplate(url, hashName) {
-		w.currentDocId = null;
-		
-		$.ajax({
-			url: url,
-			dataType: 'xml',
-			success: function(data, status, xhr) {
-				if (hashName) {
-					window.location.hash = '#'+hashName;
-				}
-//				var rdf = data.createElement('rdf:RDF');
-//				var root;
-//				if (data.childNodes) {
-//					root = data.childNodes[data.childNodes.length-1];
-//				} else {
-//					root = data.firstChild;
-//				}
-//				$(root).prepend(rdf);
-				w.converter.processDocument(data);
-			},
-			error: function(xhr, status, error) {
-				if (console) console.log(status);
-			}
-		});
 	};
 	
 	return fm;

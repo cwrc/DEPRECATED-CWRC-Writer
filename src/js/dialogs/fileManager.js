@@ -170,7 +170,7 @@ return function(writer) {
 	function _doLoad(filename, type) {
 		if (type === 'template') {
 			w.delegator.loadTemplate(filename, function(xml) {
-				w.fileManager.loadDocumentFromXml(xml);
+				w.converter.processDocument(xml);
 			});
 		} else {
 			w.fileManager.loadDocument(filename);

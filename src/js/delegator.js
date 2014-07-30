@@ -289,6 +289,7 @@ return function(writer) {
 	del.loadTemplate = function(path, callback) {
 		var branch = _getTemplateBranch();
 		branch.contents(path).then(function(template) {
+			window.location.hash = '#'+path;
 			var xml = $.parseXML(template);
 			callback.call(w, xml);
 		});
@@ -296,25 +297,25 @@ return function(writer) {
 	
 	
 	/**
-	 * Loads a document based on the currentDocId
-	 * TODO Move currentDocId system out of CWRCWriter
-	 * @param docName
+	 * Loads a document
+	 * @param {String} docId The document ID
+	 * @param {Function} callback Returns document XML, or null if there was an error
 	 */
-	del.loadDocument = function(callback) {
+	del.loadDocument = function(docId, callback) {
 		$.ajax({
-			url: w.baseUrl+'editor/documents/'+w.currentDocId,
+			url: w.baseUrl+'editor/documents/'+docId,
 			type: 'GET',
 			success: function(doc, status, xhr) {
-				window.location.hash = '#'+w.currentDocId;
+				window.location.hash = '#'+docId;
 				callback.call(w, doc);
 			},
 			error: function(xhr, status, error) {
 				w.dialogManager.show('message', {
 					title: 'Error',
-					msg: 'An error ('+status+') occurred and '+w.currentDocId+' was not loaded.',
+					msg: 'An error ('+status+') occurred and '+docId+' was not loaded.',
 					type: 'error'
 				});
-				w.currentDocId = null;
+				callback.call(w, null);
 			},
 			dataType: 'xml'
 		});
@@ -322,12 +323,13 @@ return function(writer) {
 	
 	/**
 	 * Performs the server call to save the document.
-	 * @param callback Called with one boolean parameter: true for successful save, false otherwise
+	 * @param {String} docId The document ID
+	 * @param {Function} callback Returns one boolean parameter: true for successful save, false otherwise
 	 */
-	del.saveDocument = function(callback) {
+	del.saveDocument = function(docId, callback) {
 		var docText = w.converter.getDocumentContent(true);
 		$.ajax({
-			url : w.baseUrl+'editor/documents/'+w.currentDocId,
+			url : w.baseUrl+'editor/documents/'+docId,
 			type: 'PUT',
 			dataType: 'json',
 			data: docText,
@@ -335,9 +337,9 @@ return function(writer) {
 				w.editor.isNotDirty = 1; // force clean state
 				w.dialogManager.show('message', {
 					title: 'Document Saved',
-					msg: w.currentDocId+' was saved successfully.'
+					msg: docId+' was saved successfully.'
 				});
-				window.location.hash = '#'+w.currentDocId;
+				window.location.hash = '#'+docId;
 				if (callback) {
 					callback.call(w, true);
 				}
@@ -347,7 +349,7 @@ return function(writer) {
 			error: function() {
 				w.dialogManager.show('message', {
 					title: 'Error',
-					msg: 'An error occurred and '+w.currentDocId+' was not saved.',
+					msg: 'An error occurred and '+docId+' was not saved.',
 					type: 'error'
 				});
 				if (callback) {
