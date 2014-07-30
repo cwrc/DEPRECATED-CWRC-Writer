@@ -232,10 +232,9 @@ return function(writer) {
 			},
 			success: function(data, status, xhr) {
 				var valid = $('status', data).text() == 'pass';
+				w.event('documentValidated').publish(valid, data, docText);
 				if (callback) {
 					callback.call(w, valid);
-				} else {
-					w.event('documentValidated').publish(valid, data, docText);
 				}
 			},
 			error: function() {
