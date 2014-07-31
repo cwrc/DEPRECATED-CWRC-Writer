@@ -1,5 +1,15 @@
 {
 	"cwrcRootUrl": "",
+	"cwrcDialogs": {
+		"cwrcApiUrl": "http://apps.testing.cwrc.ca/services/ccm-api/",
+		"geonameUrl": "http://apps.testing.cwrc.ca/cwrc-mtp/geonames/",
+		"viafUrl": "http://apps.testing.cwrc.ca/services/viaf/",
+		"schemas": {
+			"person": "http://cwrc.ca/schemas/entities.rng",
+			"organization": "http://cwrc.ca/schemas/entities.rng",
+			"place": "http://cwrc.ca/schemas/entities.rng"
+		}
+	},
 	"schemas": {
 		"tei": {
 			"name": "CWRC Basic TEI Schema",

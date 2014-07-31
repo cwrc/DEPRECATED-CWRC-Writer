@@ -3,7 +3,14 @@ define(['jquery', 'jquery-ui', 'dialogs/cwrcDialogBridge'], function($, jqueryUi
 return function(writer) {
 	var w = writer;
 	
-	cD.setPlaceSchema('js/cwrcDialogs/schemas/entities.rng');
+	var schema = null;
+	if (w.initialConfig.cwrcDialogs != null && w.initialConfig.cwrcDialogs.schemas != null) {
+		schema = w.initialConfig.cwrcDialogs.schemas.place;
+	}
+	if (schema == null) {
+		schema = 'js/cwrcDialogs/schemas/entities.rng';
+	}
+	cD.setPlaceSchema(schema);
 	
 	var bridge = new cwrcDialogBridge(w, {
 		label: 'Place',

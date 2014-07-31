@@ -12,6 +12,8 @@ return function(config) {
 	
 	var w = {};
 	
+	w.initialConfig = config;
+	
 	w.layout = null; // jquery ui layout object
 	w.editor = null; // reference to the tinyMCE instance we're creating, set in setup
 	

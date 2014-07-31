@@ -68,8 +68,16 @@ return function(writer) {
 		addschema: new AddSchema(writer)
 	};
 	
-	// log in for CWRC-Dialogs
-	cD.initializeWithLogin('mark_test', 'P4ssw0rd!');
+	if (window.location.hostname != 'localhost') {
+		// log in for CWRC-Dialogs
+		cD.initializeWithLogin('mark_test', 'P4ssw0rd!');
+	}
+	if (writer.initialConfig.cwrcDialogs != null) {
+		var conf = writer.initialConfig.cwrcDialogs;
+		if (conf.cwrcApiUrl != null) cD.setCwrcApi(conf.cwrcApiUrl);
+		if (conf.geonameUrl != null) cD.setGeonameUrl(conf.geonameUrl);
+		if (conf.viafUrl != null) cD.setViafUrl(conf.viafUrl);
+	}
 	
 	dialogs.event = dialogs.addevent;
 	
