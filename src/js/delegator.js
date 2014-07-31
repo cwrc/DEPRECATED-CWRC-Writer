@@ -288,6 +288,7 @@ return function(writer) {
 	del.loadTemplate = function(path, callback) {
 		var branch = _getTemplateBranch();
 		branch.contents(path).then(function(template) {
+			path = path.replace('.xml', '');
 			window.location.hash = '#'+path;
 			var xml = $.parseXML(template);
 			callback.call(w, xml);

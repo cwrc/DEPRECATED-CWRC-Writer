@@ -146,6 +146,7 @@ return function(writer) {
 		if (start === 'load') {
 			w.dialogManager.filemanager.showLoader();
 		} else if (start.match(/^templates\//) !== null) {
+			start += '.xml';
 			w.delegator.loadTemplate(start, function(xml) {
 				w.converter.processDocument(xml);
 			});
