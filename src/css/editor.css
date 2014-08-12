@@ -109,16 +109,28 @@ body {
 	cursor: pointer;
 }
 
-.note::after {
+span:not(#entityHighlight) > .start.note::after, div > .start.note::after {
 	content: url(../img/note_inline_large.png);
 }
 
-.citation::after {
+span:not(#entityHighlight) > .start.citation::after, div > .start.citation::after {
 	content: url(../img/citation_inline_large.png);
 }
 
-.keyword::after {
+span:not(#entityHighlight) > .start.keyword::after, div > .start.keyword::after {
 	content: url(../img/keyword_inline_large.png);
+}
+
+#entityHighlight > .note::after {
+	content: url(../img/note_inline_large_highlight.png);
+}
+
+#entityHighlight > .citation::after {
+	content: url(../img/citation_inline_large_highlight.png);
+}
+
+#entityHighlight > .keyword::after {
+	content: url(../img/keyword_inline_large_highlight.png);
 }
 
 .showEntityBrackets .citation.start, .showEntityBrackets .note.start, .showEntityBrackets .keyword.start {

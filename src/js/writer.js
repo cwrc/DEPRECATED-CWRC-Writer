@@ -6,10 +6,17 @@ define([
     'tagger','converter','fileManager','entitiesModel','dialogs/settings'
 ], function($, tinymce, tinymceCopyEvent,
 		EventManager, SchemaManager, DialogManager, Utilities, Tagger, Converter, FileManager, EntitiesModel, SettingsDialog) {
-	
+
+/**
+ * @class Writer
+ * @param {Object} config
+ */
 return function(config) {
 	config = config || {};
 	
+	/**
+	 * @lends Writer.prototype
+	 */
 	var w = {};
 	
 	w.initialConfig = config;
@@ -103,21 +110,19 @@ return function(config) {
 				w.editor.currentEntity = id;
 				var type = w.entities[id].props.type;
 				
-				
 				var markers = w.editor.dom.select('span[name="'+id+'"]');
 				var start = markers[0];
 				var end = markers[1];
 				
+				var nodes = [start];
 				if (type !== 'note' && type !== 'citation' && type !== 'keyword') {
-					var nodes = [start];
 					var currentNode = start;
 					while (currentNode != end  && currentNode != null) {
 						currentNode = currentNode.nextSibling;
 						nodes.push(currentNode);
 					}
-					
-					$(nodes).wrapAll('<span id="entityHighlight" class="'+type+'"/>');
 				}
+				$(nodes).wrapAll('<span id="entityHighlight" class="'+type+'"/>');
 				
 				// maintain the original caret position
 				if (bm) {
@@ -206,7 +211,7 @@ return function(config) {
 	
 	/**
 	 * Get the current document from the editor
-	 * @returns Element The XML document serialized to a string
+	 * @returns {Document} The XML document
 	 */
 	w.getDocument = function() {
 		var docString = w.converter.getDocumentContent(true);
@@ -486,9 +491,12 @@ return function(config) {
 	function _doHighlightCheck(ed, evt) {
 		var range = ed.selection.getRng(true);
 		
+		var entityClick = false;
+		
 		// check if inside boundary tag
 		var parent = range.commonAncestorContainer;
 		if (parent.nodeType == 1 && parent.hasAttribute('_entity')) {
+			entityClick = true;
 			w.highlightEntity(); // remove highlight
 			if ((w.editor.dom.hasClass(parent, 'start') && evt.which == 37) || 
 				(w.editor.dom.hasClass(parent, 'end') && evt.which != 39)) {
@@ -507,17 +515,28 @@ return function(config) {
 		var entityStart = w.tagger.findEntityBoundary('start', range.startContainer);
 		var entityEnd = w.tagger.findEntityBoundary('end', range.endContainer);
 		
-		if (entityEnd == null || entityStart == null) {
-			w.highlightEntity();
-			var parentNode = $(ed.selection.getNode());
-			if (parentNode.attr('_tag')) {
-				var id = parentNode.attr('id');
-				w.editor.currentStruct = id;
-			}
-			return;
+		var id, type;
+		if (entityStart != null) {
+			id = entityStart.getAttribute('name');
+			type = w.entities[id].props.type;
 		}
 		
-		var id = entityStart.getAttribute('name');
+		if (entityEnd == null) {
+			if (entityClick && (type === 'note' || type === 'citation' || type === 'keyword')) {
+				// entity marker's clicked so edit the entity
+				w.tagger.editTag(id);
+			} else {
+				w.highlightEntity();
+				var parentNode = $(ed.selection.getNode());
+				if (parentNode.attr('_tag')) {
+					var id = parentNode.attr('id');
+					w.editor.currentStruct = id;
+				}
+				return;
+			}
+		}
+		
+		id = entityStart.getAttribute('name');
 		if (id == ed.currentEntity) return;
 		
 		w.highlightEntity(id, ed.selection.getBookmark());
