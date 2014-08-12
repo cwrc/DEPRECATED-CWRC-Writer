@@ -1,5 +1,11 @@
 define(['jquery', 'jquery-ui'], function($, jqueryUi) {
 	
+/**
+ * @class Validation
+ * @param {Object} config
+ * @param {Writer} config.writer
+ * @param {String} config.parentId
+ */
 return function(config) {
 	
 	var w = config.writer;
@@ -35,11 +41,13 @@ return function(config) {
 		$('#southTabs').tabs('option', 'active', 0);
 	}
 	
+	/**
+	 * @lends Validation.prototype
+	 */
 	var validation = {};
 	
 	/**
 	 * Processes a validation response from the server.
-	 * @memberOf validation
 	 * @param resultDoc The actual response
 	 * @param docString The doc string sent to the server for validation  
 	 */
@@ -77,8 +85,13 @@ return function(config) {
 					var tagName = tag.match(/^\w+(?=\[)?/);
 					if (tagName != null) {
 						var index = tag.match(/\d+/);
-						if (index === null) index = 0;
-						editorPath += '*[_tag="'+tagName+'"]:eq('+index+') > ';
+						if (index === null) {
+							index = 0;
+						} else {
+							index = parseInt(index[0]);
+							index--; // xpath is 1-based and "eq()" is 0-based
+						}
+						editorPath += '*[_tag="'+tagName[0]+'"]:eq('+index+') > ';
 					}
 				}
 				editorPath = editorPath.substr(0, editorPath.length-3);
