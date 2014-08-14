@@ -322,7 +322,7 @@ return function(writer) {
 		} else if (result === w.NO_SELECTION) {
 			w.dialogManager.show('message', {
 				title: 'Error',
-				msg: 'Please select some text before adding an entity or tag.',
+				msg: 'Please select some text before adding an entity.',
 				type: 'error'
 			});
 		} else if (result === w.NO_COMMON_PARENT) {
@@ -332,16 +332,24 @@ return function(writer) {
 				type: 'error'
 			});
 		} else if (result === w.OVERLAP) {
-			w.dialogManager.confirm({
-				title: 'Info',
-				msg: 'This annotation overlaps with other tags, so an XML tag for this annotation cannot be inserted in the document. The editor will create a stand-off semantic web annotation only.<br/>If you wish to insert an XML tag, select a portion of the text to annotate that does not overlap other XML tags.<br/>Do you still wish to insert this annotation?',
-				callback: function(confirmed) {
-					if (confirmed) {
-						w.editor.currentBookmark = w.editor.selection.getBookmark(1);
-						w.dialogManager.show(type, {type: type, title: w.entitiesModel.getTitle(type), pos: w.editor.contextMenuPos});
+			if (w.allowOverlap === false) {
+				w.dialogManager.show('message', {
+					title: 'Error',
+					msg: 'You are trying to insert an overlapping entity, however the current Editor Mode doesn\'t allow overlapping. Go to Settings to change it.',
+					type: 'error'
+				});
+			} else {
+				w.dialogManager.confirm({
+					title: 'Info',
+					msg: 'This annotation overlaps with other tags, so an XML tag for this annotation cannot be inserted in the document. The editor will create a stand-off semantic web annotation only.<br/>If you wish to insert an XML tag, select a portion of the text to annotate that does not overlap other XML tags.<br/>Do you still wish to insert this annotation?',
+					callback: function(confirmed) {
+						if (confirmed) {
+							w.editor.currentBookmark = w.editor.selection.getBookmark(1);
+							w.dialogManager.show(type, {type: type, title: w.entitiesModel.getTitle(type), pos: w.editor.contextMenuPos});
+						}
 					}
-				}
-			});
+				});
+			}
 		}
 	};
 	
