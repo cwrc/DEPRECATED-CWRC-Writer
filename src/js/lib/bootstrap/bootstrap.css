@@ -894,7 +894,7 @@
   font-size: 14px;
   line-height: 1.42857143;
   color: #333333;
-  background-color: #ffffff;
+  /*background-color: #ffffff;*/
 }
 .bootstrap-scope input,
 .bootstrap-scope button,
@@ -3109,7 +3109,7 @@ tbody.bootstrap-scope .collapse.in {
 .bootstrap-scope .dropdown-toggle:focus {
   outline: 0;
 }
-.bootstrap-scope.dropdown-menu {
+.bootstrap-scope .dropdown-menu {
   position: absolute;
   top: 100%;
   left: 0;

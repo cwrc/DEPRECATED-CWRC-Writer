@@ -101,7 +101,7 @@ $(function(){
 		entity.viewModel().interfaceFields = ko.observableArray([]);
 		entity.viewModel().dialogTitle = ko.observable("");
 		entity.viewModel().validated = ko.observable(true);
-		entity.viewModel().showSavingMessage = ko.observable(false);
+		entity.viewModel().showSavingMessage = ko.observable("");
 		entity.selfWorking = $.parseXML('<entity></entity>');
 		entity.elementPath = [];
 		entity.startValuePath = [];
@@ -328,7 +328,7 @@ $(function(){
 			'		<div class="modal-content">' +
 			'			<div class="modal-header">' +
 			'				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-			'				<span data-bind="visible: showSavingMessage"><h5 class="modal-title pull-right"><span>Saving</span> <i class="fa fa-spin fa-refresh"></i>&nbsp;</h5></span>' +
+			'				<span><h5 class="modal-title pull-right"><span data-bind="text: showSavingMessage"></span> <i id="showSavingIcon"></i>&nbsp;</h5></span>' +
 			'				<h4 class="modal-title"><span data-bind="text: dialogTitle"></span></h4>' +
 			'			</div>' +
 			'			<div class="modal-body modal-body-area">' +
@@ -338,7 +338,7 @@ $(function(){
 			'			<div class="modal-footer">' +
 			'				<div class="label label-danger" data-bind="ifnot: validated"> Form is not valid</div>' +
 			'				<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>' +
-			'				<button type="button" class="btn btn-primary" onclick="cD.processCallback();">Ok</button>' +
+			'				<button type="button" class="btn btn-primary" data-bind="click: $root.processCallback">Ok</button>' +
 			'			</div>' +
 			'		</div>' +
 			'	</div>' +
@@ -352,7 +352,7 @@ $(function(){
 			'		<div class="modal-content">' +
 			'			<div class="modal-header">' +
 			'				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-			'				<span data-bind="visible: showSavingMessage"><h5 class="modal-title pull-right"><span>Saving</span> <i class="fa fa-spin fa-refresh"></i>&nbsp;</h5></span>' +
+			'				<span><h5 class="modal-title pull-right"><span data-bind="text: showSavingMessage"></span> <i id="showSavingIcon"></i>&nbsp;</h5></span>' +
 			'				<h4 class="modal-title"><span data-bind="text: dialogTitle"></span></h4>' +
 			'			</div>' +
 			'			<div class="modal-body modal-body-area" data-bind="with: modsFields">' +
@@ -431,7 +431,7 @@ $(function(){
 			'			<div class="modal-footer">' +
 			'				<div class="label label-danger" data-bind="ifnot: validated"> Form is not valid</div>' +
 			'				<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>' +
-			'				<button type="button" class="btn btn-primary" onclick="cD.processCallback();">Ok</button>' +
+			'				<button type="button" class="btn btn-primary" data-bind="click: $root.processCallback">Ok</button>' +
 			'			</div>' +
 			'		</div>' +
 			'	</div>' +
@@ -462,11 +462,15 @@ $(function(){
 		}
 
 		var savingMessageOn = function() {
-			entity.viewModel().showSavingMessage(true);
+			entity.viewModel().showSavingMessage("Saving ");
+			entity.viewModel().showSavingMessage.valueHasMutated();
+			$("#showSavingIcon").addClass("fa fa-spin fa-refresh");
 		}
 
 		var savingMessageOff = function() {
-			entity.viewModel().showSavingMessage(false);
+			entity.viewModel().showSavingMessage("");
+			entity.viewModel().showSavingMessage.valueHasMutated();
+			$("#showSavingIcon").removeClass("fa fa-spin fa-refresh");
 		}
 
 		var initializeQuantifiers = function() {
@@ -793,7 +797,10 @@ $(function(){
 						}
 						
 						if (isStartValue === "true") {
-							entity.startValuePath = currentPath;
+							entity.startValuePath = currentPath.map(function(p){
+								return {name : p,
+										count: 1};
+							});
 						}
 
 						if (leftPadding && leftPadding.trim() !== "") {
@@ -1211,34 +1218,37 @@ $(function(){
 			return result;
 		};
 
-		cD.processCallback = function() {
-			savingMessageOn();
-			entity.viewModel().validated(true);
-			var xml = getWorkingXML();
-			// console.log(xml);
-			if (entity.viewModel().validated()) {
-				var response;
-				if (entity.editing) {
-					response = cwrcApi[dialogType].modifyEntity(entity.editingPID, xml);	
-				} else {
-					response = cwrcApi[dialogType].newEntity(xml);	
-				}
-				var result = {
-					response : response,
-					data : xml
-				};
+		entity.viewModel().processCallback = function() {
+			savingMessageOn();					
+			setTimeout((function(){
+				entity.viewModel().validated(true);
+				var xml = getWorkingXML();
+				// console.log(xml);
+				if (entity.viewModel().validated()) {
+					var response;
+					if (entity.editing) {
+						response = cwrcApi[dialogType].modifyEntity(entity.editingPID, xml);	
+					} else {
+						response = cwrcApi[dialogType].newEntity(xml);	
+					}
+					var result = {
+						response : response,
+						data : xml
+					};
 
-				entity[dialogType].success(result);	
-				
-				if(dialogType === 'title'){
-					$('#cwrcTitleModal').modal('hide');
-				}else{
-					$('#cwrcEntityModal').modal('hide');
+					entity[dialogType].success(result);	
+					
+					if(dialogType === 'title'){
+						$('#cwrcTitleModal').modal('hide');
+					}else{
+						$('#cwrcEntityModal').modal('hide');
+					}
+				} else {
+					entity[dialogType].error("Form not valid");
 				}
-			} else {
-				entity[dialogType].error("Form not valid");
-			}
-			savingMessageOff();
+				savingMessageOff();
+			}), 200);
+			
 		};
 
 		var xmlToString = function(xmlData) {
@@ -1824,10 +1834,12 @@ $(function(){
 		var addStartValue = function(value, path) {
 			// clear ors |
 			for (var i=0; i< path.length; ++i) {
-				if (path[i].indexOf("|") != -1) {
-					path[i] = dialogType;
+				if (path[i].name.indexOf("|") != -1) {
+					path[i].name = dialogType;
 				}
 			}
+
+
 			foundAndFilled(value, path, entity.viewModel().interfaceFields());
 		}
 
@@ -1839,7 +1851,8 @@ $(function(){
 				entity.editingPID = "";	
 			}
 			completeDialog(opts);
-			// set default value			
+			// set default value
+
 			if (opts.startValue && opts.startValue.trim() != "") {
 				addStartValue(opts.startValue, entity.startValuePath);	
 			}			
@@ -2550,7 +2563,7 @@ $(function(){
 			// '					<h4 class="modal-title"><span>Search XXX</span></h4>' +
 			'						<h4 class="modal-title"><span data-bind="text: dialogTitle"></span></h4>' +
 			'				</div>' +
-			'				<div class="modal-body">' +
+			'				<div class="modal-body modal-body-area">' +
 			'					<!-- Content -->' +
 			'					<div class="row">' +
 			'						<div class="col-lg-12">' +
