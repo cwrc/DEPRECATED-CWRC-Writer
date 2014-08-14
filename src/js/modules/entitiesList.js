@@ -1,5 +1,12 @@
 define(['jquery', 'jquery-ui', 'jquery.contextmenu'], function($, jqueryUi, jqueryContextMenu) {
 	
+/**
+ * @class EntitiesList
+ * @fires Writer#entitiesListInitialized
+ * @param {Object} config
+ * @param {Writer} config.writer
+ * @param {String} config.parentId
+ */
 return function(config) {
 	
 	var w = config.writer;
@@ -38,6 +45,9 @@ return function(config) {
 		w.highlightEntity(w.editor.currentEntity);
 	});
 	
+	/**
+	 * @lends EntitiesList.prototype
+	 */
 	var pm = {};
 	
 	pm.layout = $('#entities').layout({
@@ -86,7 +96,6 @@ return function(config) {
 	});
 	
 	/**
-	 * @memberOf pm
 	 * @param sort
 	 */
 	pm.update = function(sort) {

@@ -1,6 +1,10 @@
 // TODO add IDs
 define(['jquery', 'jquery.tmpl'], function($) {
-	
+
+/**
+ * @class EntitiesModel
+ * @param {Writer} writer
+ */
 return function(writer) {
 	var w = writer;
 	
@@ -887,10 +891,13 @@ return function(writer) {
 		}
 	};
 	
+	/**
+	 * @lends EntitiesModel.prototype
+	 */
 	var entmod = {};
+	
 	/**
 	 * Checks if the tag is for an entity.
-	 * @memberOf entmod
 	 * @param tag The tag to check.
 	 * @param schema The schema to use.
 	 * @returns {String} The entity type, or null

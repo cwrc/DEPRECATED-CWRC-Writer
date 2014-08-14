@@ -10,7 +10,11 @@ $.fn.filterNode = function(name) {
 		return this.nodeName === name;
 	});
 };
-	
+
+/**
+ * @class FileManager
+ * @param {Writer} writer
+ */
 return function(writer) {
 	
 	var w = writer;
@@ -44,11 +48,11 @@ return function(writer) {
 		}
 	});
 	
+	/**
+	 * @lends FileManager.prototype
+	 */
 	var fm = {};
 	
-	/**
-	 * @memberOf fm
-	 */
 	fm.newDocument = function() {
 		if (w.editor.isDirty()) {
 			w.dialogManager.filemanager.showUnsaved();

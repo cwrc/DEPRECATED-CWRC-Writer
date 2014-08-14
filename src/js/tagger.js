@@ -1,13 +1,19 @@
 define(['jquery'], function($) {
-	
+
+/**
+ * @class Tagger
+ * @param {Writer} writer
+ */
 return function(writer) {
 	var w = writer;
 	
+	/**
+	 * @lends Tagger.prototype
+	 */
 	var tagger = {};
 	
 	/**
 	 * Inserts entity boundary tags around the supplied DOM range.
-	 * @memberOf tagger
 	 * @param {string} id The id of then entity 
 	 * @param {string} type The entity type
 	 * @param {range} range The DOM range to insert the tags around
@@ -271,7 +277,10 @@ return function(writer) {
 		}
 	};
 	
-	// a general removal function for entities and structure tags
+	/**
+	 * A general removal function for entities and structure tags
+	 * @param {String} id The id of the tag to remove
+	 */
 	tagger.removeTag = function(id) {
 		if (id != null) {
 			if (w.entities[id]) {
@@ -301,6 +310,10 @@ return function(writer) {
 		}, w.editor.undoManager);
 	}
 	
+	/**
+	 * Displays the appropriate dialog for adding an entity
+	 * @param {String} type The entity type
+	 */
 	tagger.addEntity = function(type) {
 		var result = w.utilities.isSelectionValid();
 		if (result === w.VALID) {
@@ -332,6 +345,13 @@ return function(writer) {
 		}
 	};
 	
+	/**
+	 * Add the remaining entity info to its entry
+	 * @protected
+	 * @fires Writer#entityAdded
+	 * @param {String} type Then entity type
+	 * @param {Object} info The entity info
+	 */
 	tagger.finalizeEntity = function(type, info) {
 		w.editor.selection.moveToBookmark(w.editor.currentBookmark);
 		if (info != null) {
@@ -381,12 +401,23 @@ return function(writer) {
 		w.editor.focus();
 	};
 	
+	/**
+	 * Update the entity info
+	 * @fires Writer#entityEdited
+	 * @param {String} id The entity id
+	 * @param {Object} info The entity info
+	 */
 	tagger.editEntity = function(id, info) {
 		w.entities[id].info = info;
 		w.event('entityEdited').publish(id);
 	};
 	
-	tagger.copyEntity = function(id, pos) {
+	/**
+	 * Copy an entity internally
+	 * @fires Writer#entityCopied
+	 * @param {String} id The entity id
+	 */
+	tagger.copyEntity = function(id) {
 		var tag = tagger.getCurrentTag(id);
 		if (tag.entity) {
 			w.editor.entityCopy = tag.entity;
@@ -400,7 +431,11 @@ return function(writer) {
 		}
 	};
 	
-	tagger.pasteEntity = function(pos) {
+	/**
+	 * Paste a previously copied entity
+	 * @fires Writer#entityPasted
+	 */
+	tagger.pasteEntity = function() {
 		if (w.editor.entityCopy == null) {
 			w.dialogManager.show('message', {
 				title: 'Error',
@@ -437,6 +472,11 @@ return function(writer) {
 		}
 	};
 	
+	/**
+	 * Remove an entity
+	 * @fires Writer#entityRemoved
+	 * @param {String} id The entity id
+	 */
 	tagger.removeEntity = function(id) {
 		id = id || w.editor.currentEntity;
 		
@@ -496,6 +536,7 @@ return function(writer) {
 	
 	/**
 	 * Adds a structure tag to the document, based on the params.
+	 * @fires Writer#tagAdded
 	 * @param params An object with the following properties:
 	 * @param params.bookmark A tinymce bookmark object, with an optional custom tagId property
 	 * @param params.attributes Various properties related to the tag
@@ -583,6 +624,7 @@ return function(writer) {
 	
 	/**
 	 * Change the attributes of a tag, or change the tag itself.
+	 * @fires Writer#tagEdited
 	 * @param tag {jQuery} A jQuery representation of the tag
 	 * @param attributes {Object} An object of attribute names and values
 	 */
@@ -626,6 +668,12 @@ return function(writer) {
 		w.event('tagEdited').publish(id);
 	};
 	
+	/**
+	 * Remove a structure tag
+	 * @fires Writer#tagRemoved
+	 * @param {String} id Then tag id
+	 * @param {Boolean} removeContents True to remove tag contents only
+	 */
 	tagger.removeStructureTag = function(id, removeContents) {
 		_doCustomTaggerUndo();
 		
@@ -656,6 +704,12 @@ return function(writer) {
 		w.editor.currentStruct = null;
 	};
 	
+	/**
+	 * Remove a structure tag's contents
+	 * @fires Writer#tagContentsRemoved
+	 * @param {String} id The tag id
+	 */
+	// TODO refactor this with removeStructureTag
 	tagger.removeStructureTagContents = function(id) {
 		_doCustomTaggerUndo();
 		

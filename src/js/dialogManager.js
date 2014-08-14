@@ -40,6 +40,10 @@ $.extend($.ui.tooltip.prototype.options, {
 	}
 });
 
+/**
+ * @class DialogManager
+ * @param {Writer} writer
+ */
 return function(writer) {	
 	var currentType = null;
 	
@@ -81,10 +85,10 @@ return function(writer) {
 	
 	dialogs.event = dialogs.addevent;
 	
+	/**
+	 * @lends DialogManager.prototype
+	 */
 	var pm = {
-		/**
-		 * @memberOf pm
-		 */
 		getCurrentType: function() {
 			return currentType;
 		},

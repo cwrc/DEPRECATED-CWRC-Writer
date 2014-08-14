@@ -52,12 +52,22 @@ $(document).on('context_hide.vakata', function(e) {
 	var filterParent = $('.filterParent', e.element);
 	filterParent.hide();
 });
-	
+
+/**
+ * @class StructureTree
+ * @fires Writer#structureTreeInitialized
+ * @param {Object} config
+ * @param {Writer} config.writer
+ * @param {String} config.parentId
+ */
 return function(config) {
 	var w = config.writer;
 	
 	var id = 'tree';
 	
+	/**
+	 * @lends StructureTree.prototype
+	 */
 	var tree = {
 		currentlySelectedNode: null, // id of the currently selected node
 		currentlySelectedEntity: null, // id of the currently selected entity (as opposed to node, ie. struct tag)
@@ -167,7 +177,7 @@ return function(config) {
 	});
 	
 	/**
-	 * @memberOf tree
+	 * Updates the tree to reflect the document structure.
 	 */
 	tree.update = function() {
 		var treeRef = $.jstree.reference('#'+id);

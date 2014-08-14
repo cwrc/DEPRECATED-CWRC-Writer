@@ -1,5 +1,11 @@
 define(['jquery','jquery.snippet'], function($, snippet) {
 	
+/**
+ * @class Selection
+ * @param {Object} config
+ * @param {Writer} config.writer
+ * @param {String} config.parentId
+ */
 return function(config) {
 	
 	var w = config.writer;
@@ -11,6 +17,9 @@ return function(config) {
 		updateSelection(w.editor);
 	});
 	
+	/**
+	 * @lends Selection.prototype
+	 */
 	var selection = {};
 	
 	function updateSelection(ed) {

@@ -3,6 +3,10 @@
  */
 define(['jquery','tinymce'], function($, tinymce) {
 
+/**
+ * @class Converter
+ * @param {Writer} writer
+ */
 return function(writer) {
 	var w = writer;
 	
@@ -10,6 +14,9 @@ return function(writer) {
 		'<div id="entitiesConverter"></div>' // used by _htmlEntitiesToUnicode
 	);
 	
+	/**
+	 * @lends Converter.prototype
+	 */
 	var converter = {};
 	
 	// a list of reserved attribute names that are used by the editor
@@ -506,6 +513,7 @@ return function(writer) {
 	
 	/**
 	 * Processes a document and loads it into the editor.
+	 * @fires Writer#documentLoaded
 	 * @param doc An XML DOM
 	 */
 	converter.processDocument = function(doc) {

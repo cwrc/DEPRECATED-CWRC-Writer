@@ -1,12 +1,20 @@
 define(['jquery', 'octokit'], function($, Octokit) {
-	
+
+/**
+ * @class Delegator
+ * @param {Writer} writer
+ */
 return function(writer) {
 	var w = writer;
 	
+	/**
+	 * @lends Delegator.prototype
+	 */
 	var del = {};
 	
 	/**
-	 * @memberOf del
+	 * Lookup an entity
+	 * @deprecated Superseded by CWRC-Dialogs
 	 * @param params
 	 * @param callback
 	 */
@@ -215,6 +223,12 @@ return function(writer) {
 		return dfd.promise();
 	};
 	
+	/**
+	 * Validate the document against the current schema
+	 * @fires Writer#validationInitiated
+	 * @fires Writer#documentValidated
+	 * @param {Delegator~validateCallback} callback
+	 */
 	del.validate = function(callback) {
 		var docText = w.converter.getDocumentContent(false);
 		var schemaUrl = w.schemaManager.schemas[w.schemaManager.schemaId].url;
@@ -251,6 +265,11 @@ return function(writer) {
 		});
 	};
 	
+	/**
+	 * @callback Delegator~validateCallback
+	 * @param {Boolean} isValid
+	 */
+	
 	function _getTemplateBranch() {
 		var octo = new Octokit({token: '15286e8222a7bc13504996e8b451d82be1cba397'});
 		var templateRepo = octo.getRepo('cwrc', 'CWRC-Writer-Templates');
@@ -260,7 +279,7 @@ return function(writer) {
 	
 	/**
 	 * Gets the list of templates
-	 * @returns {Array} The list of templates
+	 * @param {Delegator~getTemplatesCallback} callback
 	 */
 	del.getTemplates = function(callback) {
 		var branch = _getTemplateBranch();
@@ -280,10 +299,17 @@ return function(writer) {
 	};
 	
 	/**
+	 * @callback Delegator~getTemplatesCallback
+	 * @param {Array} templates The list of templates
+	 * @property {String} name The template name
+	 * @property {String} path The path to the template, relative to the parent branch
+	 * 
+	 */
+	
+	/**
 	 * Loads a template
 	 * @param {String} path The path to the template, relative to the templates repo
-	 * @param {Function} callback The function to call
-	 * @returns {XML} The template
+	 * @param {Delegator~loadTemplateCallback} callback
 	 */
 	del.loadTemplate = function(path, callback) {
 		var branch = _getTemplateBranch();
@@ -295,11 +321,15 @@ return function(writer) {
 		});
 	};
 	
+	/**
+	 * @callback Delegator~loadTemplateCallback
+	 * @param {Document} The template document
+	 */
 	
 	/**
 	 * Loads a document
 	 * @param {String} docId The document ID
-	 * @param {Function} callback Returns document XML, or null if there was an error
+	 * @param {Delegator~loadDocumentCallback} callback
 	 */
 	del.loadDocument = function(docId, callback) {
 		$.ajax({
@@ -322,9 +352,15 @@ return function(writer) {
 	};
 	
 	/**
+	 * @callback Delegator~loadDocumentCallback
+	 * @param {(Document|null)} document Returns the document or null if there was an error
+	 */
+	
+	/**
 	 * Performs the server call to save the document.
+	 * @fires Writer#documentSaved
 	 * @param {String} docId The document ID
-	 * @param {Function} callback Returns one boolean parameter: true for successful save, false otherwise
+	 * @param {Delegator~saveDocumentCallback} callback
 	 */
 	del.saveDocument = function(docId, callback) {
 		var docText = w.converter.getDocumentContent(true);
@@ -358,6 +394,11 @@ return function(writer) {
 			}
 		});
 	};
+	
+	/**
+	 * @callback Delegator~saveDocumentCallback
+	 * @param {Boolean} savedSuccessfully
+	 */
 	
 	del.getHelp = function(tagName) {
 		return w.utilities.getDocumentationForTag(tagName);
