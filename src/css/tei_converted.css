@@ -8,7 +8,7 @@
 *[_tag="author"] { display: inline; }
 *[_tag="back"] { display: block; border: thin solid black; margin-top: 1em; padding: 0.5em; }
 *[_tag="bibl"] { display: inline; }
-*[_tag="div"][type="works"] { text-indent: -2em; margin: 0px 0px 0px 2em; }
+*[_tag="div"][type="works"] { margin: 0px 0px 0px 2em; }
 *[_tag="bibl"] > *[_tag="note"] { display: inline; }
 *[_tag="bibl"] > *[_tag="title"][type="subtitle"] { content: ""; }
 *[_tag="argument"] > *[_tag="bibl"], *[_tag="body"] > *[_tag="bibl"], *[_tag="cit"] > *[_tag="bibl"], *[_tag="div"] > *[_tag="bibl"], *[_tag="div0"] > *[_tag="bibl"], *[_tag="div1"] > *[_tag="bibl"], *[_tag="div2"] > *[_tag="bibl"], *[_tag="div3"] > *[_tag="bibl"], *[_tag="div4"] > *[_tag="bibl"], *[_tag="div5"] > *[_tag="bibl"], *[_tag="div6"] > *[_tag="bibl"], *[_tag="div7"] > *[_tag="bibl"], *[_tag="epigraph"] > *[_tag="bibl"], *[_tag="listBibl"] > *[_tag="bibl"] > *[_tag="bibl"], *[_tag="taxonomy"] > *[_tag="bibl"] { display: block; margin-bottom: 0.5em; }
