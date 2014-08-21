@@ -19,15 +19,18 @@ return function(writer) {
 	 * @param {range} range The DOM range to insert the tags around
 	 */
 	tagger.insertBoundaryTags = function(id, type, range) {
-		var sel = w.editor.selection;
-		sel.setRng(range);
-		if (tinymce.isWebKit) {
-			// chrome seems to mess up the range slightly if not set again
-			sel.setRng(range);
-		}
-
+		var parentTag = w.entitiesModel.getParentTag(type, w.schemaManager.schemaId);
+		
 		if (type === 'note' || type === 'citation' || type === 'keyword') {
-			var tag = w.editor.dom.create('span', {'_entity': true, '_type': type, 'class': 'entity '+type+' start', 'name': id}, '');
+			var tag = w.editor.dom.create('span', {
+				'_entity': true, '_note': true, '_tag': parentTag, '_type': type, 'class': 'entity '+type+' start', 'name': id, 'id': id
+			}, '');
+			var sel = w.editor.selection;
+			sel.setRng(range);
+			if (tinymce.isWebKit) {
+				// chrome seems to mess up the range slightly if not set again
+				sel.setRng(range);
+			}
 			sel.collapse(false);
 			range = sel.getRng(true);
 			range.insertNode(tag);
@@ -38,19 +41,32 @@ return function(writer) {
 				tagger.editTag(tagId);
 			});
 		} else {
-			var bm = sel.getBookmark();
-			
-			var start = w.editor.dom.create('span', {'_entity': true, '_type': type, 'class': 'entity '+type+' start', 'name': id}, '');
-			range.insertNode(start);
-			w.editor.dom.bind(start, 'click', _doMarkerClick);
-			
-			w.editor.selection.moveToBookmark(bm);
-			
-			var end = w.editor.dom.create('span', {'_entity': true, '_type': type, 'class': 'entity '+type+' end', 'name': id}, '');
-			sel.collapse(false);
-			range = sel.getRng(true);
-			range.insertNode(end);
-			w.editor.dom.bind(end, 'click', _doMarkerClick);
+			if (range.startContainer.parentNode != range.endContainer.parentNode) {
+				var nodes = w.utilities.getNodesInBetween(range.startContainer, range.endContainer);
+				
+				var startRange = range.cloneRange();
+				startRange.setEnd(range.startContainer, range.startContainer.length);
+				var start = w.editor.dom.create('span', {
+					'_entity': true, '_type': type, 'class': 'entity '+type+' start', 'name': id
+				}, '');
+				startRange.surroundContents(start);
+				
+				$.each(nodes, function(index, node) {
+					$(node).wrap('<span _entity="true" _type="'+type+'" class="entity '+type+'" name="'+id+'" />');
+				});
+				
+				var endRange = range.cloneRange();
+				endRange.setStart(range.endContainer, 0);
+				var end = w.editor.dom.create('span',{
+					'_entity': true, '_type': type, 'class': 'entity '+type+' end', 'name': id
+				}, '');
+				endRange.surroundContents(end);
+			} else {
+				var start = w.editor.dom.create('span', {
+					'_entity': true, '_tag': parentTag, '_type': type, 'class': 'entity '+type+' start end', 'name': id, 'id': id
+				}, '');
+				range.surroundContents(start);
+			}
 		}
 	};
 	
@@ -167,32 +183,17 @@ return function(writer) {
 		// deleted tags
 		for (var id in w.entities) {
 			var nodes = w.editor.dom.select('[name="'+id+'"]');
-			switch (nodes.length) {
-				case 0:
-					updateRequired = true;
-					// TODO find better way to do this
-					if (w.entitiesList) {
-						w.entitiesList.remove(id);
-					}
-					w.deletedEntities[id] = w.entities[id];
-					delete w.entities[id];
-					break;
-				case 1:
-					var type = w.entities[id].props.type;
-					if (type !== 'note' && type !== 'citation' && type !== 'keyword') {
-						updateRequired = true;
-						w.editor.dom.remove(nodes[0]);
-						if (w.entitiesList) {
-							w.entitiesList.remove(id);
-						}
-						w.deletedEntities[id] = w.entities[id];
-						delete w.entities[id];
-					}
+			if (nodes.length === 0) {
+				updateRequired = true;
+				w.deletedEntities[id] = w.entities[id];
+				delete w.entities[id];
+				w.event('entityRemoved').publish(id);
+				break;
 			}
 		}
 		for (var id in w.structs) {
 			var nodes = w.editor.dom.select('#'+id);
-			if (nodes.length == 0) {
+			if (nodes.length === 0) {
 				updateRequired = true;
 				w.deletedStructs[id] = w.structs[id];
 				delete w.structs[id];
@@ -316,7 +317,7 @@ return function(writer) {
 	 */
 	tagger.addEntity = function(type) {
 		var result = w.utilities.isSelectionValid();
-		if (result === w.VALID) {
+		if (result === w.VALID || result === w.NO_COMMON_PARENT) {
 			w.editor.currentBookmark = w.editor.selection.getBookmark(1);
 			w.dialogManager.show(type, {type: type, title: w.entitiesModel.getTitle(type), pos: w.editor.contextMenuPos});
 		} else if (result === w.NO_SELECTION) {
@@ -325,12 +326,12 @@ return function(writer) {
 				msg: 'Please select some text before adding an entity.',
 				type: 'error'
 			});
-		} else if (result === w.NO_COMMON_PARENT) {
-			w.dialogManager.show('message', {
-				title: 'Error',
-				msg: 'Please ensure that the beginning and end of your selection have a common parent.<br/>For example, your selection cannot begin in one paragraph and end in another, or begin in bolded text and end outside of that text.',
-				type: 'error'
-			});
+//		} else if (result === w.NO_COMMON_PARENT) {
+//			w.dialogManager.show('message', {
+//				title: 'Error',
+//				msg: 'Please ensure that the beginning and end of your selection have a common parent.<br/>For example, your selection cannot begin in one paragraph and end in another, or begin in bolded text and end outside of that text.',
+//				type: 'error'
+//			});
 		} else if (result === w.OVERLAP) {
 			if (w.allowOverlap === false) {
 				w.dialogManager.show('message', {
@@ -363,13 +364,20 @@ return function(writer) {
 	tagger.finalizeEntity = function(type, info) {
 		w.editor.selection.moveToBookmark(w.editor.currentBookmark);
 		if (info != null) {
-			// add attributes to tag
-//			var startTag = w.editor.$('[name='+id+'][class~=start]');
-//			for (var key in info) {
-//				startTag.attr(key, w.utilities.escapeHTMLString(info[key]));
-//			}
-			
 			var id = tagger.addEntityTag(type);
+			
+			// add attributes to tag
+			if (info.attributes) {
+				var tag = w.editor.$('[name='+id+'][_tag]');
+				if (tag.length === 1) {
+					var tagName = tag.attr('_tag');
+					for (var key in info.attributes[tagName]) {
+						var val = info.attributes[tagName][key];
+						tag.attr(key, w.utilities.escapeHTMLString(val));
+					}
+				}
+			}
+			
 			var entry = w.entities[id];
 			entry.info = info;
 			if (type === 'note' || type === 'citation') {
