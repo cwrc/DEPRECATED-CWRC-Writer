@@ -94,11 +94,14 @@ return function(config) {
 	
 	w.highlightEntity = function(id, bm, doScroll) {
 		if (id == null || id !== w.editor.currentEntity) {
-			var prevHighlight = $('#entityHighlight', w.editor.getBody());
-			if (prevHighlight.length === 1) {
-				var parent = prevHighlight.parent()[0];
-				prevHighlight.contents().unwrap();
-				parent.normalize();
+			var prevHighlight = $('.entityHighlight', w.editor.getBody());
+			if (prevHighlight.length !== 0) {
+				prevHighlight.each(function(index, el) {
+					var $p = $(el);
+					var parent = $p.parent()[0];
+					$p.contents().unwrap();
+					parent.normalize();
+				});
 			}
 			if (w.editor.currentEntity != null) {
 				w.event('entityUnfocused').publish(w.editor.currentEntity);
@@ -110,27 +113,16 @@ return function(config) {
 				w.editor.currentEntity = id;
 				var type = w.entities[id].props.type;
 				
-				var markers = w.editor.dom.select('span[name="'+id+'"]');
-				var start = markers[0];
-				var end = markers[1];
-				
-				var nodes = [start];
-				if (type !== 'note' && type !== 'citation' && type !== 'keyword') {
-					var currentNode = start;
-					while (currentNode != end  && currentNode != null) {
-						currentNode = currentNode.nextSibling;
-						nodes.push(currentNode);
-					}
-				}
-				$(nodes).wrapAll('<span id="entityHighlight" class="'+type+'"/>');
-				
+				var entityTags = $('[name="'+id+'"]', w.editor.getBody());
+				entityTags.wrap('<span class="entityHighlight '+type+'"/>');
+
 				// maintain the original caret position
 				if (bm) {
 					w.editor.selection.moveToBookmark(bm);
 				}
 				
 				if (doScroll) {
-					var val = $(start).offset().top;
+					var val = entityTags.offset().top;
 					$(w.editor.dom.doc.body).scrollTop(val);
 				}
 				
@@ -271,7 +263,7 @@ return function(config) {
 				// shouldn't actually be here since you can't get "inside" these entities
 				content = $($.parseXML(entity.info.content)).text();
 			} else {
-				content = $('#entityHighlight', ed.getBody()).text();
+				content = $('.entityHighlight', ed.getBody()).text();
 			}
 			entity.props.content = content;
 			entity.props.title = w.utilities.getTitleFromContent(content);
@@ -406,7 +398,7 @@ return function(config) {
 			if (e.nodeType != 1) {
 				ed.currentNode = w.utilities.getRootTag()[0];
 			} else {
-				if (e.getAttribute('_tag') == null && e.getAttribute('id') != 'entityHighlight') {
+				if (e.getAttribute('_tag') == null && e.classList.contains('entityHighlight') == false) {
 					if (e.getAttribute('data-mce-bogus') != null) {
 						// artifact from selectStructureTag
 						var sibling;
@@ -495,7 +487,7 @@ return function(config) {
 		
 		// check if inside boundary tag
 		var parent = range.commonAncestorContainer;
-		if (parent.nodeType == 1 && parent.hasAttribute('_entity')) {
+		if (parent.nodeType === Node.ELEMENT_NODE && parent.hasAttribute('_entity')) {
 			entityClick = true;
 			w.highlightEntity(); // remove highlight
 			if ((w.editor.dom.hasClass(parent, 'start') && evt.which == 37) || 
@@ -512,32 +504,30 @@ return function(config) {
 			range = ed.selection.getRng(true);
 		}
 		
-		var entityStart = w.tagger.findEntityBoundary('start', range.startContainer);
-		var entityEnd = w.tagger.findEntityBoundary('end', range.endContainer);
+		var entity = $(range.startContainer).parents('[_entity]')[0];
+		
+//		var entityStart = w.tagger.findEntityBoundary('start', range.startContainer);
+//		var entityEnd = w.tagger.findEntityBoundary('end', range.endContainer);
 		
 		var id, type;
-		if (entityStart != null) {
-			id = entityStart.getAttribute('name');
+		if (entity != null) {
+			id = entity.getAttribute('name');
 			type = w.entities[id].props.type;
-		}
-		
-		if (entityEnd == null) {
 			if (entityClick && (type === 'note' || type === 'citation' || type === 'keyword')) {
 				// entity marker's clicked so edit the entity
 				w.tagger.editTag(id);
-			} else {
-				w.highlightEntity();
-				var parentNode = $(ed.selection.getNode());
-				if (parentNode.attr('_tag')) {
-					var id = parentNode.attr('id');
-					w.editor.currentStruct = id;
-				}
-				return;
 			}
+		} else {
+			w.highlightEntity();
+			var parentNode = $(ed.selection.getNode());
+			if (parentNode.attr('_tag')) {
+				var id = parentNode.attr('id');
+				w.editor.currentStruct = id;
+			}
+			return;
 		}
 		
-		id = entityStart.getAttribute('name');
-		if (id == ed.currentEntity) return;
+		if (id === ed.currentEntity) return;
 		
 		w.highlightEntity(id, ed.selection.getBookmark());
 	};

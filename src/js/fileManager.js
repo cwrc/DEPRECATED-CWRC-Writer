@@ -39,8 +39,8 @@ return function(writer) {
 			'Ok': function() {
 				var newDocString = $('textarea', edit).val();
 				var xmlDoc = w.utilities.stringToXML(newDocString);
-				fm.loadDocumentFromXml(xmlDoc);
 				edit.dialog('close');
+				fm.loadDocumentFromXml(xmlDoc);
 			},
 			'Cancel': function() {
 				edit.dialog('close');

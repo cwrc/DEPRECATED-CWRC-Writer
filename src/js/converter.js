@@ -54,22 +54,21 @@ return function(writer) {
 		
 		_htmlEntitiesToUnicode(body);
 		
-		// get the entity IDs, in the order that they appear in the document.
-		// have to be in order so that conversion and overlapping is done properly.
-		var entNodes = $('[_entity]', writer.editor.getBody()).filter(function() {
-			return $(this).hasClass('start');
-		});
+		// get the overlapping entity IDs, in the order that they appear in the document.
+		var entNodes = $('[_entity][class~="start"]', body).not('[_tag]').not('[_note]');
 		var entIds = $.map(entNodes, function(val, index) {
 			return $(val).attr('name');
 		});
-		
-		// convert entity boundaries to tags
-		var overlappingEntities = [];
-		$.each(entIds, function(index, id) {
-			var success = convertEntityToTag(id, body[0]); // need to do conversion before building RDF
-			if (!success) {
-				overlappingEntities.push(id);
-			}
+
+		// get ranges for overlapping entities
+		// then remove the associated nodes
+		$(entIds).each(function(index, id) {
+			var range = getRangesForEntity(id);
+			var entry = w.entities[id];
+			$.extend(entry.annotation.range, range);
+			$('[name="'+id+'"]', body).each(function(index, el) {
+				$(el).contents().unwrap();
+			});
 		});
 		
 		// rdf
@@ -111,47 +110,6 @@ return function(writer) {
 			return xmlString;
 		}
 	};
-	
-	/**
-	 * Converts the opening and closing entity tag pairs to a matched set of opening and closing tags.
-	 * @param id The entity id.
-	 * @param [el] The element within which to look for the entity. Defaults to the editor dom.
-	 * @returns {Boolean} true if successful, false if overlapping
-	 */
-	function convertEntityToTag(id, el) {
-		el = el || w.editor.getBody();
-		var markers = $('[name="' + id + '"]', el);
-		var start = markers[0];
-		var end = markers[1];
-		
-		var nodes = [start];
-		var overlap = true;
-		if (end == null) {
-			// note type entity
-			overlap = false;
-		} else {
-			var currentNode = start;
-			while (currentNode != end && currentNode != null) {
-				currentNode = currentNode.nextSibling;
-				nodes.push(currentNode);
-				if (currentNode == end) {
-					overlap = false; // we've used nextSibling to reach the end so there's no overlap
-				}
-			}
-		}
-		
-		if (overlap) {
-			return false;
-		} else {
-			var type = w.entities[id].props.type;
-			var tag = w.entitiesModel.getParentTag(type, w.schemaManager.schemaId);
-			var entString = '<entity id="'+id+'" _type="'+type+'" _tag="'+tag+'"/>';
-			$(nodes, el).wrapAll(entString);			
-			$(markers, el).remove();
-			
-			return true;
-		}
-	}
 	
 	// gets any metadata info for the node and adds as attributes
 	// returns an array of 2 strings: opening and closing tags
@@ -319,51 +277,84 @@ return function(writer) {
 	}
 	
 	/**
+	 * Determines the range that an entity spans, using xpath and character offset.
+	 * @param {String} entityId The id for the entity
+	 * @returns {JSON} The range object
+	 */
+	function getRangesForEntity(entityId) {
+		var range = {};
+		
+		function getOffsetFromParentForEntity(id, parent, isEnd) {
+			var currentOffset = 0;
+			var offset = 0;
+			function getOffset(parent) {
+				parent.contents().each(function(index, element) {
+					var el = $(this);
+					if (this.nodeType == Node.TEXT_NODE && this.data != ' ') {
+						currentOffset += this.length;
+					} else if (el.attr('name') == id) {
+						if (isEnd) {
+							currentOffset += el.text().length;
+						}
+						offset = currentOffset;
+						return false;
+					}
+				});
+			}
+			
+			getOffset(parent);
+			return offset;
+		}
+		
+		function doRangeGet($el, isEnd) {
+			var parent = $el.parents('[_tag]').first();
+			var parentId = parent.attr('id');
+			if (parentId == null) {
+				parentId = tinymce.DOM.uniqueId('struct_');
+			} else if (w.entities[parentId] != null) {
+				w.entities[parentId].annotation.range.cwrcOffsetId = parentId;
+			}
+			parent.attr('offsetId', parentId);
+			var xpath = '//'+parent.attr('_tag')+'[@offsetId="'+parentId+'"]';
+			var offset = getOffsetFromParentForEntity(entityId, parent, isEnd);
+			return [xpath, offset];
+		}
+		
+		var entitySpans = $('[name="'+entityId+'"]', w.editor.getBody());
+		var entityStart = entitySpans.first();
+		var entityEnd = entitySpans.last();
+		
+		var infoStart = doRangeGet(entityStart, false);
+		range.start = infoStart[0];
+		range.startOffset = infoStart[1];
+		
+		var infoEnd = doRangeGet(entityEnd, true);
+		range.end = infoEnd[0];
+		range.endOffset = infoEnd[1];
+		
+		return range;
+	}
+	
+	/**
 	 * Sets annotation info in the entity entry, and returns a string representation of it. Must call after convertEntityToTag.
 	 * @param {String} entityId The id for the entity
 	 * @param {String} format What format to build the annotation with: 'xml' or 'json'
 	 * @returns {XML|JSON} What's returned depends on the mode parameter
 	 */
 	function getAnnotationForEntity(entityId, format) {
-		var body = w.editor.getBody();
 		var entry = w.entities[entityId];
 		
-		var range = {};
-		
-		var entity = $('#'+entityId, body);
+		var entity = $('#'+entityId, w.editor.getBody());
 		if (entity.length === 0) {
-			// overlap, get xpaths for start and end
-			var entitySpans = $('[name="'+entityId+'"]', body);
-			var entityStart = entitySpans[0];
-			var entityEnd = entitySpans[1];
-			
-			var startId = entityStart.parentNode.getAttribute('id');
-			if (startId == null) {
-				startId = tinymce.DOM.uniqueId('struct_');
-			} else if (w.entities[startId] != null) {
-				w.entities[startId].annotation.range.cwrcOffsetId = startId;
-			}
-			entityStart.parentNode.setAttribute('offsetId', startId);
-			range.start = '//'+entityStart.parentNode.getAttribute('_tag')+'[@offsetId="'+startId+'"]';
-			range.startOffset = _getOffsetFromParentForEntity(entityId, $(entityStart.parentNode));
-			
-			var endId = entityEnd.parentNode.getAttribute('id');
-			if (endId == null) {
-				endId = tinymce.DOM.uniqueId('struct_');
-			} else if (w.entities[endId] != null) {
-				w.entities[endId].annotation.range.cwrcOffsetId = endId;
-			}
-			entityEnd.parentNode.setAttribute('offsetId', endId);
-			range.end = '//'+entityEnd.parentNode.getAttribute('_tag')+'[@offsetId="'+endId+'"]';
-			range.endOffset = _getOffsetFromParentForEntity(entityId, $(entityEnd.parentNode));
+//			range = getRangesForEntity(entityId);
 		} else {
 			// get the xpath for the entity's tag
 			entity[0].setAttribute('annotationId', entityId);
+			var range = {};
 			range.start = '//'+entity[0].getAttribute('_tag')+'[@annotationId="'+entityId+'"]';
 			range.cwrcAnnotationId = entityId;
+			$.extend(entry.annotation.range, range);
 		}
-		
-		$.extend(entry.annotation.range, range);
 		
 		var annotation = w.entitiesModel.getAnnotation(entry.props.type, entry, format);
 		return annotation;
@@ -441,31 +432,6 @@ return function(writer) {
 		getOffsets(parent);
 		return offsets;
 	};
-	
-	/**
-	 * Gets the character offset for an entity boundary marker, starting from the parent.
-	 * @param {String} id The entity ID
-	 * @param {jQuery} [parent] The node to start calculating the offset from
-	 * @returns {Integer}
-	 */
-	function _getOffsetFromParentForEntity(id, parent) {
-		var currentOffset = 0;
-		var offset = 0;
-		function getOffset(parent) {
-			parent.contents().each(function(index, element) {
-				var el = $(this);
-				if (this.nodeType == Node.TEXT_NODE && this.data != ' ') {
-					currentOffset += this.length;
-				} else if (el.attr('name') == id) {
-					offset = currentOffset;
-					return false;
-				}
-			});
-		}
-		
-		getOffset(parent);
-		return offset;
-	}
 	
 	function _determineOffsetRelationships(offsets) {
 		var relationships = {};
@@ -649,26 +615,35 @@ return function(writer) {
 			var regex = new RegExp(/xpointer\((?:string-range\()?([^\)]*)\)+/); // regex for isolating xpath and offset
 			var content = regex.exec(xpointer)[1];
 			var parts = content.split(',');
-			
 			var xpath = parts[0];
+			var offset = null;
+			if (parts[2]) {
+				offset = parseInt(parts[2]);
+			}
+			
 			var foopath = xpath.replace(/\/\//g, '//foo:'); // default namespace hack (http://stackoverflow.com/questions/9621679/javascript-xpath-and-default-namespaces)
-//			foopath = foopath.replace(/\//g, '/foo:');
 			var result = doc.evaluate(foopath, doc, nsResolver, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
 			if (result.singleNodeValue != null) {
 				var xpathEl = $(result.singleNodeValue);
 				
-				var parentId = xpathEl.attr('cwrcStructId');
+				var parentId;
+				if (offset == null) {
+					parentId = xpathEl.attr('annotationId');
+				} else {
+					parentId = xpathEl.attr('offsetId');
+				}
 				if (parentId == null) {
 					// assign a struct ID now, to associate with the entity
 					// later we'll insert it as the real struct ID value
+					if (window.console) {
+						console.warn('null ID for xpointer!');
+					}
 					parentId = tinymce.DOM.uniqueId('struct_');
-					xpathEl.attr('cwrcStructId', parentId);
+				} else {
+					var idNum = parseInt(parentId.split('_')[1]);
+					if (idNum >= tinymce.DOM.counter) tinymce.DOM.counter = idNum+1;
 				}
-				
-				var offset = null;
-				if (parts[2]) {
-					offset = parseInt(parts[2]);
-				}
+				xpathEl.attr('cwrcStructId', parentId);
 				
 				return {
 					el: xpathEl,
@@ -693,25 +668,20 @@ return function(writer) {
 			if (rdf.attr('rdf:datatype') == 'http://www.w3.org/TR/json-ld/') {
 				var entity = JSON.parse(rdf.text());
 				if (entity != null) {
-					var id = tinymce.DOM.uniqueId('ent_');
-					w.entities[id] = {
-						props: {
-							id: id,
-							type: entity.cwrcType // TODO update to new version
-						},
-						info: entity.cwrcAttributes,
-						annotation: {}
-					};
+					var id;
+					var annotationObj;
 					
 					var selector = entity.hasTarget.hasSelector;
 					if (selector['@type'] == 'oa:TextPositionSelector') {
+						id = tinymce.DOM.uniqueId('ent_');
+						
 						var xpointerStart = selector['oa:start'];
 						var xpointerEnd = selector['oa:end'];
 						var xpathStart = parseXpointer(xpointerStart, doc);
 						var xpathEnd = parseXpointer(xpointerEnd, doc);
 						
 						if (xpathStart != null && xpathEnd != null) {
-							w.entities[id].annotation = {
+							annotationObj = {
 								range: {
 									id: id,
 									parentStart: xpathStart.parentId,
@@ -725,16 +695,25 @@ return function(writer) {
 						var xpointer = selector['rdf:value'];
 						var xpathObj = parseXpointer(xpointer, doc);
 						
-						if (xpathObj != null) {
-							w.entities[id].annotation = {
-								range: {
-									id: id,
-									el: xpathObj.el,
-									parentStart: xpathObj.parentId
-								}
-							};
-						}
+						id = xpathObj.parentId;
+						
+						annotationObj = {
+							range: {
+								id: id,
+								el: xpathObj.el,
+								parentStart: xpathObj.parentId
+							}
+						};
 					}
+					
+					w.entities[id] = {
+						props: {
+							id: id,
+							type: entity.cwrcType // TODO update to new version
+						},
+						info: entity.cwrcAttributes,
+						annotation: annotationObj
+					};
 				}
 				
 			// triple
@@ -746,8 +725,6 @@ return function(writer) {
 				var aboutUri = rdf.attr('rdf:about');
 				
 				if (aboutUri.indexOf('id.cwrc.ca/annotation') !== -1) {
-					var id = tinymce.DOM.uniqueId('ent_');
-					
 					var hasBodyUri = rdf.find('oa\\:hasBody, hasBody').attr('rdf:resource');
 					var body = rdfs.find('[rdf\\:about="'+hasBodyUri+'"]');
 					var hasTargetUri = rdf.find('oa\\:hasTarget, hasTarget').attr('rdf:resource');
@@ -839,22 +816,25 @@ return function(writer) {
 						userId: '',
 						range: {}
 					};
+					
+					var id;
 					if (selectorType.indexOf('FragmentSelector') !== -1) {
 						var xpointer = selector.find('rdf\\:value, value').text();
 						var xpathObj = parseXpointer(xpointer, doc);
 						
-						if (xpathObj != null) {
-							annotationObj.range = {
-								id: id,
-								el: xpathObj.el,
-								parentStart: xpathObj.parentId
-							};
-						}
+						id = xpathObj.parentId;
+						annotationObj.range = {
+							id: id,
+							el: xpathObj.el,
+							parentStart: xpathObj.parentId
+						};
 					} else {
 						var xpointerStart = selector.find('oa\\:start, start').text();
 						var xpointerEnd = selector.find('oa\\:end, end').text();
 						var xpathStart = parseXpointer(xpointerStart, doc);
 						var xpathEnd = parseXpointer(xpointerEnd, doc);
+						
+						id = tinymce.DOM.uniqueId('ent_');
 						
 						if (xpathStart != null && xpathEnd != null) {
 							annotationObj.range = {
@@ -1130,36 +1110,31 @@ return function(writer) {
 				// markup
 				} else if (range.parentStart) {
 					var entityNode = $('#'+range.parentStart, body);
-					startNode = entityNode[0].previousSibling;
-					if (startNode != null) {
-						if (startNode.nodeType === Node.TEXT_NODE) {
-							startOffset = startNode.length;
-						} else if (startNode.nodeType === Node.ELEMENT_NODE) {
-							startOffset = 0;
-						}
-					} else {
-						startNode = entityNode[0];
-						startOffset = 0;
-					}
-					endNode = entityNode[0].nextSibling;
-					if (endNode != null) {
-						endOffset = 0;
-					} else {
-						endNode = entityNode[0];
-						endOffset = endNode.childNodes.length;
-					}
+					startNode = entityNode[0];
+					endNode = entityNode[0];
 					
 					entityNodes.push({entity: entry, node: entityNode});
 				}
 			}
 			
 			if (startNode != null && endNode != null) {
-				var range = w.editor.selection.getRng(true);
+				var type = entry.props.type;
 				try {
-					range.setStart(startNode, startOffset);
-					range.setEnd(endNode, endOffset);
-					var type = entry.props.type;
-					w.tagger.insertBoundaryTags(id, type, range);
+					if (startNode != endNode) {
+						var range = w.editor.selection.getRng(true);
+						range.setStart(startNode, startOffset);
+						range.setEnd(endNode, endOffset);
+						w.tagger.insertBoundaryTags(id, type, range);
+					} else {
+						// then tag already exists
+						$(startNode).attr({
+							'_entity': true,
+							'_type': type,
+							'class': 'entity start end '+type,
+							'name': id,
+							'id': id
+						});
+					}
 					if (entry.props.content == null) {
 						// get and set the text content
 						var content = '';
@@ -1171,7 +1146,7 @@ return function(writer) {
 							content = entry.info.corrText;
 						} else {
 							w.highlightEntity(id);
-							content = $('#entityHighlight', w.editor.getBody()).text();
+							content = $('.entityHighlight', w.editor.getBody()).text();
 							w.highlightEntity();
 						}
 						entry.props.content = content;
@@ -1190,7 +1165,7 @@ return function(writer) {
 					}
 				} catch (e) {
 					if (window.console) {
-						console.log(e);
+						console.warn(e);
 					}
 				}
 			}
@@ -1204,36 +1179,42 @@ return function(writer) {
 			var type = entity.props.type;
 			//	var tag = $(node).attr('_tag');
 			//	var type = w.entitiesModel.getEntityTypeForTag(tag, w.schemaManager.schemaId);
+
+			var textTagName = w.entitiesModel.getTextTag(type, w.schemaManager.schemaId);
+			if (textTagName != '') {
+				var textTag = $('[_tag="'+textTagName+'"]', $node);
+				if (type === 'correction') {
+					entity.info.sicText = textTag.text();
+				}
+				textTag.contents().unwrap(); // keep the text inside the textTag
+			}
 			
-			if (type === 'note' || type === 'citation') {
+			var annotationId = $node.attr('annotationId');
+			$('[annotationId="'+annotationId+'"]', $node).remove(); // remove all child elements with matching ID
+			
+			var id = $node.attr('id');
+			var structsEntry = w.structs[id];
+			if (structsEntry != null) {
+				delete structsEntry;
+			}
+			
+			/*
+			var contents = $node.contents();
+			if (contents.length === 0) {
+				// no contents so just remove the node
 				$node.remove();
 			} else {
-				var textTagName = w.entitiesModel.getTextTag(type, w.schemaManager.schemaId);
-				if (textTagName != '') {
-					var textTag = $('[_tag="'+textTagName+'"]', $node);
-					if (type === 'correction') {
-						entity.info.sicText = textTag.text();
-					}
-					textTag.contents().unwrap(); // keep the text inside the textTag
-				}
-				
-				var annotationId = $node.attr('annotationId');
-				$('[annotationId="'+annotationId+'"]', $node).remove(); // remove all child elements with matching ID
-				
-				var id = $node.attr('id');
-				var structsEntry = w.structs[id];
-				if (structsEntry != null) {
-					delete structsEntry;
-				}
-				
-				var contents = $node.contents();
-				if (contents.length === 0) {
-					// no contents so just remove the node
-					$node.remove();
-				} else {
-					contents.unwrap();
-				}
+				contents.unwrap();
 			}
+			*/
+		});
+		
+		// remove annotationId and offsetId
+		$('[annotationId]', body).each(function(index, el) {
+			$(el).removeAttr('annotationId');
+		});
+		$('[offsetId]', body).each(function(index, el) {
+			$(el).removeAttr('offsetId');
 		});
 	}
 	

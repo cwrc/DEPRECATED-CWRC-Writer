@@ -124,6 +124,85 @@ return function(writer) {
 	};
 	
 	/**
+	 * Returns an array of nodes that exist between the start and end nodes.
+	 * @param {Element} start The starting node
+	 * @param {Element} end The ending node
+	 * @returns {Array}
+	 */
+	u.getNodesInBetween = function(start, end) {
+		var nodes = [];
+		
+		function getChildNodes(parent, childNodes) {
+			if (parent.childNodes.length > 0) {
+				if (parent.childNodes.length === 1 && parent.childNodes[0].nodeType === Node.TEXT_NODE) {
+					childNodes.push(parent.childNodes[0]);
+				} else {
+					for (var i = 0; i < parent.childNodes.length; i++) {
+						getChildNodes(parent.childNodes[i], childNodes);
+					}
+				}
+			} else {
+				childNodes.push(parent);
+			}
+		}
+		
+		function doGet(currNode) {
+			if($.contains(currNode, end)) {
+				var nextNode = null;
+				for (var i = 0; i < currNode.childNodes.length; i++) {
+					var child = currNode.childNodes[i];
+					if($.contains(child, end)) {
+						nextNode = child;
+						break;
+					} else if (child === end) {
+						break;
+					} else {
+						var childNodes = [];
+						getChildNodes(child, childNodes);
+						nodes = nodes.concat(childNodes);
+					}
+				}
+				if (nextNode != null) {
+					doGet(nextNode);
+				}
+			} else {
+				var nextNode = null;
+				while (nextNode == null) {
+					nextNode = currNode.nextSibling;
+					if (nextNode == null) {
+						nextNode = currNode.parentNode.nextSibling;
+					}
+					if (nextNode == null) {
+						currNode = currNode.parentNode;
+					}
+				}
+				if (nextNode === end) {
+					return;
+				}
+				if ($.contains(nextNode, end) === false) {
+					var childNodes = [];
+					getChildNodes(nextNode, childNodes);
+					nodes = nodes.concat(childNodes);
+				}
+				doGet(nextNode);
+			}
+		}
+		
+		doGet(start);
+		
+		// filter out entities and bogus nodes
+		nodes = nodes.filter(function(n) {
+			if (n.nodeType === Node.ELEMENT_NODE && (n.getAttribute('_entity') != null || n.getAttribute('data-mce-bogus') != null)) {
+				return false;
+			} else {
+				return true;
+			}
+		});
+		
+		return nodes;
+	};
+	
+	/**
 	 * Checks the user selection for overlap issues and entity markers.
 	 * @param isStructTag Is the tag a structure tag
 	 * @param structAction How is the tag being inserted? (before/after/around/inside)
@@ -140,7 +219,7 @@ return function(writer) {
 //		range.commonAncestorContainer.normalize(); // normalize/collapse separate text nodes
 		
 		// fix for select all and root node select
-		if (range.commonAncestorContainer.nodeName.toLowerCase() == 'body') {
+		if (range.commonAncestorContainer.nodeName.toLowerCase() === 'body') {
 			var root = w.editor.dom.select('body > *')[0];
 			range.setStartBefore(root.firstChild);
 			range.setEndAfter(root.lastChild);
@@ -167,7 +246,7 @@ return function(writer) {
 		// fix for when start and/or end containers are element nodes
 		if (range.startContainer.nodeType == Node.ELEMENT_NODE) {
 			var end = range.endContainer;
-			if (end.nodeType != Node.TEXT_NODE || range.endOffset == 0) {
+			if (end.nodeType != Node.TEXT_NODE || range.endOffset === 0) {
 				end = findTextNode(range.endContainer, 'back');
 				if (end == null) return w.NO_COMMON_PARENT;
 				range.setEnd(end, end.length);
@@ -234,32 +313,10 @@ return function(writer) {
 		}
 		
 		if (!structAction) {
-			// check for and fix selections inside of entity boundary tags
-			var node = $(range.startContainer);
-			var entParent = node.parent('[_entity]');
-			if (entParent.length > 0) {
-				if (entParent.hasClass('start')) {
-					var textNode = findTextNode(node[0], 'forward');
-					if (textNode) {
-						range.setStart(textNode, 0);
-					}
-				}
-			}
-			node = $(range.endContainer);
-			entParent = node.parent('[_entity]');
-			if (entParent.length > 0) {
-				if (entParent.hasClass('end')) {
-					var textNode = findTextNode(node[0], 'back');
-					if (textNode) {
-						range.setEnd(textNode, textNode.length);
-					}
-				}
-			}
-			
-			// additional fixes
 			fixRange(range);
 		}
 		
+		// TODO add handling for when inside overlapping entity tags
 		if (range.startContainer.parentNode != range.endContainer.parentNode) {
 			if (range.endOffset == 0 && range.endContainer.previousSibling == range.startContainer.parentNode) {
 				// fix for when the user double-clicks a word that's already been tagged
@@ -277,15 +334,11 @@ return function(writer) {
 			while (currentNode != range.endContainer) {
 				currentNode = currentNode.nextSibling;
 				c = $(currentNode);
-				if (c.attr('_entity') != null) {
-					if (c.hasClass('start')) {
-						ents[c.attr('name')] = true;
+				if (c.attr('_entity') != null && c.attr('_tag') != null) {
+					if (ents[c.attr('name')]) {
+						delete ents[c.attr('name')];
 					} else {
-						if (ents[c.attr('name')]) {
-							delete ents[c.attr('name')];
-						} else {
-							return w.OVERLAP;
-						}
+						ents[c.attr('name')] = true;
 					}
 				}
 			}

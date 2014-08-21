@@ -327,14 +327,58 @@ return function(config) {
 	function _processNode(node, level) {
 		var nodeData = null;
 		
+		// entity tag
+		if (node.attr('_entity') && (node.attr('_tag') || node.attr('_note'))) {
+			var id = node.attr('name');
+			var type = node.attr('_type');
+			var tag = node.attr('_tag');
+			if (tag == null) {
+				tag = w.entitiesModel.getParentTag(type, w.schemaManager.schemaId);
+			}
+			
+			nodeData = {
+				text: tag,
+				li_attr: {name: id}, // 'class': type}
+				state: {opened: level < 3}
+			};
+			
+			if (type === 'note' || type === 'citation') {
+				var content = w.utilities.stringToXML(w.entities[id].info.content);
+				var root = $(tag, content).first();
+				
+				function processChildren(children, parent, id) {
+					children.each(function(index, el) {
+						if (parent.children == null) parent.children = [];
+						var childData = {
+							text: el.nodeName,
+							li_attr: {name: id}
+						};
+						parent.children.push(childData);
+						
+						processChildren($(el).children(), childData, id);
+					});
+				}
+				
+				processChildren(root.children(), nodeData, id);
+			} else if (type === 'keyword') {
+				nodeData.children = [];
+				var keywords = w.entities[id].info.keywords;
+				for (var i = 0; i < keywords.length; i++) {
+					nodeData.children.push({
+						text: 'keyword',
+						li_attr: {name: id}
+					});
+				}
+			}
 		// structure tag
-		if (node.attr('_tag')) {
+		} else if (node.attr('_tag')) {
 			var id = node.attr('id');
 			var tag = node.attr('_tag');
 
 //			var isLeaf = node.find('[_tag]').length > 0 ? 'open' : null;
 //			if (tag == w.header) isLeaf = false;
 			
+			// TODO move this out of here
 			// new struct check
 			if (id == '' || id == null) {
 				id = tinymce.DOM.uniqueId('struct_');
@@ -379,46 +423,6 @@ return function(config) {
 					li_attr: {name: id},
 					state: {opened: level < 3}
 				};
-			}
-		// entity tag
-		} else if (node.attr('_entity') && node.hasClass('start')) {
-			var id = node.attr('name');
-			var type = node.attr('_type');
-			var tag = w.entitiesModel.getParentTag(type, w.schemaManager.schemaId);
-			
-			nodeData = {
-				text: tag,
-				li_attr: {name: id}, // 'class': type}
-				state: {opened: level < 3}
-			};
-			
-			if (type === 'note' || type === 'citation') {
-				var content = w.utilities.stringToXML(w.entities[id].info.content);
-				var root = $(tag, content).first();
-				
-				function processChildren(children, parent, id) {
-					children.each(function(index, el) {
-						if (parent.children == null) parent.children = [];
-						var childData = {
-							text: el.nodeName,
-							li_attr: {name: id}
-						};
-						parent.children.push(childData);
-						
-						processChildren($(el).children(), childData, id);
-					});
-				}
-				
-				processChildren(root.children(), nodeData, id);
-			} else if (type === 'keyword') {
-				nodeData.children = [];
-				var keywords = w.entities[id].info.keywords;
-				for (var i = 0; i < keywords.length; i++) {
-					nodeData.children.push({
-						text: 'keyword',
-						li_attr: {name: id}
-					});
-				}
 			}
 		}
 		
@@ -478,7 +482,14 @@ return function(config) {
 				tree.currentlySelectedNode = id;
 				tree.selectionType = selectContents ? tree.CONTENTS_SELECTED : tree.NODE_SELECTED;
 				
-				if (w.structs[id] != null) {
+				if (w.entities[id] != null) {
+					tree.currentlySelectedEntity = id;
+					tree.currentlySelectedNode = null;
+					tree.selectionType = null;
+					$target.addClass('nodeSelected').removeClass('contentsSelected');
+					ignoreSelect = true;
+					w.highlightEntity(id, null, true);
+				} else if (w.structs[id] != null) {
 					tree.currentlySelectedEntity = null;
 					if (w.structs[id]._tag == w.header) {
 						w.dialogManager.show('header');
@@ -486,14 +497,7 @@ return function(config) {
 						ignoreSelect = true; // set to true so tree.highlightNode code isn't run by editor's onNodeChange handler
 						w.selectStructureTag(id, selectContents);
 					}
-				} else if (w.entities[id] != null) {
-					tree.currentlySelectedEntity = id;
-					tree.currentlySelectedNode = null;
-					tree.selectionType = null;
-					$target.addClass('nodeSelected').removeClass('contentsSelected');
-					ignoreSelect = true;
-					w.highlightEntity(id, null, true);
-				}
+				} 
 			}
 		}
 		ignoreSelect = false;
@@ -637,10 +641,30 @@ return function(config) {
 				
 				var parentNode = $tree.jstree('get_node', node.parents[0]);
 				
-				var info = w.structs[node.li_attr.name];
-
-				// structure tag
-				if (info) {
+				if (w.entities[node.li_attr.name]) {
+					// entity tag
+					w.highlightEntity(node.li_attr.name); // highlight the entity, otherwise editing will not function
+					return {
+						'editEntity': {
+							label: 'Edit Entity',
+							icon: w.cwrcRootUrl+'img/tag_blue_edit.png',
+							action: function(obj) {
+								var id = obj.reference.parent('li').attr('name');
+								w.tagger.editTag(id);
+							}
+						},
+						'copyEntity': {
+							label: 'Copy Entity',
+							icon: w.cwrcRootUrl+'img/tag_blue_copy.png',
+							action: function(obj) {
+								var id = obj.reference.parent('li').attr('name');
+								w.tagger.copyEntity(id);
+							}
+						}
+					};
+				} else {
+					// structure tag
+					var info = w.structs[node.li_attr.name];
 					if (info._tag == w.root || info._tag == w.header) return {};
 					
 					var parentInfo = w.structs[parentNode.li_attr.name];
@@ -727,27 +751,6 @@ return function(config) {
 					};
 	
 					return items;
-				} else {
-					// entity tag
-					w.highlightEntity(node.li_attr.name); // highlight the entity, otherwise editing will not function
-					return {
-						'editEntity': {
-							label: 'Edit Entity',
-							icon: w.cwrcRootUrl+'img/tag_blue_edit.png',
-							action: function(obj) {
-								var id = obj.reference.parent('li').attr('name');
-								w.tagger.editTag(id);
-							}
-						},
-						'copyEntity': {
-							label: 'Copy Entity',
-							icon: w.cwrcRootUrl+'img/tag_blue_copy.png',
-							action: function(obj) {
-								var id = obj.reference.parent('li').attr('name');
-								w.tagger.copyEntity(id);
-							}
-						}
-					};
 				}
 			}
 		}
