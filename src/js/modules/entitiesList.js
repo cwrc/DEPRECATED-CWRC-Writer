@@ -112,7 +112,7 @@ return function(config) {
 		var id, entry, i;
 		var entitiesString = '';
 		
-		var entityTags = $('span[class~=start]', w.editor.getBody());
+		var entityTags = $('[_entity][class~=start]', w.editor.getBody());
 		if (sort == 'category') {
 			var categories = {};
 			entityTags.each(function(index, el) {
