@@ -265,7 +265,7 @@ return function(writer) {
 			title: 'Person',
 			parentTag: {
 				tei: 'persName',
-				events: 'name'
+				orlando: 'name'
 			},
 			mapping: {
 				tei: function(entity) {
@@ -289,9 +289,33 @@ return function(writer) {
 					xml += '>'+TEXT_SELECTION+'</persName>';
 					return xml;
 				},
-				events: function(entity) {
-					return '<NAME>'+TEXT_SELECTION+'</NAME>';
+				orlando: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '<NAME';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					if (info.standard) xml += ' STANDARD="'+info.standard+'"';
+					
+					xml += '>'+TEXT_SELECTION+'</NAME>';
+					return xml;
+				},
+				cwrcEntry: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '<NAME';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					if (info.standard) xml += ' STANDARD="'+info.standard+'"';
+					
+					xml += '>'+TEXT_SELECTION+'</NAME>';
+					return xml;
 				}
+				
 			},
 			reverseMapping: {
 				tei: function(xml) {
@@ -306,6 +330,22 @@ return function(writer) {
 					$xml.removeAttr('ref').removeAttr('cert').removeAttr('type').removeAttr('role');
 					
 					obj.attributes = getAttributesFromXml(xml);
+					
+					return obj;
+				},
+				orlando: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+
+					obj.standard = $xml.attr('STANDARD');
+					
+					return obj;
+				},
+				cwrcEntry: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					obj.standard = $xml.attr('STANDARD');
 					
 					return obj;
 				}
@@ -327,7 +367,7 @@ return function(writer) {
 			title: 'Organization',
 			parentTag: {
 				tei: 'orgName',
-				events: 'ORGNAME'
+				orlando: 'ORGNAME'
 			},
 			mapping: {
 				tei: function(entity) {
@@ -349,7 +389,32 @@ return function(writer) {
 					xml += '>'+TEXT_SELECTION+'</orgName>';
 					return xml;
 				},
-				events: '<ORGNAME>'+TEXT_SELECTION+'</ORGNAME>'
+				orlando: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '<ORGNAME';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					if (info.standard) xml += ' STANDARD="'+info.standard+'"';
+					
+					xml += '>'+TEXT_SELECTION+'</ORGNAME>';
+					return xml;
+				},
+				cwrcEntry: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '<ORGNAME';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					if (info.standard) xml += ' STANDARD="'+info.standard+'"';
+					
+					xml += '>'+TEXT_SELECTION+'</ORGNAME>';
+					return xml;
+				}
 			},
 			reverseMapping: {
 				tei: function(xml) {
@@ -362,6 +427,22 @@ return function(writer) {
 					$xml.removeAttr('ref').removeAttr('cert');
 					
 					obj.attributes = getAttributesFromXml(xml);
+					
+					return obj;
+				},
+				orlando: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					obj.standard = $xml.attr('STANDARD');
+					
+					return obj;
+				},
+				cwrcEntry: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					obj.standard = $xml.attr('STANDARD');
 					
 					return obj;
 				}
@@ -382,7 +463,7 @@ return function(writer) {
 			title: 'Place',
 			parentTag: {
 				tei: 'placeName',
-				events: 'PLACE'
+				orlando: 'PLACE'
 			},
 			textTag: {
 				tei: 'placeName'
@@ -407,7 +488,30 @@ return function(writer) {
 					xml += '</placeName>';
 					return xml;
 				},
-				events: '<PLACE>'+TEXT_SELECTION+'</PLACE>'
+				orlando: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '<PLACE';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					
+					xml += '>'+TEXT_SELECTION+'</PLACE>';
+					return xml;
+				},
+				cwrcEntry: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '<PLACE';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					
+					xml += '>'+TEXT_SELECTION+'</PLACE>';
+					return xml;
+				}
 			},
 			reverseMapping: {
 				tei: function(xml) {
@@ -422,6 +526,18 @@ return function(writer) {
 					$xml.children('precision').remove();
 					
 					obj.attributes = getAttributesFromXml(xml);
+					
+					return obj;
+				},
+				orlando: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					return obj;
+				},
+				cwrcEntry: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
 					
 					return obj;
 				}
@@ -441,7 +557,7 @@ return function(writer) {
 			title: 'Text/Title',
 			parentTag: {
 				tei: 'title',
-				events: 'TITLE'
+				orlando: 'TITLE'
 			},
 			mapping: {
 				tei: function(entity) {
@@ -464,7 +580,32 @@ return function(writer) {
 					xml += '>'+TEXT_SELECTION+'</title>';
 					return xml;
 				},
-				events: '<TITLE TITLETYPE="${info.level}">'+TEXT_SELECTION+'</TITLE>'
+				orlando: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '<TITLE';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					if (info.level) xml += ' TITLETYPE="'+info.level+'"';
+					
+					xml += '>'+TEXT_SELECTION+'</TITLE>';
+					return xml;
+				},
+				cwrcEntry: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '<TITLE';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					if (info.level) xml += ' LEVEL="'+info.level+'"';
+					
+					xml += '>'+TEXT_SELECTION+'</TITLE>';
+					return xml;
+				}
 			},
 			reverseMapping: {
 				tei: function(xml) {
@@ -478,6 +619,22 @@ return function(writer) {
 					$xml.removeAttr('ref').removeAttr('cert').removeAttr('level');
 					
 					obj.attributes = getAttributesFromXml(xml);
+					
+					return obj;
+				},
+				orlando: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					obj.level = $xml.attr('TITLETYPE');
+					
+					return obj;
+				},
+				cwrcEntry: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					obj.level = $xml.attr('LEVEL');
 					
 					return obj;
 				}
@@ -508,7 +665,7 @@ return function(writer) {
 			title: 'Date',
 			parentTag: {
 				tei: 'date',
-				events: 'DATE'
+				orlando: 'DATE'
 			},
 			mapping: {
 				tei: function(entity) {
@@ -534,12 +691,41 @@ return function(writer) {
 					xml += '>'+TEXT_SELECTION+'</date>';
 					return xml;
 				},
-				events: function(entity) {
+				orlando: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
 					var xml = '';
 					if (info.date) {
-						xml += '<DATE VALUE="'+info.date+'">'+TEXT_SELECTION+'</DATE>';
+						xml += '<DATE';
+						if (id) xml += ' annotationId="'+id+'"';
+						if (offsetId) xml += ' offsetId="'+offsetId+'"';
+						xml +=' VALUE="'+info.date+'">'+TEXT_SELECTION+'</DATE>';
 					} else if (info.startDate) {
-						xml += '<DATERANGE FROM="'+info.startDate+'" TO="'+info.endDate+'">'+TEXT_SELECTION+'</DATERANGE>';
+						xml += '<DATERANGE';
+						if (id) xml += ' annotationId="'+id+'"';
+						if (offsetId) xml += ' offsetId="'+offsetId+'"';
+						xml += ' FROM="'+info.startDate+'" TO="'+info.endDate+'">'+TEXT_SELECTION+'</DATERANGE>';
+					}
+					return xml;
+				},
+				cwrcEntry: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '';
+					if (info.date) {
+						xml += '<DATE';
+						if (id) xml += ' annotationId="'+id+'"';
+						if (offsetId) xml += ' offsetId="'+offsetId+'"';
+						xml +=' VALUE="'+info.date+'">'+TEXT_SELECTION+'</DATE>';
+					} else if (info.startDate) {
+						xml += '<DATERANGE';
+						if (id) xml += ' annotationId="'+id+'"';
+						if (offsetId) xml += ' offsetId="'+offsetId+'"';
+						xml += ' FROM="'+info.startDate+'" TO="'+info.endDate+'">'+TEXT_SELECTION+'</DATERANGE>';
 					}
 					return xml;
 				}
@@ -559,6 +745,40 @@ return function(writer) {
 						obj.startDate = $xml.attr('from');
 						obj.endDate = $xml.attr('to');
 						$xml.removeAttr('from').removeAttr('to');
+					}
+					
+					obj.attributes = getAttributesFromXml(xml);
+					
+					return obj;
+				},
+				orlando: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					if ($xml.attr('VALUE')) {
+						obj.date = $xml.attr('VALUE');
+						$xml.removeAttr('VALUE');
+					} else {
+						obj.startDate = $xml.attr('FROM');
+						obj.endDate = $xml.attr('TO');
+						$xml.removeAttr('FROM').removeAttr('TO');
+					}
+					
+					obj.attributes = getAttributesFromXml(xml);
+					
+					return obj;
+				},
+				cwrcEntry: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					if ($xml.attr('VALUE')) {
+						obj.date = $xml.attr('VALUE');
+						$xml.removeAttr('VALUE');
+					} else {
+						obj.startDate = $xml.attr('FROM');
+						obj.endDate = $xml.attr('TO');
+						$xml.removeAttr('FROM').removeAttr('TO');
 					}
 					
 					obj.attributes = getAttributesFromXml(xml);
@@ -640,6 +860,48 @@ return function(writer) {
 					}
 					xml += '</note>';
 					return xml;
+				},
+				orlando: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var el = 'RESEARCHNOTE';
+					if (info.type && info.type == 'scholarNote') {
+						el = 'SCHOLARNOTE';
+					}
+					var xml = '<'+el;
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					if (info.content) {
+						var xmlDoc = w.utilities.stringToXML(info.content);
+						var noteContent = $('note', xmlDoc)[0];
+						xml += noteContent.innerHTML;
+					}
+					xml += '>';
+					xml += '</'+el+'>';
+					return xml;
+				},
+				cwrcEntry: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var el = 'RESEARCHNOTE';
+					if (info.type && info.type == 'scholarNote') {
+						el = 'SCHOLARNOTE';
+					}
+					var xml = '<'+el;
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					if (info.content) {
+						var xmlDoc = w.utilities.stringToXML(info.content);
+						var noteContent = $('note', xmlDoc)[0];
+						xml += noteContent.innerHTML;
+					}
+					xml += '>';
+					xml += '</'+el+'>';
+					return xml;
 				}
 			},
 			reverseMapping: {
@@ -649,6 +911,22 @@ return function(writer) {
 					
 					obj.resp = $xml.attr('resp');
 					obj.type = $xml.attr('type');
+					obj.content = w.utilities.xmlToString(xml);
+					
+					return obj;
+				},
+				orlando: function(xml) {
+					var obj = {};
+					
+					obj.type = xml.nodeName.toLowerCase() == 'researchnote' ? 'researchNote' : 'scholarNote';
+					obj.content = w.utilities.xmlToString(xml);
+					
+					return obj;
+				},
+				cwrcEntry: function(xml) {
+					var obj = {};
+					
+					obj.type = xml.nodeName.toLowerCase() == 'researchnote' ? 'researchNote' : 'scholarNote';
 					obj.content = w.utilities.xmlToString(xml);
 					
 					return obj;
@@ -691,6 +969,40 @@ return function(writer) {
 					}
 					xml += '</bibl></note>';
 					return xml;
+				},
+				orlando: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '<BIBCITS';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					xml += '><BIBCIT>';
+					if (info.content) {
+						var xmlDoc = w.utilities.stringToXML(info.content);
+						var noteContent = $('note', xmlDoc)[0];
+						xml += noteContent.innerHTML;
+					}
+					xml += '</BIBCIT></BIBCITS>';
+					return xml;
+				},
+				cwrcEntry: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '<BIBCITS';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					xml += '><BIBCIT>';
+					if (info.content) {
+						var xmlDoc = w.utilities.stringToXML(info.content);
+						var noteContent = $('note', xmlDoc)[0];
+						xml += noteContent.innerHTML;
+					}
+					xml += '</BIBCIT></BIBCITS>';
+					return xml;
 				}
 			},
 			reverseMapping: {
@@ -700,6 +1012,20 @@ return function(writer) {
 					
 					obj.cwrcInfo = {id: $xml.children('bibl').attr('ref')};
 					obj.resp = $xml.attr('resp');
+					obj.content = w.utilities.xmlToString(xml);
+					
+					return obj;
+				},
+				orlando: function(xml) {
+					var obj = {};
+					
+					obj.content = w.utilities.xmlToString(xml);
+					
+					return obj;
+				},
+				cwrcEntry: function(xml) {
+					var obj = {};
+					
 					obj.content = w.utilities.xmlToString(xml);
 					
 					return obj;
@@ -719,7 +1045,7 @@ return function(writer) {
 			title: 'Correction',
 			parentTag: {
 				tei: ['choice', 'corr'],
-				events: 'SIC'
+				orlando: 'SIC'
 			},
 			textTag: {
 				tei: 'sic'
@@ -731,7 +1057,7 @@ return function(writer) {
 					var offsetId = entity.annotation.range.cwrcOffsetId;
 					
 					var xml;
-					if (info.sicText) {
+					if (info.corrText) {
 						xml = '<choice';
 						if (id) xml += ' annotationId="'+id+'"';
 						if (offsetId) xml += ' offsetId="'+offsetId+'"';
@@ -750,7 +1076,44 @@ return function(writer) {
 					}
 					return xml;
 				},
-				events: '<SIC CORR="${info.corrText}">'+TEXT_SELECTION+'</SIC>'
+				orlando: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml;
+					if (info.corrText) {
+						xml = '<SIC';
+						if (id) xml += ' annotationId="'+id+'"';
+						if (offsetId) xml += ' offsetId="'+offsetId+'"';
+						xml += ' CORR="'+info.corrText+'">'+TEXT_SELECTION+'</SIC>';
+					} else {
+						xml = '<SIC';
+						if (id) xml += ' annotationId="'+id+'"';
+						if (offsetId) xml += ' offsetId="'+offsetId+'"';
+						xml += '>'+TEXT_SELECTION+'</SIC>';
+					}
+					return xml;
+				},
+				cwrcEntry: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml;
+					if (info.corrText) {
+						xml = '<SIC';
+						if (id) xml += ' annotationId="'+id+'"';
+						if (offsetId) xml += ' offsetId="'+offsetId+'"';
+						xml += ' CORR="'+info.corrText+'">'+TEXT_SELECTION+'</SIC>';
+					} else {
+						xml = '<SIC';
+						if (id) xml += ' annotationId="'+id+'"';
+						if (offsetId) xml += ' offsetId="'+offsetId+'"';
+						xml += '>'+TEXT_SELECTION+'</SIC>';
+					}
+					return xml;
+				}
 			},
 			reverseMapping: {
 				tei: function(xml) {
@@ -760,7 +1123,31 @@ return function(writer) {
 					if (xml.nodeName === 'choice') {
 						obj.corrText = $xml.find('corr').text();
 						obj.sicText = $xml.find('sic').text();
+					} else {
+						obj.corrText = $xml.text();
 					}
+					
+					return obj;
+				},
+				orlando: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					if ($xml.attr('CORR')) {
+						obj.corrText = $xml.attr('CORR');
+					}
+					obj.sicText = $xml.text();
+					
+					return obj;
+				},
+				cwrcEntry: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					if ($xml.attr('CORR')) {
+						obj.corrText = $xml.attr('CORR');
+					}
+					obj.sicText = $xml.text();
 					
 					return obj;
 				}
@@ -789,7 +1176,7 @@ return function(writer) {
 			title: 'Keyword',
 			parentTag: {
 				tei: 'note',
-				events: 'KEYWORDCLASS'
+				orlando: 'KEYWORDCLASS'
 			},
 			mapping: {
 				tei: function(entity) {
@@ -809,7 +1196,34 @@ return function(writer) {
 					}
 					return xml;
 				},
-				events: '<KEYWORDCLASS>'+TEXT_SELECTION+'</KEYWORDCLASS>'
+				orlando: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '';
+					for (var i = 0; i < info.keywords.length; i++) {
+						xml += '<KEYWORDCLASS KEYWORDTYPE="'+info.keywords[i]+'"';
+						if (id) xml += ' annotationId="'+id+'"';
+						if (offsetId) xml += ' offsetId="'+offsetId+'"';
+						xml +='>'+TEXT_SELECTION+'</KEYWORDCLASS>';
+					}
+					return xml;
+				},
+				cwrcEntry: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '';
+					for (var i = 0; i < info.keywords.length; i++) {
+						xml += '<KEYWORDCLASS KEYWORDTYPE="'+info.keywords[i]+'"';
+						if (id) xml += ' annotationId="'+id+'"';
+						if (offsetId) xml += ' offsetId="'+offsetId+'"';
+						xml +='>'+TEXT_SELECTION+'</KEYWORDCLASS>';
+					}
+					return xml;
+				}
 			},
 			reverseMapping: {
 				tei: function(xml) {
@@ -818,6 +1232,22 @@ return function(writer) {
 					
 					obj.resp = $xml.attr('resp');
 					obj.keywords = [$xml.children('term').text()];
+					
+					return obj;
+				},
+				orlando: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					obj.keywords = [$xml.attr('KEYWORDTYPE')];
+					
+					return obj;
+				},
+				cwrcEntry: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					obj.keywords = [$xml.attr('KEYWORDTYPE')];
 					
 					return obj;
 				}
@@ -846,7 +1276,7 @@ return function(writer) {
 			title: 'Link',
 			parentTag: {
 				tei: 'ref',
-				events: 'XREF'
+				orlando: 'XREF'
 			},
 			mapping: {
 				tei: function(entity) {
@@ -861,7 +1291,30 @@ return function(writer) {
 					xml += '>'+TEXT_SELECTION+'</ref>';
 					return xml;
 				},
-				events: '<XREF URL="${info.url}">'+TEXT_SELECTION+'</XREF>'
+				orlando: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '<XREF';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					if (info.url) xml += ' URL="'+info.url+'"';
+					xml += '>'+TEXT_SELECTION+'</XREF>';
+					return xml;
+				},
+				cwrcEntry: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '<XREF';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					if (info.url) xml += ' URL="'+info.url+'"';
+					xml += '>'+TEXT_SELECTION+'</XREF>';
+					return xml;
+				}
 			},
 			reverseMapping: {
 				tei: function(xml) {
@@ -869,6 +1322,22 @@ return function(writer) {
 					var $xml = $(xml);
 					
 					obj.url = $xml.attr('target');
+					
+					return obj;
+				},
+				orlando: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					obj.url = $xml.attr('URL');
+					
+					return obj;
+				},
+				cwrcEntry: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					obj.url = $xml.attr('URL');
 					
 					return obj;
 				}
@@ -906,7 +1375,7 @@ return function(writer) {
 		if (schema.indexOf('tei') != -1) {
 			schema = 'tei';
 		} else {
-			schema = 'events';
+			schema = 'orlando';
 		}
 		var testTag;
 		// TODO need way to differentiate between citation and note
@@ -944,7 +1413,7 @@ return function(writer) {
 			if (schema.indexOf('tei') != -1) {
 				schema = 'tei';
 			} else {
-				schema = 'events';
+				schema = 'orlando';
 			}
 			
 			if (e.mapping && e.mapping[schema]) {
@@ -981,7 +1450,7 @@ return function(writer) {
 			if (schema.indexOf('tei') != -1) {
 				schema = 'tei';
 			} else {
-				schema = 'events';
+				schema = 'orlando';
 			}
 			
 			if (e.reverseMapping && e.reverseMapping[schema]) {
@@ -1004,7 +1473,7 @@ return function(writer) {
 			if (schema.indexOf('tei') != -1) {
 				schema = 'tei';
 			} else {
-				schema = 'events';
+				schema = 'orlando';
 			}
 			if (e.parentTag && e.parentTag[schema]) {
 				var tag = e.parentTag[schema];
@@ -1029,7 +1498,7 @@ return function(writer) {
 			if (schema.indexOf('tei') != -1) {
 				schema = 'tei';
 			} else {
-				schema = 'events';
+				schema = 'orlando';
 			}
 			if (e.textTag && e.textTag[schema]) {
 				return e.textTag[schema];
