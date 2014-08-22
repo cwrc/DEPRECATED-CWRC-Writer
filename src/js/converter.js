@@ -564,38 +564,46 @@ return function(writer) {
 		// FIXME temp fix until document format is correct
 		var root = $(w.root+', '+w.root.toLowerCase(), doc)[0];
 		
-		var editorString = converter.buildEditorString(root);
-		w.editor.setContent(editorString);
+		if (root != null) {
+			var editorString = converter.buildEditorString(root);
+			w.editor.setContent(editorString);
+			
+			insertEntities();
+			
+			w.event('documentLoaded').publish();
+			
+			// try putting the cursor in the body
+			window.setTimeout(function() {
+				var bodyTag = $('[_tag='+w.header+']', w.editor.getBody()).next()[0];
+				if (bodyTag != null) {
+					w.editor.selection.select(bodyTag);
+					w.editor.selection.collapse(true);
+					w._fireNodeChange(bodyTag);
+				}
+			}, 50);
+			
+			// reset the undo manager
+			w.editor.undoManager.clear();
 		
-		insertEntities();
-		
-		w.event('documentLoaded').publish();
-		
-		// try putting the cursor in the body
-		window.setTimeout(function() {
-			var bodyTag = $('[_tag='+w.header+']', w.editor.getBody()).next()[0];
-			if (bodyTag != null) {
-				w.editor.selection.select(bodyTag);
-				w.editor.selection.collapse(true);
-				w._fireNodeChange(bodyTag);
-			}
-		}, 50);
-		
-		// reset the undo manager
-		w.editor.undoManager.clear();
-		
-//		var msg;
-//		if (w.mode == w.XML) {
-//			msg = 'This document is set to edit in XML (no overlap) mode: XML and RDF will be created with no overlapping annotations.';
-//		} else {
-//			msg = 'This document is set to edit in XML and RDF (overlapping entities) mode; XML and RDF will be kept in sync where possible, but where overlap occurs RDF will be created without corresponding XML.';
-//		}
-//		
-//		w.dialogManager.show('message', {
-//			title: 'CWRC-Writer Mode',
-//			msg: msg,
-//			type: 'info'
-//		});
+//			var msg;
+//			if (w.mode == w.XML) {
+//				msg = 'This document is set to edit in XML (no overlap) mode: XML and RDF will be created with no overlapping annotations.';
+//			} else {
+//				msg = 'This document is set to edit in XML and RDF (overlapping entities) mode; XML and RDF will be kept in sync where possible, but where overlap occurs RDF will be created without corresponding XML.';
+//			}
+//			
+//			w.dialogManager.show('message', {
+//				title: 'CWRC-Writer Mode',
+//				msg: msg,
+//				type: 'info'
+//			});
+		} else {
+			w.dialogManager.show('message', {
+				title: 'Error',
+				msg: 'Couldn\'t load the document because the root ('+w.root+') was not found.',
+				type: 'error'
+			});
+		}
 	}
 	
 	function processRdf(rdfs) {
@@ -622,7 +630,16 @@ return function(writer) {
 			}
 			
 			var foopath = xpath.replace(/\/\//g, '//foo:'); // default namespace hack (http://stackoverflow.com/questions/9621679/javascript-xpath-and-default-namespaces)
-			var result = doc.evaluate(foopath, doc, nsResolver, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+			var result;
+			try {
+				result = doc.evaluate(foopath, doc, nsResolver, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+			} catch (e) {
+				w.dialogManager.show('message', {
+					title: 'Error',
+					msg: 'There was an error evaluating an XPath:<br/>'+e,
+					type: 'error'
+				});
+			}
 			if (result.singleNodeValue != null) {
 				var xpathEl = $(result.singleNodeValue);
 				
