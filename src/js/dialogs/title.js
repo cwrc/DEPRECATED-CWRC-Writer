@@ -80,6 +80,9 @@ return function(writer) {
 	});
 	
 	$('#'+id+'_certainty').buttonset();
+	$('#'+id+'_certainty input').change(function() {
+		attributeWidget.setData({title: {cert: $(this).val()}});
+	});
 	
 	$('#titleDialog input').keyup(function(event) {
 		if (event.keyCode == '13') {
@@ -127,6 +130,7 @@ return function(writer) {
 			attributeWidget.reset();
 			$('#'+id+'_tagAs span').empty();
 			$('#'+id+'_certainty input:checked').prop('checked', false).button('refresh');
+			$('#'+id+'_certainty input[value="definite"]').prop('checked', true).button('refresh');
 			$('#'+id+'_teiParent').parent().accordion('option', 'active', false);
 			
 			currentData = {};
@@ -149,6 +153,10 @@ return function(writer) {
 				$('#'+id+'_level input[value="'+data.level+'"]').prop('checked', true);
 				$('#'+id+'_certainty input[value="'+data.certainty+'"]').prop('checked', true).button('refresh');
 				
+				if (data.attributes.title == null) {
+					data.attributes.title = {};
+				}
+				data.attributes.title.cert = data.certainty;
 				var showWidget = attributeWidget.setData(data.attributes);
 				if (showWidget) {
 					$('#'+id+'_teiParent').parent().accordion('option', 'active', 0);

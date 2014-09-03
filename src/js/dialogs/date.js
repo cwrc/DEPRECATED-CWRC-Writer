@@ -83,6 +83,9 @@ return function(writer) {
 	});
 	
 	$('#'+id+'_certainty').buttonset();
+	$('#'+id+'_certainty input').change(function() {
+		attributeWidget.setData({date: {cert: $(this).val()}});
+	});
 	$('#'+id+'_type').buttonset();
 	$('#'+id+'_type input').click(function() {
 		toggleDate($(this).val());
@@ -243,6 +246,7 @@ return function(writer) {
 			attributeWidget.reset();
 			$('#'+id+'_type input:checked').prop('checked', false).button('refresh');
 			$('#'+id+'_certainty input:checked').prop('checked', false).button('refresh');
+			$('#'+id+'_certainty input[value="definite"]').prop('checked', true).button('refresh');
 			$('#'+id+'_teiParent').parent().accordion('option', 'active', false);
 			
 			if (mode == ADD) {
@@ -289,6 +293,10 @@ return function(writer) {
 					endDate.value = data.endDate;
 				}
 				
+				if (data.attributes.date == null) {
+					data.attributes.date = {};
+				}
+				data.attributes.date.cert = data.certainty;
 				var showWidget = attributeWidget.setData(data.attributes);
 				if (showWidget) {
 					$('#'+id+'_teiParent').parent().accordion('option', 'active', 0);

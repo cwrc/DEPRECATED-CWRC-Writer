@@ -153,7 +153,13 @@ return function(writer) {
 	});
 	
 	$('#'+id+'_certainty').buttonset();
+	$('#'+id+'_certainty input').change(function() {
+		attributeWidget.setData({persName: {cert: $(this).val()}});
+	});
 	$('#'+id+'_type').buttonset();
+	$('#'+id+'_type input').change(function() {
+		attributeWidget.setData({persName: {type: $(this).val()}});
+	});
 	
 	var rolesString = '';
 	for (var i = 0; i < marcRoles.length; i++) {
@@ -175,6 +181,7 @@ return function(writer) {
 			// reset the form
 			attributeWidget.reset();
 			$('#'+id+'_certainty input:checked').prop('checked', false).button('refresh');
+			$('#'+id+'_certainty input[value="definite"]').prop('checked', true).button('refresh');
 			$('#'+id+'_type input:checked').prop('checked', false).button('refresh');
 			$('#'+id+'_role select').val('');
 			$('#'+id+'_role').accordion('option', 'active', false);
@@ -198,6 +205,13 @@ return function(writer) {
 				
 				currentId = config.entry.props.id;
 				
+				if (data.attributes.persName == null) {
+					data.attributes.persName = {};
+				}
+				data.attributes.persName.cert = data.certainty;
+				if (data.type) {
+					data.attributes.persName.type = data.type;
+				}
 				var showWidget = attributeWidget.setData(data.attributes);
 				if (showWidget) {
 					$('#'+id+'_teiParent').parent().accordion('option', 'active', 0);
