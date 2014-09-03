@@ -254,28 +254,28 @@ return function(writer) {
 	// a general edit function for entities and structure tags
 	tagger.editTag = function(id, pos) {
 		var tag = tagger.getCurrentTag(id);
-		if (tag.struct) {
+		if (tag.entity) {
+			w.editor.currentBookmark = w.editor.selection.getBookmark(1);
+			var type = tag.entity.props.type;
+			w.dialogManager.show(type, {type: type, title: w.entitiesModel.getTitle(type), pos: pos, entry: tag.entity});
+		} else if (tag.struct) {
 			if ($(tag.struct, w.editor.getBody()).attr('_tag')) {
 				w.editor.execCommand('editSchemaTag', tag.struct, pos);
 			} else {
 				alert('Tag not recognized!');
 			}
-		} else if (tag.entity) {
-			w.editor.currentBookmark = w.editor.selection.getBookmark(1);
-			var type = tag.entity.props.type;
-			w.dialogManager.show(type, {type: type, title: w.entitiesModel.getTitle(type), pos: pos, entry: tag.entity});
 		}
 	};
 	
 	// a general change/replace function
 	tagger.changeTag = function(params) {
 		var tag = tagger.getCurrentTag(params.id);
-		if (tag.struct) {
+		if (tag.entity) {
+		} else if (tag.struct) {
 			if ($(tag.struct, w.editor.getBody()).attr('_tag')) {
 				w.editor.execCommand('changeSchemaTag', {tag: tag.struct, pos: params.pos, key: params.key});
 			}
-		} else if (tag.entity) {
-		}
+		} 
 	};
 	
 	/**
@@ -528,10 +528,7 @@ return function(writer) {
 		}
 		
 		var title = w.utilities.getTitleFromContent(content);
-		
 		var id = tinymce.DOM.uniqueId('ent_');
-		w.editor.currentEntity = id;
-		
 		w.entities[id] = {
 			props: {
 				id: id,
@@ -541,6 +538,7 @@ return function(writer) {
 			},
 			info: {}
 		};
+		
 		if (content != '') {
 			tagger.insertBoundaryTags(id, type, range);
 		} else {

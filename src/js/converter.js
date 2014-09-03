@@ -120,7 +120,9 @@ return function(writer) {
 		
 		var structEntry = w.structs[id];
 		var entityEntry = w.entities[id];
-		if (structEntry) {
+		if (entityEntry && tag) {
+			array = w.entitiesModel.getMappingTags(entityEntry, w.schemaManager.schemaId);
+		} else if (structEntry) {
 			var openingTag = '<'+tag;
 			var cwrcAnnotationId = node[0].getAttribute('annotationId');
 			if (cwrcAnnotationId != null) {
@@ -144,8 +146,6 @@ return function(writer) {
 			openingTag += '>';
 			array.push(openingTag);
 			array.push('</'+tag+'>');
-		} else if (entityEntry && tag) {
-			array = w.entitiesModel.getMappingTags(entityEntry, w.schemaManager.schemaId);
 		} else {
 			// not a valid tag so return empty strings
 			array = ['', ''];
