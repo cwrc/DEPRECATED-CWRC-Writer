@@ -99,7 +99,11 @@ return function(config) {
 				prevHighlight.each(function(index, el) {
 					var $p = $(el);
 					var parent = $p.parent()[0];
-					$p.contents().unwrap();
+					if ($p.contents().length !== 0) {
+						$p.contents().unwrap();
+					} else {
+						$p.remove();
+					}
 					parent.normalize();
 				});
 			}
