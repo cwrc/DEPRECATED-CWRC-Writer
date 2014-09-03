@@ -111,9 +111,12 @@ return function(writer) {
 		}]
 	});
 	
-	$('#'+id+'_certainty').buttonset();
-	
 	var attributeWidget = new AttributeWidget({writer: w, parentId: id+'_teiParent'});
+	
+	$('#'+id+'_certainty').buttonset();
+	$('#'+id+'_certainty input').change(function() {
+		attributeWidget.setData({orgName: {cert: $(this).val()}});
+	});
 	
 	return {
 		show: function(config) {
@@ -126,6 +129,7 @@ return function(writer) {
 			// reset the form
 			attributeWidget.reset();
 			$('#'+id+'_certainty input:checked').prop('checked', false).button('refresh');
+			$('#'+id+'_certainty input[value="definite"]').prop('checked', true).button('refresh');
 			$('#'+id+'_teiParent').parent().accordion('option', 'active', false);
 			$('#'+id+'_tagAs span').empty();
 			
@@ -146,6 +150,10 @@ return function(writer) {
 				
 				currentId = config.entry.props.id;
 				
+				if (data.attributes.orgName == null) {
+					data.attributes.orgName = {};
+				}
+				data.attributes.orgName.cert = data.certainty;
 				var showWidget = attributeWidget.setData(data.attributes);
 				if (showWidget) {
 					$('#'+id+'_teiParent').parent().accordion('option', 'active', 0);

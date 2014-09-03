@@ -100,6 +100,7 @@ return function(writer) {
 			
 			// reset the form
 			$('#'+id+'_certainty input:checked').prop('checked', false).button('refresh');
+			$('#'+id+'_certainty input[value="definite"]').prop('checked', true).button('refresh');
 			$('#'+id+'_precision input:checked').prop('checked', false).button('refresh');
 			$('#'+id+'_tagAs span').empty();
 			

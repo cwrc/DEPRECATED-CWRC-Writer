@@ -272,17 +272,27 @@ return function(writer) {
 					var info = entity.info;
 					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
 					var offsetId = entity.annotation.range.cwrcOffsetId;
+					var duplicates = {};
 					
 					var xml = '<persName';
 					if (id) xml += ' annotationId="'+id+'"';
 					if (offsetId) xml += ' offsetId="'+offsetId+'"';
-					if (info.certainty) xml += ' cert="'+info.certainty+'"';
-					if (info.type) xml += ' type="'+info.type+'"';
+					if (info.certainty) {
+						xml += ' cert="'+info.certainty+'"';
+						duplicates.cert = true;
+					}
+					if (info.type) {
+						xml += ' type="'+info.type+'"';
+						duplicates.type = true;
+					}
 					if (info.role) xml += ' role="'+info.role+'"';
 					if (info.cwrcInfo && info.cwrcInfo.id) xml += ' ref="'+info.cwrcInfo.id+'"';
 					
 					if (info.attributes) {
 						var atts = info.attributes.persName;
+						for (var key in duplicates) {
+							delete atts[key];
+						}
 						xml += getAttributeString(atts);
 					}
 					
@@ -374,15 +384,22 @@ return function(writer) {
 					var info = entity.info;
 					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
 					var offsetId = entity.annotation.range.cwrcOffsetId;
+					var duplicates = {};
 					
 					var xml = '<orgName';
 					if (id) xml += ' annotationId="'+id+'"';
 					if (offsetId) xml += ' offsetId="'+offsetId+'"';
-					if (info.certainty) xml += ' cert="'+info.certainty+'"';
+					if (info.certainty) {
+						xml += ' cert="'+info.certainty+'"';
+						duplicates.cert = true;
+					}
 					if (info.cwrcInfo && info.cwrcInfo.id) xml += ' ref="'+info.cwrcInfo.id+'"';
 					
 					if (info.attributes) {
 						var atts = info.attributes.orgName;
+						for (var key in duplicates) {
+							delete atts[key];
+						}
 						xml += getAttributeString(atts);
 					}
 					
@@ -564,16 +581,23 @@ return function(writer) {
 					var info = entity.info;
 					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
 					var offsetId = entity.annotation.range.cwrcOffsetId;
+					var duplicates = {};
 					
 					var xml = '<title';
 					if (id) xml += ' annotationId="'+id+'"';
 					if (offsetId) xml += ' offsetId="'+offsetId+'"';
 					if (info.cwrcInfo && info.cwrcInfo.id) xml += ' ref="'+info.cwrcInfo.id+'"';
-					if (info.certainty) xml += ' cert="'+info.certainty+'"';
+					if (info.certainty) {
+						xml += ' cert="'+info.certainty+'"';
+						duplicates.cert = true;
+					}
 					if (info.level) xml += ' level="'+info.level+'"';
 					
 					if (info.attributes) {
 						var atts = info.attributes.title;
+						for (var key in duplicates) {
+							delete atts[key];
+						}
 						xml += getAttributeString(atts);
 					}
 					
@@ -672,11 +696,15 @@ return function(writer) {
 					var info = entity.info;
 					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
 					var offsetId = entity.annotation.range.cwrcOffsetId;
+					var duplicates = {};
 					
 					var xml = '<date';
 					if (id) xml += ' annotationId="'+id+'"';
 					if (offsetId) xml += ' offsetId="'+offsetId+'"';
-					if (info.certainty) xml += ' cert="'+info.certainty+'"';
+					if (info.certainty) {
+						xml += ' cert="'+info.certainty+'"';
+						duplicates.cert = true;
+					}
 					if (info.date) {
 						xml += ' when="'+info.date+'"';
 					} else if (info.startDate) {
@@ -685,6 +713,9 @@ return function(writer) {
 					
 					if (info.attributes) {
 						var atts = info.attributes.date;
+						for (var key in duplicates) {
+							delete atts[key];
+						}
 						xml += getAttributeString(atts);
 					}
 					
