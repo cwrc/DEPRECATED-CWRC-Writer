@@ -1,31 +1,58 @@
 define(['jquery', 'jquery-ui'], function($, jqueryUi) {
 	
+/**
+ * @class Validation
+ * @param {Object} config
+ * @param {Writer} config.writer
+ * @param {String} config.parentId
+ */
 return function(config) {
 	
 	var w = config.writer;
 	
-	$('#'+config.parentId).append('<div id="validation">'+
-			'<button>Validate</button><button>Clear</button><ul class="validationList"></ul>'+
+	var id = 'validation';
+	
+	$('#'+config.parentId).append('<div id="'+id+'">'+
+			'<div id="'+id+'_buttons"><button>Validate</button><button>Clear</button></div>'+
+			'<ul class="validationList"></ul>'+
 		'</div>');
 	
 	w.event('documentLoaded').subscribe(function() {
 		validation.clearResult();
 	});
 	
+	w.event('validationInitiated').subscribe(function() {
+		var list = $('#'+id+' > ul');
+		list.empty();
+		list.append(''+
+		'<li class="ui-state-default">'+
+			'<span class="loading"></span> Validating...'+
+		'</li>');
+		showValidation();
+	});
+	
 	w.event('documentValidated').subscribe(function(valid, resultDoc, docString) {
+		$('#'+id+'_indicator').hide();
 		validation.showValidationResult(resultDoc, docString);
 	});
 	
+	function showValidation() {
+		w.layout.center.children.layout1.open('south');
+		$('#southTabs').tabs('option', 'active', 0);
+	}
+	
+	/**
+	 * @lends Validation.prototype
+	 */
 	var validation = {};
 	
 	/**
 	 * Processes a validation response from the server.
-	 * @memberOf validation
 	 * @param resultDoc The actual response
 	 * @param docString The doc string sent to the server for validation  
 	 */
 	validation.showValidationResult = function(resultDoc, docString) {
-		var list = $('#validation > ul');
+		var list = $('#'+id+' > ul');
 		list.empty();
 		
 		docString = docString.split('\n')[1]; // remove the xml header
@@ -58,8 +85,13 @@ return function(config) {
 					var tagName = tag.match(/^\w+(?=\[)?/);
 					if (tagName != null) {
 						var index = tag.match(/\d+/);
-						if (index === null) index = 0;
-						editorPath += '*[_tag="'+tagName+'"]:eq('+index+') > ';
+						if (index === null) {
+							index = 0;
+						} else {
+							index = parseInt(index[0]);
+							index--; // xpath is 1-based and "eq()" is 0-based
+						}
+						editorPath += '*[_tag="'+tagName[0]+'"]:eq('+index+') > ';
 					}
 				}
 				editorPath = editorPath.substr(0, editorPath.length-3);
@@ -146,19 +178,19 @@ return function(config) {
 			}
 		});
 		
-		w.layout.center.children.layout1.open('south');
-		$('#southTabs').tabs('option', 'active', 0);
+		showValidation();
 	};
 	
 	validation.clearResult = function() {
-		$('#validation > ul').empty();
+		$('#'+id+'_indicator').hide();
+		$('#'+id+' > ul').empty();
 	};
 	
 
-	$('#validation button:eq(0)').button().click(function() {
+	$('#'+id+'_buttons button:eq(0)').button().click(function() {
 		w.delegator.validate();
 	});
-	$('#validation button:eq(1)').button().click(function() {
+	$('#'+id+'_buttons button:eq(1)').button().click(function() {
 		validation.clearResult();
 	});
 	

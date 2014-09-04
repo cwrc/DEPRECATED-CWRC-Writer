@@ -1,6 +1,10 @@
 // TODO add IDs
 define(['jquery', 'jquery.tmpl'], function($) {
-	
+
+/**
+ * @class EntitiesModel
+ * @param {Writer} writer
+ */
 return function(writer) {
 	var w = writer;
 	
@@ -277,8 +281,10 @@ return function(writer) {
 					if (info.role) xml += ' role="'+info.role+'"';
 					if (info.cwrcInfo && info.cwrcInfo.id) xml += ' ref="'+info.cwrcInfo.id+'"';
 					
-					var atts = info.attributes.persName;
-					xml += getAttributeString(atts);
+					if (info.attributes) {
+						var atts = info.attributes.persName;
+						xml += getAttributeString(atts);
+					}
 					
 					xml += '>'+TEXT_SELECTION+'</persName>';
 					return xml;
@@ -335,8 +341,10 @@ return function(writer) {
 					if (info.certainty) xml += ' cert="'+info.certainty+'"';
 					if (info.cwrcInfo && info.cwrcInfo.id) xml += ' ref="'+info.cwrcInfo.id+'"';
 					
-					var atts = info.attributes.orgName;
-					xml += getAttributeString(atts);
+					if (info.attributes) {
+						var atts = info.attributes.orgName;
+						xml += getAttributeString(atts);
+					}
 					
 					xml += '>'+TEXT_SELECTION+'</orgName>';
 					return xml;
@@ -447,6 +455,12 @@ return function(writer) {
 					if (info.cwrcInfo && info.cwrcInfo.id) xml += ' ref="'+info.cwrcInfo.id+'"';
 					if (info.certainty) xml += ' cert="'+info.certainty+'"';
 					if (info.level) xml += ' level="'+info.level+'"';
+					
+					if (info.attributes) {
+						var atts = info.attributes.title;
+						xml += getAttributeString(atts);
+					}
+					
 					xml += '>'+TEXT_SELECTION+'</title>';
 					return xml;
 				},
@@ -473,6 +487,9 @@ return function(writer) {
 				var data = entity.annotation;
 				data.certainty = entity.info.certainty;
 				data.cwrcInfo = entity.info.cwrcInfo;
+				data.cwrcAttributes = {
+					attributes: entity.info.attributes
+				};
 				
 				var anno = commonAnnotation({data: data, types: ['dcterms:BibliographicResource', 'dcterms:title']}, format);
 				
@@ -509,8 +526,10 @@ return function(writer) {
 						xml += ' from="'+info.startDate+'" to="'+info.endDate+'"';
 					}
 					
-					var atts = info.attributes.date;
-					xml += getAttributeString(atts);
+					if (info.attributes) {
+						var atts = info.attributes.date;
+						xml += getAttributeString(atts);
+					}
 					
 					xml += '>'+TEXT_SELECTION+'</date>';
 					return xml;
@@ -595,55 +614,6 @@ return function(writer) {
 				tei: '<event cert="${info.certainty}">'+TEXT_SELECTION+'</event>'
 			}
 		},
-		citation: {
-			title: 'Citation',
-			parentTag: {
-				tei: 'note'
-			},
-			mapping: {
-				tei: function(entity) {
-					var info = entity.info;
-					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
-					var offsetId = entity.annotation.range.cwrcOffsetId;
-					
-					var xml = '<note';
-					if (id) xml += ' annotationId="'+id+'"';
-					if (offsetId) xml += ' offsetId="'+offsetId+'"';
-					xml += ' resp="'+getResp()+'"';
-					xml += ' type="citation"><bibl';
-					if (info.cwrcInfo && info.cwrcInfo.id) xml += ' ref="'+info.cwrcInfo.id+'"';
-					xml += '>';
-					if (info.content) {
-						var xmlDoc = w.utilities.stringToXML(info.content);
-						var biblContent = $('bibl', xmlDoc)[0];
-						xml += biblContent.innerHTML;
-					}
-					xml += '</bibl></note>';
-					return xml;
-				}
-			},
-			reverseMapping: {
-				tei: function(xml) {
-					var obj = {};
-					var $xml = $(xml);
-					
-					obj.cwrcInfo = {id: $xml.children('bibl').attr('ref')};
-					obj.resp = $xml.attr('resp');
-					obj.content = w.utilities.xmlToString(xml);
-					
-					return obj;
-				}
-			},
-			annotationType: 'dcterms:BibliographicResource',
-			annotation: function(entity, format) {
-				var data = entity.annotation;
-				data.cwrcInfo = entity.info.cwrcInfo;
-				
-				var anno = commonAnnotation({data: data, types: 'dcterms:BibliographicResource'}, format);
-				
-				return anno;
-			}
-		},
 		note: {
 			title: 'Note',
 			parentTag: {
@@ -696,10 +666,59 @@ return function(writer) {
 				return anno;
 			}
 		},
+		citation: {
+			title: 'Citation',
+			parentTag: {
+				tei: 'note'
+			},
+			mapping: {
+				tei: function(entity) {
+					var info = entity.info;
+					var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
+					var offsetId = entity.annotation.range.cwrcOffsetId;
+					
+					var xml = '<note';
+					if (id) xml += ' annotationId="'+id+'"';
+					if (offsetId) xml += ' offsetId="'+offsetId+'"';
+					xml += ' resp="'+getResp()+'"';
+					xml += ' type="citation"><bibl';
+					if (info.cwrcInfo && info.cwrcInfo.id) xml += ' ref="'+info.cwrcInfo.id+'"';
+					xml += '>';
+					if (info.content) {
+						var xmlDoc = w.utilities.stringToXML(info.content);
+						var biblContent = $('bibl', xmlDoc)[0];
+						xml += biblContent.innerHTML;
+					}
+					xml += '</bibl></note>';
+					return xml;
+				}
+			},
+			reverseMapping: {
+				tei: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					obj.cwrcInfo = {id: $xml.children('bibl').attr('ref')};
+					obj.resp = $xml.attr('resp');
+					obj.content = w.utilities.xmlToString(xml);
+					
+					return obj;
+				}
+			},
+			annotationType: 'dcterms:BibliographicResource',
+			annotation: function(entity, format) {
+				var data = entity.annotation;
+				data.cwrcInfo = entity.info.cwrcInfo;
+				
+				var anno = commonAnnotation({data: data, types: 'dcterms:BibliographicResource', motivations: 'cw:citing'}, format);
+				
+				return anno;
+			}
+		},
 		correction: {
 			title: 'Correction',
 			parentTag: {
-				tei: 'choice', // TODO add corr option
+				tei: ['choice', 'corr'],
 				events: 'SIC'
 			},
 			textTag: {
@@ -732,6 +751,19 @@ return function(writer) {
 					return xml;
 				},
 				events: '<SIC CORR="${info.corrText}">'+TEXT_SELECTION+'</SIC>'
+			},
+			reverseMapping: {
+				tei: function(xml) {
+					var obj = {};
+					var $xml = $(xml);
+					
+					if (xml.nodeName === 'choice') {
+						obj.corrText = $xml.find('corr').text();
+						obj.sicText = $xml.find('sic').text();
+					}
+					
+					return obj;
+				}
 			},
 			annotationType: 'oa:editing',
 			annotation: function(entity, format) {
@@ -771,7 +803,9 @@ return function(writer) {
 						if (id) xml += ' annotationId="'+id+'"';
 						if (offsetId) xml += ' offsetId="'+offsetId+'"';
 						xml += ' resp="'+getResp()+'"';
-						xml +='><term>'+info.keywords[i]+'</term></note>';
+						xml +='><term';
+						if (id) xml += ' annotationId="'+id+'"';
+						xml +='>'+info.keywords[i]+'</term></note>';
 					}
 					return xml;
 				},
@@ -792,7 +826,7 @@ return function(writer) {
 			annotation: function(entity, format) {
 				var data = entity.annotation;
 				
-				var anno = commonAnnotation({data: data, types: ['oa:Tag', 'cnt:ContentAsText', 'skos:Concept']}, format);
+				var anno = commonAnnotation({data: data, types: ['oa:Tag', 'cnt:ContentAsText', 'skos:Concept'], motivations: 'oa:classifying'}, format);
 				
 				if (format === 'xml') {
 					var body = $('[rdf\\:about="'+data.entityId+'"]', anno);
@@ -857,10 +891,13 @@ return function(writer) {
 		}
 	};
 	
+	/**
+	 * @lends EntitiesModel.prototype
+	 */
 	var entmod = {};
+	
 	/**
 	 * Checks if the tag is for an entity.
-	 * @memberOf entmod
 	 * @param tag The tag to check.
 	 * @param schema The schema to use.
 	 * @returns {String} The entity type, or null
@@ -875,7 +912,7 @@ return function(writer) {
 		// TODO need way to differentiate between citation and note
 		for (var e in entities) {
 			testTag = entities[e].parentTag[schema];
-			if (testTag === tag) {
+			if (($.isArray(testTag) && testTag.indexOf(tag) !== -1) || testTag === tag) {
 				return e;
 			}
 		}
@@ -970,7 +1007,11 @@ return function(writer) {
 				schema = 'events';
 			}
 			if (e.parentTag && e.parentTag[schema]) {
-				return e.parentTag[schema];
+				var tag = e.parentTag[schema];
+				if ($.isArray(tag)) {
+					tag = tag[0];
+				}
+				return tag;
 			}
 		}
 		return '';

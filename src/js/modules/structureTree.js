@@ -52,12 +52,22 @@ $(document).on('context_hide.vakata', function(e) {
 	var filterParent = $('.filterParent', e.element);
 	filterParent.hide();
 });
-	
+
+/**
+ * @class StructureTree
+ * @fires Writer#structureTreeInitialized
+ * @param {Object} config
+ * @param {Writer} config.writer
+ * @param {String} config.parentId
+ */
 return function(config) {
 	var w = config.writer;
 	
 	var id = 'tree';
 	
+	/**
+	 * @lends StructureTree.prototype
+	 */
 	var tree = {
 		currentlySelectedNode: null, // id of the currently selected node
 		currentlySelectedEntity: null, // id of the currently selected entity (as opposed to node, ie. struct tag)
@@ -167,7 +177,7 @@ return function(config) {
 	});
 	
 	/**
-	 * @memberOf tree
+	 * Updates the tree to reflect the document structure.
 	 */
 	tree.update = function() {
 		var treeRef = $.jstree.reference('#'+id);
@@ -381,6 +391,35 @@ return function(config) {
 				li_attr: {name: id}, // 'class': type}
 				state: {opened: level < 3}
 			};
+			
+			if (type === 'note' || type === 'citation') {
+				var content = w.utilities.stringToXML(w.entities[id].info.content);
+				var root = $(tag, content).first();
+				
+				function processChildren(children, parent, id) {
+					children.each(function(index, el) {
+						if (parent.children == null) parent.children = [];
+						var childData = {
+							text: el.nodeName,
+							li_attr: {name: id}
+						};
+						parent.children.push(childData);
+						
+						processChildren($(el).children(), childData, id);
+					});
+				}
+				
+				processChildren(root.children(), nodeData, id);
+			} else if (type === 'keyword') {
+				nodeData.children = [];
+				var keywords = w.entities[id].info.keywords;
+				for (var i = 0; i < keywords.length; i++) {
+					nodeData.children.push({
+						text: 'keyword',
+						li_attr: {name: id}
+					});
+				}
+			}
 		}
 		
 		return nodeData;
@@ -527,11 +566,11 @@ return function(config) {
 				action: function(obj) {
 					// FIXME hack to get actionType
 					var parentText = obj.element.find('.submenu.vakata-context-hover').find('a:first').text();
-					var actionType = parentText.match(/\w+$/)[0].toLowerCase();
-					if (actionType == 'change') {
+					if (parentText.indexOf('Change') !== -1) {
 						var id = obj.reference.parent('li').attr('name');
 						w.tagger.changeTag({key: obj.item.key, id: id});
 					} else {
+						var actionType = parentText.match(/\w+$/)[0].toLowerCase();
 						w.editor.currentBookmark = w.editor.selection.getBookmark(1);
 						w.editor.currentBookmark.tagId = tagInfo.id;
 						w.editor.execCommand('addSchemaTag', {key: obj.item.key, action: actionType});

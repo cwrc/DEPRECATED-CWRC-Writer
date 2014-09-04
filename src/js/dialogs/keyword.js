@@ -7,6 +7,8 @@ return function(writer) {
 	var ADD = 0;
 	var EDIT = 1;
 	
+	var entityId = null;
+	
 	$(document.body).append(''+
 	'<div id="keywordDialog">'+
 		'<div id="keywordRowsParent">'+
@@ -77,11 +79,12 @@ return function(writer) {
 			});
 		}
 		if (mode == EDIT && data != null) {
-			w.tagger.editEntity(w.editor.currentEntity, data);
+			w.tagger.editEntity(entityId, data);
 		} else {
 			w.tagger.finalizeEntity('keyword', data);
 		}
 		keyword.dialog('close');
+		entityId = null;
 	};
 	
 	return {
@@ -102,6 +105,8 @@ return function(writer) {
 			if (mode == ADD) {
 				addRow();
 			} else {
+				entityId = config.entry.props.id;
+				
 				var data = config.entry.info;
 				var prevRow = null;
 				$.each(data.keywords, function(index, val) {

@@ -1,5 +1,13 @@
 .bootstrap-scope {
-  /*! normalize.css v2.1.3 | MIT License | git.io/normalize */
+  /*! normalize.css v3.0.1 | MIT License | git.io/normalize */
+}
+.bootstrap-scope div {
+  font-family: sans-serif;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+.bootstrap-scope body {
+  margin: 0;
 }
 .bootstrap-scope article,
 .bootstrap-scope aside,
@@ -17,8 +25,10 @@
 }
 .bootstrap-scope audio,
 .bootstrap-scope canvas,
+.bootstrap-scope progress,
 .bootstrap-scope video {
   display: inline-block;
+  vertical-align: baseline;
 }
 .bootstrap-scope audio:not([controls]) {
   display: none;
@@ -28,24 +38,12 @@
 .bootstrap-scope template {
   display: none;
 }
-.bootstrap-scope {
-  font-family: sans-serif;
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-}
 .bootstrap-scope a {
   background: transparent;
-}
-.bootstrap-scope a:focus {
-  outline: thin dotted;
 }
 .bootstrap-scope a:active,
 .bootstrap-scope a:hover {
   outline: 0;
-}
-.bootstrap-scope h1 {
-  font-size: 2em;
-  margin: 0.67em 0;
 }
 .bootstrap-scope abbr[title] {
   border-bottom: 1px dotted;
@@ -57,27 +55,13 @@
 .bootstrap-scope dfn {
   font-style: italic;
 }
-.bootstrap-scope hr {
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
-  height: 0;
+.bootstrap-scope h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
 }
 .bootstrap-scope mark {
   background: #ff0;
   color: #000;
-}
-.bootstrap-scope code,
-.bootstrap-scope kbd,
-.bootstrap-scope pre,
-.bootstrap-scope samp {
-  font-family: monospace, serif;
-  font-size: 1em;
-}
-.bootstrap-scope pre {
-  white-space: pre-wrap;
-}
-.bootstrap-scope q {
-  quotes: "\201C" "\201D" "\2018" "\2019";
 }
 .bootstrap-scope small {
   font-size: 80%;
@@ -102,48 +86,66 @@
   overflow: hidden;
 }
 .bootstrap-scope figure {
-  margin: 0;
+  margin: 1em 40px;
 }
-.bootstrap-scope fieldset {
-  border: 1px solid #c0c0c0;
-  margin: 0 2px;
-  padding: 0.35em 0.625em 0.75em;
+.bootstrap-scope hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
 }
-.bootstrap-scope legend {
-  border: 0;
-  padding: 0;
+.bootstrap-scope pre {
+  overflow: auto;
+}
+.bootstrap-scope code,
+.bootstrap-scope kbd,
+.bootstrap-scope pre,
+.bootstrap-scope samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
 }
 .bootstrap-scope button,
 .bootstrap-scope input,
+.bootstrap-scope optgroup,
 .bootstrap-scope select,
 .bootstrap-scope textarea {
-  font-family: inherit;
-  font-size: 100%;
+  color: inherit;
+  font: inherit;
   margin: 0;
 }
-.bootstrap-scope button,
-.bootstrap-scope input {
-  line-height: normal;
+.bootstrap-scope button {
+  overflow: visible;
 }
 .bootstrap-scope button,
 .bootstrap-scope select {
   text-transform: none;
 }
 .bootstrap-scope button,
-.bootstrap-scope input[type="button"],
+.bootstrap-scope html input[type="button"],
 .bootstrap-scope input[type="reset"],
 .bootstrap-scope input[type="submit"] {
   -webkit-appearance: button;
   cursor: pointer;
 }
 .bootstrap-scope button[disabled],
-.bootstrap-scope input[disabled] {
+.bootstrap-scope html input[disabled] {
   cursor: default;
+}
+.bootstrap-scope button::-moz-focus-inner,
+.bootstrap-scope input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+.bootstrap-scope input {
+  line-height: normal;
 }
 .bootstrap-scope input[type="checkbox"],
 .bootstrap-scope input[type="radio"] {
   box-sizing: border-box;
   padding: 0;
+}
+.bootstrap-scope input[type="number"]::-webkit-inner-spin-button,
+.bootstrap-scope input[type="number"]::-webkit-outer-spin-button {
+  height: auto;
 }
 .bootstrap-scope input[type="search"] {
   -webkit-appearance: textfield;
@@ -155,18 +157,28 @@
 .bootstrap-scope input[type="search"]::-webkit-search-decoration {
   -webkit-appearance: none;
 }
-.bootstrap-scope button::-moz-focus-inner,
-.bootstrap-scope input::-moz-focus-inner {
+.bootstrap-scope fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em;
+}
+.bootstrap-scope legend {
   border: 0;
   padding: 0;
 }
 .bootstrap-scope textarea {
   overflow: auto;
-  vertical-align: top;
+}
+.bootstrap-scope optgroup {
+  font-weight: bold;
 }
 .bootstrap-scope table {
   border-collapse: collapse;
   border-spacing: 0;
+}
+.bootstrap-scope td,
+.bootstrap-scope th {
+  padding: 0;
 }
 @media print {
   .bootstrap-scope * {
@@ -204,9 +216,6 @@
   .bootstrap-scope img {
     max-width: 100% !important;
   }
-  @page {
-    margin: 2cm .5cm;
-  }
   .bootstrap-scope p,
   .bootstrap-scope h2,
   .bootstrap-scope h3 {
@@ -242,2031 +251,10 @@
     border: 1px solid #ddd !important;
   }
 }
-.bootstrap-scope *,
-.bootstrap-scope *:before,
-.bootstrap-scope *:after {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-.bootstrap-scope {
-  font-size: 62.5%;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
-.bootstrap-scope {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 14px;
-  line-height: 1.42857143;
-  color: #333333;
-  background-color: #ffffff;
-}
-.bootstrap-scope input,
-.bootstrap-scope button,
-.bootstrap-scope select,
-.bootstrap-scope textarea {
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
-}
-.bootstrap-scope a {
-  color: #428bca;
-  text-decoration: none;
-}
-.bootstrap-scope a:hover,
-.bootstrap-scope a:focus {
-  color: #2a6496;
-  text-decoration: underline;
-}
-.bootstrap-scope a:focus {
-  outline: thin dotted;
-  outline: 5px auto -webkit-focus-ring-color;
-  outline-offset: -2px;
-}
-.bootstrap-scope img {
-  vertical-align: middle;
-}
-.bootstrap-scope .img-responsive {
-  display: block;
-  max-width: 100%;
-  height: auto;
-}
-.bootstrap-scope .img-rounded {
-  border-radius: 6px;
-}
-.bootstrap-scope .img-thumbnail {
-  padding: 4px;
-  line-height: 1.42857143;
-  background-color: #ffffff;
-  border: 1px solid #dddddd;
-  border-radius: 4px;
-  -webkit-transition: all 0.2s ease-in-out;
-  transition: all 0.2s ease-in-out;
-  display: inline-block;
-  max-width: 100%;
-  height: auto;
-}
-.bootstrap-scope .img-circle {
-  border-radius: 50%;
-}
-.bootstrap-scope hr {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  border: 0;
-  border-top: 1px solid #eeeeee;
-}
-.bootstrap-scope .sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-}
-.bootstrap-scope h1,
-.bootstrap-scope h2,
-.bootstrap-scope h3,
-.bootstrap-scope h4,
-.bootstrap-scope h5,
-.bootstrap-scope h6,
-.bootstrap-scope .h1,
-.bootstrap-scope .h2,
-.bootstrap-scope .h3,
-.bootstrap-scope .h4,
-.bootstrap-scope .h5,
-.bootstrap-scope .h6 {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-weight: 500;
-  line-height: 1.1;
-  color: inherit;
-}
-.bootstrap-scope h1 small,
-.bootstrap-scope h2 small,
-.bootstrap-scope h3 small,
-.bootstrap-scope h4 small,
-.bootstrap-scope h5 small,
-.bootstrap-scope h6 small,
-.bootstrap-scope .h1 small,
-.bootstrap-scope .h2 small,
-.bootstrap-scope .h3 small,
-.bootstrap-scope .h4 small,
-.bootstrap-scope .h5 small,
-.bootstrap-scope .h6 small,
-.bootstrap-scope h1 .small,
-.bootstrap-scope h2 .small,
-.bootstrap-scope h3 .small,
-.bootstrap-scope h4 .small,
-.bootstrap-scope h5 .small,
-.bootstrap-scope h6 .small,
-.bootstrap-scope .h1 .small,
-.bootstrap-scope .h2 .small,
-.bootstrap-scope .h3 .small,
-.bootstrap-scope .h4 .small,
-.bootstrap-scope .h5 .small,
-.bootstrap-scope .h6 .small {
-  font-weight: normal;
-  line-height: 1;
-  color: #999999;
-}
-.bootstrap-scope h1,
-.bootstrap-scope h2,
-.bootstrap-scope h3 {
-  margin-top: 20px;
-  margin-bottom: 10px;
-}
-.bootstrap-scope h1 small,
-.bootstrap-scope h2 small,
-.bootstrap-scope h3 small,
-.bootstrap-scope h1 .small,
-.bootstrap-scope h2 .small,
-.bootstrap-scope h3 .small {
-  font-size: 65%;
-}
-.bootstrap-scope h4,
-.bootstrap-scope h5,
-.bootstrap-scope h6 {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-.bootstrap-scope h4 small,
-.bootstrap-scope h5 small,
-.bootstrap-scope h6 small,
-.bootstrap-scope h4 .small,
-.bootstrap-scope h5 .small,
-.bootstrap-scope h6 .small {
-  font-size: 75%;
-}
-.bootstrap-scope h1,
-.bootstrap-scope .h1 {
-  font-size: 36px;
-}
-.bootstrap-scope h2,
-.bootstrap-scope .h2 {
-  font-size: 30px;
-}
-.bootstrap-scope h3,
-.bootstrap-scope .h3 {
-  font-size: 24px;
-}
-.bootstrap-scope h4,
-.bootstrap-scope .h4 {
-  font-size: 18px;
-}
-.bootstrap-scope h5,
-.bootstrap-scope .h5 {
-  font-size: 14px;
-}
-.bootstrap-scope h6,
-.bootstrap-scope .h6 {
-  font-size: 12px;
-}
-.bootstrap-scope p {
-  margin: 0 0 10px;
-}
-.bootstrap-scope .lead {
-  margin-bottom: 20px;
-  font-size: 16px;
-  font-weight: 200;
-  line-height: 1.4;
-}
-@media (min-width: 768px) {
-  .bootstrap-scope .lead {
-    font-size: 21px;
-  }
-}
-.bootstrap-scope small,
-.bootstrap-scope .small {
-  font-size: 85%;
-}
-.bootstrap-scope cite {
-  font-style: normal;
-}
-.bootstrap-scope .text-muted {
-  color: #999999;
-}
-.bootstrap-scope .text-primary {
-  color: #428bca;
-}
-.bootstrap-scope .text-primary:hover {
-  color: #3071a9;
-}
-.bootstrap-scope .text-warning {
-  color: #8a6d3b;
-}
-.bootstrap-scope .text-warning:hover {
-  color: #66512c;
-}
-.bootstrap-scope .text-danger {
-  color: #a94442;
-}
-.bootstrap-scope .text-danger:hover {
-  color: #843534;
-}
-.bootstrap-scope .text-success {
-  color: #3c763d;
-}
-.bootstrap-scope .text-success:hover {
-  color: #2b542c;
-}
-.bootstrap-scope .text-info {
-  color: #31708f;
-}
-.bootstrap-scope .text-info:hover {
-  color: #245269;
-}
-.bootstrap-scope .text-left {
-  text-align: left;
-}
-.bootstrap-scope .text-right {
-  text-align: right;
-}
-.bootstrap-scope .text-center {
-  text-align: center;
-}
-.bootstrap-scope .page-header {
-  padding-bottom: 9px;
-  margin: 40px 0 20px;
-  border-bottom: 1px solid #eeeeee;
-}
-.bootstrap-scope ul,
-.bootstrap-scope ol {
-  margin-top: 0;
-  margin-bottom: 10px;
-}
-.bootstrap-scope ul ul,
-.bootstrap-scope ol ul,
-.bootstrap-scope ul ol,
-.bootstrap-scope ol ol {
-  margin-bottom: 0;
-}
-.bootstrap-scope .list-unstyled {
-  padding-left: 0;
-  list-style: none;
-}
-.bootstrap-scope .list-inline {
-  padding-left: 0;
-  list-style: none;
-}
-.bootstrap-scope .list-inline > li {
-  display: inline-block;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-.bootstrap-scope .list-inline > li:first-child {
-  padding-left: 0;
-}
-.bootstrap-scope dl {
-  margin-top: 0;
-  margin-bottom: 20px;
-}
-.bootstrap-scope dt,
-.bootstrap-scope dd {
-  line-height: 1.42857143;
-}
-.bootstrap-scope dt {
-  font-weight: bold;
-}
-.bootstrap-scope dd {
-  margin-left: 0;
-}
-@media (min-width: 768px) {
-  .bootstrap-scope .dl-horizontal dt {
-    float: left;
-    width: 160px;
-    clear: left;
-    text-align: right;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .bootstrap-scope .dl-horizontal dd {
-    margin-left: 180px;
-  }
-  .bootstrap-scope .dl-horizontal dd:before,
-  .bootstrap-scope .dl-horizontal dd:after {
-    content: " ";
-    display: table;
-  }
-  .bootstrap-scope .dl-horizontal dd:after {
-    clear: both;
-  }
-  .bootstrap-scope .dl-horizontal dd:before,
-  .bootstrap-scope .dl-horizontal dd:after {
-    content: " ";
-    display: table;
-  }
-  .bootstrap-scope .dl-horizontal dd:after {
-    clear: both;
-  }
-}
-.bootstrap-scope abbr[title],
-.bootstrap-scope abbr[data-original-title] {
-  cursor: help;
-  border-bottom: 1px dotted #999999;
-}
-.bootstrap-scope .initialism {
-  font-size: 90%;
-  text-transform: uppercase;
-}
-.bootstrap-scope blockquote {
-  padding: 10px 20px;
-  margin: 0 0 20px;
-  border-left: 5px solid #eeeeee;
-}
-.bootstrap-scope blockquote p {
-  font-size: 17.5px;
-  font-weight: 300;
-  line-height: 1.25;
-}
-.bootstrap-scope blockquote p:last-child {
-  margin-bottom: 0;
-}
-.bootstrap-scope blockquote small,
-.bootstrap-scope blockquote .small {
-  display: block;
-  line-height: 1.42857143;
-  color: #999999;
-}
-.bootstrap-scope blockquote small:before,
-.bootstrap-scope blockquote .small:before {
-  content: '\2014 \00A0';
-}
-.bootstrap-scope blockquote.pull-right {
-  padding-right: 15px;
-  padding-left: 0;
-  border-right: 5px solid #eeeeee;
-  border-left: 0;
-}
-.bootstrap-scope blockquote.pull-right p,
-.bootstrap-scope blockquote.pull-right small,
-.bootstrap-scope blockquote.pull-right .small {
-  text-align: right;
-}
-.bootstrap-scope blockquote.pull-right small:before,
-.bootstrap-scope blockquote.pull-right .small:before {
-  content: '';
-}
-.bootstrap-scope blockquote.pull-right small:after,
-.bootstrap-scope blockquote.pull-right .small:after {
-  content: '\00A0 \2014';
-}
-.bootstrap-scope blockquote:before,
-.bootstrap-scope blockquote:after {
-  content: "";
-}
-.bootstrap-scope address {
-  margin-bottom: 20px;
-  font-style: normal;
-  line-height: 1.42857143;
-}
-.bootstrap-scope code,
-.bootstrap-scope kbd,
-.bootstrap-scope pre,
-.bootstrap-scope samp {
-  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-}
-.bootstrap-scope code {
-  padding: 2px 4px;
-  font-size: 90%;
-  color: #c7254e;
-  background-color: #f9f2f4;
-  white-space: nowrap;
-  border-radius: 4px;
-}
-.bootstrap-scope pre {
-  display: block;
-  padding: 9.5px;
-  margin: 0 0 10px;
-  font-size: 13px;
-  line-height: 1.42857143;
-  word-break: break-all;
-  word-wrap: break-word;
-  color: #333333;
-  background-color: #f5f5f5;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-}
-.bootstrap-scope pre code {
-  padding: 0;
-  font-size: inherit;
-  color: inherit;
-  white-space: pre-wrap;
-  background-color: transparent;
-  border-radius: 0;
-}
-.bootstrap-scope .pre-scrollable {
-  max-height: 340px;
-  overflow-y: scroll;
-}
-.bootstrap-scope .container {
-  margin-right: auto;
-  margin-left: auto;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-.bootstrap-scope .container:before,
-.bootstrap-scope .container:after {
-  content: " ";
-  display: table;
-}
-.bootstrap-scope .container:after {
-  clear: both;
-}
-.bootstrap-scope .container:before,
-.bootstrap-scope .container:after {
-  content: " ";
-  display: table;
-}
-.bootstrap-scope .container:after {
-  clear: both;
-}
-@media (min-width: 768px) {
-  .bootstrap-scope .container {
-    width: 750px;
-  }
-}
-@media (min-width: 992px) {
-  .bootstrap-scope .container {
-    width: 970px;
-  }
-}
-@media (min-width: 1200px) {
-  .bootstrap-scope .container {
-    width: 1170px;
-  }
-}
-.bootstrap-scope .row {
-  margin-left: -15px;
-  margin-right: -15px;
-}
-.bootstrap-scope .row:before,
-.bootstrap-scope .row:after {
-  content: " ";
-  display: table;
-}
-.bootstrap-scope .row:after {
-  clear: both;
-}
-.bootstrap-scope .row:before,
-.bootstrap-scope .row:after {
-  content: " ";
-  display: table;
-}
-.bootstrap-scope .row:after {
-  clear: both;
-}
-.bootstrap-scope .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-.bootstrap-scope .col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12 {
-  float: left;
-}
-.bootstrap-scope .col-xs-12 {
-  width: 100%;
-}
-.bootstrap-scope .col-xs-11 {
-  width: 91.66666667%;
-}
-.bootstrap-scope .col-xs-10 {
-  width: 83.33333333%;
-}
-.bootstrap-scope .col-xs-9 {
-  width: 75%;
-}
-.bootstrap-scope .col-xs-8 {
-  width: 66.66666667%;
-}
-.bootstrap-scope .col-xs-7 {
-  width: 58.33333333%;
-}
-.bootstrap-scope .col-xs-6 {
-  width: 50%;
-}
-.bootstrap-scope .col-xs-5 {
-  width: 41.66666667%;
-}
-.bootstrap-scope .col-xs-4 {
-  width: 33.33333333%;
-}
-.bootstrap-scope .col-xs-3 {
-  width: 25%;
-}
-.bootstrap-scope .col-xs-2 {
-  width: 16.66666667%;
-}
-.bootstrap-scope .col-xs-1 {
-  width: 8.33333333%;
-}
-.bootstrap-scope .col-xs-pull-12 {
-  right: 100%;
-}
-.bootstrap-scope .col-xs-pull-11 {
-  right: 91.66666667%;
-}
-.bootstrap-scope .col-xs-pull-10 {
-  right: 83.33333333%;
-}
-.bootstrap-scope .col-xs-pull-9 {
-  right: 75%;
-}
-.bootstrap-scope .col-xs-pull-8 {
-  right: 66.66666667%;
-}
-.bootstrap-scope .col-xs-pull-7 {
-  right: 58.33333333%;
-}
-.bootstrap-scope .col-xs-pull-6 {
-  right: 50%;
-}
-.bootstrap-scope .col-xs-pull-5 {
-  right: 41.66666667%;
-}
-.bootstrap-scope .col-xs-pull-4 {
-  right: 33.33333333%;
-}
-.bootstrap-scope .col-xs-pull-3 {
-  right: 25%;
-}
-.bootstrap-scope .col-xs-pull-2 {
-  right: 16.66666667%;
-}
-.bootstrap-scope .col-xs-pull-1 {
-  right: 8.33333333%;
-}
-.bootstrap-scope .col-xs-pull-0 {
-  right: 0%;
-}
-.bootstrap-scope .col-xs-push-12 {
-  left: 100%;
-}
-.bootstrap-scope .col-xs-push-11 {
-  left: 91.66666667%;
-}
-.bootstrap-scope .col-xs-push-10 {
-  left: 83.33333333%;
-}
-.bootstrap-scope .col-xs-push-9 {
-  left: 75%;
-}
-.bootstrap-scope .col-xs-push-8 {
-  left: 66.66666667%;
-}
-.bootstrap-scope .col-xs-push-7 {
-  left: 58.33333333%;
-}
-.bootstrap-scope .col-xs-push-6 {
-  left: 50%;
-}
-.bootstrap-scope .col-xs-push-5 {
-  left: 41.66666667%;
-}
-.bootstrap-scope .col-xs-push-4 {
-  left: 33.33333333%;
-}
-.bootstrap-scope .col-xs-push-3 {
-  left: 25%;
-}
-.bootstrap-scope .col-xs-push-2 {
-  left: 16.66666667%;
-}
-.bootstrap-scope .col-xs-push-1 {
-  left: 8.33333333%;
-}
-.bootstrap-scope .col-xs-push-0 {
-  left: 0%;
-}
-.bootstrap-scope .col-xs-offset-12 {
-  margin-left: 100%;
-}
-.bootstrap-scope .col-xs-offset-11 {
-  margin-left: 91.66666667%;
-}
-.bootstrap-scope .col-xs-offset-10 {
-  margin-left: 83.33333333%;
-}
-.bootstrap-scope .col-xs-offset-9 {
-  margin-left: 75%;
-}
-.bootstrap-scope .col-xs-offset-8 {
-  margin-left: 66.66666667%;
-}
-.bootstrap-scope .col-xs-offset-7 {
-  margin-left: 58.33333333%;
-}
-.bootstrap-scope .col-xs-offset-6 {
-  margin-left: 50%;
-}
-.bootstrap-scope .col-xs-offset-5 {
-  margin-left: 41.66666667%;
-}
-.bootstrap-scope .col-xs-offset-4 {
-  margin-left: 33.33333333%;
-}
-.bootstrap-scope .col-xs-offset-3 {
-  margin-left: 25%;
-}
-.bootstrap-scope .col-xs-offset-2 {
-  margin-left: 16.66666667%;
-}
-.bootstrap-scope .col-xs-offset-1 {
-  margin-left: 8.33333333%;
-}
-.bootstrap-scope .col-xs-offset-0 {
-  margin-left: 0%;
-}
-@media (min-width: 768px) {
-  .bootstrap-scope .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12 {
-    float: left;
-  }
-  .bootstrap-scope .col-sm-12 {
-    width: 100%;
-  }
-  .bootstrap-scope .col-sm-11 {
-    width: 91.66666667%;
-  }
-  .bootstrap-scope .col-sm-10 {
-    width: 83.33333333%;
-  }
-  .bootstrap-scope .col-sm-9 {
-    width: 75%;
-  }
-  .bootstrap-scope .col-sm-8 {
-    width: 66.66666667%;
-  }
-  .bootstrap-scope .col-sm-7 {
-    width: 58.33333333%;
-  }
-  .bootstrap-scope .col-sm-6 {
-    width: 50%;
-  }
-  .bootstrap-scope .col-sm-5 {
-    width: 41.66666667%;
-  }
-  .bootstrap-scope .col-sm-4 {
-    width: 33.33333333%;
-  }
-  .bootstrap-scope .col-sm-3 {
-    width: 25%;
-  }
-  .bootstrap-scope .col-sm-2 {
-    width: 16.66666667%;
-  }
-  .bootstrap-scope .col-sm-1 {
-    width: 8.33333333%;
-  }
-  .bootstrap-scope .col-sm-pull-12 {
-    right: 100%;
-  }
-  .bootstrap-scope .col-sm-pull-11 {
-    right: 91.66666667%;
-  }
-  .bootstrap-scope .col-sm-pull-10 {
-    right: 83.33333333%;
-  }
-  .bootstrap-scope .col-sm-pull-9 {
-    right: 75%;
-  }
-  .bootstrap-scope .col-sm-pull-8 {
-    right: 66.66666667%;
-  }
-  .bootstrap-scope .col-sm-pull-7 {
-    right: 58.33333333%;
-  }
-  .bootstrap-scope .col-sm-pull-6 {
-    right: 50%;
-  }
-  .bootstrap-scope .col-sm-pull-5 {
-    right: 41.66666667%;
-  }
-  .bootstrap-scope .col-sm-pull-4 {
-    right: 33.33333333%;
-  }
-  .bootstrap-scope .col-sm-pull-3 {
-    right: 25%;
-  }
-  .bootstrap-scope .col-sm-pull-2 {
-    right: 16.66666667%;
-  }
-  .bootstrap-scope .col-sm-pull-1 {
-    right: 8.33333333%;
-  }
-  .bootstrap-scope .col-sm-pull-0 {
-    right: 0%;
-  }
-  .bootstrap-scope .col-sm-push-12 {
-    left: 100%;
-  }
-  .bootstrap-scope .col-sm-push-11 {
-    left: 91.66666667%;
-  }
-  .bootstrap-scope .col-sm-push-10 {
-    left: 83.33333333%;
-  }
-  .bootstrap-scope .col-sm-push-9 {
-    left: 75%;
-  }
-  .bootstrap-scope .col-sm-push-8 {
-    left: 66.66666667%;
-  }
-  .bootstrap-scope .col-sm-push-7 {
-    left: 58.33333333%;
-  }
-  .bootstrap-scope .col-sm-push-6 {
-    left: 50%;
-  }
-  .bootstrap-scope .col-sm-push-5 {
-    left: 41.66666667%;
-  }
-  .bootstrap-scope .col-sm-push-4 {
-    left: 33.33333333%;
-  }
-  .bootstrap-scope .col-sm-push-3 {
-    left: 25%;
-  }
-  .bootstrap-scope .col-sm-push-2 {
-    left: 16.66666667%;
-  }
-  .bootstrap-scope .col-sm-push-1 {
-    left: 8.33333333%;
-  }
-  .bootstrap-scope .col-sm-push-0 {
-    left: 0%;
-  }
-  .bootstrap-scope .col-sm-offset-12 {
-    margin-left: 100%;
-  }
-  .bootstrap-scope .col-sm-offset-11 {
-    margin-left: 91.66666667%;
-  }
-  .bootstrap-scope .col-sm-offset-10 {
-    margin-left: 83.33333333%;
-  }
-  .bootstrap-scope .col-sm-offset-9 {
-    margin-left: 75%;
-  }
-  .bootstrap-scope .col-sm-offset-8 {
-    margin-left: 66.66666667%;
-  }
-  .bootstrap-scope .col-sm-offset-7 {
-    margin-left: 58.33333333%;
-  }
-  .bootstrap-scope .col-sm-offset-6 {
-    margin-left: 50%;
-  }
-  .bootstrap-scope .col-sm-offset-5 {
-    margin-left: 41.66666667%;
-  }
-  .bootstrap-scope .col-sm-offset-4 {
-    margin-left: 33.33333333%;
-  }
-  .bootstrap-scope .col-sm-offset-3 {
-    margin-left: 25%;
-  }
-  .bootstrap-scope .col-sm-offset-2 {
-    margin-left: 16.66666667%;
-  }
-  .bootstrap-scope .col-sm-offset-1 {
-    margin-left: 8.33333333%;
-  }
-  .bootstrap-scope .col-sm-offset-0 {
-    margin-left: 0%;
-  }
-}
-@media (min-width: 992px) {
-  .bootstrap-scope .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12 {
-    float: left;
-  }
-  .bootstrap-scope .col-md-12 {
-    width: 100%;
-  }
-  .bootstrap-scope .col-md-11 {
-    width: 91.66666667%;
-  }
-  .bootstrap-scope .col-md-10 {
-    width: 83.33333333%;
-  }
-  .bootstrap-scope .col-md-9 {
-    width: 75%;
-  }
-  .bootstrap-scope .col-md-8 {
-    width: 66.66666667%;
-  }
-  .bootstrap-scope .col-md-7 {
-    width: 58.33333333%;
-  }
-  .bootstrap-scope .col-md-6 {
-    width: 50%;
-  }
-  .bootstrap-scope .col-md-5 {
-    width: 41.66666667%;
-  }
-  .bootstrap-scope .col-md-4 {
-    width: 33.33333333%;
-  }
-  .bootstrap-scope .col-md-3 {
-    width: 25%;
-  }
-  .bootstrap-scope .col-md-2 {
-    width: 16.66666667%;
-  }
-  .bootstrap-scope .col-md-1 {
-    width: 8.33333333%;
-  }
-  .bootstrap-scope .col-md-pull-12 {
-    right: 100%;
-  }
-  .bootstrap-scope .col-md-pull-11 {
-    right: 91.66666667%;
-  }
-  .bootstrap-scope .col-md-pull-10 {
-    right: 83.33333333%;
-  }
-  .bootstrap-scope .col-md-pull-9 {
-    right: 75%;
-  }
-  .bootstrap-scope .col-md-pull-8 {
-    right: 66.66666667%;
-  }
-  .bootstrap-scope .col-md-pull-7 {
-    right: 58.33333333%;
-  }
-  .bootstrap-scope .col-md-pull-6 {
-    right: 50%;
-  }
-  .bootstrap-scope .col-md-pull-5 {
-    right: 41.66666667%;
-  }
-  .bootstrap-scope .col-md-pull-4 {
-    right: 33.33333333%;
-  }
-  .bootstrap-scope .col-md-pull-3 {
-    right: 25%;
-  }
-  .bootstrap-scope .col-md-pull-2 {
-    right: 16.66666667%;
-  }
-  .bootstrap-scope .col-md-pull-1 {
-    right: 8.33333333%;
-  }
-  .bootstrap-scope .col-md-pull-0 {
-    right: 0%;
-  }
-  .bootstrap-scope .col-md-push-12 {
-    left: 100%;
-  }
-  .bootstrap-scope .col-md-push-11 {
-    left: 91.66666667%;
-  }
-  .bootstrap-scope .col-md-push-10 {
-    left: 83.33333333%;
-  }
-  .bootstrap-scope .col-md-push-9 {
-    left: 75%;
-  }
-  .bootstrap-scope .col-md-push-8 {
-    left: 66.66666667%;
-  }
-  .bootstrap-scope .col-md-push-7 {
-    left: 58.33333333%;
-  }
-  .bootstrap-scope .col-md-push-6 {
-    left: 50%;
-  }
-  .bootstrap-scope .col-md-push-5 {
-    left: 41.66666667%;
-  }
-  .bootstrap-scope .col-md-push-4 {
-    left: 33.33333333%;
-  }
-  .bootstrap-scope .col-md-push-3 {
-    left: 25%;
-  }
-  .bootstrap-scope .col-md-push-2 {
-    left: 16.66666667%;
-  }
-  .bootstrap-scope .col-md-push-1 {
-    left: 8.33333333%;
-  }
-  .bootstrap-scope .col-md-push-0 {
-    left: 0%;
-  }
-  .bootstrap-scope .col-md-offset-12 {
-    margin-left: 100%;
-  }
-  .bootstrap-scope .col-md-offset-11 {
-    margin-left: 91.66666667%;
-  }
-  .bootstrap-scope .col-md-offset-10 {
-    margin-left: 83.33333333%;
-  }
-  .bootstrap-scope .col-md-offset-9 {
-    margin-left: 75%;
-  }
-  .bootstrap-scope .col-md-offset-8 {
-    margin-left: 66.66666667%;
-  }
-  .bootstrap-scope .col-md-offset-7 {
-    margin-left: 58.33333333%;
-  }
-  .bootstrap-scope .col-md-offset-6 {
-    margin-left: 50%;
-  }
-  .bootstrap-scope .col-md-offset-5 {
-    margin-left: 41.66666667%;
-  }
-  .bootstrap-scope .col-md-offset-4 {
-    margin-left: 33.33333333%;
-  }
-  .bootstrap-scope .col-md-offset-3 {
-    margin-left: 25%;
-  }
-  .bootstrap-scope .col-md-offset-2 {
-    margin-left: 16.66666667%;
-  }
-  .bootstrap-scope .col-md-offset-1 {
-    margin-left: 8.33333333%;
-  }
-  .bootstrap-scope .col-md-offset-0 {
-    margin-left: 0%;
-  }
-}
-@media (min-width: 1200px) {
-  .bootstrap-scope .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12 {
-    float: left;
-  }
-  .bootstrap-scope .col-lg-12 {
-    width: 100%;
-  }
-  .bootstrap-scope .col-lg-11 {
-    width: 91.66666667%;
-  }
-  .bootstrap-scope .col-lg-10 {
-    width: 83.33333333%;
-  }
-  .bootstrap-scope .col-lg-9 {
-    width: 75%;
-  }
-  .bootstrap-scope .col-lg-8 {
-    width: 66.66666667%;
-  }
-  .bootstrap-scope .col-lg-7 {
-    width: 58.33333333%;
-  }
-  .bootstrap-scope .col-lg-6 {
-    width: 50%;
-  }
-  .bootstrap-scope .col-lg-5 {
-    width: 41.66666667%;
-  }
-  .bootstrap-scope .col-lg-4 {
-    width: 33.33333333%;
-  }
-  .bootstrap-scope .col-lg-3 {
-    width: 25%;
-  }
-  .bootstrap-scope .col-lg-2 {
-    width: 16.66666667%;
-  }
-  .bootstrap-scope .col-lg-1 {
-    width: 8.33333333%;
-  }
-  .bootstrap-scope .col-lg-pull-12 {
-    right: 100%;
-  }
-  .bootstrap-scope .col-lg-pull-11 {
-    right: 91.66666667%;
-  }
-  .bootstrap-scope .col-lg-pull-10 {
-    right: 83.33333333%;
-  }
-  .bootstrap-scope .col-lg-pull-9 {
-    right: 75%;
-  }
-  .bootstrap-scope .col-lg-pull-8 {
-    right: 66.66666667%;
-  }
-  .bootstrap-scope .col-lg-pull-7 {
-    right: 58.33333333%;
-  }
-  .bootstrap-scope .col-lg-pull-6 {
-    right: 50%;
-  }
-  .bootstrap-scope .col-lg-pull-5 {
-    right: 41.66666667%;
-  }
-  .bootstrap-scope .col-lg-pull-4 {
-    right: 33.33333333%;
-  }
-  .bootstrap-scope .col-lg-pull-3 {
-    right: 25%;
-  }
-  .bootstrap-scope .col-lg-pull-2 {
-    right: 16.66666667%;
-  }
-  .bootstrap-scope .col-lg-pull-1 {
-    right: 8.33333333%;
-  }
-  .bootstrap-scope .col-lg-pull-0 {
-    right: 0%;
-  }
-  .bootstrap-scope .col-lg-push-12 {
-    left: 100%;
-  }
-  .bootstrap-scope .col-lg-push-11 {
-    left: 91.66666667%;
-  }
-  .bootstrap-scope .col-lg-push-10 {
-    left: 83.33333333%;
-  }
-  .bootstrap-scope .col-lg-push-9 {
-    left: 75%;
-  }
-  .bootstrap-scope .col-lg-push-8 {
-    left: 66.66666667%;
-  }
-  .bootstrap-scope .col-lg-push-7 {
-    left: 58.33333333%;
-  }
-  .bootstrap-scope .col-lg-push-6 {
-    left: 50%;
-  }
-  .bootstrap-scope .col-lg-push-5 {
-    left: 41.66666667%;
-  }
-  .bootstrap-scope .col-lg-push-4 {
-    left: 33.33333333%;
-  }
-  .bootstrap-scope .col-lg-push-3 {
-    left: 25%;
-  }
-  .bootstrap-scope .col-lg-push-2 {
-    left: 16.66666667%;
-  }
-  .bootstrap-scope .col-lg-push-1 {
-    left: 8.33333333%;
-  }
-  .bootstrap-scope .col-lg-push-0 {
-    left: 0%;
-  }
-  .bootstrap-scope .col-lg-offset-12 {
-    margin-left: 100%;
-  }
-  .bootstrap-scope .col-lg-offset-11 {
-    margin-left: 91.66666667%;
-  }
-  .bootstrap-scope .col-lg-offset-10 {
-    margin-left: 83.33333333%;
-  }
-  .bootstrap-scope .col-lg-offset-9 {
-    margin-left: 75%;
-  }
-  .bootstrap-scope .col-lg-offset-8 {
-    margin-left: 66.66666667%;
-  }
-  .bootstrap-scope .col-lg-offset-7 {
-    margin-left: 58.33333333%;
-  }
-  .bootstrap-scope .col-lg-offset-6 {
-    margin-left: 50%;
-  }
-  .bootstrap-scope .col-lg-offset-5 {
-    margin-left: 41.66666667%;
-  }
-  .bootstrap-scope .col-lg-offset-4 {
-    margin-left: 33.33333333%;
-  }
-  .bootstrap-scope .col-lg-offset-3 {
-    margin-left: 25%;
-  }
-  .bootstrap-scope .col-lg-offset-2 {
-    margin-left: 16.66666667%;
-  }
-  .bootstrap-scope .col-lg-offset-1 {
-    margin-left: 8.33333333%;
-  }
-  .bootstrap-scope .col-lg-offset-0 {
-    margin-left: 0%;
-  }
-}
-.bootstrap-scope table {
-  max-width: 100%;
-  background-color: transparent;
-}
-.bootstrap-scope th {
-  text-align: left;
-}
-.bootstrap-scope .table {
-  width: 100%;
-  margin-bottom: 20px;
-}
-.bootstrap-scope .table > thead > tr > th,
-.bootstrap-scope .table > tbody > tr > th,
-.bootstrap-scope .table > tfoot > tr > th,
-.bootstrap-scope .table > thead > tr > td,
-.bootstrap-scope .table > tbody > tr > td,
-.bootstrap-scope .table > tfoot > tr > td {
-  padding: 8px;
-  line-height: 1.42857143;
-  vertical-align: top;
-  border-top: 1px solid #dddddd;
-}
-.bootstrap-scope .table > thead > tr > th {
-  vertical-align: bottom;
-  border-bottom: 2px solid #dddddd;
-}
-.bootstrap-scope .table > caption + thead > tr:first-child > th,
-.bootstrap-scope .table > colgroup + thead > tr:first-child > th,
-.bootstrap-scope .table > thead:first-child > tr:first-child > th,
-.bootstrap-scope .table > caption + thead > tr:first-child > td,
-.bootstrap-scope .table > colgroup + thead > tr:first-child > td,
-.bootstrap-scope .table > thead:first-child > tr:first-child > td {
-  border-top: 0;
-}
-.bootstrap-scope .table > tbody + tbody {
-  border-top: 2px solid #dddddd;
-}
-.bootstrap-scope .table .table {
-  background-color: #ffffff;
-}
-.bootstrap-scope .table-condensed > thead > tr > th,
-.bootstrap-scope .table-condensed > tbody > tr > th,
-.bootstrap-scope .table-condensed > tfoot > tr > th,
-.bootstrap-scope .table-condensed > thead > tr > td,
-.bootstrap-scope .table-condensed > tbody > tr > td,
-.bootstrap-scope .table-condensed > tfoot > tr > td {
-  padding: 5px;
-}
-.bootstrap-scope .table-bordered {
-  border: 1px solid #dddddd;
-}
-.bootstrap-scope .table-bordered > thead > tr > th,
-.bootstrap-scope .table-bordered > tbody > tr > th,
-.bootstrap-scope .table-bordered > tfoot > tr > th,
-.bootstrap-scope .table-bordered > thead > tr > td,
-.bootstrap-scope .table-bordered > tbody > tr > td,
-.bootstrap-scope .table-bordered > tfoot > tr > td {
-  border: 1px solid #dddddd;
-}
-.bootstrap-scope .table-bordered > thead > tr > th,
-.bootstrap-scope .table-bordered > thead > tr > td {
-  border-bottom-width: 2px;
-}
-.bootstrap-scope .table-striped > tbody > tr:nth-child(odd) > td,
-.bootstrap-scope .table-striped > tbody > tr:nth-child(odd) > th {
-  background-color: #f9f9f9;
-}
-.bootstrap-scope .table-hover > tbody > tr:hover > td,
-.bootstrap-scope .table-hover > tbody > tr:hover > th {
-  background-color: #f5f5f5;
-}
-.bootstrap-scope table col[class*="col-"] {
-  position: static;
-  float: none;
-  display: table-column;
-}
-.bootstrap-scope table td[class*="col-"],
-.bootstrap-scope table th[class*="col-"] {
-  float: none;
-  display: table-cell;
-}
-.bootstrap-scope .table > thead > tr > .active,
-.bootstrap-scope .table > tbody > tr > .active,
-.bootstrap-scope .table > tfoot > tr > .active,
-.bootstrap-scope .table > thead > .active > td,
-.bootstrap-scope .table > tbody > .active > td,
-.bootstrap-scope .table > tfoot > .active > td,
-.bootstrap-scope .table > thead > .active > th,
-.bootstrap-scope .table > tbody > .active > th,
-.bootstrap-scope .table > tfoot > .active > th {
-  background-color: #f5f5f5;
-}
-.bootstrap-scope .table-hover > tbody > tr > .active:hover,
-.bootstrap-scope .table-hover > tbody > .active:hover > td,
-.bootstrap-scope .table-hover > tbody > .active:hover > th {
-  background-color: #e8e8e8;
-}
-.bootstrap-scope .table > thead > tr > .success,
-.bootstrap-scope .table > tbody > tr > .success,
-.bootstrap-scope .table > tfoot > tr > .success,
-.bootstrap-scope .table > thead > .success > td,
-.bootstrap-scope .table > tbody > .success > td,
-.bootstrap-scope .table > tfoot > .success > td,
-.bootstrap-scope .table > thead > .success > th,
-.bootstrap-scope .table > tbody > .success > th,
-.bootstrap-scope .table > tfoot > .success > th {
-  background-color: #dff0d8;
-}
-.bootstrap-scope .table-hover > tbody > tr > .success:hover,
-.bootstrap-scope .table-hover > tbody > .success:hover > td,
-.bootstrap-scope .table-hover > tbody > .success:hover > th {
-  background-color: #d0e9c6;
-}
-.bootstrap-scope .table > thead > tr > .danger,
-.bootstrap-scope .table > tbody > tr > .danger,
-.bootstrap-scope .table > tfoot > tr > .danger,
-.bootstrap-scope .table > thead > .danger > td,
-.bootstrap-scope .table > tbody > .danger > td,
-.bootstrap-scope .table > tfoot > .danger > td,
-.bootstrap-scope .table > thead > .danger > th,
-.bootstrap-scope .table > tbody > .danger > th,
-.bootstrap-scope .table > tfoot > .danger > th {
-  background-color: #f2dede;
-}
-.bootstrap-scope .table-hover > tbody > tr > .danger:hover,
-.bootstrap-scope .table-hover > tbody > .danger:hover > td,
-.bootstrap-scope .table-hover > tbody > .danger:hover > th {
-  background-color: #ebcccc;
-}
-.bootstrap-scope .table > thead > tr > .warning,
-.bootstrap-scope .table > tbody > tr > .warning,
-.bootstrap-scope .table > tfoot > tr > .warning,
-.bootstrap-scope .table > thead > .warning > td,
-.bootstrap-scope .table > tbody > .warning > td,
-.bootstrap-scope .table > tfoot > .warning > td,
-.bootstrap-scope .table > thead > .warning > th,
-.bootstrap-scope .table > tbody > .warning > th,
-.bootstrap-scope .table > tfoot > .warning > th {
-  background-color: #fcf8e3;
-}
-.bootstrap-scope .table-hover > tbody > tr > .warning:hover,
-.bootstrap-scope .table-hover > tbody > .warning:hover > td,
-.bootstrap-scope .table-hover > tbody > .warning:hover > th {
-  background-color: #faf2cc;
-}
-@media (max-width: 767px) {
-  .bootstrap-scope .table-responsive {
-    width: 100%;
-    margin-bottom: 15px;
-    overflow-y: hidden;
-    overflow-x: scroll;
-    -ms-overflow-style: -ms-autohiding-scrollbar;
-    border: 1px solid #dddddd;
-    -webkit-overflow-scrolling: touch;
-  }
-  .bootstrap-scope .table-responsive > .table {
-    margin-bottom: 0;
-  }
-  .bootstrap-scope .table-responsive > .table > thead > tr > th,
-  .bootstrap-scope .table-responsive > .table > tbody > tr > th,
-  .bootstrap-scope .table-responsive > .table > tfoot > tr > th,
-  .bootstrap-scope .table-responsive > .table > thead > tr > td,
-  .bootstrap-scope .table-responsive > .table > tbody > tr > td,
-  .bootstrap-scope .table-responsive > .table > tfoot > tr > td {
-    white-space: nowrap;
-  }
-  .bootstrap-scope .table-responsive > .table-bordered {
-    border: 0;
-  }
-  .bootstrap-scope .table-responsive > .table-bordered > thead > tr > th:first-child,
-  .bootstrap-scope .table-responsive > .table-bordered > tbody > tr > th:first-child,
-  .bootstrap-scope .table-responsive > .table-bordered > tfoot > tr > th:first-child,
-  .bootstrap-scope .table-responsive > .table-bordered > thead > tr > td:first-child,
-  .bootstrap-scope .table-responsive > .table-bordered > tbody > tr > td:first-child,
-  .bootstrap-scope .table-responsive > .table-bordered > tfoot > tr > td:first-child {
-    border-left: 0;
-  }
-  .bootstrap-scope .table-responsive > .table-bordered > thead > tr > th:last-child,
-  .bootstrap-scope .table-responsive > .table-bordered > tbody > tr > th:last-child,
-  .bootstrap-scope .table-responsive > .table-bordered > tfoot > tr > th:last-child,
-  .bootstrap-scope .table-responsive > .table-bordered > thead > tr > td:last-child,
-  .bootstrap-scope .table-responsive > .table-bordered > tbody > tr > td:last-child,
-  .bootstrap-scope .table-responsive > .table-bordered > tfoot > tr > td:last-child {
-    border-right: 0;
-  }
-  .bootstrap-scope .table-responsive > .table-bordered > tbody > tr:last-child > th,
-  .bootstrap-scope .table-responsive > .table-bordered > tfoot > tr:last-child > th,
-  .bootstrap-scope .table-responsive > .table-bordered > tbody > tr:last-child > td,
-  .bootstrap-scope .table-responsive > .table-bordered > tfoot > tr:last-child > td {
-    border-bottom: 0;
-  }
-}
-.bootstrap-scope fieldset {
-  padding: 0;
-  margin: 0;
-  border: 0;
-}
-.bootstrap-scope legend {
-  display: block;
-  width: 100%;
-  padding: 0;
-  margin-bottom: 20px;
-  font-size: 21px;
-  line-height: inherit;
-  color: #333333;
-  border: 0;
-  border-bottom: 1px solid #e5e5e5;
-}
-.bootstrap-scope label {
-  display: inline-block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-.bootstrap-scope input[type="search"] {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-.bootstrap-scope input[type="radio"],
-.bootstrap-scope input[type="checkbox"] {
-  margin: 4px 0 0;
-  margin-top: 1px \9;
-  /* IE8-9 */
-  line-height: normal;
-}
-.bootstrap-scope input[type="file"] {
-  display: block;
-}
-.bootstrap-scope select[multiple],
-.bootstrap-scope select[size] {
-  height: auto;
-}
-.bootstrap-scope select optgroup {
-  font-size: inherit;
-  font-style: inherit;
-  font-family: inherit;
-}
-.bootstrap-scope input[type="file"]:focus,
-.bootstrap-scope input[type="radio"]:focus,
-.bootstrap-scope input[type="checkbox"]:focus {
-  outline: thin dotted;
-  outline: 5px auto -webkit-focus-ring-color;
-  outline-offset: -2px;
-}
-.bootstrap-scope input[type="number"]::-webkit-outer-spin-button,
-.bootstrap-scope input[type="number"]::-webkit-inner-spin-button {
-  height: auto;
-}
-.bootstrap-scope output {
-  display: block;
-  padding-top: 7px;
-  font-size: 14px;
-  line-height: 1.42857143;
-  color: #555555;
-  vertical-align: middle;
-}
-.bootstrap-scope .form-control {
-  display: block;
-  width: 100%;
-  height: 34px;
-  padding: 6px 12px;
-  font-size: 14px;
-  line-height: 1.42857143;
-  color: #555555;
-  vertical-align: middle;
-  background-color: #ffffff;
-  background-image: none;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-  -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-}
-.bootstrap-scope .form-control:focus {
-  border-color: #66afe9;
-  outline: 0;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
-  box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
-}
-.bootstrap-scope .form-control:-moz-placeholder {
-  color: #999999;
-}
-.bootstrap-scope .form-control::-moz-placeholder {
-  color: #999999;
-  opacity: 1;
-}
-.bootstrap-scope .form-control:-ms-input-placeholder {
-  color: #999999;
-}
-.bootstrap-scope .form-control::-webkit-input-placeholder {
-  color: #999999;
-}
-.bootstrap-scope .form-control[disabled],
-.bootstrap-scope .form-control[readonly],
-fieldset[disabled] .bootstrap-scope .form-control {
-  cursor: not-allowed;
-  background-color: #eeeeee;
-}
-textarea.bootstrap-scope .form-control {
-  height: auto;
-}
-.bootstrap-scope .form-group {
-  margin-bottom: 15px;
-}
-.bootstrap-scope .radio,
-.bootstrap-scope .checkbox {
-  display: block;
-  min-height: 20px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding-left: 20px;
-  vertical-align: middle;
-}
-.bootstrap-scope .radio label,
-.bootstrap-scope .checkbox label {
-  display: inline;
-  margin-bottom: 0;
-  font-weight: normal;
-  cursor: pointer;
-}
-.bootstrap-scope .radio input[type="radio"],
-.bootstrap-scope .radio-inline input[type="radio"],
-.bootstrap-scope .checkbox input[type="checkbox"],
-.bootstrap-scope .checkbox-inline input[type="checkbox"] {
-  float: left;
-  margin-left: -20px;
-}
-.bootstrap-scope .radio + .radio,
-.bootstrap-scope .checkbox + .checkbox {
-  margin-top: -5px;
-}
-.bootstrap-scope .radio-inline,
-.bootstrap-scope .checkbox-inline {
-  display: inline-block;
-  padding-left: 20px;
-  margin-bottom: 0;
-  vertical-align: middle;
-  font-weight: normal;
-  cursor: pointer;
-}
-.bootstrap-scope .radio-inline + .radio-inline,
-.bootstrap-scope .checkbox-inline + .checkbox-inline {
-  margin-top: 0;
-  margin-left: 10px;
-}
-.bootstrap-scope input[type="radio"][disabled],
-.bootstrap-scope input[type="checkbox"][disabled],
-.bootstrap-scope .radio[disabled],
-.bootstrap-scope .radio-inline[disabled],
-.bootstrap-scope .checkbox[disabled],
-.bootstrap-scope .checkbox-inline[disabled],
-fieldset[disabled] .bootstrap-scope input[type="radio"],
-fieldset[disabled] .bootstrap-scope input[type="checkbox"],
-fieldset[disabled] .bootstrap-scope .radio,
-fieldset[disabled] .bootstrap-scope .radio-inline,
-fieldset[disabled] .bootstrap-scope .checkbox,
-fieldset[disabled] .bootstrap-scope .checkbox-inline {
-  cursor: not-allowed;
-}
-.bootstrap-scope .input-sm {
-  height: 30px;
-  padding: 5px 10px;
-  font-size: 12px;
-  line-height: 1.5;
-  border-radius: 3px;
-}
-select.bootstrap-scope .input-sm {
-  height: 30px;
-  line-height: 30px;
-}
-textarea.bootstrap-scope .input-sm {
-  height: auto;
-}
-.bootstrap-scope .input-lg {
-  height: 46px;
-  padding: 10px 16px;
-  font-size: 18px;
-  line-height: 1.33;
-  border-radius: 6px;
-}
-select.bootstrap-scope .input-lg {
-  height: 46px;
-  line-height: 46px;
-}
-textarea.bootstrap-scope .input-lg {
-  height: auto;
-}
-.bootstrap-scope .has-warning .help-block,
-.bootstrap-scope .has-warning .control-label,
-.bootstrap-scope .has-warning .radio,
-.bootstrap-scope .has-warning .checkbox,
-.bootstrap-scope .has-warning .radio-inline,
-.bootstrap-scope .has-warning .checkbox-inline {
-  color: #8a6d3b;
-}
-.bootstrap-scope .has-warning .form-control {
-  border-color: #8a6d3b;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-}
-.bootstrap-scope .has-warning .form-control:focus {
-  border-color: #66512c;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c0a16b;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c0a16b;
-}
-.bootstrap-scope .has-warning .input-group-addon {
-  color: #8a6d3b;
-  border-color: #8a6d3b;
-  background-color: #fcf8e3;
-}
-.bootstrap-scope .has-error .help-block,
-.bootstrap-scope .has-error .control-label,
-.bootstrap-scope .has-error .radio,
-.bootstrap-scope .has-error .checkbox,
-.bootstrap-scope .has-error .radio-inline,
-.bootstrap-scope .has-error .checkbox-inline {
-  color: #a94442;
-}
-.bootstrap-scope .has-error .form-control {
-  border-color: #a94442;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-}
-.bootstrap-scope .has-error .form-control:focus {
-  border-color: #843534;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #ce8483;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #ce8483;
-}
-.bootstrap-scope .has-error .input-group-addon {
-  color: #a94442;
-  border-color: #a94442;
-  background-color: #f2dede;
-}
-.bootstrap-scope .has-success .help-block,
-.bootstrap-scope .has-success .control-label,
-.bootstrap-scope .has-success .radio,
-.bootstrap-scope .has-success .checkbox,
-.bootstrap-scope .has-success .radio-inline,
-.bootstrap-scope .has-success .checkbox-inline {
-  color: #3c763d;
-}
-.bootstrap-scope .has-success .form-control {
-  border-color: #3c763d;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-}
-.bootstrap-scope .has-success .form-control:focus {
-  border-color: #2b542c;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #67b168;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #67b168;
-}
-.bootstrap-scope .has-success .input-group-addon {
-  color: #3c763d;
-  border-color: #3c763d;
-  background-color: #dff0d8;
-}
-.bootstrap-scope .form-control-static {
-  margin-bottom: 0;
-}
-.bootstrap-scope .help-block {
-  display: block;
-  margin-top: 5px;
-  margin-bottom: 10px;
-  color: #737373;
-}
-@media (min-width: 768px) {
-  .bootstrap-scope .form-inline .form-group {
-    display: inline-block;
-    margin-bottom: 0;
-    vertical-align: middle;
-  }
-  .bootstrap-scope .form-inline .form-control {
-    display: inline-block;
-  }
-  .bootstrap-scope .form-inline select.form-control {
-    width: auto;
-  }
-  .bootstrap-scope .form-inline .radio,
-  .bootstrap-scope .form-inline .checkbox {
-    display: inline-block;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-left: 0;
-  }
-  .bootstrap-scope .form-inline .radio input[type="radio"],
-  .bootstrap-scope .form-inline .checkbox input[type="checkbox"] {
-    float: none;
-    margin-left: 0;
-  }
-}
-.bootstrap-scope .form-horizontal .control-label,
-.bootstrap-scope .form-horizontal .radio,
-.bootstrap-scope .form-horizontal .checkbox,
-.bootstrap-scope .form-horizontal .radio-inline,
-.bootstrap-scope .form-horizontal .checkbox-inline {
-  margin-top: 0;
-  margin-bottom: 0;
-  padding-top: 7px;
-}
-.bootstrap-scope .form-horizontal .radio,
-.bootstrap-scope .form-horizontal .checkbox {
-  min-height: 27px;
-}
-.bootstrap-scope .form-horizontal .form-group {
-  margin-left: -15px;
-  margin-right: -15px;
-}
-.bootstrap-scope .form-horizontal .form-group:before,
-.bootstrap-scope .form-horizontal .form-group:after {
-  content: " ";
-  display: table;
-}
-.bootstrap-scope .form-horizontal .form-group:after {
-  clear: both;
-}
-.bootstrap-scope .form-horizontal .form-group:before,
-.bootstrap-scope .form-horizontal .form-group:after {
-  content: " ";
-  display: table;
-}
-.bootstrap-scope .form-horizontal .form-group:after {
-  clear: both;
-}
-.bootstrap-scope .form-horizontal .form-control-static {
-  padding-top: 7px;
-}
-@media (min-width: 768px) {
-  .bootstrap-scope .form-horizontal .control-label {
-    text-align: right;
-  }
-}
-.bootstrap-scope .btn {
-  display: inline-block;
-  margin-bottom: 0;
-  font-weight: normal;
-  text-align: center;
-  vertical-align: middle;
-  cursor: pointer;
-  background-image: none;
-  border: 1px solid transparent;
-  white-space: nowrap;
-  padding: 6px 12px;
-  font-size: 14px;
-  line-height: 1.42857143;
-  border-radius: 4px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-}
-.bootstrap-scope .btn:focus {
-  outline: thin dotted;
-  outline: 5px auto -webkit-focus-ring-color;
-  outline-offset: -2px;
-}
-.bootstrap-scope .btn:hover,
-.bootstrap-scope .btn:focus {
-  color: #333333;
-  text-decoration: none;
-}
-.bootstrap-scope .btn:active,
-.bootstrap-scope .btn.active {
-  outline: 0;
-  background-image: none;
-  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-}
-.bootstrap-scope .btn.disabled,
-.bootstrap-scope .btn[disabled],
-fieldset[disabled] .bootstrap-scope .btn {
-  cursor: not-allowed;
-  pointer-events: none;
-  opacity: 0.65;
-  filter: alpha(opacity=65);
-  -webkit-box-shadow: none;
-  box-shadow: none;
-}
-.bootstrap-scope .btn-default {
-  color: #333333;
-  background-color: #ffffff;
-  border-color: #cccccc;
-}
-.bootstrap-scope .btn-default:hover,
-.bootstrap-scope .btn-default:focus,
-.bootstrap-scope .btn-default:active,
-.bootstrap-scope .btn-default.active,
-.open .dropdown-toggle.bootstrap-scope .btn-default {
-  color: #333333;
-  background-color: #ebebeb;
-  border-color: #adadad;
-}
-.bootstrap-scope .btn-default:active,
-.bootstrap-scope .btn-default.active,
-.open .dropdown-toggle.bootstrap-scope .btn-default {
-  background-image: none;
-}
-.bootstrap-scope .btn-default.disabled,
-.bootstrap-scope .btn-default[disabled],
-fieldset[disabled] .bootstrap-scope .btn-default,
-.bootstrap-scope .btn-default.disabled:hover,
-.bootstrap-scope .btn-default[disabled]:hover,
-fieldset[disabled] .bootstrap-scope .btn-default:hover,
-.bootstrap-scope .btn-default.disabled:focus,
-.bootstrap-scope .btn-default[disabled]:focus,
-fieldset[disabled] .bootstrap-scope .btn-default:focus,
-.bootstrap-scope .btn-default.disabled:active,
-.bootstrap-scope .btn-default[disabled]:active,
-fieldset[disabled] .bootstrap-scope .btn-default:active,
-.bootstrap-scope .btn-default.disabled.active,
-.bootstrap-scope .btn-default[disabled].active,
-fieldset[disabled] .bootstrap-scope .btn-default.active {
-  background-color: #ffffff;
-  border-color: #cccccc;
-}
-.bootstrap-scope .btn-default .badge {
-  color: #ffffff;
-  background-color: #fff;
-}
-.bootstrap-scope .btn-primary {
-  color: #ffffff;
-  background-color: #428bca;
-  border-color: #357ebd;
-}
-.bootstrap-scope .btn-primary:hover,
-.bootstrap-scope .btn-primary:focus,
-.bootstrap-scope .btn-primary:active,
-.bootstrap-scope .btn-primary.active,
-.open .dropdown-toggle.bootstrap-scope .btn-primary {
-  color: #ffffff;
-  background-color: #3276b1;
-  border-color: #285e8e;
-}
-.bootstrap-scope .btn-primary:active,
-.bootstrap-scope .btn-primary.active,
-.open .dropdown-toggle.bootstrap-scope .btn-primary {
-  background-image: none;
-}
-.bootstrap-scope .btn-primary.disabled,
-.bootstrap-scope .btn-primary[disabled],
-fieldset[disabled] .bootstrap-scope .btn-primary,
-.bootstrap-scope .btn-primary.disabled:hover,
-.bootstrap-scope .btn-primary[disabled]:hover,
-fieldset[disabled] .bootstrap-scope .btn-primary:hover,
-.bootstrap-scope .btn-primary.disabled:focus,
-.bootstrap-scope .btn-primary[disabled]:focus,
-fieldset[disabled] .bootstrap-scope .btn-primary:focus,
-.bootstrap-scope .btn-primary.disabled:active,
-.bootstrap-scope .btn-primary[disabled]:active,
-fieldset[disabled] .bootstrap-scope .btn-primary:active,
-.bootstrap-scope .btn-primary.disabled.active,
-.bootstrap-scope .btn-primary[disabled].active,
-fieldset[disabled] .bootstrap-scope .btn-primary.active {
-  background-color: #428bca;
-  border-color: #357ebd;
-}
-.bootstrap-scope .btn-primary .badge {
-  color: #428bca;
-  background-color: #fff;
-}
-.bootstrap-scope .btn-warning {
-  color: #ffffff;
-  background-color: #f0ad4e;
-  border-color: #eea236;
-}
-.bootstrap-scope .btn-warning:hover,
-.bootstrap-scope .btn-warning:focus,
-.bootstrap-scope .btn-warning:active,
-.bootstrap-scope .btn-warning.active,
-.open .dropdown-toggle.bootstrap-scope .btn-warning {
-  color: #ffffff;
-  background-color: #ed9c28;
-  border-color: #d58512;
-}
-.bootstrap-scope .btn-warning:active,
-.bootstrap-scope .btn-warning.active,
-.open .dropdown-toggle.bootstrap-scope .btn-warning {
-  background-image: none;
-}
-.bootstrap-scope .btn-warning.disabled,
-.bootstrap-scope .btn-warning[disabled],
-fieldset[disabled] .bootstrap-scope .btn-warning,
-.bootstrap-scope .btn-warning.disabled:hover,
-.bootstrap-scope .btn-warning[disabled]:hover,
-fieldset[disabled] .bootstrap-scope .btn-warning:hover,
-.bootstrap-scope .btn-warning.disabled:focus,
-.bootstrap-scope .btn-warning[disabled]:focus,
-fieldset[disabled] .bootstrap-scope .btn-warning:focus,
-.bootstrap-scope .btn-warning.disabled:active,
-.bootstrap-scope .btn-warning[disabled]:active,
-fieldset[disabled] .bootstrap-scope .btn-warning:active,
-.bootstrap-scope .btn-warning.disabled.active,
-.bootstrap-scope .btn-warning[disabled].active,
-fieldset[disabled] .bootstrap-scope .btn-warning.active {
-  background-color: #f0ad4e;
-  border-color: #eea236;
-}
-.bootstrap-scope .btn-warning .badge {
-  color: #f0ad4e;
-  background-color: #fff;
-}
-.bootstrap-scope .btn-danger {
-  color: #ffffff;
-  background-color: #d9534f;
-  border-color: #d43f3a;
-}
-.bootstrap-scope .btn-danger:hover,
-.bootstrap-scope .btn-danger:focus,
-.bootstrap-scope .btn-danger:active,
-.bootstrap-scope .btn-danger.active,
-.open .dropdown-toggle.bootstrap-scope .btn-danger {
-  color: #ffffff;
-  background-color: #d2322d;
-  border-color: #ac2925;
-}
-.bootstrap-scope .btn-danger:active,
-.bootstrap-scope .btn-danger.active,
-.open .dropdown-toggle.bootstrap-scope .btn-danger {
-  background-image: none;
-}
-.bootstrap-scope .btn-danger.disabled,
-.bootstrap-scope .btn-danger[disabled],
-fieldset[disabled] .bootstrap-scope .btn-danger,
-.bootstrap-scope .btn-danger.disabled:hover,
-.bootstrap-scope .btn-danger[disabled]:hover,
-fieldset[disabled] .bootstrap-scope .btn-danger:hover,
-.bootstrap-scope .btn-danger.disabled:focus,
-.bootstrap-scope .btn-danger[disabled]:focus,
-fieldset[disabled] .bootstrap-scope .btn-danger:focus,
-.bootstrap-scope .btn-danger.disabled:active,
-.bootstrap-scope .btn-danger[disabled]:active,
-fieldset[disabled] .bootstrap-scope .btn-danger:active,
-.bootstrap-scope .btn-danger.disabled.active,
-.bootstrap-scope .btn-danger[disabled].active,
-fieldset[disabled] .bootstrap-scope .btn-danger.active {
-  background-color: #d9534f;
-  border-color: #d43f3a;
-}
-.bootstrap-scope .btn-danger .badge {
-  color: #d9534f;
-  background-color: #fff;
-}
-.bootstrap-scope .btn-success {
-  color: #ffffff;
-  background-color: #5cb85c;
-  border-color: #4cae4c;
-}
-.bootstrap-scope .btn-success:hover,
-.bootstrap-scope .btn-success:focus,
-.bootstrap-scope .btn-success:active,
-.bootstrap-scope .btn-success.active,
-.open .dropdown-toggle.bootstrap-scope .btn-success {
-  color: #ffffff;
-  background-color: #47a447;
-  border-color: #398439;
-}
-.bootstrap-scope .btn-success:active,
-.bootstrap-scope .btn-success.active,
-.open .dropdown-toggle.bootstrap-scope .btn-success {
-  background-image: none;
-}
-.bootstrap-scope .btn-success.disabled,
-.bootstrap-scope .btn-success[disabled],
-fieldset[disabled] .bootstrap-scope .btn-success,
-.bootstrap-scope .btn-success.disabled:hover,
-.bootstrap-scope .btn-success[disabled]:hover,
-fieldset[disabled] .bootstrap-scope .btn-success:hover,
-.bootstrap-scope .btn-success.disabled:focus,
-.bootstrap-scope .btn-success[disabled]:focus,
-fieldset[disabled] .bootstrap-scope .btn-success:focus,
-.bootstrap-scope .btn-success.disabled:active,
-.bootstrap-scope .btn-success[disabled]:active,
-fieldset[disabled] .bootstrap-scope .btn-success:active,
-.bootstrap-scope .btn-success.disabled.active,
-.bootstrap-scope .btn-success[disabled].active,
-fieldset[disabled] .bootstrap-scope .btn-success.active {
-  background-color: #5cb85c;
-  border-color: #4cae4c;
-}
-.bootstrap-scope .btn-success .badge {
-  color: #5cb85c;
-  background-color: #fff;
-}
-.bootstrap-scope .btn-info {
-  color: #ffffff;
-  background-color: #5bc0de;
-  border-color: #46b8da;
-}
-.bootstrap-scope .btn-info:hover,
-.bootstrap-scope .btn-info:focus,
-.bootstrap-scope .btn-info:active,
-.bootstrap-scope .btn-info.active,
-.open .dropdown-toggle.bootstrap-scope .btn-info {
-  color: #ffffff;
-  background-color: #39b3d7;
-  border-color: #269abc;
-}
-.bootstrap-scope .btn-info:active,
-.bootstrap-scope .btn-info.active,
-.open .dropdown-toggle.bootstrap-scope .btn-info {
-  background-image: none;
-}
-.bootstrap-scope .btn-info.disabled,
-.bootstrap-scope .btn-info[disabled],
-fieldset[disabled] .bootstrap-scope .btn-info,
-.bootstrap-scope .btn-info.disabled:hover,
-.bootstrap-scope .btn-info[disabled]:hover,
-fieldset[disabled] .bootstrap-scope .btn-info:hover,
-.bootstrap-scope .btn-info.disabled:focus,
-.bootstrap-scope .btn-info[disabled]:focus,
-fieldset[disabled] .bootstrap-scope .btn-info:focus,
-.bootstrap-scope .btn-info.disabled:active,
-.bootstrap-scope .btn-info[disabled]:active,
-fieldset[disabled] .bootstrap-scope .btn-info:active,
-.bootstrap-scope .btn-info.disabled.active,
-.bootstrap-scope .btn-info[disabled].active,
-fieldset[disabled] .bootstrap-scope .btn-info.active {
-  background-color: #5bc0de;
-  border-color: #46b8da;
-}
-.bootstrap-scope .btn-info .badge {
-  color: #5bc0de;
-  background-color: #fff;
-}
-.bootstrap-scope .btn-link {
-  color: #428bca;
-  font-weight: normal;
-  cursor: pointer;
-  border-radius: 0;
-}
-.bootstrap-scope .btn-link,
-.bootstrap-scope .btn-link:active,
-.bootstrap-scope .btn-link[disabled],
-fieldset[disabled] .bootstrap-scope .btn-link {
-  background-color: transparent;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-}
-.bootstrap-scope .btn-link,
-.bootstrap-scope .btn-link:hover,
-.bootstrap-scope .btn-link:focus,
-.bootstrap-scope .btn-link:active {
-  border-color: transparent;
-}
-.bootstrap-scope .btn-link:hover,
-.bootstrap-scope .btn-link:focus {
-  color: #2a6496;
-  text-decoration: underline;
-  background-color: transparent;
-}
-.bootstrap-scope .btn-link[disabled]:hover,
-fieldset[disabled] .bootstrap-scope .btn-link:hover,
-.bootstrap-scope .btn-link[disabled]:focus,
-fieldset[disabled] .bootstrap-scope .btn-link:focus {
-  color: #999999;
-  text-decoration: none;
-}
-.bootstrap-scope .btn-lg {
-  padding: 10px 16px;
-  font-size: 18px;
-  line-height: 1.33;
-  border-radius: 6px;
-}
-.bootstrap-scope .btn-sm {
-  padding: 5px 10px;
-  font-size: 12px;
-  line-height: 1.5;
-  border-radius: 3px;
-}
-.bootstrap-scope .btn-xs {
-  padding: 1px 5px;
-  font-size: 12px;
-  line-height: 1.5;
-  border-radius: 3px;
-}
-.bootstrap-scope .btn-block {
-  display: block;
-  width: 100%;
-  padding-left: 0;
-  padding-right: 0;
-}
-.bootstrap-scope .btn-block + .btn-block {
-  margin-top: 5px;
-}
-.bootstrap-scope input[type="submit"].btn-block,
-.bootstrap-scope input[type="reset"].btn-block,
-.bootstrap-scope input[type="button"].btn-block {
-  width: 100%;
-}
-.bootstrap-scope .fade {
-  opacity: 0;
-  -webkit-transition: opacity 0.15s linear;
-  transition: opacity 0.15s linear;
-}
-.bootstrap-scope .fade.in {
-  opacity: 1;
-}
-.bootstrap-scope .collapse {
-  display: none;
-}
-.bootstrap-scope .collapse.in {
-  display: block;
-}
-.bootstrap-scope .collapsing {
-  position: relative;
-  height: 0;
-  overflow: hidden;
-  -webkit-transition: height 0.35s ease;
-  transition: height 0.35s ease;
-}
 @font-face {
   font-family: 'Glyphicons Halflings';
   src: url('../fonts/glyphicons-halflings-regular.eot');
-  src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');
+  src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
 }
 .bootstrap-scope .glyphicon {
   position: relative;
@@ -2278,9 +266,6 @@ fieldset[disabled] .bootstrap-scope .btn-link:focus {
   line-height: 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-.bootstrap-scope .glyphicon:empty {
-  width: 1em;
 }
 .bootstrap-scope .glyphicon-asterisk:before {
   content: "\2a";
@@ -2882,6 +867,2232 @@ fieldset[disabled] .bootstrap-scope .btn-link:focus {
 .bootstrap-scope .glyphicon-tree-deciduous:before {
   content: "\e200";
 }
+.bootstrap-scope * {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.bootstrap-scope *:before,
+.bootstrap-scope *:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.bootstrap-scope html {
+  font-size: 10px;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+.bootstrap-scope body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #333333;
+  background-color: #ffffff;
+}
+.bootstrap-scope div {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #333333;
+  /*background-color: #ffffff;*/
+}
+.bootstrap-scope input,
+.bootstrap-scope button,
+.bootstrap-scope select,
+.bootstrap-scope textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+.bootstrap-scope a {
+  color: #428bca;
+  text-decoration: none;
+}
+.bootstrap-scope a:hover,
+.bootstrap-scope a:focus {
+  color: #2a6496;
+  text-decoration: underline;
+}
+.bootstrap-scope a:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.bootstrap-scope figure {
+  margin: 0;
+}
+.bootstrap-scope img {
+  vertical-align: middle;
+}
+.bootstrap-scope .img-responsive {
+  display: block;
+  width: 100% \9;
+  max-width: 100%;
+  height: auto;
+}
+.bootstrap-scope .img-rounded {
+  border-radius: 6px;
+}
+.bootstrap-scope .img-thumbnail {
+  padding: 4px;
+  line-height: 1.42857143;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  -webkit-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+  display: inline-block;
+  width: 100% \9;
+  max-width: 100%;
+  height: auto;
+}
+.bootstrap-scope .img-circle {
+  border-radius: 50%;
+}
+.bootstrap-scope hr {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 0;
+  border-top: 1px solid #eeeeee;
+}
+.bootstrap-scope .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+.bootstrap-scope .sr-only-focusable:active,
+.bootstrap-scope .sr-only-focusable:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+}
+.bootstrap-scope h1,
+.bootstrap-scope h2,
+.bootstrap-scope h3,
+.bootstrap-scope h4,
+.bootstrap-scope h5,
+.bootstrap-scope h6,
+.bootstrap-scope .h1,
+.bootstrap-scope .h2,
+.bootstrap-scope .h3,
+.bootstrap-scope .h4,
+.bootstrap-scope .h5,
+.bootstrap-scope .h6 {
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.1;
+  color: inherit;
+}
+.bootstrap-scope h1 small,
+.bootstrap-scope h2 small,
+.bootstrap-scope h3 small,
+.bootstrap-scope h4 small,
+.bootstrap-scope h5 small,
+.bootstrap-scope h6 small,
+.bootstrap-scope .h1 small,
+.bootstrap-scope .h2 small,
+.bootstrap-scope .h3 small,
+.bootstrap-scope .h4 small,
+.bootstrap-scope .h5 small,
+.bootstrap-scope .h6 small,
+.bootstrap-scope h1 .small,
+.bootstrap-scope h2 .small,
+.bootstrap-scope h3 .small,
+.bootstrap-scope h4 .small,
+.bootstrap-scope h5 .small,
+.bootstrap-scope h6 .small,
+.bootstrap-scope .h1 .small,
+.bootstrap-scope .h2 .small,
+.bootstrap-scope .h3 .small,
+.bootstrap-scope .h4 .small,
+.bootstrap-scope .h5 .small,
+.bootstrap-scope .h6 .small {
+  font-weight: normal;
+  line-height: 1;
+  color: #777777;
+}
+.bootstrap-scope h1,
+.bootstrap-scope .h1,
+.bootstrap-scope h2,
+.bootstrap-scope .h2,
+.bootstrap-scope h3,
+.bootstrap-scope .h3 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+.bootstrap-scope h1 small,
+.bootstrap-scope .h1 small,
+.bootstrap-scope h2 small,
+.bootstrap-scope .h2 small,
+.bootstrap-scope h3 small,
+.bootstrap-scope .h3 small,
+.bootstrap-scope h1 .small,
+.bootstrap-scope .h1 .small,
+.bootstrap-scope h2 .small,
+.bootstrap-scope .h2 .small,
+.bootstrap-scope h3 .small,
+.bootstrap-scope .h3 .small {
+  font-size: 65%;
+}
+.bootstrap-scope h4,
+.bootstrap-scope .h4,
+.bootstrap-scope h5,
+.bootstrap-scope .h5,
+.bootstrap-scope h6,
+.bootstrap-scope .h6 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.bootstrap-scope h4 small,
+.bootstrap-scope .h4 small,
+.bootstrap-scope h5 small,
+.bootstrap-scope .h5 small,
+.bootstrap-scope h6 small,
+.bootstrap-scope .h6 small,
+.bootstrap-scope h4 .small,
+.bootstrap-scope .h4 .small,
+.bootstrap-scope h5 .small,
+.bootstrap-scope .h5 .small,
+.bootstrap-scope h6 .small,
+.bootstrap-scope .h6 .small {
+  font-size: 75%;
+}
+.bootstrap-scope h1,
+.bootstrap-scope .h1 {
+  font-size: 36px;
+}
+.bootstrap-scope h2,
+.bootstrap-scope .h2 {
+  font-size: 30px;
+}
+.bootstrap-scope h3,
+.bootstrap-scope .h3 {
+  font-size: 24px;
+}
+.bootstrap-scope h4,
+.bootstrap-scope .h4 {
+  font-size: 18px;
+}
+.bootstrap-scope h5,
+.bootstrap-scope .h5 {
+  font-size: 14px;
+}
+.bootstrap-scope h6,
+.bootstrap-scope .h6 {
+  font-size: 12px;
+}
+.bootstrap-scope p {
+  margin: 0 0 10px;
+}
+.bootstrap-scope .lead {
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.4;
+}
+@media (min-width: 768px) {
+  .bootstrap-scope .lead {
+    font-size: 21px;
+  }
+}
+.bootstrap-scope small,
+.bootstrap-scope .small {
+  font-size: 85%;
+}
+.bootstrap-scope cite {
+  font-style: normal;
+}
+.bootstrap-scope mark,
+.bootstrap-scope .mark {
+  background-color: #fcf8e3;
+  padding: .2em;
+}
+.bootstrap-scope .text-left {
+  text-align: left;
+}
+.bootstrap-scope .text-right {
+  text-align: right;
+}
+.bootstrap-scope .text-center {
+  text-align: center;
+}
+.bootstrap-scope .text-justify {
+  text-align: justify;
+}
+.bootstrap-scope .text-nowrap {
+  white-space: nowrap;
+}
+.bootstrap-scope .text-lowercase {
+  text-transform: lowercase;
+}
+.bootstrap-scope .text-uppercase {
+  text-transform: uppercase;
+}
+.bootstrap-scope .text-capitalize {
+  text-transform: capitalize;
+}
+.bootstrap-scope .text-muted {
+  color: #777777;
+}
+.bootstrap-scope .text-primary {
+  color: #428bca;
+}
+a.bootstrap-scope .text-primary:hover {
+  color: #3071a9;
+}
+.bootstrap-scope .text-success {
+  color: #3c763d;
+}
+a.bootstrap-scope .text-success:hover {
+  color: #2b542c;
+}
+.bootstrap-scope .text-info {
+  color: #31708f;
+}
+a.bootstrap-scope .text-info:hover {
+  color: #245269;
+}
+.bootstrap-scope .text-warning {
+  color: #8a6d3b;
+}
+a.bootstrap-scope .text-warning:hover {
+  color: #66512c;
+}
+.bootstrap-scope .text-danger {
+  color: #a94442;
+}
+a.bootstrap-scope .text-danger:hover {
+  color: #843534;
+}
+.bootstrap-scope .bg-primary {
+  color: #fff;
+  background-color: #428bca;
+}
+a.bootstrap-scope .bg-primary:hover {
+  background-color: #3071a9;
+}
+.bootstrap-scope .bg-success {
+  background-color: #dff0d8;
+}
+a.bootstrap-scope .bg-success:hover {
+  background-color: #c1e2b3;
+}
+.bootstrap-scope .bg-info {
+  background-color: #d9edf7;
+}
+a.bootstrap-scope .bg-info:hover {
+  background-color: #afd9ee;
+}
+.bootstrap-scope .bg-warning {
+  background-color: #fcf8e3;
+}
+a.bootstrap-scope .bg-warning:hover {
+  background-color: #f7ecb5;
+}
+.bootstrap-scope .bg-danger {
+  background-color: #f2dede;
+}
+a.bootstrap-scope .bg-danger:hover {
+  background-color: #e4b9b9;
+}
+.bootstrap-scope .page-header {
+  padding-bottom: 9px;
+  margin: 40px 0 20px;
+  border-bottom: 1px solid #eeeeee;
+}
+.bootstrap-scope ul,
+.bootstrap-scope ol {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+.bootstrap-scope ul ul,
+.bootstrap-scope ol ul,
+.bootstrap-scope ul ol,
+.bootstrap-scope ol ol {
+  margin-bottom: 0;
+}
+.bootstrap-scope .list-unstyled {
+  padding-left: 0;
+  list-style: none;
+}
+.bootstrap-scope .list-inline {
+  padding-left: 0;
+  list-style: none;
+  margin-left: -5px;
+}
+.bootstrap-scope .list-inline > li {
+  display: inline-block;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.bootstrap-scope dl {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+.bootstrap-scope dt,
+.bootstrap-scope dd {
+  line-height: 1.42857143;
+}
+.bootstrap-scope dt {
+  font-weight: bold;
+}
+.bootstrap-scope dd {
+  margin-left: 0;
+}
+@media (min-width: 768px) {
+  .bootstrap-scope .dl-horizontal dt {
+    float: left;
+    width: 160px;
+    clear: left;
+    text-align: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .bootstrap-scope .dl-horizontal dd {
+    margin-left: 180px;
+  }
+}
+.bootstrap-scope abbr[title],
+.bootstrap-scope abbr[data-original-title] {
+  cursor: help;
+  border-bottom: 1px dotted #777777;
+}
+.bootstrap-scope .initialism {
+  font-size: 90%;
+  text-transform: uppercase;
+}
+.bootstrap-scope blockquote {
+  padding: 10px 20px;
+  margin: 0 0 20px;
+  font-size: 17.5px;
+  border-left: 5px solid #eeeeee;
+}
+.bootstrap-scope blockquote p:last-child,
+.bootstrap-scope blockquote ul:last-child,
+.bootstrap-scope blockquote ol:last-child {
+  margin-bottom: 0;
+}
+.bootstrap-scope blockquote footer,
+.bootstrap-scope blockquote small,
+.bootstrap-scope blockquote .small {
+  display: block;
+  font-size: 80%;
+  line-height: 1.42857143;
+  color: #777777;
+}
+.bootstrap-scope blockquote footer:before,
+.bootstrap-scope blockquote small:before,
+.bootstrap-scope blockquote .small:before {
+  content: '\2014 \00A0';
+}
+.bootstrap-scope .blockquote-reverse,
+.bootstrap-scope blockquote.pull-right {
+  padding-right: 15px;
+  padding-left: 0;
+  border-right: 5px solid #eeeeee;
+  border-left: 0;
+  text-align: right;
+}
+.bootstrap-scope .blockquote-reverse footer:before,
+.bootstrap-scope blockquote.pull-right footer:before,
+.bootstrap-scope .blockquote-reverse small:before,
+.bootstrap-scope blockquote.pull-right small:before,
+.bootstrap-scope .blockquote-reverse .small:before,
+.bootstrap-scope blockquote.pull-right .small:before {
+  content: '';
+}
+.bootstrap-scope .blockquote-reverse footer:after,
+.bootstrap-scope blockquote.pull-right footer:after,
+.bootstrap-scope .blockquote-reverse small:after,
+.bootstrap-scope blockquote.pull-right small:after,
+.bootstrap-scope .blockquote-reverse .small:after,
+.bootstrap-scope blockquote.pull-right .small:after {
+  content: '\00A0 \2014';
+}
+.bootstrap-scope blockquote:before,
+.bootstrap-scope blockquote:after {
+  content: "";
+}
+.bootstrap-scope address {
+  margin-bottom: 20px;
+  font-style: normal;
+  line-height: 1.42857143;
+}
+.bootstrap-scope code,
+.bootstrap-scope kbd,
+.bootstrap-scope pre,
+.bootstrap-scope samp {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+.bootstrap-scope code {
+  padding: 2px 4px;
+  font-size: 90%;
+  color: #c7254e;
+  background-color: #f9f2f4;
+  border-radius: 4px;
+}
+.bootstrap-scope kbd {
+  padding: 2px 4px;
+  font-size: 90%;
+  color: #ffffff;
+  background-color: #333333;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+.bootstrap-scope kbd kbd {
+  padding: 0;
+  font-size: 100%;
+  box-shadow: none;
+}
+.bootstrap-scope pre {
+  display: block;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  word-break: break-all;
+  word-wrap: break-word;
+  color: #333333;
+  background-color: #f5f5f5;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+}
+.bootstrap-scope pre code {
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+  white-space: pre-wrap;
+  background-color: transparent;
+  border-radius: 0;
+}
+.bootstrap-scope .pre-scrollable {
+  max-height: 340px;
+  overflow-y: scroll;
+}
+.bootstrap-scope .container {
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .bootstrap-scope .container {
+    width: 750px;
+  }
+}
+@media (min-width: 992px) {
+  .bootstrap-scope .container {
+    width: 970px;
+  }
+}
+@media (min-width: 1200px) {
+  .bootstrap-scope .container {
+    width: 1170px;
+  }
+}
+.bootstrap-scope .container-fluid {
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.bootstrap-scope .row {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+.bootstrap-scope .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.bootstrap-scope .col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12 {
+  float: left;
+}
+.bootstrap-scope .col-xs-12 {
+  width: 100%;
+}
+.bootstrap-scope .col-xs-11 {
+  width: 91.66666667%;
+}
+.bootstrap-scope .col-xs-10 {
+  width: 83.33333333%;
+}
+.bootstrap-scope .col-xs-9 {
+  width: 75%;
+}
+.bootstrap-scope .col-xs-8 {
+  width: 66.66666667%;
+}
+.bootstrap-scope .col-xs-7 {
+  width: 58.33333333%;
+}
+.bootstrap-scope .col-xs-6 {
+  width: 50%;
+}
+.bootstrap-scope .col-xs-5 {
+  width: 41.66666667%;
+}
+.bootstrap-scope .col-xs-4 {
+  width: 33.33333333%;
+}
+.bootstrap-scope .col-xs-3 {
+  width: 25%;
+}
+.bootstrap-scope .col-xs-2 {
+  width: 16.66666667%;
+}
+.bootstrap-scope .col-xs-1 {
+  width: 8.33333333%;
+}
+.bootstrap-scope .col-xs-pull-12 {
+  right: 100%;
+}
+.bootstrap-scope .col-xs-pull-11 {
+  right: 91.66666667%;
+}
+.bootstrap-scope .col-xs-pull-10 {
+  right: 83.33333333%;
+}
+.bootstrap-scope .col-xs-pull-9 {
+  right: 75%;
+}
+.bootstrap-scope .col-xs-pull-8 {
+  right: 66.66666667%;
+}
+.bootstrap-scope .col-xs-pull-7 {
+  right: 58.33333333%;
+}
+.bootstrap-scope .col-xs-pull-6 {
+  right: 50%;
+}
+.bootstrap-scope .col-xs-pull-5 {
+  right: 41.66666667%;
+}
+.bootstrap-scope .col-xs-pull-4 {
+  right: 33.33333333%;
+}
+.bootstrap-scope .col-xs-pull-3 {
+  right: 25%;
+}
+.bootstrap-scope .col-xs-pull-2 {
+  right: 16.66666667%;
+}
+.bootstrap-scope .col-xs-pull-1 {
+  right: 8.33333333%;
+}
+.bootstrap-scope .col-xs-pull-0 {
+  right: auto;
+}
+.bootstrap-scope .col-xs-push-12 {
+  left: 100%;
+}
+.bootstrap-scope .col-xs-push-11 {
+  left: 91.66666667%;
+}
+.bootstrap-scope .col-xs-push-10 {
+  left: 83.33333333%;
+}
+.bootstrap-scope .col-xs-push-9 {
+  left: 75%;
+}
+.bootstrap-scope .col-xs-push-8 {
+  left: 66.66666667%;
+}
+.bootstrap-scope .col-xs-push-7 {
+  left: 58.33333333%;
+}
+.bootstrap-scope .col-xs-push-6 {
+  left: 50%;
+}
+.bootstrap-scope .col-xs-push-5 {
+  left: 41.66666667%;
+}
+.bootstrap-scope .col-xs-push-4 {
+  left: 33.33333333%;
+}
+.bootstrap-scope .col-xs-push-3 {
+  left: 25%;
+}
+.bootstrap-scope .col-xs-push-2 {
+  left: 16.66666667%;
+}
+.bootstrap-scope .col-xs-push-1 {
+  left: 8.33333333%;
+}
+.bootstrap-scope .col-xs-push-0 {
+  left: auto;
+}
+.bootstrap-scope .col-xs-offset-12 {
+  margin-left: 100%;
+}
+.bootstrap-scope .col-xs-offset-11 {
+  margin-left: 91.66666667%;
+}
+.bootstrap-scope .col-xs-offset-10 {
+  margin-left: 83.33333333%;
+}
+.bootstrap-scope .col-xs-offset-9 {
+  margin-left: 75%;
+}
+.bootstrap-scope .col-xs-offset-8 {
+  margin-left: 66.66666667%;
+}
+.bootstrap-scope .col-xs-offset-7 {
+  margin-left: 58.33333333%;
+}
+.bootstrap-scope .col-xs-offset-6 {
+  margin-left: 50%;
+}
+.bootstrap-scope .col-xs-offset-5 {
+  margin-left: 41.66666667%;
+}
+.bootstrap-scope .col-xs-offset-4 {
+  margin-left: 33.33333333%;
+}
+.bootstrap-scope .col-xs-offset-3 {
+  margin-left: 25%;
+}
+.bootstrap-scope .col-xs-offset-2 {
+  margin-left: 16.66666667%;
+}
+.bootstrap-scope .col-xs-offset-1 {
+  margin-left: 8.33333333%;
+}
+.bootstrap-scope .col-xs-offset-0 {
+  margin-left: 0%;
+}
+@media (min-width: 768px) {
+  .bootstrap-scope .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12 {
+    float: left;
+  }
+  .bootstrap-scope .col-sm-12 {
+    width: 100%;
+  }
+  .bootstrap-scope .col-sm-11 {
+    width: 91.66666667%;
+  }
+  .bootstrap-scope .col-sm-10 {
+    width: 83.33333333%;
+  }
+  .bootstrap-scope .col-sm-9 {
+    width: 75%;
+  }
+  .bootstrap-scope .col-sm-8 {
+    width: 66.66666667%;
+  }
+  .bootstrap-scope .col-sm-7 {
+    width: 58.33333333%;
+  }
+  .bootstrap-scope .col-sm-6 {
+    width: 50%;
+  }
+  .bootstrap-scope .col-sm-5 {
+    width: 41.66666667%;
+  }
+  .bootstrap-scope .col-sm-4 {
+    width: 33.33333333%;
+  }
+  .bootstrap-scope .col-sm-3 {
+    width: 25%;
+  }
+  .bootstrap-scope .col-sm-2 {
+    width: 16.66666667%;
+  }
+  .bootstrap-scope .col-sm-1 {
+    width: 8.33333333%;
+  }
+  .bootstrap-scope .col-sm-pull-12 {
+    right: 100%;
+  }
+  .bootstrap-scope .col-sm-pull-11 {
+    right: 91.66666667%;
+  }
+  .bootstrap-scope .col-sm-pull-10 {
+    right: 83.33333333%;
+  }
+  .bootstrap-scope .col-sm-pull-9 {
+    right: 75%;
+  }
+  .bootstrap-scope .col-sm-pull-8 {
+    right: 66.66666667%;
+  }
+  .bootstrap-scope .col-sm-pull-7 {
+    right: 58.33333333%;
+  }
+  .bootstrap-scope .col-sm-pull-6 {
+    right: 50%;
+  }
+  .bootstrap-scope .col-sm-pull-5 {
+    right: 41.66666667%;
+  }
+  .bootstrap-scope .col-sm-pull-4 {
+    right: 33.33333333%;
+  }
+  .bootstrap-scope .col-sm-pull-3 {
+    right: 25%;
+  }
+  .bootstrap-scope .col-sm-pull-2 {
+    right: 16.66666667%;
+  }
+  .bootstrap-scope .col-sm-pull-1 {
+    right: 8.33333333%;
+  }
+  .bootstrap-scope .col-sm-pull-0 {
+    right: auto;
+  }
+  .bootstrap-scope .col-sm-push-12 {
+    left: 100%;
+  }
+  .bootstrap-scope .col-sm-push-11 {
+    left: 91.66666667%;
+  }
+  .bootstrap-scope .col-sm-push-10 {
+    left: 83.33333333%;
+  }
+  .bootstrap-scope .col-sm-push-9 {
+    left: 75%;
+  }
+  .bootstrap-scope .col-sm-push-8 {
+    left: 66.66666667%;
+  }
+  .bootstrap-scope .col-sm-push-7 {
+    left: 58.33333333%;
+  }
+  .bootstrap-scope .col-sm-push-6 {
+    left: 50%;
+  }
+  .bootstrap-scope .col-sm-push-5 {
+    left: 41.66666667%;
+  }
+  .bootstrap-scope .col-sm-push-4 {
+    left: 33.33333333%;
+  }
+  .bootstrap-scope .col-sm-push-3 {
+    left: 25%;
+  }
+  .bootstrap-scope .col-sm-push-2 {
+    left: 16.66666667%;
+  }
+  .bootstrap-scope .col-sm-push-1 {
+    left: 8.33333333%;
+  }
+  .bootstrap-scope .col-sm-push-0 {
+    left: auto;
+  }
+  .bootstrap-scope .col-sm-offset-12 {
+    margin-left: 100%;
+  }
+  .bootstrap-scope .col-sm-offset-11 {
+    margin-left: 91.66666667%;
+  }
+  .bootstrap-scope .col-sm-offset-10 {
+    margin-left: 83.33333333%;
+  }
+  .bootstrap-scope .col-sm-offset-9 {
+    margin-left: 75%;
+  }
+  .bootstrap-scope .col-sm-offset-8 {
+    margin-left: 66.66666667%;
+  }
+  .bootstrap-scope .col-sm-offset-7 {
+    margin-left: 58.33333333%;
+  }
+  .bootstrap-scope .col-sm-offset-6 {
+    margin-left: 50%;
+  }
+  .bootstrap-scope .col-sm-offset-5 {
+    margin-left: 41.66666667%;
+  }
+  .bootstrap-scope .col-sm-offset-4 {
+    margin-left: 33.33333333%;
+  }
+  .bootstrap-scope .col-sm-offset-3 {
+    margin-left: 25%;
+  }
+  .bootstrap-scope .col-sm-offset-2 {
+    margin-left: 16.66666667%;
+  }
+  .bootstrap-scope .col-sm-offset-1 {
+    margin-left: 8.33333333%;
+  }
+  .bootstrap-scope .col-sm-offset-0 {
+    margin-left: 0%;
+  }
+}
+@media (min-width: 992px) {
+  .bootstrap-scope .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12 {
+    float: left;
+  }
+  .bootstrap-scope .col-md-12 {
+    width: 100%;
+  }
+  .bootstrap-scope .col-md-11 {
+    width: 91.66666667%;
+  }
+  .bootstrap-scope .col-md-10 {
+    width: 83.33333333%;
+  }
+  .bootstrap-scope .col-md-9 {
+    width: 75%;
+  }
+  .bootstrap-scope .col-md-8 {
+    width: 66.66666667%;
+  }
+  .bootstrap-scope .col-md-7 {
+    width: 58.33333333%;
+  }
+  .bootstrap-scope .col-md-6 {
+    width: 50%;
+  }
+  .bootstrap-scope .col-md-5 {
+    width: 41.66666667%;
+  }
+  .bootstrap-scope .col-md-4 {
+    width: 33.33333333%;
+  }
+  .bootstrap-scope .col-md-3 {
+    width: 25%;
+  }
+  .bootstrap-scope .col-md-2 {
+    width: 16.66666667%;
+  }
+  .bootstrap-scope .col-md-1 {
+    width: 8.33333333%;
+  }
+  .bootstrap-scope .col-md-pull-12 {
+    right: 100%;
+  }
+  .bootstrap-scope .col-md-pull-11 {
+    right: 91.66666667%;
+  }
+  .bootstrap-scope .col-md-pull-10 {
+    right: 83.33333333%;
+  }
+  .bootstrap-scope .col-md-pull-9 {
+    right: 75%;
+  }
+  .bootstrap-scope .col-md-pull-8 {
+    right: 66.66666667%;
+  }
+  .bootstrap-scope .col-md-pull-7 {
+    right: 58.33333333%;
+  }
+  .bootstrap-scope .col-md-pull-6 {
+    right: 50%;
+  }
+  .bootstrap-scope .col-md-pull-5 {
+    right: 41.66666667%;
+  }
+  .bootstrap-scope .col-md-pull-4 {
+    right: 33.33333333%;
+  }
+  .bootstrap-scope .col-md-pull-3 {
+    right: 25%;
+  }
+  .bootstrap-scope .col-md-pull-2 {
+    right: 16.66666667%;
+  }
+  .bootstrap-scope .col-md-pull-1 {
+    right: 8.33333333%;
+  }
+  .bootstrap-scope .col-md-pull-0 {
+    right: auto;
+  }
+  .bootstrap-scope .col-md-push-12 {
+    left: 100%;
+  }
+  .bootstrap-scope .col-md-push-11 {
+    left: 91.66666667%;
+  }
+  .bootstrap-scope .col-md-push-10 {
+    left: 83.33333333%;
+  }
+  .bootstrap-scope .col-md-push-9 {
+    left: 75%;
+  }
+  .bootstrap-scope .col-md-push-8 {
+    left: 66.66666667%;
+  }
+  .bootstrap-scope .col-md-push-7 {
+    left: 58.33333333%;
+  }
+  .bootstrap-scope .col-md-push-6 {
+    left: 50%;
+  }
+  .bootstrap-scope .col-md-push-5 {
+    left: 41.66666667%;
+  }
+  .bootstrap-scope .col-md-push-4 {
+    left: 33.33333333%;
+  }
+  .bootstrap-scope .col-md-push-3 {
+    left: 25%;
+  }
+  .bootstrap-scope .col-md-push-2 {
+    left: 16.66666667%;
+  }
+  .bootstrap-scope .col-md-push-1 {
+    left: 8.33333333%;
+  }
+  .bootstrap-scope .col-md-push-0 {
+    left: auto;
+  }
+  .bootstrap-scope .col-md-offset-12 {
+    margin-left: 100%;
+  }
+  .bootstrap-scope .col-md-offset-11 {
+    margin-left: 91.66666667%;
+  }
+  .bootstrap-scope .col-md-offset-10 {
+    margin-left: 83.33333333%;
+  }
+  .bootstrap-scope .col-md-offset-9 {
+    margin-left: 75%;
+  }
+  .bootstrap-scope .col-md-offset-8 {
+    margin-left: 66.66666667%;
+  }
+  .bootstrap-scope .col-md-offset-7 {
+    margin-left: 58.33333333%;
+  }
+  .bootstrap-scope .col-md-offset-6 {
+    margin-left: 50%;
+  }
+  .bootstrap-scope .col-md-offset-5 {
+    margin-left: 41.66666667%;
+  }
+  .bootstrap-scope .col-md-offset-4 {
+    margin-left: 33.33333333%;
+  }
+  .bootstrap-scope .col-md-offset-3 {
+    margin-left: 25%;
+  }
+  .bootstrap-scope .col-md-offset-2 {
+    margin-left: 16.66666667%;
+  }
+  .bootstrap-scope .col-md-offset-1 {
+    margin-left: 8.33333333%;
+  }
+  .bootstrap-scope .col-md-offset-0 {
+    margin-left: 0%;
+  }
+}
+@media (min-width: 1200px) {
+  .bootstrap-scope .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12 {
+    float: left;
+  }
+  .bootstrap-scope .col-lg-12 {
+    width: 100%;
+  }
+  .bootstrap-scope .col-lg-11 {
+    width: 91.66666667%;
+  }
+  .bootstrap-scope .col-lg-10 {
+    width: 83.33333333%;
+  }
+  .bootstrap-scope .col-lg-9 {
+    width: 75%;
+  }
+  .bootstrap-scope .col-lg-8 {
+    width: 66.66666667%;
+  }
+  .bootstrap-scope .col-lg-7 {
+    width: 58.33333333%;
+  }
+  .bootstrap-scope .col-lg-6 {
+    width: 50%;
+  }
+  .bootstrap-scope .col-lg-5 {
+    width: 41.66666667%;
+  }
+  .bootstrap-scope .col-lg-4 {
+    width: 33.33333333%;
+  }
+  .bootstrap-scope .col-lg-3 {
+    width: 25%;
+  }
+  .bootstrap-scope .col-lg-2 {
+    width: 16.66666667%;
+  }
+  .bootstrap-scope .col-lg-1 {
+    width: 8.33333333%;
+  }
+  .bootstrap-scope .col-lg-pull-12 {
+    right: 100%;
+  }
+  .bootstrap-scope .col-lg-pull-11 {
+    right: 91.66666667%;
+  }
+  .bootstrap-scope .col-lg-pull-10 {
+    right: 83.33333333%;
+  }
+  .bootstrap-scope .col-lg-pull-9 {
+    right: 75%;
+  }
+  .bootstrap-scope .col-lg-pull-8 {
+    right: 66.66666667%;
+  }
+  .bootstrap-scope .col-lg-pull-7 {
+    right: 58.33333333%;
+  }
+  .bootstrap-scope .col-lg-pull-6 {
+    right: 50%;
+  }
+  .bootstrap-scope .col-lg-pull-5 {
+    right: 41.66666667%;
+  }
+  .bootstrap-scope .col-lg-pull-4 {
+    right: 33.33333333%;
+  }
+  .bootstrap-scope .col-lg-pull-3 {
+    right: 25%;
+  }
+  .bootstrap-scope .col-lg-pull-2 {
+    right: 16.66666667%;
+  }
+  .bootstrap-scope .col-lg-pull-1 {
+    right: 8.33333333%;
+  }
+  .bootstrap-scope .col-lg-pull-0 {
+    right: auto;
+  }
+  .bootstrap-scope .col-lg-push-12 {
+    left: 100%;
+  }
+  .bootstrap-scope .col-lg-push-11 {
+    left: 91.66666667%;
+  }
+  .bootstrap-scope .col-lg-push-10 {
+    left: 83.33333333%;
+  }
+  .bootstrap-scope .col-lg-push-9 {
+    left: 75%;
+  }
+  .bootstrap-scope .col-lg-push-8 {
+    left: 66.66666667%;
+  }
+  .bootstrap-scope .col-lg-push-7 {
+    left: 58.33333333%;
+  }
+  .bootstrap-scope .col-lg-push-6 {
+    left: 50%;
+  }
+  .bootstrap-scope .col-lg-push-5 {
+    left: 41.66666667%;
+  }
+  .bootstrap-scope .col-lg-push-4 {
+    left: 33.33333333%;
+  }
+  .bootstrap-scope .col-lg-push-3 {
+    left: 25%;
+  }
+  .bootstrap-scope .col-lg-push-2 {
+    left: 16.66666667%;
+  }
+  .bootstrap-scope .col-lg-push-1 {
+    left: 8.33333333%;
+  }
+  .bootstrap-scope .col-lg-push-0 {
+    left: auto;
+  }
+  .bootstrap-scope .col-lg-offset-12 {
+    margin-left: 100%;
+  }
+  .bootstrap-scope .col-lg-offset-11 {
+    margin-left: 91.66666667%;
+  }
+  .bootstrap-scope .col-lg-offset-10 {
+    margin-left: 83.33333333%;
+  }
+  .bootstrap-scope .col-lg-offset-9 {
+    margin-left: 75%;
+  }
+  .bootstrap-scope .col-lg-offset-8 {
+    margin-left: 66.66666667%;
+  }
+  .bootstrap-scope .col-lg-offset-7 {
+    margin-left: 58.33333333%;
+  }
+  .bootstrap-scope .col-lg-offset-6 {
+    margin-left: 50%;
+  }
+  .bootstrap-scope .col-lg-offset-5 {
+    margin-left: 41.66666667%;
+  }
+  .bootstrap-scope .col-lg-offset-4 {
+    margin-left: 33.33333333%;
+  }
+  .bootstrap-scope .col-lg-offset-3 {
+    margin-left: 25%;
+  }
+  .bootstrap-scope .col-lg-offset-2 {
+    margin-left: 16.66666667%;
+  }
+  .bootstrap-scope .col-lg-offset-1 {
+    margin-left: 8.33333333%;
+  }
+  .bootstrap-scope .col-lg-offset-0 {
+    margin-left: 0%;
+  }
+}
+.bootstrap-scope table {
+  background-color: transparent;
+}
+.bootstrap-scope th {
+  text-align: left;
+}
+.bootstrap-scope .table {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 20px;
+}
+.bootstrap-scope .table > thead > tr > th,
+.bootstrap-scope .table > tbody > tr > th,
+.bootstrap-scope .table > tfoot > tr > th,
+.bootstrap-scope .table > thead > tr > td,
+.bootstrap-scope .table > tbody > tr > td,
+.bootstrap-scope .table > tfoot > tr > td {
+  padding: 8px;
+  line-height: 1.42857143;
+  vertical-align: top;
+  border-top: 1px solid #dddddd;
+}
+.bootstrap-scope .table > thead > tr > th {
+  vertical-align: bottom;
+  border-bottom: 2px solid #dddddd;
+}
+.bootstrap-scope .table > caption + thead > tr:first-child > th,
+.bootstrap-scope .table > colgroup + thead > tr:first-child > th,
+.bootstrap-scope .table > thead:first-child > tr:first-child > th,
+.bootstrap-scope .table > caption + thead > tr:first-child > td,
+.bootstrap-scope .table > colgroup + thead > tr:first-child > td,
+.bootstrap-scope .table > thead:first-child > tr:first-child > td {
+  border-top: 0;
+}
+.bootstrap-scope .table > tbody + tbody {
+  border-top: 2px solid #dddddd;
+}
+.bootstrap-scope .table .table {
+  background-color: #ffffff;
+}
+.bootstrap-scope .table-condensed > thead > tr > th,
+.bootstrap-scope .table-condensed > tbody > tr > th,
+.bootstrap-scope .table-condensed > tfoot > tr > th,
+.bootstrap-scope .table-condensed > thead > tr > td,
+.bootstrap-scope .table-condensed > tbody > tr > td,
+.bootstrap-scope .table-condensed > tfoot > tr > td {
+  padding: 5px;
+}
+.bootstrap-scope .table-bordered {
+  border: 1px solid #dddddd;
+}
+.bootstrap-scope .table-bordered > thead > tr > th,
+.bootstrap-scope .table-bordered > tbody > tr > th,
+.bootstrap-scope .table-bordered > tfoot > tr > th,
+.bootstrap-scope .table-bordered > thead > tr > td,
+.bootstrap-scope .table-bordered > tbody > tr > td,
+.bootstrap-scope .table-bordered > tfoot > tr > td {
+  border: 1px solid #dddddd;
+}
+.bootstrap-scope .table-bordered > thead > tr > th,
+.bootstrap-scope .table-bordered > thead > tr > td {
+  border-bottom-width: 2px;
+}
+.bootstrap-scope .table-striped > tbody > tr:nth-child(odd) > td,
+.bootstrap-scope .table-striped > tbody > tr:nth-child(odd) > th {
+  background-color: #f9f9f9;
+}
+.bootstrap-scope .table-hover > tbody > tr:hover > td,
+.bootstrap-scope .table-hover > tbody > tr:hover > th {
+  background-color: #f5f5f5;
+}
+.bootstrap-scope table col[class*="col-"] {
+  position: static;
+  float: none;
+  display: table-column;
+}
+.bootstrap-scope table td[class*="col-"],
+.bootstrap-scope table th[class*="col-"] {
+  position: static;
+  float: none;
+  display: table-cell;
+}
+.bootstrap-scope .table > thead > tr > td.active,
+.bootstrap-scope .table > tbody > tr > td.active,
+.bootstrap-scope .table > tfoot > tr > td.active,
+.bootstrap-scope .table > thead > tr > th.active,
+.bootstrap-scope .table > tbody > tr > th.active,
+.bootstrap-scope .table > tfoot > tr > th.active,
+.bootstrap-scope .table > thead > tr.active > td,
+.bootstrap-scope .table > tbody > tr.active > td,
+.bootstrap-scope .table > tfoot > tr.active > td,
+.bootstrap-scope .table > thead > tr.active > th,
+.bootstrap-scope .table > tbody > tr.active > th,
+.bootstrap-scope .table > tfoot > tr.active > th {
+  background-color: #f5f5f5;
+}
+.bootstrap-scope .table-hover > tbody > tr > td.active:hover,
+.bootstrap-scope .table-hover > tbody > tr > th.active:hover,
+.bootstrap-scope .table-hover > tbody > tr.active:hover > td,
+.bootstrap-scope .table-hover > tbody > tr:hover > .active,
+.bootstrap-scope .table-hover > tbody > tr.active:hover > th {
+  background-color: #e8e8e8;
+}
+.bootstrap-scope .table > thead > tr > td.success,
+.bootstrap-scope .table > tbody > tr > td.success,
+.bootstrap-scope .table > tfoot > tr > td.success,
+.bootstrap-scope .table > thead > tr > th.success,
+.bootstrap-scope .table > tbody > tr > th.success,
+.bootstrap-scope .table > tfoot > tr > th.success,
+.bootstrap-scope .table > thead > tr.success > td,
+.bootstrap-scope .table > tbody > tr.success > td,
+.bootstrap-scope .table > tfoot > tr.success > td,
+.bootstrap-scope .table > thead > tr.success > th,
+.bootstrap-scope .table > tbody > tr.success > th,
+.bootstrap-scope .table > tfoot > tr.success > th {
+  background-color: #dff0d8;
+}
+.bootstrap-scope .table-hover > tbody > tr > td.success:hover,
+.bootstrap-scope .table-hover > tbody > tr > th.success:hover,
+.bootstrap-scope .table-hover > tbody > tr.success:hover > td,
+.bootstrap-scope .table-hover > tbody > tr:hover > .success,
+.bootstrap-scope .table-hover > tbody > tr.success:hover > th {
+  background-color: #d0e9c6;
+}
+.bootstrap-scope .table > thead > tr > td.info,
+.bootstrap-scope .table > tbody > tr > td.info,
+.bootstrap-scope .table > tfoot > tr > td.info,
+.bootstrap-scope .table > thead > tr > th.info,
+.bootstrap-scope .table > tbody > tr > th.info,
+.bootstrap-scope .table > tfoot > tr > th.info,
+.bootstrap-scope .table > thead > tr.info > td,
+.bootstrap-scope .table > tbody > tr.info > td,
+.bootstrap-scope .table > tfoot > tr.info > td,
+.bootstrap-scope .table > thead > tr.info > th,
+.bootstrap-scope .table > tbody > tr.info > th,
+.bootstrap-scope .table > tfoot > tr.info > th {
+  background-color: #d9edf7;
+}
+.bootstrap-scope .table-hover > tbody > tr > td.info:hover,
+.bootstrap-scope .table-hover > tbody > tr > th.info:hover,
+.bootstrap-scope .table-hover > tbody > tr.info:hover > td,
+.bootstrap-scope .table-hover > tbody > tr:hover > .info,
+.bootstrap-scope .table-hover > tbody > tr.info:hover > th {
+  background-color: #c4e3f3;
+}
+.bootstrap-scope .table > thead > tr > td.warning,
+.bootstrap-scope .table > tbody > tr > td.warning,
+.bootstrap-scope .table > tfoot > tr > td.warning,
+.bootstrap-scope .table > thead > tr > th.warning,
+.bootstrap-scope .table > tbody > tr > th.warning,
+.bootstrap-scope .table > tfoot > tr > th.warning,
+.bootstrap-scope .table > thead > tr.warning > td,
+.bootstrap-scope .table > tbody > tr.warning > td,
+.bootstrap-scope .table > tfoot > tr.warning > td,
+.bootstrap-scope .table > thead > tr.warning > th,
+.bootstrap-scope .table > tbody > tr.warning > th,
+.bootstrap-scope .table > tfoot > tr.warning > th {
+  background-color: #fcf8e3;
+}
+.bootstrap-scope .table-hover > tbody > tr > td.warning:hover,
+.bootstrap-scope .table-hover > tbody > tr > th.warning:hover,
+.bootstrap-scope .table-hover > tbody > tr.warning:hover > td,
+.bootstrap-scope .table-hover > tbody > tr:hover > .warning,
+.bootstrap-scope .table-hover > tbody > tr.warning:hover > th {
+  background-color: #faf2cc;
+}
+.bootstrap-scope .table > thead > tr > td.danger,
+.bootstrap-scope .table > tbody > tr > td.danger,
+.bootstrap-scope .table > tfoot > tr > td.danger,
+.bootstrap-scope .table > thead > tr > th.danger,
+.bootstrap-scope .table > tbody > tr > th.danger,
+.bootstrap-scope .table > tfoot > tr > th.danger,
+.bootstrap-scope .table > thead > tr.danger > td,
+.bootstrap-scope .table > tbody > tr.danger > td,
+.bootstrap-scope .table > tfoot > tr.danger > td,
+.bootstrap-scope .table > thead > tr.danger > th,
+.bootstrap-scope .table > tbody > tr.danger > th,
+.bootstrap-scope .table > tfoot > tr.danger > th {
+  background-color: #f2dede;
+}
+.bootstrap-scope .table-hover > tbody > tr > td.danger:hover,
+.bootstrap-scope .table-hover > tbody > tr > th.danger:hover,
+.bootstrap-scope .table-hover > tbody > tr.danger:hover > td,
+.bootstrap-scope .table-hover > tbody > tr:hover > .danger,
+.bootstrap-scope .table-hover > tbody > tr.danger:hover > th {
+  background-color: #ebcccc;
+}
+@media screen and (max-width: 767px) {
+  .bootstrap-scope .table-responsive {
+    width: 100%;
+    margin-bottom: 15px;
+    overflow-y: hidden;
+    overflow-x: auto;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    border: 1px solid #dddddd;
+    -webkit-overflow-scrolling: touch;
+  }
+  .bootstrap-scope .table-responsive > .table {
+    margin-bottom: 0;
+  }
+  .bootstrap-scope .table-responsive > .table > thead > tr > th,
+  .bootstrap-scope .table-responsive > .table > tbody > tr > th,
+  .bootstrap-scope .table-responsive > .table > tfoot > tr > th,
+  .bootstrap-scope .table-responsive > .table > thead > tr > td,
+  .bootstrap-scope .table-responsive > .table > tbody > tr > td,
+  .bootstrap-scope .table-responsive > .table > tfoot > tr > td {
+    white-space: nowrap;
+  }
+  .bootstrap-scope .table-responsive > .table-bordered {
+    border: 0;
+  }
+  .bootstrap-scope .table-responsive > .table-bordered > thead > tr > th:first-child,
+  .bootstrap-scope .table-responsive > .table-bordered > tbody > tr > th:first-child,
+  .bootstrap-scope .table-responsive > .table-bordered > tfoot > tr > th:first-child,
+  .bootstrap-scope .table-responsive > .table-bordered > thead > tr > td:first-child,
+  .bootstrap-scope .table-responsive > .table-bordered > tbody > tr > td:first-child,
+  .bootstrap-scope .table-responsive > .table-bordered > tfoot > tr > td:first-child {
+    border-left: 0;
+  }
+  .bootstrap-scope .table-responsive > .table-bordered > thead > tr > th:last-child,
+  .bootstrap-scope .table-responsive > .table-bordered > tbody > tr > th:last-child,
+  .bootstrap-scope .table-responsive > .table-bordered > tfoot > tr > th:last-child,
+  .bootstrap-scope .table-responsive > .table-bordered > thead > tr > td:last-child,
+  .bootstrap-scope .table-responsive > .table-bordered > tbody > tr > td:last-child,
+  .bootstrap-scope .table-responsive > .table-bordered > tfoot > tr > td:last-child {
+    border-right: 0;
+  }
+  .bootstrap-scope .table-responsive > .table-bordered > tbody > tr:last-child > th,
+  .bootstrap-scope .table-responsive > .table-bordered > tfoot > tr:last-child > th,
+  .bootstrap-scope .table-responsive > .table-bordered > tbody > tr:last-child > td,
+  .bootstrap-scope .table-responsive > .table-bordered > tfoot > tr:last-child > td {
+    border-bottom: 0;
+  }
+}
+.bootstrap-scope fieldset {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  min-width: 0;
+}
+.bootstrap-scope legend {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin-bottom: 20px;
+  font-size: 21px;
+  line-height: inherit;
+  color: #333333;
+  border: 0;
+  border-bottom: 1px solid #e5e5e5;
+}
+.bootstrap-scope label {
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+.bootstrap-scope input[type="search"] {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.bootstrap-scope input[type="radio"],
+.bootstrap-scope input[type="checkbox"] {
+  margin: 4px 0 0;
+  margin-top: 1px \9;
+  line-height: normal;
+}
+.bootstrap-scope input[type="file"] {
+  display: block;
+}
+.bootstrap-scope input[type="range"] {
+  display: block;
+  width: 100%;
+}
+.bootstrap-scope select[multiple],
+.bootstrap-scope select[size] {
+  height: auto;
+}
+.bootstrap-scope input[type="file"]:focus,
+.bootstrap-scope input[type="radio"]:focus,
+.bootstrap-scope input[type="checkbox"]:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.bootstrap-scope output {
+  display: block;
+  padding-top: 7px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #555555;
+}
+.bootstrap-scope .form-control {
+  display: block;
+  width: 100%;
+  height: 34px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #555555;
+  background-color: #ffffff;
+  background-image: none;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+  -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+.bootstrap-scope .form-control:focus {
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
+.bootstrap-scope .form-control::-moz-placeholder {
+  color: #777777;
+  opacity: 1;
+}
+.bootstrap-scope .form-control:-ms-input-placeholder {
+  color: #777777;
+}
+.bootstrap-scope .form-control::-webkit-input-placeholder {
+  color: #777777;
+}
+.bootstrap-scope .form-control[disabled],
+.bootstrap-scope .form-control[readonly],
+fieldset[disabled] .bootstrap-scope .form-control {
+  cursor: not-allowed;
+  background-color: #eeeeee;
+  opacity: 1;
+}
+textarea.bootstrap-scope .form-control {
+  height: auto;
+}
+.bootstrap-scope input[type="search"] {
+  -webkit-appearance: none;
+}
+.bootstrap-scope input[type="date"],
+.bootstrap-scope input[type="time"],
+.bootstrap-scope input[type="datetime-local"],
+.bootstrap-scope input[type="month"] {
+  line-height: 34px;
+  line-height: 1.42857143 \0;
+}
+.bootstrap-scope input[type="date"].input-sm,
+.bootstrap-scope input[type="time"].input-sm,
+.bootstrap-scope input[type="datetime-local"].input-sm,
+.bootstrap-scope input[type="month"].input-sm {
+  line-height: 30px;
+}
+.bootstrap-scope input[type="date"].input-lg,
+.bootstrap-scope input[type="time"].input-lg,
+.bootstrap-scope input[type="datetime-local"].input-lg,
+.bootstrap-scope input[type="month"].input-lg {
+  line-height: 46px;
+}
+.bootstrap-scope .form-group {
+  margin-bottom: 15px;
+}
+.bootstrap-scope .radio,
+.bootstrap-scope .checkbox {
+  position: relative;
+  display: block;
+  min-height: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.bootstrap-scope .radio label,
+.bootstrap-scope .checkbox label {
+  padding-left: 20px;
+  margin-bottom: 0;
+  font-weight: normal;
+  cursor: pointer;
+}
+.bootstrap-scope .radio input[type="radio"],
+.bootstrap-scope .radio-inline input[type="radio"],
+.bootstrap-scope .checkbox input[type="checkbox"],
+.bootstrap-scope .checkbox-inline input[type="checkbox"] {
+  position: absolute;
+  margin-left: -20px;
+  margin-top: 4px \9;
+}
+.bootstrap-scope .radio + .radio,
+.bootstrap-scope .checkbox + .checkbox {
+  margin-top: -5px;
+}
+.bootstrap-scope .radio-inline,
+.bootstrap-scope .checkbox-inline {
+  display: inline-block;
+  padding-left: 20px;
+  margin-bottom: 0;
+  vertical-align: middle;
+  font-weight: normal;
+  cursor: pointer;
+}
+.bootstrap-scope .radio-inline + .radio-inline,
+.bootstrap-scope .checkbox-inline + .checkbox-inline {
+  margin-top: 0;
+  margin-left: 10px;
+}
+.bootstrap-scope input[type="radio"][disabled],
+.bootstrap-scope input[type="checkbox"][disabled],
+.bootstrap-scope input[type="radio"].disabled,
+.bootstrap-scope input[type="checkbox"].disabled,
+fieldset[disabled] .bootstrap-scope input[type="radio"],
+fieldset[disabled] .bootstrap-scope input[type="checkbox"] {
+  cursor: not-allowed;
+}
+.bootstrap-scope .radio-inline.disabled,
+.bootstrap-scope .checkbox-inline.disabled,
+fieldset[disabled] .bootstrap-scope .radio-inline,
+fieldset[disabled] .bootstrap-scope .checkbox-inline {
+  cursor: not-allowed;
+}
+.bootstrap-scope .radio.disabled label,
+.bootstrap-scope .checkbox.disabled label,
+fieldset[disabled] .bootstrap-scope .radio label,
+fieldset[disabled] .bootstrap-scope .checkbox label {
+  cursor: not-allowed;
+}
+.bootstrap-scope .form-control-static {
+  padding-top: 7px;
+  padding-bottom: 7px;
+  margin-bottom: 0;
+}
+.bootstrap-scope .form-control-static.input-lg,
+.bootstrap-scope .form-control-static.input-sm {
+  padding-left: 0;
+  padding-right: 0;
+}
+.bootstrap-scope .input-sm {
+  height: 30px;
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+select.bootstrap-scope .input-sm {
+  height: 30px;
+  line-height: 30px;
+}
+textarea.bootstrap-scope .input-sm,
+select[multiple].bootstrap-scope .input-sm {
+  height: auto;
+}
+.bootstrap-scope .input-lg {
+  height: 46px;
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.33;
+  border-radius: 6px;
+}
+select.bootstrap-scope .input-lg {
+  height: 46px;
+  line-height: 46px;
+}
+textarea.bootstrap-scope .input-lg,
+select[multiple].bootstrap-scope .input-lg {
+  height: auto;
+}
+.bootstrap-scope .has-feedback {
+  position: relative;
+}
+.bootstrap-scope .has-feedback .form-control {
+  padding-right: 42.5px;
+}
+.bootstrap-scope .form-control-feedback {
+  position: absolute;
+  top: 25px;
+  right: 0;
+  z-index: 2;
+  display: block;
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+  text-align: center;
+}
+.bootstrap-scope .input-lg + .form-control-feedback {
+  width: 46px;
+  height: 46px;
+  line-height: 46px;
+}
+.bootstrap-scope .input-sm + .form-control-feedback {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+}
+.bootstrap-scope .has-success .help-block,
+.bootstrap-scope .has-success .control-label,
+.bootstrap-scope .has-success .radio,
+.bootstrap-scope .has-success .checkbox,
+.bootstrap-scope .has-success .radio-inline,
+.bootstrap-scope .has-success .checkbox-inline {
+  color: #3c763d;
+}
+.bootstrap-scope .has-success .form-control {
+  border-color: #3c763d;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+.bootstrap-scope .has-success .form-control:focus {
+  border-color: #2b542c;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #67b168;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #67b168;
+}
+.bootstrap-scope .has-success .input-group-addon {
+  color: #3c763d;
+  border-color: #3c763d;
+  background-color: #dff0d8;
+}
+.bootstrap-scope .has-success .form-control-feedback {
+  color: #3c763d;
+}
+.bootstrap-scope .has-warning .help-block,
+.bootstrap-scope .has-warning .control-label,
+.bootstrap-scope .has-warning .radio,
+.bootstrap-scope .has-warning .checkbox,
+.bootstrap-scope .has-warning .radio-inline,
+.bootstrap-scope .has-warning .checkbox-inline {
+  color: #8a6d3b;
+}
+.bootstrap-scope .has-warning .form-control {
+  border-color: #8a6d3b;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+.bootstrap-scope .has-warning .form-control:focus {
+  border-color: #66512c;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c0a16b;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #c0a16b;
+}
+.bootstrap-scope .has-warning .input-group-addon {
+  color: #8a6d3b;
+  border-color: #8a6d3b;
+  background-color: #fcf8e3;
+}
+.bootstrap-scope .has-warning .form-control-feedback {
+  color: #8a6d3b;
+}
+.bootstrap-scope .has-error .help-block,
+.bootstrap-scope .has-error .control-label,
+.bootstrap-scope .has-error .radio,
+.bootstrap-scope .has-error .checkbox,
+.bootstrap-scope .has-error .radio-inline,
+.bootstrap-scope .has-error .checkbox-inline {
+  color: #a94442;
+}
+.bootstrap-scope .has-error .form-control {
+  border-color: #a94442;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+.bootstrap-scope .has-error .form-control:focus {
+  border-color: #843534;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #ce8483;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #ce8483;
+}
+.bootstrap-scope .has-error .input-group-addon {
+  color: #a94442;
+  border-color: #a94442;
+  background-color: #f2dede;
+}
+.bootstrap-scope .has-error .form-control-feedback {
+  color: #a94442;
+}
+.bootstrap-scope .has-feedback label.sr-only ~ .form-control-feedback {
+  top: 0;
+}
+.bootstrap-scope .help-block {
+  display: block;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  color: #737373;
+}
+@media (min-width: 768px) {
+  .bootstrap-scope .form-inline .form-group {
+    display: inline-block;
+    margin-bottom: 0;
+    vertical-align: middle;
+  }
+  .bootstrap-scope .form-inline .form-control {
+    display: inline-block;
+    width: auto;
+    vertical-align: middle;
+  }
+  .bootstrap-scope .form-inline .input-group {
+    display: inline-table;
+    vertical-align: middle;
+  }
+  .bootstrap-scope .form-inline .input-group .input-group-addon,
+  .bootstrap-scope .form-inline .input-group .input-group-btn,
+  .bootstrap-scope .form-inline .input-group .form-control {
+    width: auto;
+  }
+  .bootstrap-scope .form-inline .input-group > .form-control {
+    width: 100%;
+  }
+  .bootstrap-scope .form-inline .control-label {
+    margin-bottom: 0;
+    vertical-align: middle;
+  }
+  .bootstrap-scope .form-inline .radio,
+  .bootstrap-scope .form-inline .checkbox {
+    display: inline-block;
+    margin-top: 0;
+    margin-bottom: 0;
+    vertical-align: middle;
+  }
+  .bootstrap-scope .form-inline .radio label,
+  .bootstrap-scope .form-inline .checkbox label {
+    padding-left: 0;
+  }
+  .bootstrap-scope .form-inline .radio input[type="radio"],
+  .bootstrap-scope .form-inline .checkbox input[type="checkbox"] {
+    position: relative;
+    margin-left: 0;
+  }
+  .bootstrap-scope .form-inline .has-feedback .form-control-feedback {
+    top: 0;
+  }
+}
+.bootstrap-scope .form-horizontal .radio,
+.bootstrap-scope .form-horizontal .checkbox,
+.bootstrap-scope .form-horizontal .radio-inline,
+.bootstrap-scope .form-horizontal .checkbox-inline {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 7px;
+}
+.bootstrap-scope .form-horizontal .radio,
+.bootstrap-scope .form-horizontal .checkbox {
+  min-height: 27px;
+}
+.bootstrap-scope .form-horizontal .form-group {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+@media (min-width: 768px) {
+  .bootstrap-scope .form-horizontal .control-label {
+    text-align: right;
+    margin-bottom: 0;
+    padding-top: 7px;
+  }
+}
+.bootstrap-scope .form-horizontal .has-feedback .form-control-feedback {
+  top: 0;
+  right: 15px;
+}
+@media (min-width: 768px) {
+  .bootstrap-scope .form-horizontal .form-group-lg .control-label {
+    padding-top: 14.3px;
+  }
+}
+@media (min-width: 768px) {
+  .bootstrap-scope .form-horizontal .form-group-sm .control-label {
+    padding-top: 6px;
+  }
+}
+.bootstrap-scope .btn {
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.bootstrap-scope .btn:focus,
+.bootstrap-scope .btn:active:focus,
+.bootstrap-scope .btn.active:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.bootstrap-scope .btn:hover,
+.bootstrap-scope .btn:focus {
+  color: #333333;
+  text-decoration: none;
+}
+.bootstrap-scope .btn:active,
+.bootstrap-scope .btn.active {
+  outline: 0;
+  background-image: none;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.bootstrap-scope .btn.disabled,
+.bootstrap-scope .btn[disabled],
+fieldset[disabled] .bootstrap-scope .btn {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.bootstrap-scope .btn-default {
+  color: #333333;
+  background-color: #ffffff;
+  border-color: #cccccc;
+}
+.bootstrap-scope .btn-default:hover,
+.bootstrap-scope .btn-default:focus,
+.bootstrap-scope .btn-default:active,
+.bootstrap-scope .btn-default.active,
+.open > .dropdown-toggle.bootstrap-scope .btn-default {
+  color: #333333;
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
+.bootstrap-scope .btn-default:active,
+.bootstrap-scope .btn-default.active,
+.open > .dropdown-toggle.bootstrap-scope .btn-default {
+  background-image: none;
+}
+.bootstrap-scope .btn-default.disabled,
+.bootstrap-scope .btn-default[disabled],
+fieldset[disabled] .bootstrap-scope .btn-default,
+.bootstrap-scope .btn-default.disabled:hover,
+.bootstrap-scope .btn-default[disabled]:hover,
+fieldset[disabled] .bootstrap-scope .btn-default:hover,
+.bootstrap-scope .btn-default.disabled:focus,
+.bootstrap-scope .btn-default[disabled]:focus,
+fieldset[disabled] .bootstrap-scope .btn-default:focus,
+.bootstrap-scope .btn-default.disabled:active,
+.bootstrap-scope .btn-default[disabled]:active,
+fieldset[disabled] .bootstrap-scope .btn-default:active,
+.bootstrap-scope .btn-default.disabled.active,
+.bootstrap-scope .btn-default[disabled].active,
+fieldset[disabled] .bootstrap-scope .btn-default.active {
+  background-color: #ffffff;
+  border-color: #cccccc;
+}
+.bootstrap-scope .btn-default .badge {
+  color: #ffffff;
+  background-color: #333333;
+}
+.bootstrap-scope .btn-primary {
+  color: #ffffff;
+  background-color: #428bca;
+  border-color: #357ebd;
+}
+.bootstrap-scope .btn-primary:hover,
+.bootstrap-scope .btn-primary:focus,
+.bootstrap-scope .btn-primary:active,
+.bootstrap-scope .btn-primary.active,
+.open > .dropdown-toggle.bootstrap-scope .btn-primary {
+  color: #ffffff;
+  background-color: #3071a9;
+  border-color: #285e8e;
+}
+.bootstrap-scope .btn-primary:active,
+.bootstrap-scope .btn-primary.active,
+.open > .dropdown-toggle.bootstrap-scope .btn-primary {
+  background-image: none;
+}
+.bootstrap-scope .btn-primary.disabled,
+.bootstrap-scope .btn-primary[disabled],
+fieldset[disabled] .bootstrap-scope .btn-primary,
+.bootstrap-scope .btn-primary.disabled:hover,
+.bootstrap-scope .btn-primary[disabled]:hover,
+fieldset[disabled] .bootstrap-scope .btn-primary:hover,
+.bootstrap-scope .btn-primary.disabled:focus,
+.bootstrap-scope .btn-primary[disabled]:focus,
+fieldset[disabled] .bootstrap-scope .btn-primary:focus,
+.bootstrap-scope .btn-primary.disabled:active,
+.bootstrap-scope .btn-primary[disabled]:active,
+fieldset[disabled] .bootstrap-scope .btn-primary:active,
+.bootstrap-scope .btn-primary.disabled.active,
+.bootstrap-scope .btn-primary[disabled].active,
+fieldset[disabled] .bootstrap-scope .btn-primary.active {
+  background-color: #428bca;
+  border-color: #357ebd;
+}
+.bootstrap-scope .btn-primary .badge {
+  color: #428bca;
+  background-color: #ffffff;
+}
+.bootstrap-scope .btn-success {
+  color: #ffffff;
+  background-color: #5cb85c;
+  border-color: #4cae4c;
+}
+.bootstrap-scope .btn-success:hover,
+.bootstrap-scope .btn-success:focus,
+.bootstrap-scope .btn-success:active,
+.bootstrap-scope .btn-success.active,
+.open > .dropdown-toggle.bootstrap-scope .btn-success {
+  color: #ffffff;
+  background-color: #449d44;
+  border-color: #398439;
+}
+.bootstrap-scope .btn-success:active,
+.bootstrap-scope .btn-success.active,
+.open > .dropdown-toggle.bootstrap-scope .btn-success {
+  background-image: none;
+}
+.bootstrap-scope .btn-success.disabled,
+.bootstrap-scope .btn-success[disabled],
+fieldset[disabled] .bootstrap-scope .btn-success,
+.bootstrap-scope .btn-success.disabled:hover,
+.bootstrap-scope .btn-success[disabled]:hover,
+fieldset[disabled] .bootstrap-scope .btn-success:hover,
+.bootstrap-scope .btn-success.disabled:focus,
+.bootstrap-scope .btn-success[disabled]:focus,
+fieldset[disabled] .bootstrap-scope .btn-success:focus,
+.bootstrap-scope .btn-success.disabled:active,
+.bootstrap-scope .btn-success[disabled]:active,
+fieldset[disabled] .bootstrap-scope .btn-success:active,
+.bootstrap-scope .btn-success.disabled.active,
+.bootstrap-scope .btn-success[disabled].active,
+fieldset[disabled] .bootstrap-scope .btn-success.active {
+  background-color: #5cb85c;
+  border-color: #4cae4c;
+}
+.bootstrap-scope .btn-success .badge {
+  color: #5cb85c;
+  background-color: #ffffff;
+}
+.bootstrap-scope .btn-info {
+  color: #ffffff;
+  background-color: #5bc0de;
+  border-color: #46b8da;
+}
+.bootstrap-scope .btn-info:hover,
+.bootstrap-scope .btn-info:focus,
+.bootstrap-scope .btn-info:active,
+.bootstrap-scope .btn-info.active,
+.open > .dropdown-toggle.bootstrap-scope .btn-info {
+  color: #ffffff;
+  background-color: #31b0d5;
+  border-color: #269abc;
+}
+.bootstrap-scope .btn-info:active,
+.bootstrap-scope .btn-info.active,
+.open > .dropdown-toggle.bootstrap-scope .btn-info {
+  background-image: none;
+}
+.bootstrap-scope .btn-info.disabled,
+.bootstrap-scope .btn-info[disabled],
+fieldset[disabled] .bootstrap-scope .btn-info,
+.bootstrap-scope .btn-info.disabled:hover,
+.bootstrap-scope .btn-info[disabled]:hover,
+fieldset[disabled] .bootstrap-scope .btn-info:hover,
+.bootstrap-scope .btn-info.disabled:focus,
+.bootstrap-scope .btn-info[disabled]:focus,
+fieldset[disabled] .bootstrap-scope .btn-info:focus,
+.bootstrap-scope .btn-info.disabled:active,
+.bootstrap-scope .btn-info[disabled]:active,
+fieldset[disabled] .bootstrap-scope .btn-info:active,
+.bootstrap-scope .btn-info.disabled.active,
+.bootstrap-scope .btn-info[disabled].active,
+fieldset[disabled] .bootstrap-scope .btn-info.active {
+  background-color: #5bc0de;
+  border-color: #46b8da;
+}
+.bootstrap-scope .btn-info .badge {
+  color: #5bc0de;
+  background-color: #ffffff;
+}
+.bootstrap-scope .btn-warning {
+  color: #ffffff;
+  background-color: #f0ad4e;
+  border-color: #eea236;
+}
+.bootstrap-scope .btn-warning:hover,
+.bootstrap-scope .btn-warning:focus,
+.bootstrap-scope .btn-warning:active,
+.bootstrap-scope .btn-warning.active,
+.open > .dropdown-toggle.bootstrap-scope .btn-warning {
+  color: #ffffff;
+  background-color: #ec971f;
+  border-color: #d58512;
+}
+.bootstrap-scope .btn-warning:active,
+.bootstrap-scope .btn-warning.active,
+.open > .dropdown-toggle.bootstrap-scope .btn-warning {
+  background-image: none;
+}
+.bootstrap-scope .btn-warning.disabled,
+.bootstrap-scope .btn-warning[disabled],
+fieldset[disabled] .bootstrap-scope .btn-warning,
+.bootstrap-scope .btn-warning.disabled:hover,
+.bootstrap-scope .btn-warning[disabled]:hover,
+fieldset[disabled] .bootstrap-scope .btn-warning:hover,
+.bootstrap-scope .btn-warning.disabled:focus,
+.bootstrap-scope .btn-warning[disabled]:focus,
+fieldset[disabled] .bootstrap-scope .btn-warning:focus,
+.bootstrap-scope .btn-warning.disabled:active,
+.bootstrap-scope .btn-warning[disabled]:active,
+fieldset[disabled] .bootstrap-scope .btn-warning:active,
+.bootstrap-scope .btn-warning.disabled.active,
+.bootstrap-scope .btn-warning[disabled].active,
+fieldset[disabled] .bootstrap-scope .btn-warning.active {
+  background-color: #f0ad4e;
+  border-color: #eea236;
+}
+.bootstrap-scope .btn-warning .badge {
+  color: #f0ad4e;
+  background-color: #ffffff;
+}
+.bootstrap-scope .btn-danger {
+  color: #ffffff;
+  background-color: #d9534f;
+  border-color: #d43f3a;
+}
+.bootstrap-scope .btn-danger:hover,
+.bootstrap-scope .btn-danger:focus,
+.bootstrap-scope .btn-danger:active,
+.bootstrap-scope .btn-danger.active,
+.open > .dropdown-toggle.bootstrap-scope .btn-danger {
+  color: #ffffff;
+  background-color: #c9302c;
+  border-color: #ac2925;
+}
+.bootstrap-scope .btn-danger:active,
+.bootstrap-scope .btn-danger.active,
+.open > .dropdown-toggle.bootstrap-scope .btn-danger {
+  background-image: none;
+}
+.bootstrap-scope .btn-danger.disabled,
+.bootstrap-scope .btn-danger[disabled],
+fieldset[disabled] .bootstrap-scope .btn-danger,
+.bootstrap-scope .btn-danger.disabled:hover,
+.bootstrap-scope .btn-danger[disabled]:hover,
+fieldset[disabled] .bootstrap-scope .btn-danger:hover,
+.bootstrap-scope .btn-danger.disabled:focus,
+.bootstrap-scope .btn-danger[disabled]:focus,
+fieldset[disabled] .bootstrap-scope .btn-danger:focus,
+.bootstrap-scope .btn-danger.disabled:active,
+.bootstrap-scope .btn-danger[disabled]:active,
+fieldset[disabled] .bootstrap-scope .btn-danger:active,
+.bootstrap-scope .btn-danger.disabled.active,
+.bootstrap-scope .btn-danger[disabled].active,
+fieldset[disabled] .bootstrap-scope .btn-danger.active {
+  background-color: #d9534f;
+  border-color: #d43f3a;
+}
+.bootstrap-scope .btn-danger .badge {
+  color: #d9534f;
+  background-color: #ffffff;
+}
+.bootstrap-scope .btn-link {
+  color: #428bca;
+  font-weight: normal;
+  cursor: pointer;
+  border-radius: 0;
+}
+.bootstrap-scope .btn-link,
+.bootstrap-scope .btn-link:active,
+.bootstrap-scope .btn-link[disabled],
+fieldset[disabled] .bootstrap-scope .btn-link {
+  background-color: transparent;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.bootstrap-scope .btn-link,
+.bootstrap-scope .btn-link:hover,
+.bootstrap-scope .btn-link:focus,
+.bootstrap-scope .btn-link:active {
+  border-color: transparent;
+}
+.bootstrap-scope .btn-link:hover,
+.bootstrap-scope .btn-link:focus {
+  color: #2a6496;
+  text-decoration: underline;
+  background-color: transparent;
+}
+.bootstrap-scope .btn-link[disabled]:hover,
+fieldset[disabled] .bootstrap-scope .btn-link:hover,
+.bootstrap-scope .btn-link[disabled]:focus,
+fieldset[disabled] .bootstrap-scope .btn-link:focus {
+  color: #777777;
+  text-decoration: none;
+}
+.bootstrap-scope .btn-lg {
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.33;
+  border-radius: 6px;
+}
+.bootstrap-scope .btn-sm {
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+.bootstrap-scope .btn-xs {
+  padding: 1px 5px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+.bootstrap-scope .btn-block {
+  display: block;
+  width: 100%;
+}
+.bootstrap-scope .btn-block + .btn-block {
+  margin-top: 5px;
+}
+.bootstrap-scope input[type="submit"].btn-block,
+.bootstrap-scope input[type="reset"].btn-block,
+.bootstrap-scope input[type="button"].btn-block {
+  width: 100%;
+}
+.bootstrap-scope .fade {
+  opacity: 0;
+  -webkit-transition: opacity 0.15s linear;
+  -o-transition: opacity 0.15s linear;
+  transition: opacity 0.15s linear;
+}
+.bootstrap-scope .fade.in {
+  opacity: 1;
+}
+.bootstrap-scope .collapse {
+  display: none;
+}
+.bootstrap-scope .collapse.in {
+  display: block;
+}
+tr.bootstrap-scope .collapse.in {
+  display: table-row;
+}
+tbody.bootstrap-scope .collapse.in {
+  display: table-row-group;
+}
+.bootstrap-scope .collapsing {
+  position: relative;
+  height: 0;
+  overflow: hidden;
+  -webkit-transition: height 0.35s ease;
+  -o-transition: height 0.35s ease;
+  transition: height 0.35s ease;
+}
 .bootstrap-scope .caret {
   display: inline-block;
   width: 0;
@@ -2898,7 +3109,7 @@ fieldset[disabled] .bootstrap-scope .btn-link:focus {
 .bootstrap-scope .dropdown-toggle:focus {
   outline: 0;
 }
-.bootstrap-scope.dropdown-menu {
+.bootstrap-scope .dropdown-menu {
   position: absolute;
   top: 100%;
   left: 0;
@@ -2910,6 +3121,7 @@ fieldset[disabled] .bootstrap-scope .btn-link:focus {
   margin: 2px 0 0;
   list-style: none;
   font-size: 14px;
+  text-align: left;
   background-color: #ffffff;
   border: 1px solid #cccccc;
   border: 1px solid rgba(0, 0, 0, 0.15);
@@ -2954,7 +3166,7 @@ fieldset[disabled] .bootstrap-scope .btn-link:focus {
 .bootstrap-scope .dropdown-menu > .disabled > a,
 .bootstrap-scope .dropdown-menu > .disabled > a:hover,
 .bootstrap-scope .dropdown-menu > .disabled > a:focus {
-  color: #999999;
+  color: #777777;
 }
 .bootstrap-scope .dropdown-menu > .disabled > a:hover,
 .bootstrap-scope .dropdown-menu > .disabled > a:focus {
@@ -2970,12 +3182,21 @@ fieldset[disabled] .bootstrap-scope .btn-link:focus {
 .bootstrap-scope .open > a {
   outline: 0;
 }
+.bootstrap-scope .dropdown-menu-right {
+  left: auto;
+  right: 0;
+}
+.bootstrap-scope .dropdown-menu-left {
+  left: 0;
+  right: auto;
+}
 .bootstrap-scope .dropdown-header {
   display: block;
   padding: 3px 20px;
   font-size: 12px;
   line-height: 1.42857143;
-  color: #999999;
+  color: #777777;
+  white-space: nowrap;
 }
 .bootstrap-scope .dropdown-backdrop {
   position: fixed;
@@ -3003,8 +3224,12 @@ fieldset[disabled] .bootstrap-scope .btn-link:focus {
 }
 @media (min-width: 768px) {
   .bootstrap-scope .navbar-right .dropdown-menu {
-    right: 0;
     left: auto;
+    right: 0;
+  }
+  .bootstrap-scope .navbar-right .dropdown-menu-left {
+    left: 0;
+    right: auto;
   }
 }
 .bootstrap-scope .btn-group,
@@ -3030,7 +3255,7 @@ fieldset[disabled] .bootstrap-scope .btn-link:focus {
 }
 .bootstrap-scope .btn-group > .btn:focus,
 .bootstrap-scope .btn-group-vertical > .btn:focus {
-  outline: none;
+  outline: 0;
 }
 .bootstrap-scope .btn-group .btn + .btn,
 .bootstrap-scope .btn-group .btn + .btn-group,
@@ -3038,29 +3263,16 @@ fieldset[disabled] .bootstrap-scope .btn-link:focus {
 .bootstrap-scope .btn-group .btn-group + .btn-group {
   margin-left: -1px;
 }
-.bootstrap-scope .btn-toolbar:before,
-.bootstrap-scope .btn-toolbar:after {
-  content: " ";
-  display: table;
+.bootstrap-scope .btn-toolbar {
+  margin-left: -5px;
 }
-.bootstrap-scope .btn-toolbar:after {
-  clear: both;
-}
-.bootstrap-scope .btn-toolbar:before,
-.bootstrap-scope .btn-toolbar:after {
-  content: " ";
-  display: table;
-}
-.bootstrap-scope .btn-toolbar:after {
-  clear: both;
-}
-.bootstrap-scope .btn-toolbar .btn-group {
+.bootstrap-scope .btn-toolbar .btn-group,
+.bootstrap-scope .btn-toolbar .input-group {
   float: left;
 }
-.bootstrap-scope .btn-toolbar > .btn + .btn,
-.bootstrap-scope .btn-toolbar > .btn-group + .btn,
-.bootstrap-scope .btn-toolbar > .btn + .btn-group,
-.bootstrap-scope .btn-toolbar > .btn-group + .btn-group {
+.bootstrap-scope .btn-toolbar > .btn,
+.bootstrap-scope .btn-toolbar > .btn-group,
+.bootstrap-scope .btn-toolbar > .input-group {
   margin-left: 5px;
 }
 .bootstrap-scope .btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
@@ -3097,24 +3309,6 @@ fieldset[disabled] .bootstrap-scope .btn-link:focus {
 .bootstrap-scope .btn-group.open .dropdown-toggle {
   outline: 0;
 }
-.bootstrap-scope .btn-group-xs > .btn {
-  padding: 1px 5px;
-  font-size: 12px;
-  line-height: 1.5;
-  border-radius: 3px;
-}
-.bootstrap-scope .btn-group-sm > .btn {
-  padding: 5px 10px;
-  font-size: 12px;
-  line-height: 1.5;
-  border-radius: 3px;
-}
-.bootstrap-scope .btn-group-lg > .btn {
-  padding: 10px 16px;
-  font-size: 18px;
-  line-height: 1.33;
-  border-radius: 6px;
-}
 .bootstrap-scope .btn-group > .btn + .dropdown-toggle {
   padding-left: 8px;
   padding-right: 8px;
@@ -3149,22 +3343,6 @@ fieldset[disabled] .bootstrap-scope .btn-link:focus {
   width: 100%;
   max-width: 100%;
 }
-.bootstrap-scope .btn-group-vertical > .btn-group:before,
-.bootstrap-scope .btn-group-vertical > .btn-group:after {
-  content: " ";
-  display: table;
-}
-.bootstrap-scope .btn-group-vertical > .btn-group:after {
-  clear: both;
-}
-.bootstrap-scope .btn-group-vertical > .btn-group:before,
-.bootstrap-scope .btn-group-vertical > .btn-group:after {
-  content: " ";
-  display: table;
-}
-.bootstrap-scope .btn-group-vertical > .btn-group:after {
-  clear: both;
-}
 .bootstrap-scope .btn-group-vertical > .btn-group > .btn {
   float: none;
 }
@@ -3191,12 +3369,12 @@ fieldset[disabled] .bootstrap-scope .btn-link:focus {
 .bootstrap-scope .btn-group-vertical > .btn-group:not(:first-child):not(:last-child) > .btn {
   border-radius: 0;
 }
-.bootstrap-scope .btn-group-vertical > .btn-group:first-child > .btn:last-child,
-.bootstrap-scope .btn-group-vertical > .btn-group:first-child > .dropdown-toggle {
+.bootstrap-scope .btn-group-vertical > .btn-group:first-child:not(:last-child) > .btn:last-child,
+.bootstrap-scope .btn-group-vertical > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
-.bootstrap-scope .btn-group-vertical > .btn-group:last-child > .btn:first-child {
+.bootstrap-scope .btn-group-vertical > .btn-group:last-child:not(:first-child) > .btn:first-child {
   border-top-right-radius: 0;
   border-top-left-radius: 0;
 }
@@ -3215,9 +3393,15 @@ fieldset[disabled] .bootstrap-scope .btn-link:focus {
 .bootstrap-scope .btn-group-justified > .btn-group .btn {
   width: 100%;
 }
+.bootstrap-scope .btn-group-justified > .btn-group .dropdown-menu {
+  left: auto;
+}
 .bootstrap-scope [data-toggle="buttons"] > .btn > input[type="radio"],
 .bootstrap-scope [data-toggle="buttons"] > .btn > input[type="checkbox"] {
-  display: none;
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+  filter: alpha(opacity=0);
 }
 .bootstrap-scope .input-group {
   position: relative;
@@ -3230,6 +3414,9 @@ fieldset[disabled] .bootstrap-scope .btn-link:focus {
   padding-right: 0;
 }
 .bootstrap-scope .input-group .form-control {
+  position: relative;
+  z-index: 2;
+  float: left;
   width: 100%;
   margin-bottom: 0;
 }
@@ -3250,7 +3437,10 @@ select.bootstrap-scope .input-group-lg > .input-group-btn > .btn {
 }
 textarea.bootstrap-scope .input-group-lg > .form-control,
 textarea.bootstrap-scope .input-group-lg > .input-group-addon,
-textarea.bootstrap-scope .input-group-lg > .input-group-btn > .btn {
+textarea.bootstrap-scope .input-group-lg > .input-group-btn > .btn,
+select[multiple].bootstrap-scope .input-group-lg > .form-control,
+select[multiple].bootstrap-scope .input-group-lg > .input-group-addon,
+select[multiple].bootstrap-scope .input-group-lg > .input-group-btn > .btn {
   height: auto;
 }
 .bootstrap-scope .input-group-sm > .form-control,
@@ -3270,7 +3460,10 @@ select.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
 }
 textarea.bootstrap-scope .input-group-sm > .form-control,
 textarea.bootstrap-scope .input-group-sm > .input-group-addon,
-textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
+textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn,
+select[multiple].bootstrap-scope .input-group-sm > .form-control,
+select[multiple].bootstrap-scope .input-group-sm > .input-group-addon,
+select[multiple].bootstrap-scope .input-group-sm > .input-group-btn > .btn {
   height: auto;
 }
 .bootstrap-scope .input-group-addon,
@@ -3317,8 +3510,10 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
 .bootstrap-scope .input-group .form-control:first-child,
 .bootstrap-scope .input-group-addon:first-child,
 .bootstrap-scope .input-group-btn:first-child > .btn,
+.bootstrap-scope .input-group-btn:first-child > .btn-group > .btn,
 .bootstrap-scope .input-group-btn:first-child > .dropdown-toggle,
-.bootstrap-scope .input-group-btn:last-child > .btn:not(:last-child):not(.dropdown-toggle) {
+.bootstrap-scope .input-group-btn:last-child > .btn:not(:last-child):not(.dropdown-toggle),
+.bootstrap-scope .input-group-btn:last-child > .btn-group:not(:last-child) > .btn {
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
 }
@@ -3328,8 +3523,10 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
 .bootstrap-scope .input-group .form-control:last-child,
 .bootstrap-scope .input-group-addon:last-child,
 .bootstrap-scope .input-group-btn:last-child > .btn,
+.bootstrap-scope .input-group-btn:last-child > .btn-group > .btn,
 .bootstrap-scope .input-group-btn:last-child > .dropdown-toggle,
-.bootstrap-scope .input-group-btn:first-child > .btn:not(:first-child) {
+.bootstrap-scope .input-group-btn:first-child > .btn:not(:first-child),
+.bootstrap-scope .input-group-btn:first-child > .btn-group:not(:first-child) > .btn {
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
 }
@@ -3338,44 +3535,32 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
 }
 .bootstrap-scope .input-group-btn {
   position: relative;
+  font-size: 0;
   white-space: nowrap;
-}
-.bootstrap-scope .input-group-btn:first-child > .btn {
-  margin-right: -1px;
-}
-.bootstrap-scope .input-group-btn:last-child > .btn {
-  margin-left: -1px;
 }
 .bootstrap-scope .input-group-btn > .btn {
   position: relative;
 }
 .bootstrap-scope .input-group-btn > .btn + .btn {
-  margin-left: -4px;
+  margin-left: -1px;
 }
 .bootstrap-scope .input-group-btn > .btn:hover,
+.bootstrap-scope .input-group-btn > .btn:focus,
 .bootstrap-scope .input-group-btn > .btn:active {
   z-index: 2;
+}
+.bootstrap-scope .input-group-btn:first-child > .btn,
+.bootstrap-scope .input-group-btn:first-child > .btn-group {
+  margin-right: -1px;
+}
+.bootstrap-scope .input-group-btn:last-child > .btn,
+.bootstrap-scope .input-group-btn:last-child > .btn-group {
+  margin-left: -1px;
 }
 .bootstrap-scope .nav {
   margin-bottom: 0;
   padding-left: 0;
   list-style: none;
-}
-.bootstrap-scope .nav:before,
-.bootstrap-scope .nav:after {
-  content: " ";
-  display: table;
-}
-.bootstrap-scope .nav:after {
-  clear: both;
-}
-.bootstrap-scope .nav:before,
-.bootstrap-scope .nav:after {
-  content: " ";
-  display: table;
-}
-.bootstrap-scope .nav:after {
-  clear: both;
 }
 .bootstrap-scope .nav > li {
   position: relative;
@@ -3392,11 +3577,11 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
   background-color: #eeeeee;
 }
 .bootstrap-scope .nav > li.disabled > a {
-  color: #999999;
+  color: #777777;
 }
 .bootstrap-scope .nav > li.disabled > a:hover,
 .bootstrap-scope .nav > li.disabled > a:focus {
-  color: #999999;
+  color: #777777;
   text-decoration: none;
   background-color: transparent;
   cursor: not-allowed;
@@ -3570,42 +3755,10 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
   margin-bottom: 20px;
   border: 1px solid transparent;
 }
-.bootstrap-scope .navbar:before,
-.bootstrap-scope .navbar:after {
-  content: " ";
-  display: table;
-}
-.bootstrap-scope .navbar:after {
-  clear: both;
-}
-.bootstrap-scope .navbar:before,
-.bootstrap-scope .navbar:after {
-  content: " ";
-  display: table;
-}
-.bootstrap-scope .navbar:after {
-  clear: both;
-}
 @media (min-width: 768px) {
   .bootstrap-scope .navbar {
     border-radius: 4px;
   }
-}
-.bootstrap-scope .navbar-header:before,
-.bootstrap-scope .navbar-header:after {
-  content: " ";
-  display: table;
-}
-.bootstrap-scope .navbar-header:after {
-  clear: both;
-}
-.bootstrap-scope .navbar-header:before,
-.bootstrap-scope .navbar-header:after {
-  content: " ";
-  display: table;
-}
-.bootstrap-scope .navbar-header:after {
-  clear: both;
 }
 @media (min-width: 768px) {
   .bootstrap-scope .navbar-header {
@@ -3613,29 +3766,12 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
   }
 }
 .bootstrap-scope .navbar-collapse {
-  max-height: 340px;
   overflow-x: visible;
   padding-right: 15px;
   padding-left: 15px;
   border-top: 1px solid transparent;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
   -webkit-overflow-scrolling: touch;
-}
-.bootstrap-scope .navbar-collapse:before,
-.bootstrap-scope .navbar-collapse:after {
-  content: " ";
-  display: table;
-}
-.bootstrap-scope .navbar-collapse:after {
-  clear: both;
-}
-.bootstrap-scope .navbar-collapse:before,
-.bootstrap-scope .navbar-collapse:after {
-  content: " ";
-  display: table;
-}
-.bootstrap-scope .navbar-collapse:after {
-  clear: both;
 }
 .bootstrap-scope .navbar-collapse.in {
   overflow-y: auto;
@@ -3662,14 +3798,28 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
     padding-right: 0;
   }
 }
+.bootstrap-scope .navbar-fixed-top .navbar-collapse,
+.bootstrap-scope .navbar-fixed-bottom .navbar-collapse {
+  max-height: 340px;
+}
+@media (max-width: 480px) and (orientation: landscape) {
+  .bootstrap-scope .navbar-fixed-top .navbar-collapse,
+  .bootstrap-scope .navbar-fixed-bottom .navbar-collapse {
+    max-height: 200px;
+  }
+}
 .bootstrap-scope .container > .navbar-header,
-.bootstrap-scope .container > .navbar-collapse {
+.bootstrap-scope .container-fluid > .navbar-header,
+.bootstrap-scope .container > .navbar-collapse,
+.bootstrap-scope .container-fluid > .navbar-collapse {
   margin-right: -15px;
   margin-left: -15px;
 }
 @media (min-width: 768px) {
   .bootstrap-scope .container > .navbar-header,
-  .bootstrap-scope .container > .navbar-collapse {
+  .bootstrap-scope .container-fluid > .navbar-header,
+  .bootstrap-scope .container > .navbar-collapse,
+  .bootstrap-scope .container-fluid > .navbar-collapse {
     margin-right: 0;
     margin-left: 0;
   }
@@ -3689,6 +3839,8 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
   right: 0;
   left: 0;
   z-index: 1030;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
 }
 @media (min-width: 768px) {
   .bootstrap-scope .navbar-fixed-top,
@@ -3710,13 +3862,15 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
   padding: 15px 15px;
   font-size: 18px;
   line-height: 20px;
+  height: 50px;
 }
 .bootstrap-scope .navbar-brand:hover,
 .bootstrap-scope .navbar-brand:focus {
   text-decoration: none;
 }
 @media (min-width: 768px) {
-  .navbar > .container .bootstrap-scope .navbar-brand {
+  .navbar > .container .bootstrap-scope .navbar-brand,
+  .navbar > .container-fluid .bootstrap-scope .navbar-brand {
     margin-left: -15px;
   }
 }
@@ -3731,6 +3885,9 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
   background-image: none;
   border: 1px solid transparent;
   border-radius: 4px;
+}
+.bootstrap-scope .navbar-toggle:focus {
+  outline: 0;
 }
 .bootstrap-scope .navbar-toggle .icon-bar {
   display: block;
@@ -3819,21 +3976,43 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
   }
   .bootstrap-scope .navbar-form .form-control {
     display: inline-block;
-  }
-  .bootstrap-scope .navbar-form select.form-control {
     width: auto;
+    vertical-align: middle;
+  }
+  .bootstrap-scope .navbar-form .input-group {
+    display: inline-table;
+    vertical-align: middle;
+  }
+  .bootstrap-scope .navbar-form .input-group .input-group-addon,
+  .bootstrap-scope .navbar-form .input-group .input-group-btn,
+  .bootstrap-scope .navbar-form .input-group .form-control {
+    width: auto;
+  }
+  .bootstrap-scope .navbar-form .input-group > .form-control {
+    width: 100%;
+  }
+  .bootstrap-scope .navbar-form .control-label {
+    margin-bottom: 0;
+    vertical-align: middle;
   }
   .bootstrap-scope .navbar-form .radio,
   .bootstrap-scope .navbar-form .checkbox {
     display: inline-block;
     margin-top: 0;
     margin-bottom: 0;
+    vertical-align: middle;
+  }
+  .bootstrap-scope .navbar-form .radio label,
+  .bootstrap-scope .navbar-form .checkbox label {
     padding-left: 0;
   }
   .bootstrap-scope .navbar-form .radio input[type="radio"],
   .bootstrap-scope .navbar-form .checkbox input[type="checkbox"] {
-    float: none;
+    position: relative;
     margin-left: 0;
+  }
+  .bootstrap-scope .navbar-form .has-feedback .form-control-feedback {
+    top: 0;
   }
 }
 @media (max-width: 767px) {
@@ -3864,11 +4043,6 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
 .bootstrap-scope .navbar-fixed-bottom .navbar-nav > li > .dropdown-menu {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
-}
-.bootstrap-scope .navbar-nav.pull-right > li > .dropdown-menu,
-.bootstrap-scope .navbar-nav > li > .dropdown-menu.pull-right {
-  left: auto;
-  right: 0;
 }
 .bootstrap-scope .navbar-btn {
   margin-top: 8px;
@@ -3939,7 +4113,7 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
   background-color: #dddddd;
 }
 .bootstrap-scope .navbar-default .navbar-toggle .icon-bar {
-  background-color: #cccccc;
+  background-color: #888888;
 }
 .bootstrap-scope .navbar-default .navbar-collapse,
 .bootstrap-scope .navbar-default .navbar-form {
@@ -3979,12 +4153,25 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
 .bootstrap-scope .navbar-default .navbar-link:hover {
   color: #333333;
 }
+.bootstrap-scope .navbar-default .btn-link {
+  color: #777777;
+}
+.bootstrap-scope .navbar-default .btn-link:hover,
+.bootstrap-scope .navbar-default .btn-link:focus {
+  color: #333333;
+}
+.bootstrap-scope .navbar-default .btn-link[disabled]:hover,
+fieldset[disabled] .bootstrap-scope .navbar-default .btn-link:hover,
+.bootstrap-scope .navbar-default .btn-link[disabled]:focus,
+fieldset[disabled] .bootstrap-scope .navbar-default .btn-link:focus {
+  color: #cccccc;
+}
 .bootstrap-scope .navbar-inverse {
   background-color: #222222;
   border-color: #080808;
 }
 .bootstrap-scope .navbar-inverse .navbar-brand {
-  color: #999999;
+  color: #777777;
 }
 .bootstrap-scope .navbar-inverse .navbar-brand:hover,
 .bootstrap-scope .navbar-inverse .navbar-brand:focus {
@@ -3992,10 +4179,10 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
   background-color: transparent;
 }
 .bootstrap-scope .navbar-inverse .navbar-text {
-  color: #999999;
+  color: #777777;
 }
 .bootstrap-scope .navbar-inverse .navbar-nav > li > a {
-  color: #999999;
+  color: #777777;
 }
 .bootstrap-scope .navbar-inverse .navbar-nav > li > a:hover,
 .bootstrap-scope .navbar-inverse .navbar-nav > li > a:focus {
@@ -4042,7 +4229,7 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
     background-color: #080808;
   }
   .bootstrap-scope .navbar-inverse .navbar-nav .open .dropdown-menu > li > a {
-    color: #999999;
+    color: #777777;
   }
   .bootstrap-scope .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:hover,
   .bootstrap-scope .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:focus {
@@ -4063,10 +4250,23 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
   }
 }
 .bootstrap-scope .navbar-inverse .navbar-link {
-  color: #999999;
+  color: #777777;
 }
 .bootstrap-scope .navbar-inverse .navbar-link:hover {
   color: #ffffff;
+}
+.bootstrap-scope .navbar-inverse .btn-link {
+  color: #777777;
+}
+.bootstrap-scope .navbar-inverse .btn-link:hover,
+.bootstrap-scope .navbar-inverse .btn-link:focus {
+  color: #ffffff;
+}
+.bootstrap-scope .navbar-inverse .btn-link[disabled]:hover,
+fieldset[disabled] .bootstrap-scope .navbar-inverse .btn-link:hover,
+.bootstrap-scope .navbar-inverse .btn-link[disabled]:focus,
+fieldset[disabled] .bootstrap-scope .navbar-inverse .btn-link:focus {
+  color: #444444;
 }
 .bootstrap-scope .breadcrumb {
   padding: 8px 15px;
@@ -4084,7 +4284,7 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
   color: #cccccc;
 }
 .bootstrap-scope .breadcrumb > .active {
-  color: #999999;
+  color: #777777;
 }
 .bootstrap-scope .pagination {
   display: inline-block;
@@ -4102,6 +4302,7 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
   padding: 6px 12px;
   line-height: 1.42857143;
   text-decoration: none;
+  color: #428bca;
   background-color: #ffffff;
   border: 1px solid #dddddd;
   margin-left: -1px;
@@ -4121,7 +4322,9 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
 .bootstrap-scope .pagination > li > span:hover,
 .bootstrap-scope .pagination > li > a:focus,
 .bootstrap-scope .pagination > li > span:focus {
+  color: #2a6496;
   background-color: #eeeeee;
+  border-color: #dddddd;
 }
 .bootstrap-scope .pagination > .active > a,
 .bootstrap-scope .pagination > .active > span,
@@ -4141,7 +4344,7 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
 .bootstrap-scope .pagination > .disabled > a,
 .bootstrap-scope .pagination > .disabled > a:hover,
 .bootstrap-scope .pagination > .disabled > a:focus {
-  color: #999999;
+  color: #777777;
   background-color: #ffffff;
   border-color: #dddddd;
   cursor: not-allowed;
@@ -4182,22 +4385,6 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
   list-style: none;
   text-align: center;
 }
-.bootstrap-scope .pager:before,
-.bootstrap-scope .pager:after {
-  content: " ";
-  display: table;
-}
-.bootstrap-scope .pager:after {
-  clear: both;
-}
-.bootstrap-scope .pager:before,
-.bootstrap-scope .pager:after {
-  content: " ";
-  display: table;
-}
-.bootstrap-scope .pager:after {
-  clear: both;
-}
 .bootstrap-scope .pager li {
   display: inline;
 }
@@ -4226,7 +4413,7 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
 .bootstrap-scope .pager .disabled > a:hover,
 .bootstrap-scope .pager .disabled > a:focus,
 .bootstrap-scope .pager .disabled > span {
-  color: #999999;
+  color: #777777;
   background-color: #ffffff;
   cursor: not-allowed;
 }
@@ -4242,8 +4429,8 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
   vertical-align: baseline;
   border-radius: .25em;
 }
-.bootstrap-scope .label[href]:hover,
-.bootstrap-scope .label[href]:focus {
+a.bootstrap-scope .label:hover,
+a.bootstrap-scope .label:focus {
   color: #ffffff;
   text-decoration: none;
   cursor: pointer;
@@ -4256,11 +4443,11 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
   top: -1px;
 }
 .bootstrap-scope .label-default {
-  background-color: #999999;
+  background-color: #777777;
 }
 .bootstrap-scope .label-default[href]:hover,
 .bootstrap-scope .label-default[href]:focus {
-  background-color: #808080;
+  background-color: #5e5e5e;
 }
 .bootstrap-scope .label-primary {
   background-color: #428bca;
@@ -4308,7 +4495,7 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
   vertical-align: baseline;
   white-space: nowrap;
   text-align: center;
-  background-color: #999999;
+  background-color: #777777;
   border-radius: 10px;
 }
 .bootstrap-scope .badge:empty {
@@ -4318,36 +4505,41 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
   position: relative;
   top: -1px;
 }
-.bootstrap-scope a.badge:hover,
-.bootstrap-scope a.badge:focus {
+.btn-xs .bootstrap-scope .badge {
+  top: 0;
+  padding: 1px 5px;
+}
+a.bootstrap-scope .badge:hover,
+a.bootstrap-scope .badge:focus {
   color: #ffffff;
   text-decoration: none;
   cursor: pointer;
 }
-.bootstrap-scope a.list-group-item.active > .badge,
-.bootstrap-scope .nav-pills > .active > a > .badge {
+a.list-group-item.active > .bootstrap-scope .badge,
+.nav-pills > .active > a > .bootstrap-scope .badge {
   color: #428bca;
   background-color: #ffffff;
 }
-.bootstrap-scope .nav-pills > li > a > .badge {
+.nav-pills > li > a > .bootstrap-scope .badge {
   margin-left: 3px;
 }
 .bootstrap-scope .jumbotron {
   padding: 30px;
   margin-bottom: 30px;
-  font-size: 21px;
-  font-weight: 200;
-  line-height: 2.14285714;
   color: inherit;
   background-color: #eeeeee;
 }
 .bootstrap-scope .jumbotron h1,
 .bootstrap-scope .jumbotron .h1 {
-  line-height: 1;
   color: inherit;
 }
 .bootstrap-scope .jumbotron p {
-  line-height: 1.4;
+  margin-bottom: 15px;
+  font-size: 21px;
+  font-weight: 200;
+}
+.bootstrap-scope .jumbotron > hr {
+  border-top-color: #d5d5d5;
 }
 .container .bootstrap-scope .jumbotron {
   border-radius: 6px;
@@ -4378,13 +4570,11 @@ textarea.bootstrap-scope .input-group-sm > .input-group-btn > .btn {
   border: 1px solid #dddddd;
   border-radius: 4px;
   -webkit-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
 }
 .bootstrap-scope .thumbnail > img,
 .bootstrap-scope .thumbnail a > img {
-  display: block;
-  max-width: 100%;
-  height: auto;
   margin-left: auto;
   margin-right: auto;
 }
@@ -4417,10 +4607,12 @@ a.bootstrap-scope .thumbnail.active {
 .bootstrap-scope .alert > p + p {
   margin-top: 5px;
 }
-.bootstrap-scope .alert-dismissable {
+.bootstrap-scope .alert-dismissable,
+.bootstrap-scope .alert-dismissible {
   padding-right: 35px;
 }
-.bootstrap-scope .alert-dismissable .close {
+.bootstrap-scope .alert-dismissable .close,
+.bootstrap-scope .alert-dismissible .close {
   position: relative;
   top: -2px;
   right: -21px;
@@ -4507,22 +4699,39 @@ a.bootstrap-scope .thumbnail.active {
   -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
   -webkit-transition: width 0.6s ease;
+  -o-transition: width 0.6s ease;
   transition: width 0.6s ease;
 }
-.bootstrap-scope .progress-striped .progress-bar {
+.bootstrap-scope .progress-striped .progress-bar,
+.bootstrap-scope .progress-bar-striped {
   background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
   background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
   background-size: 40px 40px;
 }
-.bootstrap-scope .progress.active .progress-bar {
+.bootstrap-scope .progress.active .progress-bar,
+.bootstrap-scope .progress-bar.active {
   -webkit-animation: progress-bar-stripes 2s linear infinite;
+  -o-animation: progress-bar-stripes 2s linear infinite;
   animation: progress-bar-stripes 2s linear infinite;
+}
+.bootstrap-scope .progress-bar[aria-valuenow="1"],
+.bootstrap-scope .progress-bar[aria-valuenow="2"] {
+  min-width: 30px;
+}
+.bootstrap-scope .progress-bar[aria-valuenow="0"] {
+  color: #777777;
+  min-width: 30px;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
 }
 .bootstrap-scope .progress-bar-success {
   background-color: #5cb85c;
 }
 .progress-striped .bootstrap-scope .progress-bar-success {
   background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
   background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
 }
 .bootstrap-scope .progress-bar-info {
@@ -4530,6 +4739,7 @@ a.bootstrap-scope .thumbnail.active {
 }
 .progress-striped .bootstrap-scope .progress-bar-info {
   background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
   background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
 }
 .bootstrap-scope .progress-bar-warning {
@@ -4537,6 +4747,7 @@ a.bootstrap-scope .thumbnail.active {
 }
 .progress-striped .bootstrap-scope .progress-bar-warning {
   background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
   background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
 }
 .bootstrap-scope .progress-bar-danger {
@@ -4544,6 +4755,7 @@ a.bootstrap-scope .thumbnail.active {
 }
 .progress-striped .bootstrap-scope .progress-bar-danger {
   background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
   background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
 }
 .bootstrap-scope .media,
@@ -4610,25 +4822,136 @@ a.bootstrap-scope .thumbnail.active {
 .bootstrap-scope a.list-group-item:hover,
 .bootstrap-scope a.list-group-item:focus {
   text-decoration: none;
+  color: #555555;
   background-color: #f5f5f5;
 }
-.bootstrap-scope a.list-group-item.active,
-.bootstrap-scope a.list-group-item.active:hover,
-.bootstrap-scope a.list-group-item.active:focus {
+.bootstrap-scope .list-group-item.disabled,
+.bootstrap-scope .list-group-item.disabled:hover,
+.bootstrap-scope .list-group-item.disabled:focus {
+  background-color: #eeeeee;
+  color: #777777;
+}
+.bootstrap-scope .list-group-item.disabled .list-group-item-heading,
+.bootstrap-scope .list-group-item.disabled:hover .list-group-item-heading,
+.bootstrap-scope .list-group-item.disabled:focus .list-group-item-heading {
+  color: inherit;
+}
+.bootstrap-scope .list-group-item.disabled .list-group-item-text,
+.bootstrap-scope .list-group-item.disabled:hover .list-group-item-text,
+.bootstrap-scope .list-group-item.disabled:focus .list-group-item-text {
+  color: #777777;
+}
+.bootstrap-scope .list-group-item.active,
+.bootstrap-scope .list-group-item.active:hover,
+.bootstrap-scope .list-group-item.active:focus {
   z-index: 2;
   color: #ffffff;
   background-color: #428bca;
   border-color: #428bca;
 }
-.bootstrap-scope a.list-group-item.active .list-group-item-heading,
-.bootstrap-scope a.list-group-item.active:hover .list-group-item-heading,
-.bootstrap-scope a.list-group-item.active:focus .list-group-item-heading {
+.bootstrap-scope .list-group-item.active .list-group-item-heading,
+.bootstrap-scope .list-group-item.active:hover .list-group-item-heading,
+.bootstrap-scope .list-group-item.active:focus .list-group-item-heading,
+.bootstrap-scope .list-group-item.active .list-group-item-heading > small,
+.bootstrap-scope .list-group-item.active:hover .list-group-item-heading > small,
+.bootstrap-scope .list-group-item.active:focus .list-group-item-heading > small,
+.bootstrap-scope .list-group-item.active .list-group-item-heading > .small,
+.bootstrap-scope .list-group-item.active:hover .list-group-item-heading > .small,
+.bootstrap-scope .list-group-item.active:focus .list-group-item-heading > .small {
   color: inherit;
 }
-.bootstrap-scope a.list-group-item.active .list-group-item-text,
-.bootstrap-scope a.list-group-item.active:hover .list-group-item-text,
-.bootstrap-scope a.list-group-item.active:focus .list-group-item-text {
+.bootstrap-scope .list-group-item.active .list-group-item-text,
+.bootstrap-scope .list-group-item.active:hover .list-group-item-text,
+.bootstrap-scope .list-group-item.active:focus .list-group-item-text {
   color: #e1edf7;
+}
+.bootstrap-scope .list-group-item-success {
+  color: #3c763d;
+  background-color: #dff0d8;
+}
+a.bootstrap-scope .list-group-item-success {
+  color: #3c763d;
+}
+a.bootstrap-scope .list-group-item-success .list-group-item-heading {
+  color: inherit;
+}
+a.bootstrap-scope .list-group-item-success:hover,
+a.bootstrap-scope .list-group-item-success:focus {
+  color: #3c763d;
+  background-color: #d0e9c6;
+}
+a.bootstrap-scope .list-group-item-success.active,
+a.bootstrap-scope .list-group-item-success.active:hover,
+a.bootstrap-scope .list-group-item-success.active:focus {
+  color: #fff;
+  background-color: #3c763d;
+  border-color: #3c763d;
+}
+.bootstrap-scope .list-group-item-info {
+  color: #31708f;
+  background-color: #d9edf7;
+}
+a.bootstrap-scope .list-group-item-info {
+  color: #31708f;
+}
+a.bootstrap-scope .list-group-item-info .list-group-item-heading {
+  color: inherit;
+}
+a.bootstrap-scope .list-group-item-info:hover,
+a.bootstrap-scope .list-group-item-info:focus {
+  color: #31708f;
+  background-color: #c4e3f3;
+}
+a.bootstrap-scope .list-group-item-info.active,
+a.bootstrap-scope .list-group-item-info.active:hover,
+a.bootstrap-scope .list-group-item-info.active:focus {
+  color: #fff;
+  background-color: #31708f;
+  border-color: #31708f;
+}
+.bootstrap-scope .list-group-item-warning {
+  color: #8a6d3b;
+  background-color: #fcf8e3;
+}
+a.bootstrap-scope .list-group-item-warning {
+  color: #8a6d3b;
+}
+a.bootstrap-scope .list-group-item-warning .list-group-item-heading {
+  color: inherit;
+}
+a.bootstrap-scope .list-group-item-warning:hover,
+a.bootstrap-scope .list-group-item-warning:focus {
+  color: #8a6d3b;
+  background-color: #faf2cc;
+}
+a.bootstrap-scope .list-group-item-warning.active,
+a.bootstrap-scope .list-group-item-warning.active:hover,
+a.bootstrap-scope .list-group-item-warning.active:focus {
+  color: #fff;
+  background-color: #8a6d3b;
+  border-color: #8a6d3b;
+}
+.bootstrap-scope .list-group-item-danger {
+  color: #a94442;
+  background-color: #f2dede;
+}
+a.bootstrap-scope .list-group-item-danger {
+  color: #a94442;
+}
+a.bootstrap-scope .list-group-item-danger .list-group-item-heading {
+  color: inherit;
+}
+a.bootstrap-scope .list-group-item-danger:hover,
+a.bootstrap-scope .list-group-item-danger:focus {
+  color: #a94442;
+  background-color: #ebcccc;
+}
+a.bootstrap-scope .list-group-item-danger.active,
+a.bootstrap-scope .list-group-item-danger.active:hover,
+a.bootstrap-scope .list-group-item-danger.active:focus {
+  color: #fff;
+  background-color: #a94442;
+  border-color: #a94442;
 }
 .bootstrap-scope .list-group-item-heading {
   margin-top: 0;
@@ -4649,48 +4972,115 @@ a.bootstrap-scope .thumbnail.active {
 .bootstrap-scope .panel-body {
   padding: 15px;
 }
-.bootstrap-scope .panel-body:before,
-.bootstrap-scope .panel-body:after {
-  content: " ";
-  display: table;
+.bootstrap-scope .panel-heading {
+  padding: 10px 15px;
+  border-bottom: 1px solid transparent;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
 }
-.bootstrap-scope .panel-body:after {
-  clear: both;
+.bootstrap-scope .panel-heading > .dropdown .dropdown-toggle {
+  color: inherit;
 }
-.bootstrap-scope .panel-body:before,
-.bootstrap-scope .panel-body:after {
-  content: " ";
-  display: table;
+.bootstrap-scope .panel-title {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 16px;
+  color: inherit;
 }
-.bootstrap-scope .panel-body:after {
-  clear: both;
+.bootstrap-scope .panel-title > a {
+  color: inherit;
+}
+.bootstrap-scope .panel-footer {
+  padding: 10px 15px;
+  background-color: #f5f5f5;
+  border-top: 1px solid #dddddd;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
 }
 .bootstrap-scope .panel > .list-group {
   margin-bottom: 0;
 }
 .bootstrap-scope .panel > .list-group .list-group-item {
   border-width: 1px 0;
+  border-radius: 0;
 }
-.bootstrap-scope .panel > .list-group .list-group-item:first-child {
-  border-top-right-radius: 0;
-  border-top-left-radius: 0;
+.bootstrap-scope .panel > .list-group:first-child .list-group-item:first-child {
+  border-top: 0;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
 }
-.bootstrap-scope .panel > .list-group .list-group-item:last-child {
+.bootstrap-scope .panel > .list-group:last-child .list-group-item:last-child {
   border-bottom: 0;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
 }
 .bootstrap-scope .panel-heading + .list-group .list-group-item:first-child {
   border-top-width: 0;
 }
+.bootstrap-scope .list-group + .panel-footer {
+  border-top-width: 0;
+}
 .bootstrap-scope .panel > .table,
-.bootstrap-scope .panel > .table-responsive > .table {
+.bootstrap-scope .panel > .table-responsive > .table,
+.bootstrap-scope .panel > .panel-collapse > .table {
   margin-bottom: 0;
+}
+.bootstrap-scope .panel > .table:first-child,
+.bootstrap-scope .panel > .table-responsive:first-child > .table:first-child {
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+.bootstrap-scope .panel > .table:first-child > thead:first-child > tr:first-child td:first-child,
+.bootstrap-scope .panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child td:first-child,
+.bootstrap-scope .panel > .table:first-child > tbody:first-child > tr:first-child td:first-child,
+.bootstrap-scope .panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child td:first-child,
+.bootstrap-scope .panel > .table:first-child > thead:first-child > tr:first-child th:first-child,
+.bootstrap-scope .panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child th:first-child,
+.bootstrap-scope .panel > .table:first-child > tbody:first-child > tr:first-child th:first-child,
+.bootstrap-scope .panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child th:first-child {
+  border-top-left-radius: 3px;
+}
+.bootstrap-scope .panel > .table:first-child > thead:first-child > tr:first-child td:last-child,
+.bootstrap-scope .panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child td:last-child,
+.bootstrap-scope .panel > .table:first-child > tbody:first-child > tr:first-child td:last-child,
+.bootstrap-scope .panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child td:last-child,
+.bootstrap-scope .panel > .table:first-child > thead:first-child > tr:first-child th:last-child,
+.bootstrap-scope .panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child th:last-child,
+.bootstrap-scope .panel > .table:first-child > tbody:first-child > tr:first-child th:last-child,
+.bootstrap-scope .panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child th:last-child {
+  border-top-right-radius: 3px;
+}
+.bootstrap-scope .panel > .table:last-child,
+.bootstrap-scope .panel > .table-responsive:last-child > .table:last-child {
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+.bootstrap-scope .panel > .table:last-child > tbody:last-child > tr:last-child td:first-child,
+.bootstrap-scope .panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child td:first-child,
+.bootstrap-scope .panel > .table:last-child > tfoot:last-child > tr:last-child td:first-child,
+.bootstrap-scope .panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child td:first-child,
+.bootstrap-scope .panel > .table:last-child > tbody:last-child > tr:last-child th:first-child,
+.bootstrap-scope .panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child th:first-child,
+.bootstrap-scope .panel > .table:last-child > tfoot:last-child > tr:last-child th:first-child,
+.bootstrap-scope .panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child th:first-child {
+  border-bottom-left-radius: 3px;
+}
+.bootstrap-scope .panel > .table:last-child > tbody:last-child > tr:last-child td:last-child,
+.bootstrap-scope .panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child td:last-child,
+.bootstrap-scope .panel > .table:last-child > tfoot:last-child > tr:last-child td:last-child,
+.bootstrap-scope .panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child td:last-child,
+.bootstrap-scope .panel > .table:last-child > tbody:last-child > tr:last-child th:last-child,
+.bootstrap-scope .panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child th:last-child,
+.bootstrap-scope .panel > .table:last-child > tfoot:last-child > tr:last-child th:last-child,
+.bootstrap-scope .panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child th:last-child {
+  border-bottom-right-radius: 3px;
 }
 .bootstrap-scope .panel > .panel-body + .table,
 .bootstrap-scope .panel > .panel-body + .table-responsive {
   border-top: 1px solid #dddddd;
 }
-.bootstrap-scope .panel > .table > tbody:first-child th,
-.bootstrap-scope .panel > .table > tbody:first-child td {
+.bootstrap-scope .panel > .table > tbody:first-child > tr:first-child th,
+.bootstrap-scope .panel > .table > tbody:first-child > tr:first-child td {
   border-top: 0;
 }
 .bootstrap-scope .panel > .table-bordered,
@@ -4725,53 +5115,36 @@ a.bootstrap-scope .thumbnail.active {
 .bootstrap-scope .panel > .table-responsive > .table-bordered > tfoot > tr > td:last-child {
   border-right: 0;
 }
-.bootstrap-scope .panel > .table-bordered > thead > tr:last-child > th,
-.bootstrap-scope .panel > .table-responsive > .table-bordered > thead > tr:last-child > th,
-.bootstrap-scope .panel > .table-bordered > tbody > tr:last-child > th,
-.bootstrap-scope .panel > .table-responsive > .table-bordered > tbody > tr:last-child > th,
-.bootstrap-scope .panel > .table-bordered > tfoot > tr:last-child > th,
-.bootstrap-scope .panel > .table-responsive > .table-bordered > tfoot > tr:last-child > th,
-.bootstrap-scope .panel > .table-bordered > thead > tr:last-child > td,
-.bootstrap-scope .panel > .table-responsive > .table-bordered > thead > tr:last-child > td,
+.bootstrap-scope .panel > .table-bordered > thead > tr:first-child > td,
+.bootstrap-scope .panel > .table-responsive > .table-bordered > thead > tr:first-child > td,
+.bootstrap-scope .panel > .table-bordered > tbody > tr:first-child > td,
+.bootstrap-scope .panel > .table-responsive > .table-bordered > tbody > tr:first-child > td,
+.bootstrap-scope .panel > .table-bordered > thead > tr:first-child > th,
+.bootstrap-scope .panel > .table-responsive > .table-bordered > thead > tr:first-child > th,
+.bootstrap-scope .panel > .table-bordered > tbody > tr:first-child > th,
+.bootstrap-scope .panel > .table-responsive > .table-bordered > tbody > tr:first-child > th {
+  border-bottom: 0;
+}
 .bootstrap-scope .panel > .table-bordered > tbody > tr:last-child > td,
 .bootstrap-scope .panel > .table-responsive > .table-bordered > tbody > tr:last-child > td,
 .bootstrap-scope .panel > .table-bordered > tfoot > tr:last-child > td,
-.bootstrap-scope .panel > .table-responsive > .table-bordered > tfoot > tr:last-child > td {
+.bootstrap-scope .panel > .table-responsive > .table-bordered > tfoot > tr:last-child > td,
+.bootstrap-scope .panel > .table-bordered > tbody > tr:last-child > th,
+.bootstrap-scope .panel > .table-responsive > .table-bordered > tbody > tr:last-child > th,
+.bootstrap-scope .panel > .table-bordered > tfoot > tr:last-child > th,
+.bootstrap-scope .panel > .table-responsive > .table-bordered > tfoot > tr:last-child > th {
   border-bottom: 0;
 }
 .bootstrap-scope .panel > .table-responsive {
   border: 0;
   margin-bottom: 0;
 }
-.bootstrap-scope .panel-heading {
-  padding: 10px 15px;
-  border-bottom: 1px solid transparent;
-  border-top-right-radius: 3px;
-  border-top-left-radius: 3px;
-}
-.bootstrap-scope .panel-heading > .dropdown .dropdown-toggle {
-  color: inherit;
-}
-.bootstrap-scope .panel-title {
-  margin-top: 0;
-  margin-bottom: 0;
-  font-size: 16px;
-  color: inherit;
-}
-.bootstrap-scope .panel-title > a {
-  color: inherit;
-}
-.bootstrap-scope .panel-footer {
-  padding: 10px 15px;
-  background-color: #f5f5f5;
-  border-top: 1px solid #dddddd;
-  border-bottom-right-radius: 3px;
-  border-bottom-left-radius: 3px;
+.bootstrap-scope .panel-group {
+  margin-bottom: 20px;
 }
 .bootstrap-scope .panel-group .panel {
   margin-bottom: 0;
   border-radius: 4px;
-  overflow: hidden;
 }
 .bootstrap-scope .panel-group .panel + .panel {
   margin-top: 5px;
@@ -4779,7 +5152,7 @@ a.bootstrap-scope .thumbnail.active {
 .bootstrap-scope .panel-group .panel-heading {
   border-bottom: 0;
 }
-.bootstrap-scope .panel-group .panel-heading + .panel-collapse .panel-body {
+.bootstrap-scope .panel-group .panel-heading + .panel-collapse > .panel-body {
   border-top: 1px solid #dddddd;
 }
 .bootstrap-scope .panel-group .panel-footer {
@@ -4796,10 +5169,14 @@ a.bootstrap-scope .thumbnail.active {
   background-color: #f5f5f5;
   border-color: #dddddd;
 }
-.bootstrap-scope .panel-default > .panel-heading + .panel-collapse .panel-body {
+.bootstrap-scope .panel-default > .panel-heading + .panel-collapse > .panel-body {
   border-top-color: #dddddd;
 }
-.bootstrap-scope .panel-default > .panel-footer + .panel-collapse .panel-body {
+.bootstrap-scope .panel-default > .panel-heading .badge {
+  color: #f5f5f5;
+  background-color: #333333;
+}
+.bootstrap-scope .panel-default > .panel-footer + .panel-collapse > .panel-body {
   border-bottom-color: #dddddd;
 }
 .bootstrap-scope .panel-primary {
@@ -4810,10 +5187,14 @@ a.bootstrap-scope .thumbnail.active {
   background-color: #428bca;
   border-color: #428bca;
 }
-.bootstrap-scope .panel-primary > .panel-heading + .panel-collapse .panel-body {
+.bootstrap-scope .panel-primary > .panel-heading + .panel-collapse > .panel-body {
   border-top-color: #428bca;
 }
-.bootstrap-scope .panel-primary > .panel-footer + .panel-collapse .panel-body {
+.bootstrap-scope .panel-primary > .panel-heading .badge {
+  color: #428bca;
+  background-color: #ffffff;
+}
+.bootstrap-scope .panel-primary > .panel-footer + .panel-collapse > .panel-body {
   border-bottom-color: #428bca;
 }
 .bootstrap-scope .panel-success {
@@ -4824,11 +5205,33 @@ a.bootstrap-scope .thumbnail.active {
   background-color: #dff0d8;
   border-color: #d6e9c6;
 }
-.bootstrap-scope .panel-success > .panel-heading + .panel-collapse .panel-body {
+.bootstrap-scope .panel-success > .panel-heading + .panel-collapse > .panel-body {
   border-top-color: #d6e9c6;
 }
-.bootstrap-scope .panel-success > .panel-footer + .panel-collapse .panel-body {
+.bootstrap-scope .panel-success > .panel-heading .badge {
+  color: #dff0d8;
+  background-color: #3c763d;
+}
+.bootstrap-scope .panel-success > .panel-footer + .panel-collapse > .panel-body {
   border-bottom-color: #d6e9c6;
+}
+.bootstrap-scope .panel-info {
+  border-color: #bce8f1;
+}
+.bootstrap-scope .panel-info > .panel-heading {
+  color: #31708f;
+  background-color: #d9edf7;
+  border-color: #bce8f1;
+}
+.bootstrap-scope .panel-info > .panel-heading + .panel-collapse > .panel-body {
+  border-top-color: #bce8f1;
+}
+.bootstrap-scope .panel-info > .panel-heading .badge {
+  color: #d9edf7;
+  background-color: #31708f;
+}
+.bootstrap-scope .panel-info > .panel-footer + .panel-collapse > .panel-body {
+  border-bottom-color: #bce8f1;
 }
 .bootstrap-scope .panel-warning {
   border-color: #faebcc;
@@ -4838,10 +5241,14 @@ a.bootstrap-scope .thumbnail.active {
   background-color: #fcf8e3;
   border-color: #faebcc;
 }
-.bootstrap-scope .panel-warning > .panel-heading + .panel-collapse .panel-body {
+.bootstrap-scope .panel-warning > .panel-heading + .panel-collapse > .panel-body {
   border-top-color: #faebcc;
 }
-.bootstrap-scope .panel-warning > .panel-footer + .panel-collapse .panel-body {
+.bootstrap-scope .panel-warning > .panel-heading .badge {
+  color: #fcf8e3;
+  background-color: #8a6d3b;
+}
+.bootstrap-scope .panel-warning > .panel-footer + .panel-collapse > .panel-body {
   border-bottom-color: #faebcc;
 }
 .bootstrap-scope .panel-danger {
@@ -4852,25 +5259,40 @@ a.bootstrap-scope .thumbnail.active {
   background-color: #f2dede;
   border-color: #ebccd1;
 }
-.bootstrap-scope .panel-danger > .panel-heading + .panel-collapse .panel-body {
+.bootstrap-scope .panel-danger > .panel-heading + .panel-collapse > .panel-body {
   border-top-color: #ebccd1;
 }
-.bootstrap-scope .panel-danger > .panel-footer + .panel-collapse .panel-body {
+.bootstrap-scope .panel-danger > .panel-heading .badge {
+  color: #f2dede;
+  background-color: #a94442;
+}
+.bootstrap-scope .panel-danger > .panel-footer + .panel-collapse > .panel-body {
   border-bottom-color: #ebccd1;
 }
-.bootstrap-scope .panel-info {
-  border-color: #bce8f1;
+.bootstrap-scope .embed-responsive {
+  position: relative;
+  display: block;
+  height: 0;
+  padding: 0;
+  overflow: hidden;
 }
-.bootstrap-scope .panel-info > .panel-heading {
-  color: #31708f;
-  background-color: #d9edf7;
-  border-color: #bce8f1;
+.bootstrap-scope .embed-responsive .embed-responsive-item,
+.bootstrap-scope .embed-responsive iframe,
+.bootstrap-scope .embed-responsive embed,
+.bootstrap-scope .embed-responsive object {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+  border: 0;
 }
-.bootstrap-scope .panel-info > .panel-heading + .panel-collapse .panel-body {
-  border-top-color: #bce8f1;
+.bootstrap-scope .embed-responsive.embed-responsive-16by9 {
+  padding-bottom: 56.25%;
 }
-.bootstrap-scope .panel-info > .panel-footer + .panel-collapse .panel-body {
-  border-bottom-color: #bce8f1;
+.bootstrap-scope .embed-responsive.embed-responsive-4by3 {
+  padding-bottom: 75%;
 }
 .bootstrap-scope .well {
   min-height: 20px;
@@ -4924,34 +5346,36 @@ button.bootstrap-scope .close {
 }
 .bootstrap-scope .modal {
   display: none;
-  overflow: auto;
-  overflow-y: scroll;
+  overflow: hidden;
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 1040;
+  z-index: 1050;
+  -webkit-overflow-scrolling: touch;
+  outline: 0;
 }
 .bootstrap-scope .modal.fade .modal-dialog {
-  -webkit-transform: translate(0, -25%);
-  -ms-transform: translate(0, -25%);
-  transform: translate(0, -25%);
+  -webkit-transform: translate3d(0, -25%, 0);
+  transform: translate3d(0, -25%, 0);
   -webkit-transition: -webkit-transform 0.3s ease-out;
   -moz-transition: -moz-transform 0.3s ease-out;
   -o-transition: -o-transform 0.3s ease-out;
   transition: transform 0.3s ease-out;
 }
 .bootstrap-scope .modal.in .modal-dialog {
-  -webkit-transform: translate(0, 0);
-  -ms-transform: translate(0, 0);
-  transform: translate(0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+.bootstrap-scope .modal-open .modal {
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 .bootstrap-scope .modal-dialog {
   position: relative;
   width: auto;
   margin: 10px;
-  z-index: 1050;
 }
 .bootstrap-scope .modal-content {
   position: relative;
@@ -4962,7 +5386,7 @@ button.bootstrap-scope .close {
   -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
   box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
   background-clip: padding-box;
-  outline: none;
+  outline: 0;
 }
 .bootstrap-scope .modal-backdrop {
   position: fixed;
@@ -4970,7 +5394,7 @@ button.bootstrap-scope .close {
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 1030;
+  z-index: 1040;
   background-color: #000000;
 }
 .bootstrap-scope .modal-backdrop.fade {
@@ -4995,29 +5419,12 @@ button.bootstrap-scope .close {
 }
 .bootstrap-scope .modal-body {
   position: relative;
-  padding: 20px;
+  padding: 15px;
 }
 .bootstrap-scope .modal-footer {
-  margin-top: 15px;
-  padding: 19px 20px 20px;
+  padding: 15px;
   text-align: right;
   border-top: 1px solid #e5e5e5;
-}
-.bootstrap-scope .modal-footer:before,
-.bootstrap-scope .modal-footer:after {
-  content: " ";
-  display: table;
-}
-.bootstrap-scope .modal-footer:after {
-  clear: both;
-}
-.bootstrap-scope .modal-footer:before,
-.bootstrap-scope .modal-footer:after {
-  content: " ";
-  display: table;
-}
-.bootstrap-scope .modal-footer:after {
-  clear: both;
 }
 .bootstrap-scope .modal-footer .btn + .btn {
   margin-left: 5px;
@@ -5029,7 +5436,14 @@ button.bootstrap-scope .close {
 .bootstrap-scope .modal-footer .btn-block + .btn-block {
   margin-left: 0;
 }
-@media screen and (min-width: 768px) {
+.bootstrap-scope .modal-scrollbar-measure {
+  position: absolute;
+  top: -9999px;
+  width: 50px;
+  height: 50px;
+  overflow: scroll;
+}
+@media (min-width: 768px) {
   .bootstrap-scope .modal-dialog {
     width: 600px;
     margin: 30px auto;
@@ -5038,10 +5452,18 @@ button.bootstrap-scope .close {
     -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   }
+  .bootstrap-scope .modal-sm {
+    width: 300px;
+  }
+}
+@media (min-width: 992px) {
+  .bootstrap-scope .modal-lg {
+    width: 900px;
+  }
 }
 .bootstrap-scope .tooltip {
   position: absolute;
-  z-index: 1030;
+  z-index: 1070;
   display: block;
   visibility: visible;
   font-size: 12px;
@@ -5141,7 +5563,7 @@ button.bootstrap-scope .close {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 1010;
+  z-index: 1060;
   display: none;
   max-width: 276px;
   padding: 1px;
@@ -5180,8 +5602,8 @@ button.bootstrap-scope .close {
 .bootstrap-scope .popover-content {
   padding: 9px 14px;
 }
-.bootstrap-scope .popover .arrow,
-.bootstrap-scope .popover .arrow:after {
+.bootstrap-scope .popover > .arrow,
+.bootstrap-scope .popover > .arrow:after {
   position: absolute;
   display: block;
   width: 0;
@@ -5189,14 +5611,14 @@ button.bootstrap-scope .close {
   border-color: transparent;
   border-style: solid;
 }
-.bootstrap-scope .popover .arrow {
+.bootstrap-scope .popover > .arrow {
   border-width: 11px;
 }
-.bootstrap-scope .popover .arrow:after {
+.bootstrap-scope .popover > .arrow:after {
   border-width: 10px;
   content: "";
 }
-.bootstrap-scope .popover.top .arrow {
+.bootstrap-scope .popover.top > .arrow {
   left: 50%;
   margin-left: -11px;
   border-bottom-width: 0;
@@ -5204,14 +5626,14 @@ button.bootstrap-scope .close {
   border-top-color: rgba(0, 0, 0, 0.25);
   bottom: -11px;
 }
-.bootstrap-scope .popover.top .arrow:after {
+.bootstrap-scope .popover.top > .arrow:after {
   content: " ";
   bottom: 1px;
   margin-left: -10px;
   border-bottom-width: 0;
   border-top-color: #ffffff;
 }
-.bootstrap-scope .popover.right .arrow {
+.bootstrap-scope .popover.right > .arrow {
   top: 50%;
   left: -11px;
   margin-top: -11px;
@@ -5219,14 +5641,14 @@ button.bootstrap-scope .close {
   border-right-color: #999999;
   border-right-color: rgba(0, 0, 0, 0.25);
 }
-.bootstrap-scope .popover.right .arrow:after {
+.bootstrap-scope .popover.right > .arrow:after {
   content: " ";
   left: 1px;
   bottom: -10px;
   border-left-width: 0;
   border-right-color: #ffffff;
 }
-.bootstrap-scope .popover.bottom .arrow {
+.bootstrap-scope .popover.bottom > .arrow {
   left: 50%;
   margin-left: -11px;
   border-top-width: 0;
@@ -5234,14 +5656,14 @@ button.bootstrap-scope .close {
   border-bottom-color: rgba(0, 0, 0, 0.25);
   top: -11px;
 }
-.bootstrap-scope .popover.bottom .arrow:after {
+.bootstrap-scope .popover.bottom > .arrow:after {
   content: " ";
   top: 1px;
   margin-left: -10px;
   border-top-width: 0;
   border-bottom-color: #ffffff;
 }
-.bootstrap-scope .popover.left .arrow {
+.bootstrap-scope .popover.left > .arrow {
   top: 50%;
   right: -11px;
   margin-top: -11px;
@@ -5249,7 +5671,7 @@ button.bootstrap-scope .close {
   border-left-color: #999999;
   border-left-color: rgba(0, 0, 0, 0.25);
 }
-.bootstrap-scope .popover.left .arrow:after {
+.bootstrap-scope .popover.left > .arrow:after {
   content: " ";
   right: 1px;
   border-right-width: 0;
@@ -5268,13 +5690,11 @@ button.bootstrap-scope .close {
   display: none;
   position: relative;
   -webkit-transition: 0.6s ease-in-out left;
+  -o-transition: 0.6s ease-in-out left;
   transition: 0.6s ease-in-out left;
 }
 .bootstrap-scope .carousel-inner > .item > img,
 .bootstrap-scope .carousel-inner > .item > a > img {
-  display: block;
-  max-width: 100%;
-  height: auto;
   line-height: 1;
 }
 .bootstrap-scope .carousel-inner > .active,
@@ -5321,7 +5741,8 @@ button.bootstrap-scope .close {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 .bootstrap-scope .carousel-control.left {
-  background-image: -webkit-linear-gradient(left, color-stop(rgba(0, 0, 0, 0.5) 0%), color-stop(rgba(0, 0, 0, 0.0001) 100%));
+  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.0001) 100%);
+  background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.0001) 100%);
   background-image: linear-gradient(to right, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.0001) 100%);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#80000000', endColorstr='#00000000', GradientType=1);
@@ -5329,14 +5750,15 @@ button.bootstrap-scope .close {
 .bootstrap-scope .carousel-control.right {
   left: auto;
   right: 0;
-  background-image: -webkit-linear-gradient(left, color-stop(rgba(0, 0, 0, 0.0001) 0%), color-stop(rgba(0, 0, 0, 0.5) 100%));
+  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0.0001) 0%, rgba(0, 0, 0, 0.5) 100%);
+  background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0.0001) 0%, rgba(0, 0, 0, 0.5) 100%);
   background-image: linear-gradient(to right, rgba(0, 0, 0, 0.0001) 0%, rgba(0, 0, 0, 0.5) 100%);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#80000000', GradientType=1);
 }
 .bootstrap-scope .carousel-control:hover,
 .bootstrap-scope .carousel-control:focus {
-  outline: none;
+  outline: 0;
   color: #ffffff;
   text-decoration: none;
   opacity: 0.9;
@@ -5354,17 +5776,18 @@ button.bootstrap-scope .close {
 .bootstrap-scope .carousel-control .icon-prev,
 .bootstrap-scope .carousel-control .glyphicon-chevron-left {
   left: 50%;
+  margin-left: -10px;
 }
 .bootstrap-scope .carousel-control .icon-next,
 .bootstrap-scope .carousel-control .glyphicon-chevron-right {
   right: 50%;
+  margin-right: -10px;
 }
 .bootstrap-scope .carousel-control .icon-prev,
 .bootstrap-scope .carousel-control .icon-next {
   width: 20px;
   height: 20px;
   margin-top: -10px;
-  margin-left: -10px;
   font-family: serif;
 }
 .bootstrap-scope .carousel-control .icon-prev:before {
@@ -5418,15 +5841,22 @@ button.bootstrap-scope .close {
   text-shadow: none;
 }
 @media screen and (min-width: 768px) {
-  .bootstrap-scope .carousel-control .glyphicons-chevron-left,
-  .bootstrap-scope .carousel-control .glyphicons-chevron-right,
+  .bootstrap-scope .carousel-control .glyphicon-chevron-left,
+  .bootstrap-scope .carousel-control .glyphicon-chevron-right,
   .bootstrap-scope .carousel-control .icon-prev,
   .bootstrap-scope .carousel-control .icon-next {
     width: 30px;
     height: 30px;
     margin-top: -15px;
-    margin-left: -15px;
     font-size: 30px;
+  }
+  .bootstrap-scope .carousel-control .glyphicon-chevron-left,
+  .bootstrap-scope .carousel-control .icon-prev {
+    margin-left: -15px;
+  }
+  .bootstrap-scope .carousel-control .glyphicon-chevron-right,
+  .bootstrap-scope .carousel-control .icon-next {
+    margin-right: -15px;
   }
   .bootstrap-scope .carousel-caption {
     left: 20%;
@@ -5438,11 +5868,53 @@ button.bootstrap-scope .close {
   }
 }
 .bootstrap-scope .clearfix:before,
-.bootstrap-scope .clearfix:after {
+.bootstrap-scope .clearfix:after,
+.bootstrap-scope .bootstrap-scope .dl-horizontal dd:before,
+.bootstrap-scope .bootstrap-scope .dl-horizontal dd:after,
+.bootstrap-scope .bootstrap-scope .container:before,
+.bootstrap-scope .bootstrap-scope .container:after,
+.bootstrap-scope .bootstrap-scope .container-fluid:before,
+.bootstrap-scope .bootstrap-scope .container-fluid:after,
+.bootstrap-scope .bootstrap-scope .row:before,
+.bootstrap-scope .bootstrap-scope .row:after,
+.bootstrap-scope .bootstrap-scope .form-horizontal .form-group:before,
+.bootstrap-scope .bootstrap-scope .form-horizontal .form-group:after,
+.bootstrap-scope .bootstrap-scope .btn-toolbar:before,
+.bootstrap-scope .bootstrap-scope .btn-toolbar:after,
+.bootstrap-scope .bootstrap-scope .btn-group-vertical > .btn-group:before,
+.bootstrap-scope .bootstrap-scope .btn-group-vertical > .btn-group:after,
+.bootstrap-scope .bootstrap-scope .nav:before,
+.bootstrap-scope .bootstrap-scope .nav:after,
+.bootstrap-scope .bootstrap-scope .navbar:before,
+.bootstrap-scope .bootstrap-scope .navbar:after,
+.bootstrap-scope .bootstrap-scope .navbar-header:before,
+.bootstrap-scope .bootstrap-scope .navbar-header:after,
+.bootstrap-scope .bootstrap-scope .navbar-collapse:before,
+.bootstrap-scope .bootstrap-scope .navbar-collapse:after,
+.bootstrap-scope .bootstrap-scope .pager:before,
+.bootstrap-scope .bootstrap-scope .pager:after,
+.bootstrap-scope .bootstrap-scope .panel-body:before,
+.bootstrap-scope .bootstrap-scope .panel-body:after,
+.bootstrap-scope .bootstrap-scope .modal-footer:before,
+.bootstrap-scope .bootstrap-scope .modal-footer:after {
   content: " ";
   display: table;
 }
-.bootstrap-scope .clearfix:after {
+.bootstrap-scope .clearfix:after,
+.bootstrap-scope .bootstrap-scope .dl-horizontal dd:after,
+.bootstrap-scope .bootstrap-scope .container:after,
+.bootstrap-scope .bootstrap-scope .container-fluid:after,
+.bootstrap-scope .bootstrap-scope .row:after,
+.bootstrap-scope .bootstrap-scope .form-horizontal .form-group:after,
+.bootstrap-scope .bootstrap-scope .btn-toolbar:after,
+.bootstrap-scope .bootstrap-scope .btn-group-vertical > .btn-group:after,
+.bootstrap-scope .bootstrap-scope .nav:after,
+.bootstrap-scope .bootstrap-scope .navbar:after,
+.bootstrap-scope .bootstrap-scope .navbar-header:after,
+.bootstrap-scope .bootstrap-scope .navbar-collapse:after,
+.bootstrap-scope .bootstrap-scope .pager:after,
+.bootstrap-scope .bootstrap-scope .panel-body:after,
+.bootstrap-scope .bootstrap-scope .modal-footer:after {
   clear: both;
 }
 .bootstrap-scope .center-block {
@@ -5478,14 +5950,30 @@ button.bootstrap-scope .close {
 }
 .bootstrap-scope .affix {
   position: fixed;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
 }
 @-ms-viewport {
   width: device-width;
 }
 .bootstrap-scope .visible-xs,
-tr.bootstrap-scope .visible-xs,
-th.bootstrap-scope .visible-xs,
-td.bootstrap-scope .visible-xs {
+.bootstrap-scope .visible-sm,
+.bootstrap-scope .visible-md,
+.bootstrap-scope .visible-lg {
+  display: none !important;
+}
+.bootstrap-scope .visible-xs-block,
+.bootstrap-scope .visible-xs-inline,
+.bootstrap-scope .visible-xs-inline-block,
+.bootstrap-scope .visible-sm-block,
+.bootstrap-scope .visible-sm-inline,
+.bootstrap-scope .visible-sm-inline-block,
+.bootstrap-scope .visible-md-block,
+.bootstrap-scope .visible-md-inline,
+.bootstrap-scope .visible-md-inline-block,
+.bootstrap-scope .visible-lg-block,
+.bootstrap-scope .visible-lg-inline,
+.bootstrap-scope .visible-lg-inline-block {
   display: none !important;
 }
 @media (max-width: 767px) {
@@ -5503,70 +5991,19 @@ td.bootstrap-scope .visible-xs {
     display: table-cell !important;
   }
 }
-@media (min-width: 768px) and (max-width: 991px) {
-  .bootstrap-scope .visible-xs.visible-sm {
+@media (max-width: 767px) {
+  .bootstrap-scope .visible-xs-block {
     display: block !important;
   }
-  table.bootstrap-scope .visible-xs.visible-sm {
-    display: table;
-  }
-  tr.bootstrap-scope .visible-xs.visible-sm {
-    display: table-row !important;
-  }
-  th.bootstrap-scope .visible-xs.visible-sm,
-  td.bootstrap-scope .visible-xs.visible-sm {
-    display: table-cell !important;
-  }
-}
-@media (min-width: 992px) and (max-width: 1199px) {
-  .bootstrap-scope .visible-xs.visible-md {
-    display: block !important;
-  }
-  table.bootstrap-scope .visible-xs.visible-md {
-    display: table;
-  }
-  tr.bootstrap-scope .visible-xs.visible-md {
-    display: table-row !important;
-  }
-  th.bootstrap-scope .visible-xs.visible-md,
-  td.bootstrap-scope .visible-xs.visible-md {
-    display: table-cell !important;
-  }
-}
-@media (min-width: 1200px) {
-  .bootstrap-scope .visible-xs.visible-lg {
-    display: block !important;
-  }
-  table.bootstrap-scope .visible-xs.visible-lg {
-    display: table;
-  }
-  tr.bootstrap-scope .visible-xs.visible-lg {
-    display: table-row !important;
-  }
-  th.bootstrap-scope .visible-xs.visible-lg,
-  td.bootstrap-scope .visible-xs.visible-lg {
-    display: table-cell !important;
-  }
-}
-.bootstrap-scope .visible-sm,
-tr.bootstrap-scope .visible-sm,
-th.bootstrap-scope .visible-sm,
-td.bootstrap-scope .visible-sm {
-  display: none !important;
 }
 @media (max-width: 767px) {
-  .bootstrap-scope .visible-sm.visible-xs {
-    display: block !important;
+  .bootstrap-scope .visible-xs-inline {
+    display: inline !important;
   }
-  table.bootstrap-scope .visible-sm.visible-xs {
-    display: table;
-  }
-  tr.bootstrap-scope .visible-sm.visible-xs {
-    display: table-row !important;
-  }
-  th.bootstrap-scope .visible-sm.visible-xs,
-  td.bootstrap-scope .visible-sm.visible-xs {
-    display: table-cell !important;
+}
+@media (max-width: 767px) {
+  .bootstrap-scope .visible-xs-inline-block {
+    display: inline-block !important;
   }
 }
 @media (min-width: 768px) and (max-width: 991px) {
@@ -5584,70 +6021,19 @@ td.bootstrap-scope .visible-sm {
     display: table-cell !important;
   }
 }
-@media (min-width: 992px) and (max-width: 1199px) {
-  .bootstrap-scope .visible-sm.visible-md {
+@media (min-width: 768px) and (max-width: 991px) {
+  .bootstrap-scope .visible-sm-block {
     display: block !important;
-  }
-  table.bootstrap-scope .visible-sm.visible-md {
-    display: table;
-  }
-  tr.bootstrap-scope .visible-sm.visible-md {
-    display: table-row !important;
-  }
-  th.bootstrap-scope .visible-sm.visible-md,
-  td.bootstrap-scope .visible-sm.visible-md {
-    display: table-cell !important;
-  }
-}
-@media (min-width: 1200px) {
-  .bootstrap-scope .visible-sm.visible-lg {
-    display: block !important;
-  }
-  table.bootstrap-scope .visible-sm.visible-lg {
-    display: table;
-  }
-  tr.bootstrap-scope .visible-sm.visible-lg {
-    display: table-row !important;
-  }
-  th.bootstrap-scope .visible-sm.visible-lg,
-  td.bootstrap-scope .visible-sm.visible-lg {
-    display: table-cell !important;
-  }
-}
-.bootstrap-scope .visible-md,
-tr.bootstrap-scope .visible-md,
-th.bootstrap-scope .visible-md,
-td.bootstrap-scope .visible-md {
-  display: none !important;
-}
-@media (max-width: 767px) {
-  .bootstrap-scope .visible-md.visible-xs {
-    display: block !important;
-  }
-  table.bootstrap-scope .visible-md.visible-xs {
-    display: table;
-  }
-  tr.bootstrap-scope .visible-md.visible-xs {
-    display: table-row !important;
-  }
-  th.bootstrap-scope .visible-md.visible-xs,
-  td.bootstrap-scope .visible-md.visible-xs {
-    display: table-cell !important;
   }
 }
 @media (min-width: 768px) and (max-width: 991px) {
-  .bootstrap-scope .visible-md.visible-sm {
-    display: block !important;
+  .bootstrap-scope .visible-sm-inline {
+    display: inline !important;
   }
-  table.bootstrap-scope .visible-md.visible-sm {
-    display: table;
-  }
-  tr.bootstrap-scope .visible-md.visible-sm {
-    display: table-row !important;
-  }
-  th.bootstrap-scope .visible-md.visible-sm,
-  td.bootstrap-scope .visible-md.visible-sm {
-    display: table-cell !important;
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  .bootstrap-scope .visible-sm-inline-block {
+    display: inline-block !important;
   }
 }
 @media (min-width: 992px) and (max-width: 1199px) {
@@ -5665,70 +6051,19 @@ td.bootstrap-scope .visible-md {
     display: table-cell !important;
   }
 }
-@media (min-width: 1200px) {
-  .bootstrap-scope .visible-md.visible-lg {
+@media (min-width: 992px) and (max-width: 1199px) {
+  .bootstrap-scope .visible-md-block {
     display: block !important;
-  }
-  table.bootstrap-scope .visible-md.visible-lg {
-    display: table;
-  }
-  tr.bootstrap-scope .visible-md.visible-lg {
-    display: table-row !important;
-  }
-  th.bootstrap-scope .visible-md.visible-lg,
-  td.bootstrap-scope .visible-md.visible-lg {
-    display: table-cell !important;
-  }
-}
-.bootstrap-scope .visible-lg,
-tr.bootstrap-scope .visible-lg,
-th.bootstrap-scope .visible-lg,
-td.bootstrap-scope .visible-lg {
-  display: none !important;
-}
-@media (max-width: 767px) {
-  .bootstrap-scope .visible-lg.visible-xs {
-    display: block !important;
-  }
-  table.bootstrap-scope .visible-lg.visible-xs {
-    display: table;
-  }
-  tr.bootstrap-scope .visible-lg.visible-xs {
-    display: table-row !important;
-  }
-  th.bootstrap-scope .visible-lg.visible-xs,
-  td.bootstrap-scope .visible-lg.visible-xs {
-    display: table-cell !important;
-  }
-}
-@media (min-width: 768px) and (max-width: 991px) {
-  .bootstrap-scope .visible-lg.visible-sm {
-    display: block !important;
-  }
-  table.bootstrap-scope .visible-lg.visible-sm {
-    display: table;
-  }
-  tr.bootstrap-scope .visible-lg.visible-sm {
-    display: table-row !important;
-  }
-  th.bootstrap-scope .visible-lg.visible-sm,
-  td.bootstrap-scope .visible-lg.visible-sm {
-    display: table-cell !important;
   }
 }
 @media (min-width: 992px) and (max-width: 1199px) {
-  .bootstrap-scope .visible-lg.visible-md {
-    display: block !important;
+  .bootstrap-scope .visible-md-inline {
+    display: inline !important;
   }
-  table.bootstrap-scope .visible-lg.visible-md {
-    display: table;
-  }
-  tr.bootstrap-scope .visible-lg.visible-md {
-    display: table-row !important;
-  }
-  th.bootstrap-scope .visible-lg.visible-md,
-  td.bootstrap-scope .visible-lg.visible-md {
-    display: table-cell !important;
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+  .bootstrap-scope .visible-md-inline-block {
+    display: inline-block !important;
   }
 }
 @media (min-width: 1200px) {
@@ -5746,190 +6081,42 @@ td.bootstrap-scope .visible-lg {
     display: table-cell !important;
   }
 }
-.bootstrap-scope .hidden-xs {
-  display: block !important;
+@media (min-width: 1200px) {
+  .bootstrap-scope .visible-lg-block {
+    display: block !important;
+  }
 }
-table.bootstrap-scope .hidden-xs {
-  display: table;
+@media (min-width: 1200px) {
+  .bootstrap-scope .visible-lg-inline {
+    display: inline !important;
+  }
 }
-tr.bootstrap-scope .hidden-xs {
-  display: table-row !important;
-}
-th.bootstrap-scope .hidden-xs,
-td.bootstrap-scope .hidden-xs {
-  display: table-cell !important;
+@media (min-width: 1200px) {
+  .bootstrap-scope .visible-lg-inline-block {
+    display: inline-block !important;
+  }
 }
 @media (max-width: 767px) {
-  .bootstrap-scope .hidden-xs,
-  tr.bootstrap-scope .hidden-xs,
-  th.bootstrap-scope .hidden-xs,
-  td.bootstrap-scope .hidden-xs {
+  .bootstrap-scope .hidden-xs {
     display: none !important;
   }
 }
 @media (min-width: 768px) and (max-width: 991px) {
-  .bootstrap-scope .hidden-xs.hidden-sm,
-  tr.bootstrap-scope .hidden-xs.hidden-sm,
-  th.bootstrap-scope .hidden-xs.hidden-sm,
-  td.bootstrap-scope .hidden-xs.hidden-sm {
+  .bootstrap-scope .hidden-sm {
     display: none !important;
   }
 }
 @media (min-width: 992px) and (max-width: 1199px) {
-  .bootstrap-scope .hidden-xs.hidden-md,
-  tr.bootstrap-scope .hidden-xs.hidden-md,
-  th.bootstrap-scope .hidden-xs.hidden-md,
-  td.bootstrap-scope .hidden-xs.hidden-md {
+  .bootstrap-scope .hidden-md {
     display: none !important;
   }
 }
 @media (min-width: 1200px) {
-  .bootstrap-scope .hidden-xs.hidden-lg,
-  tr.bootstrap-scope .hidden-xs.hidden-lg,
-  th.bootstrap-scope .hidden-xs.hidden-lg,
-  td.bootstrap-scope .hidden-xs.hidden-lg {
+  .bootstrap-scope .hidden-lg {
     display: none !important;
   }
 }
-.bootstrap-scope .hidden-sm {
-  display: block !important;
-}
-table.bootstrap-scope .hidden-sm {
-  display: table;
-}
-tr.bootstrap-scope .hidden-sm {
-  display: table-row !important;
-}
-th.bootstrap-scope .hidden-sm,
-td.bootstrap-scope .hidden-sm {
-  display: table-cell !important;
-}
-@media (max-width: 767px) {
-  .bootstrap-scope .hidden-sm.hidden-xs,
-  tr.bootstrap-scope .hidden-sm.hidden-xs,
-  th.bootstrap-scope .hidden-sm.hidden-xs,
-  td.bootstrap-scope .hidden-sm.hidden-xs {
-    display: none !important;
-  }
-}
-@media (min-width: 768px) and (max-width: 991px) {
-  .bootstrap-scope .hidden-sm,
-  tr.bootstrap-scope .hidden-sm,
-  th.bootstrap-scope .hidden-sm,
-  td.bootstrap-scope .hidden-sm {
-    display: none !important;
-  }
-}
-@media (min-width: 992px) and (max-width: 1199px) {
-  .bootstrap-scope .hidden-sm.hidden-md,
-  tr.bootstrap-scope .hidden-sm.hidden-md,
-  th.bootstrap-scope .hidden-sm.hidden-md,
-  td.bootstrap-scope .hidden-sm.hidden-md {
-    display: none !important;
-  }
-}
-@media (min-width: 1200px) {
-  .bootstrap-scope .hidden-sm.hidden-lg,
-  tr.bootstrap-scope .hidden-sm.hidden-lg,
-  th.bootstrap-scope .hidden-sm.hidden-lg,
-  td.bootstrap-scope .hidden-sm.hidden-lg {
-    display: none !important;
-  }
-}
-.bootstrap-scope .hidden-md {
-  display: block !important;
-}
-table.bootstrap-scope .hidden-md {
-  display: table;
-}
-tr.bootstrap-scope .hidden-md {
-  display: table-row !important;
-}
-th.bootstrap-scope .hidden-md,
-td.bootstrap-scope .hidden-md {
-  display: table-cell !important;
-}
-@media (max-width: 767px) {
-  .bootstrap-scope .hidden-md.hidden-xs,
-  tr.bootstrap-scope .hidden-md.hidden-xs,
-  th.bootstrap-scope .hidden-md.hidden-xs,
-  td.bootstrap-scope .hidden-md.hidden-xs {
-    display: none !important;
-  }
-}
-@media (min-width: 768px) and (max-width: 991px) {
-  .bootstrap-scope .hidden-md.hidden-sm,
-  tr.bootstrap-scope .hidden-md.hidden-sm,
-  th.bootstrap-scope .hidden-md.hidden-sm,
-  td.bootstrap-scope .hidden-md.hidden-sm {
-    display: none !important;
-  }
-}
-@media (min-width: 992px) and (max-width: 1199px) {
-  .bootstrap-scope .hidden-md,
-  tr.bootstrap-scope .hidden-md,
-  th.bootstrap-scope .hidden-md,
-  td.bootstrap-scope .hidden-md {
-    display: none !important;
-  }
-}
-@media (min-width: 1200px) {
-  .bootstrap-scope .hidden-md.hidden-lg,
-  tr.bootstrap-scope .hidden-md.hidden-lg,
-  th.bootstrap-scope .hidden-md.hidden-lg,
-  td.bootstrap-scope .hidden-md.hidden-lg {
-    display: none !important;
-  }
-}
-.bootstrap-scope .hidden-lg {
-  display: block !important;
-}
-table.bootstrap-scope .hidden-lg {
-  display: table;
-}
-tr.bootstrap-scope .hidden-lg {
-  display: table-row !important;
-}
-th.bootstrap-scope .hidden-lg,
-td.bootstrap-scope .hidden-lg {
-  display: table-cell !important;
-}
-@media (max-width: 767px) {
-  .bootstrap-scope .hidden-lg.hidden-xs,
-  tr.bootstrap-scope .hidden-lg.hidden-xs,
-  th.bootstrap-scope .hidden-lg.hidden-xs,
-  td.bootstrap-scope .hidden-lg.hidden-xs {
-    display: none !important;
-  }
-}
-@media (min-width: 768px) and (max-width: 991px) {
-  .bootstrap-scope .hidden-lg.hidden-sm,
-  tr.bootstrap-scope .hidden-lg.hidden-sm,
-  th.bootstrap-scope .hidden-lg.hidden-sm,
-  td.bootstrap-scope .hidden-lg.hidden-sm {
-    display: none !important;
-  }
-}
-@media (min-width: 992px) and (max-width: 1199px) {
-  .bootstrap-scope .hidden-lg.hidden-md,
-  tr.bootstrap-scope .hidden-lg.hidden-md,
-  th.bootstrap-scope .hidden-lg.hidden-md,
-  td.bootstrap-scope .hidden-lg.hidden-md {
-    display: none !important;
-  }
-}
-@media (min-width: 1200px) {
-  .bootstrap-scope .hidden-lg,
-  tr.bootstrap-scope .hidden-lg,
-  th.bootstrap-scope .hidden-lg,
-  td.bootstrap-scope .hidden-lg {
-    display: none !important;
-  }
-}
-.bootstrap-scope .visible-print,
-tr.bootstrap-scope .visible-print,
-th.bootstrap-scope .visible-print,
-td.bootstrap-scope .visible-print {
+.bootstrap-scope .visible-print {
   display: none !important;
 }
 @media print {
@@ -5946,10 +6133,33 @@ td.bootstrap-scope .visible-print {
   td.bootstrap-scope .visible-print {
     display: table-cell !important;
   }
-  .bootstrap-scope .hidden-print,
-  tr.bootstrap-scope .hidden-print,
-  th.bootstrap-scope .hidden-print,
-  td.bootstrap-scope .hidden-print {
+}
+.bootstrap-scope .visible-print-block {
+  display: none !important;
+}
+@media print {
+  .bootstrap-scope .visible-print-block {
+    display: block !important;
+  }
+}
+.bootstrap-scope .visible-print-inline {
+  display: none !important;
+}
+@media print {
+  .bootstrap-scope .visible-print-inline {
+    display: inline !important;
+  }
+}
+.bootstrap-scope .visible-print-inline-block {
+  display: none !important;
+}
+@media print {
+  .bootstrap-scope .visible-print-inline-block {
+    display: inline-block !important;
+  }
+}
+@media print {
+  .bootstrap-scope .hidden-print {
     display: none !important;
   }
 }

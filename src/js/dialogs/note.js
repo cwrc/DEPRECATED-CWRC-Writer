@@ -11,6 +11,7 @@ return function(writer) {
 	var EDIT = 1;
 	
 	var currentData = null;
+	var entityId = null;
 	
 	$(document.body).append(''+
 	'<div id="noteDialog">'+
@@ -49,6 +50,7 @@ return function(writer) {
 					// editor wasn't fully initialized
 				}
 				currentData = null;
+				entityId = null;
 				note.dialog('close');
 			}
 		}
@@ -63,7 +65,7 @@ return function(writer) {
 		currentData.content = content;
 	
 		if (mode == EDIT) {
-			w.tagger.editEntity(w.editor.currentEntity, currentData);
+			w.tagger.editEntity(entityId, currentData);
 		} else {
 			w.tagger.finalizeEntity('note', currentData);
 		}
@@ -71,6 +73,7 @@ return function(writer) {
 		cwrcWriter.editor.remove();
 		cwrcWriter.editor.destroy();
 		currentData = null;
+		entityId = null;
 		note.dialog('close');
 	};
 	
@@ -88,6 +91,7 @@ return function(writer) {
 			if (mode == EDIT) {
 				prefix = 'Edit ';
 				currentData = config.entry.info;
+				entityId = config.entry.props.id;
 			}
 			
 			var title = prefix+'Note';

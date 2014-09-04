@@ -19,6 +19,8 @@ require.config({
 		'objtree': 'lib/objtree/ObjTree',
 		'moment': 'lib/moment/moment.min',
 		
+		'octokit': 'lib/octokit/octokit',
+		
 		'attributeWidget': 'dialogs/attributeWidget',
 		
 		// cwrcDialogs

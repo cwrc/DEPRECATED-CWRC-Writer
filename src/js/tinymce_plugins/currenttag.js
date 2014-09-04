@@ -32,9 +32,14 @@
 					
 					var tag = n.getAttribute('_tag');
 					var id = n.getAttribute('id');
-					var title = 'id: '+id;
+					if (id === 'entityHighlight') {
+						var w = t.editor.writer;
+						id = t.editor.currentEntity;
+						var type = w.entities[id].props.type;
+						tag = w.entitiesModel.getParentTag(type, w.schemaManager.schemaId);
+					}
 					if (tag != null) {
-						var pi = t.editor.dom.create('a', {name: id, 'href' : "javascript:;", role: 'button', onmousedown : "return false;", title : title, 'class' : 'mcePath_' + (de++)}, tag);
+						var pi = t.editor.dom.create('a', {name: id, 'href' : "javascript:;", role: 'button', onmousedown : "return false;", 'class' : 'mcePath_' + (de++)}, tag);
 						var p = $('#currentPath')[0];
 						if (p.hasChildNodes()) {
 							p.insertBefore(t.editor.dom.create('span', {'aria-hidden': 'true'}, '\u00a0\u00bb '), p.firstChild);

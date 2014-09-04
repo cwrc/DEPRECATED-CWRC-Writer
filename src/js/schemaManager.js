@@ -1,27 +1,54 @@
 define(['jquery', 'tinymce'], function($, tinymce) {
-	
+
+/**
+ * @class SchemaManager
+ * @param {Writer} writer
+ * @param {Object} config
+ * @param {Object} config.schemas
+ */
 return function(writer, config) {
 	var w = writer;
 	
+	/**
+	 * @lends SchemaManager.prototype
+	 */
 	var sm = {};
 	
 	/**
 	 * A map of schema objects. The key represents the schema ID, the "value" should have the following properties:
-	 * @param name A name/label for the schema
-	 * @param url The URL where the schema is located
-	 * @param cssUrl The URL where the schema's CSS is located
+	 * @member {Object}
+	 * @property {String} name A name/label for the schema
+	 * @property {String} url The URL where the schema is located
+	 * @property {string} cssUrl The URL where the schema's CSS is located
 	 */
 	sm.schemas = config.schemas || {};
 	
-	// the ID of the current validation schema, according to config.schemas
+	/**
+	 * The ID of the current validation schema, according to config.schemas
+	 * @member {String}
+	 */ 
 	sm.schemaId = null;
 	
-	sm.schemaXML = null; // a cached copy of the loaded schema
-	sm.schemaJSON = null; // a json version of the schema
-	sm.schema = {elements: []}; // stores a list of all the elements of the loaded schema
+	/**
+	 * A cached copy of the loaded schema
+	 * @member {Document}
+	 */
+	sm.schemaXML = null;
+	/**
+	 * A JSON version of the schema
+	 * @member {Object}
+	 */
+	sm.schemaJSON = null;
+	/**
+	 * Stores a list of all the elements of the loaded schema
+	 * @member {Object}
+	 * @property {Array} elements The list of elements
+	 */
+	sm.schema = {elements: []};
 
 	/**
 	 * Add a schema to the list.
+	 * @fires Writer#schemaAdded
 	 * @param {Object} config The config object
 	 * @param {String} config.name The name for the schema
 	 * @param {String} config.url The url to the schema
@@ -38,6 +65,7 @@ return function(writer, config) {
 	
 	/**
 	 * Load a new schema.
+	 * @fires Writer#schemaLoaded
 	 * @param {String} schemaId The ID of the schema to load (from the config)
 	 * @param {Boolean} startText Whether to include the default starting text
 	 * @param {Function} callback Callback for when the load is complete
@@ -189,6 +217,11 @@ return function(writer, config) {
 		});
 	};
 	
+	/**
+	 * Load the CSS and convert it to the internal format
+	 * NB: Doesn't work in Chrome.
+	 * @param {String} url The URL for the CSS
+	 */
 	sm.loadSchemaCSS = function(url) {
 		w.editor.dom.loadCSS(url);
 		if (url.match('converted') != null) {

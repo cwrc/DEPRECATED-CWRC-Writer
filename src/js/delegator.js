@@ -1,12 +1,20 @@
-define(['jquery'], function($) {
-	
+define(['jquery', 'octokit'], function($, Octokit) {
+
+/**
+ * @class Delegator
+ * @param {Writer} writer
+ */
 return function(writer) {
 	var w = writer;
 	
+	/**
+	 * @lends Delegator.prototype
+	 */
 	var del = {};
 	
 	/**
-	 * @memberOf del
+	 * Lookup an entity
+	 * @deprecated Superseded by CWRC-Dialogs
 	 * @param params
 	 * @param callback
 	 */
@@ -215,9 +223,17 @@ return function(writer) {
 		return dfd.promise();
 	};
 	
+	/**
+	 * Validate the document against the current schema
+	 * @fires Writer#validationInitiated
+	 * @fires Writer#documentValidated
+	 * @param {Delegator~validateCallback} callback
+	 */
 	del.validate = function(callback) {
 		var docText = w.converter.getDocumentContent(false);
 		var schemaUrl = w.schemaManager.schemas[w.schemaManager.schemaId].url;
+		
+		w.event('validationInitiated').publish();
 		
 		$.ajax({
 			url: w.baseUrl+'services/validator/validate.html',
@@ -230,10 +246,9 @@ return function(writer) {
 			},
 			success: function(data, status, xhr) {
 				var valid = $('status', data).text() == 'pass';
+				w.event('documentValidated').publish(valid, data, docText);
 				if (callback) {
 					callback.call(w, valid);
-				} else {
-					w.event('documentValidated').publish(valid, data, docText);
 				}
 			},
 			error: function() {
@@ -251,38 +266,106 @@ return function(writer) {
 	};
 	
 	/**
-	 * Loads a document based on the currentDocId
-	 * TODO Move currentDocId system out of CWRCWriter
-	 * @param docName
+	 * @callback Delegator~validateCallback
+	 * @param {Boolean} isValid
 	 */
-	del.loadDocument = function(callback) {
+	
+	function _getTemplateBranch() {
+		var octo = new Octokit({token: '15286e8222a7bc13504996e8b451d82be1cba397'});
+		var templateRepo = octo.getRepo('cwrc', 'CWRC-Writer-Templates');
+		var branch = templateRepo.getBranch('master');
+		return branch;
+	}
+	
+	/**
+	 * Gets the list of templates
+	 * @param {Delegator~getTemplatesCallback} callback
+	 */
+	del.getTemplates = function(callback) {
+		var branch = _getTemplateBranch();
+		branch.contents('templates').then(function(contents) {
+			contents = $.parseJSON(contents);
+			var templates = [];
+			for (var i = 0; i < contents.length; i++) {
+				var c = contents[i];
+				var path = c.path;
+				var name = c.name;
+				name = name.replace(/_/g, ' ').replace('.xml', '');
+				name = w.utilities.getCamelCase(name);
+				templates.push({name: name, path: path});
+			}
+			callback.call(w, templates);
+		});
+	};
+	
+	/**
+	 * @callback Delegator~getTemplatesCallback
+	 * @param {Array} templates The list of templates
+	 * @property {String} name The template name
+	 * @property {String} path The path to the template, relative to the parent branch
+	 * 
+	 */
+	
+	/**
+	 * Loads a template
+	 * @param {String} path The path to the template, relative to the templates repo
+	 * @param {Delegator~loadTemplateCallback} callback
+	 */
+	del.loadTemplate = function(path, callback) {
+		var branch = _getTemplateBranch();
+		branch.contents(path).then(function(template) {
+			path = path.replace('.xml', '');
+			window.location.hash = '#'+path;
+			var xml = $.parseXML(template);
+			callback.call(w, xml);
+		});
+	};
+	
+	/**
+	 * @callback Delegator~loadTemplateCallback
+	 * @param {Document} The template document
+	 */
+	
+	/**
+	 * Loads a document
+	 * @param {String} docId The document ID
+	 * @param {Delegator~loadDocumentCallback} callback
+	 */
+	del.loadDocument = function(docId, callback) {
 		$.ajax({
-			url: w.baseUrl+'editor/documents/'+w.currentDocId,
+			url: w.baseUrl+'editor/documents/'+docId,
 			type: 'GET',
 			success: function(doc, status, xhr) {
-				window.location.hash = '#'+w.currentDocId;
+				window.location.hash = '#'+docId;
 				callback.call(w, doc);
 			},
 			error: function(xhr, status, error) {
 				w.dialogManager.show('message', {
 					title: 'Error',
-					msg: 'An error ('+status+') occurred and '+w.currentDocId+' was not loaded.',
+					msg: 'An error ('+status+') occurred and '+docId+' was not loaded.',
 					type: 'error'
 				});
-				w.currentDocId = null;
+				callback.call(w, null);
 			},
 			dataType: 'xml'
 		});
 	};
 	
 	/**
-	 * Performs the server call to save the document.
-	 * @param callback Called with one boolean parameter: true for successful save, false otherwise
+	 * @callback Delegator~loadDocumentCallback
+	 * @param {(Document|null)} document Returns the document or null if there was an error
 	 */
-	del.saveDocument = function(callback) {
+	
+	/**
+	 * Performs the server call to save the document.
+	 * @fires Writer#documentSaved
+	 * @param {String} docId The document ID
+	 * @param {Delegator~saveDocumentCallback} callback
+	 */
+	del.saveDocument = function(docId, callback) {
 		var docText = w.converter.getDocumentContent(true);
 		$.ajax({
-			url : w.baseUrl+'editor/documents/'+w.currentDocId,
+			url : w.baseUrl+'editor/documents/'+docId,
 			type: 'PUT',
 			dataType: 'json',
 			data: docText,
@@ -290,9 +373,9 @@ return function(writer) {
 				w.editor.isNotDirty = 1; // force clean state
 				w.dialogManager.show('message', {
 					title: 'Document Saved',
-					msg: w.currentDocId+' was saved successfully.'
+					msg: docId+' was saved successfully.'
 				});
-				window.location.hash = '#'+w.currentDocId;
+				window.location.hash = '#'+docId;
 				if (callback) {
 					callback.call(w, true);
 				}
@@ -302,7 +385,7 @@ return function(writer) {
 			error: function() {
 				w.dialogManager.show('message', {
 					title: 'Error',
-					msg: 'An error occurred and '+w.currentDocId+' was not saved.',
+					msg: 'An error occurred and '+docId+' was not saved.',
 					type: 'error'
 				});
 				if (callback) {
@@ -311,6 +394,11 @@ return function(writer) {
 			}
 		});
 	};
+	
+	/**
+	 * @callback Delegator~saveDocumentCallback
+	 * @param {Boolean} savedSuccessfully
+	 */
 	
 	del.getHelp = function(tagName) {
 		return w.utilities.getDocumentationForTag(tagName);

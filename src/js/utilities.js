@@ -1,5 +1,9 @@
 define(['jquery', 'objtree'], function($, objTree) {
-	
+
+/**
+ * @class Utilities
+ * @param {Writer} writer
+ */
 return function(writer) {
 	var w = writer;
 	
@@ -8,6 +12,9 @@ return function(writer) {
 	var BLOCK_TAG = 'div';
 	var INLINE_TAG = 'span';
 	
+	/**
+	 * @lends Utilities
+	 */
 	var u = {};
 	
 	u.xmlToString = function(xmlData) {
@@ -45,14 +52,19 @@ return function(writer) {
 	};
 	
 	/**
-	 * @memberOf u
 	 * @param content
-	 * @returns
+	 * @returns {String}
 	 */
 	u.getTitleFromContent = function(content) {
 		if (content.length <= 34) return content;
 		var title = content.substring(0, 34) + '&#8230;';
 		return title;
+	};
+	
+	u.getCamelCase = function(str) {
+		return str.replace(/(?:^|\s)\w/g, function(match) {
+	        return match.toUpperCase();
+	    });
 	};
 	
 	u.escapeHTMLString = function(value) {
@@ -115,7 +127,7 @@ return function(writer) {
 	 * Checks the user selection for overlap issues and entity markers.
 	 * @param isStructTag Is the tag a structure tag
 	 * @param structAction How is the tag being inserted? (before/after/around/inside)
-	 * @returns
+	 * @returns {Integer}
 	 */
 	u.isSelectionValid = function(isStructTag, structAction) {
 		var sel = w.editor.selection;
@@ -272,7 +284,7 @@ return function(writer) {
 						if (ents[c.attr('name')]) {
 							delete ents[c.attr('name')];
 						} else {
-							return w.NO_COMMON_PARENT;
+							return w.OVERLAP;
 						}
 					}
 				}
@@ -281,7 +293,7 @@ return function(writer) {
 			for (var id in ents) {
 				count++;
 			}
-			if (count != 0) return w.NO_COMMON_PARENT;
+			if (count != 0) return w.OVERLAP;
 		}
 		
 		return w.VALID;

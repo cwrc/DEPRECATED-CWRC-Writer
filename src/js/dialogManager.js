@@ -14,11 +14,16 @@ define([
 ) {
 
 // add event listeners to all of our jquery ui dialogs
-// wrapping our dialogs in the cwrc css scope
 $.extend($.ui.dialog.prototype.options, {
 	create: function(event) {
 		$(event.target).on('dialogopen', function(event) {
+			// wrap our dialogs in the cwrc css scope
 			$(event.target).parent('.ui-dialog').prev('.ui-widget-overlay').andSelf().wrapAll('<div class="cwrc" />');
+			// resize if necessary
+			var docHeight = $(document).height();
+			if ($(this).dialog('option', 'height') >= docHeight) {
+				$(this).dialog('option', 'height', docHeight * 0.85);
+			}
 		}).on('dialogclose', function(event) {
 			$(event.target).parent('.ui-dialog').unwrap();
 		});
@@ -35,6 +40,10 @@ $.extend($.ui.tooltip.prototype.options, {
 	}
 });
 
+/**
+ * @class DialogManager
+ * @param {Writer} writer
+ */
 return function(writer) {	
 	var currentType = null;
 	
@@ -63,15 +72,23 @@ return function(writer) {
 		addschema: new AddSchema(writer)
 	};
 	
-	// log in for CWRC-Dialogs
-	cD.initializeWithLogin('mark_test', 'P4ssw0rd!');
+	if (window.location.hostname != 'localhost') {
+		// log in for CWRC-Dialogs
+		cD.initializeWithLogin('mark_test', 'P4ssw0rd!');
+	}
+	if (writer.initialConfig.cwrcDialogs != null) {
+		var conf = writer.initialConfig.cwrcDialogs;
+		if (conf.cwrcApiUrl != null) cD.setCwrcApi(conf.cwrcApiUrl);
+		if (conf.geonameUrl != null) cD.setGeonameUrl(conf.geonameUrl);
+		if (conf.viafUrl != null) cD.setViafUrl(conf.viafUrl);
+	}
 	
 	dialogs.event = dialogs.addevent;
 	
+	/**
+	 * @lends DialogManager.prototype
+	 */
 	var pm = {
-		/**
-		 * @memberOf pm
-		 */
 		getCurrentType: function() {
 			return currentType;
 		},

@@ -1,82 +1,15 @@
-define(['jquery', 'jquery-ui', 'cwrcDialogs'], function($, jqueryUi, cwrcDialogs) {
-
-// a bridge between the CWRC-Writer and the cwrcDialogs
+define(['jquery', 'jquery-ui', 'dialogs/cwrcDialogBridge'], function($, jqueryUi, cwrcDialogBridge) {
+	
 return function(writer) {
 	var w = writer;
 	
-	function createNewTitle(data) {
-		cD.popCreateTitle({
-			success: function(result) {
-				if (result.data == null) {
-					var error = result.error || 'There was an error creating the entry.';
-					w.dialogManager.show('message', {
-						title: 'Error',
-						msg: error,
-						type: 'error'
-					});
-				} else {
-					result = {
-						id: 'http://cwrc-dev-01.srv.ualberta.ca/islandora/object/'+result.response.pid
-					};
-					w.dialogManager.show('tagCitation', {
-						cwrcInfo: result
-					});
-				}
-			},
-			error: function(errorThrown) {
-			},
-		});
-	}
+	var bridge = new cwrcDialogBridge(w, {
+		label: 'Citation',
+		localDialog: 'tagCitation',
+		cwrcType: 'title'
+	});
 	
-	return {
-		show: function(config) {
-			if (config.entry) {
-				w.dialogManager.show('tagCitation', {
-					entry: config.entry
-				});
-			} else {
-				var query = w.editor.currentBookmark.rng.toString();
-				$('#searchEntityInput').val(query);
-				
-				cD.popSearchTitle({
-					success: function(result) {
-						if (result.id == null) {
-							result = {
-								id: w.utilities.createGuid(),
-								name: ['Test Citation'],
-								repository: 'cwrc'
-							};
-						}
-						
-						if (result.repository === 'viaf') {
-							result.id = 'http://viaf.org/viaf/'+result.id;
-						} else {
-							result.id = 'http://cwrc-dev-01.srv.ualberta.ca/islandora/object/'+result.id;
-						}
-						
-						if ($.isArray(result.name)) {
-							result.name = result.name[0];
-						}
-						
-						delete result.data;
-						
-						w.dialogManager.show('tagCitation', {
-							query: query,
-							cwrcInfo: result
-						});
-					},
-					error: function(errorThrown) {
-					},
-					buttons: [{
-						label : 'Create New Citation',
-						action : createNewTitle
-					}]
-				});
-			}
-		},
-		hide: function() {
-		}
-	};
+	return bridge;
 };
 
 });

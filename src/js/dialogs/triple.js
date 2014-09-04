@@ -50,9 +50,7 @@ return function(writer) {
 		var subject = components[0];
 		var predicate = components[1];
 		var object = components[2];
-		var id = tinymce.DOM.uniqueId('tri_');
 		w.triples.push({
-			id: id,
 			subject: subject,
 			predicate: {
 				text: predicate.text,
@@ -102,7 +100,12 @@ return function(writer) {
 		$('#tripleColumnsParent ul').each(function(index, el) {
 			var s = $(this).find('.selected');
 			if (s.length == 1) {
-				components[index] = {text: w.utilities.escapeHTMLString(s.text()), uri: s.attr('name'), external: false};
+				var uri = '';
+				var id = s.attr('name');
+				if (id != null) {
+					uri = w.entities[id].annotation.annotationId;
+				}
+				components[index] = {text: w.utilities.escapeHTMLString(s.text()), uri: uri, external: false};
 			}
 		});
 		$('#tripleColumnsParent input').each(function(index, el) {
@@ -141,14 +144,8 @@ return function(writer) {
 	};
 	
 	var buildEntity = function(entity) {
-//		var infoString = '<ul>';
-//		for (var infoKey in entity.info) {
-//			infoString += '<li><strong>'+infoKey+'</strong>: '+entity.info[infoKey]+'</li>';
-//		}
-//		infoString += '</ul>';
 		return '<li class="'+entity.props.type+'" name="'+entity.props.id+'">'+
 			'<span class="box"/><span class="entityTitle">'+entity.props.title+'</span>'+
-//			'<div class="info">'+infoString+'</div>'+
 		'</li>';
 	};
 	

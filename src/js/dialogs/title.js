@@ -1,9 +1,12 @@
-define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+define(['jquery', 'jquery-ui', 'attributeWidget'], function($, jqueryUi, AttributeWidget) {
 	
 return function(writer) {
 	var w = writer;
 	
 	var id = "title";
+
+	var attWidgetInit = false;
+	var attributeWidget;
 	
 	var mode = null;
 	var ADD = 0;
@@ -19,7 +22,7 @@ return function(writer) {
 			'<span class="tagAs"></span>'+
 		'</div>'+
 		'<div id="'+id+'_level">'+
-			'<p>Type:</p>'+
+			'<p>This title is:</p>'+
 			'<input type="radio" value="a" name="level" id="'+id+'_level_a"/>'+
 			'<label for="'+id+'_level_a">Analytic <span>article, poem, or other item published as part of a larger item</span></label><br/>'+
 			'<input type="radio" value="m" name="level" id="'+id+'_level_m" checked="checked"/>'+
@@ -38,6 +41,11 @@ return function(writer) {
 			'<input type="radio" id="'+id+'_probable" name="'+id+'_id_certainty" value="probable" /><label for="'+id+'_probable">Probable</label>'+
 			'<input type="radio" id="'+id+'_speculative" name="'+id+'_id_certainty" value="speculative" /><label for="'+id+'_speculative">Speculative</label>'+
 	    '</div>'+
+	    '<div>'+
+		    '<h3>Markup options</h3>'+
+		    '<div id="'+id+'_teiParent" style="position: relative; height: 200px;">'+
+		    '</div>'+
+		'</div>'+
 	'</div>');
 	
 	var title = $('#'+id+'Dialog');
@@ -49,7 +57,7 @@ return function(writer) {
 		open: function(event, ui) {
 			$('#'+id+'Dialog').parent().find('.ui-dialog-titlebar-close').hide();
 		},
-		height: 400,
+		height: 630,
 		width: 435,
 		autoOpen: false,
 		buttons: {
@@ -64,6 +72,13 @@ return function(writer) {
 		}
 	});
 	
+	$('#'+id+'_teiParent').parent().accordion({
+		heightStyle: 'content',
+		animate: false,
+		collapsible: true,
+		active: false
+	});
+	
 	$('#'+id+'_certainty').buttonset();
 	
 	$('#titleDialog input').keyup(function(event) {
@@ -76,6 +91,7 @@ return function(writer) {
 	var titleResult = function() {
 		currentData.level = $('#'+id+'_level input[name="level"]:checked').val();
 		currentData.certainty = $('#'+id+'_certainty input:checked').val();
+		currentData.attributes = attributeWidget.getData();
 		
 		if (mode == EDIT && currentData != null) {
 			w.tagger.editEntity(currentId, currentData);
@@ -88,13 +104,30 @@ return function(writer) {
 		title.dialog('close');
 	};
 	
+	var initAttributeWidget = function() {
+		var titleAtts = w.utilities.getChildrenForTag({tag: 'title', type: 'attribute', returnType: 'array'});
+		for (var i = 0; i < titleAtts.length; i++) {
+			titleAtts[i].parent = 'title';
+		}
+		attributeWidget.buildWidget(titleAtts);
+		attWidgetInit = true;
+	};
+	
+	attributeWidget = new AttributeWidget({writer: w, parentId: id+'_teiParent'});
+	
 	return {
 		show: function(config) {
+			if (attWidgetInit == false) {
+				initAttributeWidget();
+			}
+			
 			mode = config.entry ? EDIT : ADD;
 			var prefix = 'Tag ';
 			
+			attributeWidget.reset();
 			$('#'+id+'_tagAs span').empty();
 			$('#'+id+'_certainty input:checked').prop('checked', false).button('refresh');
+			$('#'+id+'_teiParent').parent().accordion('option', 'active', false);
 			
 			currentData = {};
 			
@@ -115,6 +148,11 @@ return function(writer) {
 				$('#'+id+'_tagAs span').html(data.cwrcInfo.name);
 				$('#'+id+'_level input[value="'+data.level+'"]').prop('checked', true);
 				$('#'+id+'_certainty input[value="'+data.certainty+'"]').prop('checked', true).button('refresh');
+				
+				var showWidget = attributeWidget.setData(data.attributes);
+				if (showWidget) {
+					$('#'+id+'_teiParent').parent().accordion('option', 'active', 0);
+				}
 			}
 			
 			var t = prefix+'Title';

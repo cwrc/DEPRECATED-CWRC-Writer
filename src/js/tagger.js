@@ -1,13 +1,19 @@
 define(['jquery'], function($) {
-	
+
+/**
+ * @class Tagger
+ * @param {Writer} writer
+ */
 return function(writer) {
 	var w = writer;
 	
+	/**
+	 * @lends Tagger.prototype
+	 */
 	var tagger = {};
 	
 	/**
 	 * Inserts entity boundary tags around the supplied DOM range.
-	 * @memberOf tagger
 	 * @param {string} id The id of then entity 
 	 * @param {string} type The entity type
 	 * @param {range} range The DOM range to insert the tags around
@@ -15,19 +21,37 @@ return function(writer) {
 	tagger.insertBoundaryTags = function(id, type, range) {
 		var sel = w.editor.selection;
 		sel.setRng(range);
-		var bm = sel.getBookmark();
-		
-		var start = w.editor.dom.create('span', {'_entity': true, '_type': type, 'class': 'entity '+type+' start', 'name': id}, '');
-		range.insertNode(start);
-		w.editor.dom.bind(start, 'click', _doMarkerClick);
-		
-		w.editor.selection.moveToBookmark(bm);
-		
-		var end = w.editor.dom.create('span', {'_entity': true, '_type': type, 'class': 'entity '+type+' end', 'name': id}, '');
-		sel.collapse(false);
-		range = sel.getRng(true);
-		range.insertNode(end);
-		w.editor.dom.bind(end, 'click', _doMarkerClick);
+		if (tinymce.isWebKit) {
+			// chrome seems to mess up the range slightly if not set again
+			sel.setRng(range);
+		}
+
+		if (type === 'note' || type === 'citation' || type === 'keyword') {
+			var tag = w.editor.dom.create('span', {'_entity': true, '_type': type, 'class': 'entity '+type+' start', 'name': id}, '');
+			sel.collapse(false);
+			range = sel.getRng(true);
+			range.insertNode(tag);
+			
+			w.editor.dom.bind(tag, 'click', function(e) {
+				var marker = w.editor.dom.get(e.target);
+				var tagId = marker.getAttribute('name');
+				tagger.editTag(tagId);
+			});
+		} else {
+			var bm = sel.getBookmark();
+			
+			var start = w.editor.dom.create('span', {'_entity': true, '_type': type, 'class': 'entity '+type+' start', 'name': id}, '');
+			range.insertNode(start);
+			w.editor.dom.bind(start, 'click', _doMarkerClick);
+			
+			w.editor.selection.moveToBookmark(bm);
+			
+			var end = w.editor.dom.create('span', {'_entity': true, '_type': type, 'class': 'entity '+type+' end', 'name': id}, '');
+			sel.collapse(false);
+			range = sel.getRng(true);
+			range.insertNode(end);
+			w.editor.dom.bind(end, 'click', _doMarkerClick);
+		}
 	};
 	
 	// prevents the user from moving the caret inside a marker
@@ -154,13 +178,16 @@ return function(writer) {
 					delete w.entities[id];
 					break;
 				case 1:
-					updateRequired = true;
-					w.editor.dom.remove(nodes[0]);
-					if (w.entitiesList) {
-						w.entitiesList.remove(id);
+					var type = w.entities[id].props.type;
+					if (type !== 'note' && type !== 'citation' && type !== 'keyword') {
+						updateRequired = true;
+						w.editor.dom.remove(nodes[0]);
+						if (w.entitiesList) {
+							w.entitiesList.remove(id);
+						}
+						w.deletedEntities[id] = w.entities[id];
+						delete w.entities[id];
 					}
-					w.deletedEntities[id] = w.entities[id];
-					delete w.entities[id];
 			}
 		}
 		for (var id in w.structs) {
@@ -250,7 +277,10 @@ return function(writer) {
 		}
 	};
 	
-	// a general removal function for entities and structure tags
+	/**
+	 * A general removal function for entities and structure tags
+	 * @param {String} id The id of the tag to remove
+	 */
 	tagger.removeTag = function(id) {
 		if (id != null) {
 			if (w.entities[id]) {
@@ -280,26 +310,56 @@ return function(writer) {
 		}, w.editor.undoManager);
 	}
 	
+	/**
+	 * Displays the appropriate dialog for adding an entity
+	 * @param {String} type The entity type
+	 */
 	tagger.addEntity = function(type) {
 		var result = w.utilities.isSelectionValid();
-		if (result == w.VALID) {
+		if (result === w.VALID) {
 			w.editor.currentBookmark = w.editor.selection.getBookmark(1);
 			w.dialogManager.show(type, {type: type, title: w.entitiesModel.getTitle(type), pos: w.editor.contextMenuPos});
-		} else if (result == w.NO_SELECTION) {
+		} else if (result === w.NO_SELECTION) {
 			w.dialogManager.show('message', {
 				title: 'Error',
-				msg: 'Please select some text before adding an entity or tag.',
+				msg: 'Please select some text before adding an entity.',
 				type: 'error'
 			});
-		} else if (result == w.NO_COMMON_PARENT) {
+		} else if (result === w.NO_COMMON_PARENT) {
 			w.dialogManager.show('message', {
 				title: 'Error',
 				msg: 'Please ensure that the beginning and end of your selection have a common parent.<br/>For example, your selection cannot begin in one paragraph and end in another, or begin in bolded text and end outside of that text.',
 				type: 'error'
 			});
+		} else if (result === w.OVERLAP) {
+			if (w.allowOverlap === false) {
+				w.dialogManager.show('message', {
+					title: 'Error',
+					msg: 'You are trying to insert an overlapping entity, however the current Editor Mode doesn\'t allow overlapping. Go to Settings to change it.',
+					type: 'error'
+				});
+			} else {
+				w.dialogManager.confirm({
+					title: 'Info',
+					msg: 'This annotation overlaps with other tags, so an XML tag for this annotation cannot be inserted in the document. The editor will create a stand-off semantic web annotation only.<br/>If you wish to insert an XML tag, select a portion of the text to annotate that does not overlap other XML tags.<br/>Do you still wish to insert this annotation?',
+					callback: function(confirmed) {
+						if (confirmed) {
+							w.editor.currentBookmark = w.editor.selection.getBookmark(1);
+							w.dialogManager.show(type, {type: type, title: w.entitiesModel.getTitle(type), pos: w.editor.contextMenuPos});
+						}
+					}
+				});
+			}
 		}
 	};
 	
+	/**
+	 * Add the remaining entity info to its entry
+	 * @protected
+	 * @fires Writer#entityAdded
+	 * @param {String} type Then entity type
+	 * @param {Object} info The entity info
+	 */
 	tagger.finalizeEntity = function(type, info) {
 		w.editor.selection.moveToBookmark(w.editor.currentBookmark);
 		if (info != null) {
@@ -310,10 +370,18 @@ return function(writer) {
 //			}
 			
 			var id = tagger.addEntityTag(type);
-			w.entities[id].info = info;
+			var entry = w.entities[id];
+			entry.info = info;
+			if (type === 'note' || type === 'citation') {
+				var content = $($.parseXML(entry.info.content)).text();
+				entry.props.title = w.utilities.getTitleFromContent(content);
+			} else if (type === 'keyword') {
+				var content = entry.info.keywords.join(', ');
+				entry.props.title = w.utilities.getTitleFromContent(content);
+			}
 			
 			$.when(
-				w.delegator.getUriForEntity(w.entities[id]),
+				w.delegator.getUriForEntity(entry),
 				w.delegator.getUriForAnnotation(),
 				w.delegator.getUriForDocument(),
 				w.delegator.getUriForTarget(),
@@ -324,7 +392,7 @@ return function(writer) {
 					// use the id already provided
 					entityUri = info.cwrcInfo.id;
 				}
-				w.entities[id].annotation = {
+				entry.annotation = {
 					entityId: entityUri,
 					annotationId: annoUri,
 					docId: docUri,
@@ -341,12 +409,23 @@ return function(writer) {
 		w.editor.focus();
 	};
 	
+	/**
+	 * Update the entity info
+	 * @fires Writer#entityEdited
+	 * @param {String} id The entity id
+	 * @param {Object} info The entity info
+	 */
 	tagger.editEntity = function(id, info) {
 		w.entities[id].info = info;
 		w.event('entityEdited').publish(id);
 	};
 	
-	tagger.copyEntity = function(id, pos) {
+	/**
+	 * Copy an entity internally
+	 * @fires Writer#entityCopied
+	 * @param {String} id The entity id
+	 */
+	tagger.copyEntity = function(id) {
 		var tag = tagger.getCurrentTag(id);
 		if (tag.entity) {
 			w.editor.entityCopy = tag.entity;
@@ -360,7 +439,11 @@ return function(writer) {
 		}
 	};
 	
-	tagger.pasteEntity = function(pos) {
+	/**
+	 * Paste a previously copied entity
+	 * @fires Writer#entityPasted
+	 */
+	tagger.pasteEntity = function() {
 		if (w.editor.entityCopy == null) {
 			w.dialogManager.show('message', {
 				title: 'Error',
@@ -375,7 +458,16 @@ return function(writer) {
 			var sel = w.editor.selection;
 			sel.collapse();
 			var rng = sel.getRng(true);
-			var text = w.editor.getDoc().createTextNode(newEntity.props.content);
+			
+			var type = newEntity.props.type;
+			var content;
+			if (type === 'note' || type === 'citation' || type === 'keyword') {
+				content = '\uFEFF';
+			} else {
+				content = newEntity.props.content;
+			}
+			
+			var text = w.editor.getDoc().createTextNode(content);
 			rng.insertNode(text);
 			sel.select(text);
 			
@@ -388,6 +480,11 @@ return function(writer) {
 		}
 	};
 	
+	/**
+	 * Remove an entity
+	 * @fires Writer#entityRemoved
+	 * @param {String} id The entity id
+	 */
 	tagger.removeEntity = function(id) {
 		id = id || w.editor.currentEntity;
 		
@@ -447,6 +544,7 @@ return function(writer) {
 	
 	/**
 	 * Adds a structure tag to the document, based on the params.
+	 * @fires Writer#tagAdded
 	 * @param params An object with the following properties:
 	 * @param params.bookmark A tinymce bookmark object, with an optional custom tagId property
 	 * @param params.attributes Various properties related to the tag
@@ -532,33 +630,58 @@ return function(writer) {
 		}
 	};
 	
+	/**
+	 * Change the attributes of a tag, or change the tag itself.
+	 * @fires Writer#tagEdited
+	 * @param tag {jQuery} A jQuery representation of the tag
+	 * @param attributes {Object} An object of attribute names and values
+	 */
 	tagger.editStructureTag = function(tag, attributes) {
-		// TODO add support for span/div changing, add undo support
+		// TODO add undo support
 		var id = tag.attr('id');
 		attributes.id = id;
-		$.each($(tag[0].attributes), function(index, att) {
-			if (att.name != 'id') {
-				tag.removeAttr(att.name);
+		
+		if (tag.attr('_tag') != attributes._tag) {
+			// change the tag
+			var tagName;
+			if (tag.parent().is('span')) {
+				// force inline if parent is inline
+				tagName = 'span';
+			} else {
+				tagName = w.utilities.getTagForEditor(attributes._tag);
 			}
-		});
-		for (var key in attributes) {
-			if (key.match(/^_/) != null) {
-				tag.attr(key, attributes[key]);
+			tag.contents().unwrap().wrap('<'+tagName+' id="'+id+'" />');
+			tag = $('#'+id, w.editor.getBody());
+			for (var key in attributes) {
+				if (key.match(/^_/) != null || w.converter.reservedAttributes[key] !== true) {
+					tag.attr(key, attributes[key]);
+				}
+			}
+		} else {
+			$.each($(tag[0].attributes), function(index, att) {
+				if (w.converter.reservedAttributes[att.name] !== true) {
+					tag.removeAttr(att.name);
+				}
+			});
+			
+			for (var key in attributes) {
+				if (w.converter.reservedAttributes[key] !== true) {
+					tag.attr(key, attributes[key]);
+				}
 			}
 		}
-		if (attributes._tag == 'title') {
-			if (attributes.level != null) {
-				tag.attr('level', attributes.level);
-			}
-			if (attributes.type != null) {
-				tag.attr('type', attributes.type);
-			}
-		}
+		
 		w.structs[id] = attributes;
 		
 		w.event('tagEdited').publish(id);
 	};
 	
+	/**
+	 * Remove a structure tag
+	 * @fires Writer#tagRemoved
+	 * @param {String} id Then tag id
+	 * @param {Boolean} removeContents True to remove tag contents only
+	 */
 	tagger.removeStructureTag = function(id, removeContents) {
 		_doCustomTaggerUndo();
 		
@@ -589,6 +712,12 @@ return function(writer) {
 		w.editor.currentStruct = null;
 	};
 	
+	/**
+	 * Remove a structure tag's contents
+	 * @fires Writer#tagContentsRemoved
+	 * @param {String} id The tag id
+	 */
+	// TODO refactor this with removeStructureTag
 	tagger.removeStructureTagContents = function(id) {
 		_doCustomTaggerUndo();
 		

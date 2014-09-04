@@ -11,6 +11,7 @@ return function(writer) {
 	var EDIT = 1;
 	
 	var currentData = null;
+	var entityId = null;
 	
 	$(document.body).append(''+
 	'<div id="citationDialog" class="annotationDialog">'+
@@ -47,6 +48,7 @@ return function(writer) {
 					// editor wasn't fully initialized
 				}
 				currentData = null;
+				entityId = null;
 				citation.dialog('close');
 			}
 		}
@@ -59,7 +61,7 @@ return function(writer) {
 		currentData.content = content;
 		
 		if (mode == EDIT) {
-			w.tagger.editEntity(w.editor.currentEntity, currentData);
+			w.tagger.editEntity(entityId, currentData);
 		} else {
 			w.tagger.finalizeEntity('citation', currentData);
 		}
@@ -67,6 +69,7 @@ return function(writer) {
 		cwrcWriter.editor.remove();
 		cwrcWriter.editor.destroy();
 		currentData = null;
+		entityId = null;
 		citation.dialog('close');
 	};
 	
@@ -84,6 +87,7 @@ return function(writer) {
 			if (mode == EDIT) {
 				prefix = 'Edit ';
 				currentData = config.entry.info;
+				entityId = config.entry.props.id;
 			}
 			
 			// cwrcInfo means we're coming from the cwrcDialog
@@ -139,7 +143,9 @@ return function(writer) {
 					} else {
 						var data = config.entry.info;
 						var xmlDoc = cwrcWriter.utilities.stringToXML(data.content);
-						if (xmlDoc.firstChild.nodeName === 'bibl') {
+						if (xmlDoc.firstChild.nodeName === 'note') {
+							// remove the annotationId attribute
+							xmlDoc.firstChild.removeAttribute('annotationId');
 							// insert the appropriate wrapper tags
 							var xml = $.parseXML('<TEI><text><body/></text></TEI>');
 							xmlDoc = $(xml).find('body').append(xmlDoc.firstChild).end()[0];

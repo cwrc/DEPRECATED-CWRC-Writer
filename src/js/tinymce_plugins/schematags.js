@@ -36,17 +36,32 @@
 					// get the node from currentBookmark if available, otherwise use currentNode
 					if (t.editor.currentBookmark != null) {
 						node = t.editor.currentBookmark.rng.commonAncestorContainer;
-						while (node.nodeType == 3 || (node.nodeType == 1 && !node.hasAttribute('_tag'))) {
+						while (node.nodeType === 3) {
 							node = node.parentNode;
 						}
 					} else {
 						node = t.editor.currentNode;
 					}
-					if (node.nodeType == 9) {
+					if (node.nodeType === 9) {
 						node = $('body > [_tag]', node)[0]; // we're at the document level so select the root instead
 					}
 					
 					filterKey = node.getAttribute('_tag');
+					
+					if (filterKey == null) {
+						// probably in an entity
+						var id = node.getAttribute('id');
+						if (id === 'entityHighlight') {
+							var w = t.editor.writer;
+							id = t.editor.currentEntity;
+							var type = w.entities[id].props.type;
+							filterKey = w.entitiesModel.getParentTag(type, w.schemaManager.schemaId);
+						} else {
+							if (window.console) {
+								console.warn('In unknown tag', node);
+							}
+						}
+					}
 					
 					if (mode == 'change') {
 						filterKey = $(node).parent().attr('_tag');
@@ -86,19 +101,26 @@
 			t.editor.addCommand('addSchemaTag', function(params) {
 				var key = params.key;
 				var pos = params.pos;
+				var w = t.editor.writer;
 				t.action = params.action;
-				if (key == t.editor.writer.header) {
+				if (key == w.header) {
 					t.editor.execCommand('addStructureTag', {bookmark: t.editor.currentBookmark, attributes: {_tag: key}, action: t.action});
-					t.editor.writer.d.show('header');
+					w.dialogManager.show('header');
 					return;
+				} else {
+					var type = w.entitiesModel.getEntityTypeForTag(key, w.schemaManager.schemaId);
+					if (type != null) {
+						w.tagger.addEntity(type);
+						return;
+					}
 				}
 				
 				var tagId = t.editor.currentBookmark.tagId;
 				t.editor.selection.moveToBookmark(t.editor.currentBookmark);
 				
 				var valid = t.editor.execCommand('isSelectionValid', true, t.action);
-				if (valid != 2) {
-					t.editor.writer.dialogManager.show('message', {
+				if (valid !== t.editor.writer.VALID) {
+					w.dialogManager.show('message', {
 						title: 'Error',
 						msg: 'Please ensure that the beginning and end of your selection have a common parent.<br/>For example, your selection cannot begin in one paragraph and end in another, or begin in bolded text and end outside of that text.',
 						type: 'error'
@@ -110,19 +132,7 @@
 				t.editor.currentBookmark = t.editor.selection.getBookmark(1);
 				if (tagId != null) {
 					t.editor.currentBookmark.tagId = tagId;
-				}
-				
-				// isSelectionValid should perform this function
-//				var sel = t.editor.selection;
-//				var content = sel.getContent();
-//				var range = sel.getRng(true);
-//				if (range.startContainer == range.endContainer) {
-//					var leftTrimAmount = content.match(/^\s{0,1}/)[0].length;
-//					var rightTrimAmount = content.match(/\s{0,1}$/)[0].length;
-//					range.setStart(range.startContainer, range.startOffset+leftTrimAmount);
-//					range.setEnd(range.endContainer, range.endOffset-rightTrimAmount);
-//					sel.setRng(range);
-//				}				
+				}				
 				
 				t.mode = t.ADD;
 				t.showDialog(key, pos);
@@ -154,7 +164,6 @@
 						'<div class="level1Atts"></div>'+
 						'<div class="highLevelAtts"></div>'+
 					'</div>'+
-					'<input type="hidden" name="attsAllowed" value="" />'+
 					'<div class="schemaHelp"></div>'+
 				'</div>'
 			);
@@ -260,9 +269,6 @@
 			
 			var atts = t.editor.writer.utilities.getChildrenForTag({tag: key, type: 'attribute', returnType: 'array'});
 			
-			var canTagContainAttributes = atts.length != 0;
-			
-			$('input[name="attsAllowed"]', parent).val(canTagContainAttributes);
 			// build atts
 			var level1Atts = '';
 			var highLevelAtts = '';
@@ -400,8 +406,6 @@
 				return;
 			}
 			
-			
-			attributes._attsallowed = $('input[name="attsAllowed"]', parent).val() != 'false';
 			attributes._tag = t.currentKey;
 			
 			t.schemaDialog.dialog('close');

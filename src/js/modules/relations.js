@@ -1,5 +1,11 @@
 define(['jquery', 'jquery-ui'], function($, jqueryUi) {
-	
+
+/**
+ * @class Relations
+ * @param {Object} config
+ * @param {Writer} config.writer
+ * @param {String} config.parentId
+ */
 return function(config) {
 	
 	var w = config.writer;
@@ -41,6 +47,9 @@ return function(config) {
 		pm.update();
 	});
 	
+	/**
+	 * @lends Relations.prototype
+	 */
 	var pm = {
 		currentlySelectedNode: null
 	};
@@ -58,7 +67,7 @@ return function(config) {
 	});
 	
 	/**
-	 * @memberOf pm
+	 * Update the list of relations.
 	 */
 	pm.update = function() {
 		$('#relations ul').empty();
