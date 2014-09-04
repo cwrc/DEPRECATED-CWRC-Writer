@@ -1563,6 +1563,12 @@ $(function(){
 
 		cD.initializeWithLogin = initializeWithLogin;
 
+		var initializeWithCookieData = function(data){
+			cwrcApi.initializeWithCookieData(data);
+		}
+
+		cD.initializeWithCookieData = initializeWithCookieData;
+
 		// population functions
 
 		var populateDialog = function(opts) {
@@ -1684,68 +1690,212 @@ $(function(){
 			if (node.nodeType === 3 && nodeValue !== "") {
 				foundAndFilled(nodeValue, parentPath, entity.viewModel().interfaceFields());
 
-				var atts = node.parentNode.attributes;
-				for (var attIndex =0; attIndex < atts.length; ++attIndex) {
-					var currentAtt = atts.item(attIndex);
-					parentPath.push({name: currentAtt.name, count : 1});					
-					foundAndFilled(currentAtt.value, parentPath, entity.viewModel().interfaceFields());
-					parentPath.pop();
-				}
+				// var atts = node.parentNode.attributes;
+				// for (var attIndex =0; attIndex < atts.length; ++attIndex) {
+				// 	var currentAtt = atts.item(attIndex);
+				// 	parentPath.push({name: currentAtt.name, count : 1});					
+				// 	foundAndFilled(currentAtt.value, parentPath, entity.viewModel().interfaceFields());
+				// 	parentPath.pop();
+				// }
 
 			} 
 
 			// path.pop();
 		}
 
-		var GetFromFields = function(currentSection, fields) {
+		var getFromFields = function(currentSection, field) {
 			var nodeNumber = currentSection.count;
 			var currentCount = 0;
+			console.log("GETTING FROM FIELDS");
+			if (field.input === "quantifier") {
+				var result = null;
+				ko.utils.arrayForEach(field.interfaceFields(), function(currentSeed){
 
-
-
-			
-			console.log(fields.input) // first one is a quantifier
-			$.each(fields, function(i, field){
-				console.log(field.toSource())
-				console.log(field.input)
-				if (field.input){
-					console.log(field.path)
-					var fieldPath = field.path.split(',');
-					if (last(fieldPath) === currentSection.name) {
-						++currentCount;
-	
-						if (currentCount === nodeNumber) {
-							return field;
+					ko.utils.arrayForEach(currentSeed.interfaceFields(), function(currentField){
+						var pathArray = currentField.path.split(",");
+						console.log(currentSection.toSource() + " " + pathArray.toSource())
+						if ($.inArray(currentSection.name , pathArray) >= 0) {
+							if (currentField.input != "header"){
+								console.log(">>>>>>>>>>>>>>>>>>>> RETURNING " + currentField.input);
+								result = currentField;
+								return false;
+							}
+						} else {
+							console.log("xx xxx xx not found " + currentSection)
 						}
+					});
+
+					if (result != null) {
+						return false;
 					}
+					
+				});
+				console.log("RESULT :::::: " + result);
+				return result;
+			} else {
+				console.log("UNHANDLED INPUT     "+ field.input);
+			}
+
+			// if not found add Group 
+
+
+			// console.log("name " + currentSection.name)
+			// console.log("input " + field.input);
+			// console.log("path " + field.path);
+			// return null;
+
+
+			// switch (field.input) {
+			// 	case "quantifier":
+			// 		ko.utils.arrayForEach(field.interfaceFields(), function(currentField){
+			// 			switch (currentField.input) {
+			// 				case "quantifier":
+			// 				break;
+			// 				default:
+			// 					console.log("level 2 unknown case : " + field.input);
+			// 				break;
+			// 			}
+			// 		});
+			// 	break;
+			// 	default:
+			// 		console.log("level 1 unknown case : " + field.input);
+			// 	break;
+			// }
+
+
+			// if (field.input == "quantifier" || field.input == "seed") {
+			// 	var result = null;
+			// 	ko.utils.arrayForEach(field.interfaceFields(), function(currentField){
+					
+
+			// 		switch (currentField.input) {
+			// 			case "quantifier":
+
+			// 			break;
+			// 			case "seed":
+
+			// 			break;
+			// 			default:
+			// 				if (currentField.input != "header") {
+
+			// 				}
+			// 			break
+			// 		}
+
+			// 		// if (currentField.input == "quantifier" || currentField.input == "seed") {
+						
+			// 		// 	if (currentField.interfaceFields && currentField.interfaceFields()[0] && currentField.interfaceFields()[0].path &&
+			// 		// 	  currentField.interfaceFields()[0].path.indexOf(currentSection.name) >= 0) {
+			// 		// 		console.log("if claimed")
+			// 		// 		result = currentField;
+			// 		// 		// return false;
+			// 		// 	}
+
+			// 		// } else if (currentField.input != "header") {
+			// 		// 	// if (currentField.path.indexOf())
+
+			// 		// 	console.log("xxx [] found " + currentField.input);
+			// 		// 	result = currentField;
+			// 		// }
+
+					
+			// 	});
+			// 	console.log("returning result " + result)
+			// 	return result;
+
+
+			// } 
+
+			// console.log("not quantifier nore seed")
+			// return null;
+/*
+			if (fields.input === "quantifier") {
+				var fieldPath = last(fields.path.split(','));
+
+				if (fieldPath == currentSection.name) {
+					// ++currentCount;
+					// if (currentCount === nodeNumber) {
+					// 	console.log("returning")
+					// 	return fields.interfaceFields()[];
+					// }
+					// while (fields.interfaceFields().length < currentSection.count) {
+					// 	fields.interfaceFields().addGroup();
+					// }
+					console.log("return field");
+					return fields.interfaceFields()[currentSection.count-1];
+
 				}
-			});
+
+			} else if (fields.input === "seed") {
+				// return getFromFields(currentSection, fields.interfaceFields());
+				$.each(fields.interfaceFields(), function(i, field){
+					// console.log(field.input)
+					if (field.input === "quantifier") {
+						console.log("return quantifier");
+						return getFromFields(currentSection, field);
+					}
+
+				});
+			}
+			console.log("return null");
+			return null;
+
+
+			*/
+			// else if (fields.input === "seed") {
+			// 	console.log("seed")
+			// 	$.each(fields.interfaceFields(), function(i, field){
+			// 		console.log("seed " + i)
+			// 		console.log(field.toSource())
+			// 	});
+			// }
+
+			// console.log("nothing");
+
+			// if (fields.input == "quantifier") {
+			// 	console.log("here");
+			// 	$.each(fields.interfaceFields(), function(i, field){
+			// 		console.log(field.toSource())
+			// 		var fieldPath = field.path.split(',');
+
+
+			// 		console.log(last(fieldPath) +" "+ currentSection.name)
+			// 		if (last(fieldPath) == currentSection.name) {
+			// 			console.log("returning field")
+			// 			return field;
+			// 		}
+			// 		// var fieldPath = field.path.split(',');
+
+			// 		// if (last(fieldPath) === currentSection.name) {
+			// 		// 	++currentCount;
+			// 		// 	if (currentCount === nodeNumber) {
+			// 		// 		return field;
+			// 		// 	}
+			// 		// }
+			// 	});
+			// }
+
+
+			// // console.log("fields.input " + fields.input) // first one is a quantifier
+			// $.each(fields, function(i, field){
+			// 	// console.log("field source " + field.toSource())
+			// 	// console.log("field input " + field.input)
+			// 	if (field.input && field.path){
+			// 		// console.log("field path " + field.path)
+			// 		var fieldPath = field.path.split(',');
+			// 		if (last(fieldPath) === currentSection.name) {
+			// 			++currentCount;
+	
+			// 			if (currentCount === nodeNumber) {
+			// 				return field;
+			// 			}
+			// 		}
+			// 	}
+			// });
 			
 			// not found, look for in seed
 
 
-
-		}
-
-		var NEW_foundAndFilled = function(nodeValue, parentPath) {
-			var pathNames = parentPath.map(function(p){
-				return p.name;
-			});
-
-			var field = entity.viewModel().interfaceFields().interfaceFields();
-
-			for (var i=0; i<parentPath.length; ++i) {
-				console.log(parentPath[i]);
-				var currentSection = parentPath[i];
-				field = GetFromFields(currentSection, field);
-			}
-
-			// field should be where the value goes
-			if (field.input == "radioButton" || field.input == "dynamicCheckbox") {
-				field.value(nodeValue.split(","));
-			} else {
-				field.value(nodeValue);
-			}
 
 		}
 
@@ -1764,9 +1914,46 @@ $(function(){
 			return result;
 		}
 
-		// XXX second seed is not added
-		// XXX second value in group is not added 
-		// XXX same problem ?
+		var NEW_foundAndFilled = function(nodeValue, parentPath) {
+			var pathNames = parentPath.map(function(p){
+				return p.name;
+			});
+
+			// var field = entity.viewModel().interfaceFields().interfaceFields();
+			var field = entity.viewModel().interfaceFields();
+
+			console.log("[][][][][] " + parentPath.toSource())
+			// i == 0 is entity
+			for (var i=0; i<parentPath.length-1; ++i) {
+				// console.log(i + " : " + parentPath[i].toSource());
+
+				var currentSection = parentPath[i+1];
+				console.log(i+1 + "] : " + currentSection.toSource());
+				field = getFromFields(currentSection, field);
+
+				if (field == null) {
+					break;
+				} 
+			}
+			if (!field) {
+				console.log("NOTHING");
+			} else {
+				console.log("FOUND!! !! !!")
+			}
+			// field should be where the value goes
+			if (field) {
+				if (field.input == "radioButton" || field.input == "dynamicCheckbox") {					
+					field.value(nodeValue.split(","));
+				} else {
+					field.value(nodeValue);
+				}	
+				console.log("SETTING VALUE");
+			}
+			
+
+		}
+
+		var lastCount = 0;
 
 		var foundAndFilled = function(nodeValue, parentPath, field) {
 			var pathNames = parentPath.map(function(p){
@@ -1776,12 +1963,26 @@ $(function(){
 				// check path if sub continue
 
 				if (pathNames.toString().indexOf(field.path) === 0) {
+					// console.log("++++ "  + field.path)
+					var lastField = last(field.path.split(","));
+					lastCount = 0;
+					$.each(parentPath, function(i, path){
+						if (path.name == lastField) {
+							lastCount = path.count;
+							return false;
+						}
+					});
+					
 					var foundOnFields = false;
 					// alert(field.interfaceFields().length)
+					// var currentCount = 0;
 					$.each(field.interfaceFields(), function(i, currentField) {						
 						if(foundAndFilled(nodeValue, parentPath, currentField)) {
-							foundOnFields = true;
-							return false; // break out of loop
+							// currentCount += 1;
+							// if (currentCount == lastCount) {
+								foundOnFields = true;
+								return false; // break out of loop	
+							// }							
 						}
 					});
 					if (foundOnFields) {
@@ -1800,12 +2001,15 @@ $(function(){
 
 			} else if(field.input === "seed") {
 				var foundOnSeedCheck = false;
-				
+				var currentCount = 0;				
 				$.each(field.interfaceFields(), function(i, currentField) {
 					
 					if(foundAndFilled(nodeValue, parentPath, currentField)) {
-						foundOnSeedCheck = true;
-						return false; // break out of loop
+						// currentCount += 1;
+						// if (currentCount == lastCount){
+							foundOnSeedCheck = true;
+							return false; // break out of loop
+						// }
 					}
 				});
 
@@ -1813,7 +2017,8 @@ $(function(){
 					return true;
 				}
 
-			}else if (field.input !== "header") {				
+			}else if (field.input !== "header") {	
+				// set value
 				if (field.path == pathNames) {
 					
 					if (! field.isSet) {

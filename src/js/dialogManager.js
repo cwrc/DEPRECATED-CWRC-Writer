@@ -72,10 +72,9 @@ return function(writer) {
 		addschema: new AddSchema(writer)
 	};
 	
-	if (window.location.hostname != 'localhost') {
-		// log in for CWRC-Dialogs
-		cD.initializeWithLogin('mark_test', 'P4ssw0rd!');
-	}
+	// log in for CWRC-Dialogs
+	cD.initializeWithCookieData(document.cookie);
+	
 	if (writer.initialConfig.cwrcDialogs != null) {
 		var conf = writer.initialConfig.cwrcDialogs;
 		if (conf.cwrcApiUrl != null) cD.setCwrcApi(conf.cwrcApiUrl);
