@@ -230,8 +230,8 @@ return function(writer) {
 		format = format || 'xml';
 		
 		var namespaces = {
-			'rdf': 'xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"',
-			'cw': 'xmlns:cw="http://cwrc.ca/ns/cw#"'
+			'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+			'cw': 'http://cwrc.ca/ns/cw#'
 		};
 		
 		var rdfString = '';
