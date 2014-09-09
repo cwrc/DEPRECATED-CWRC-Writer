@@ -73,7 +73,7 @@ return function(writer) {
 	};
 	
 	// log in for CWRC-Dialogs
-	cD.initializeWithCookieData(document.cookie);
+	cD.initializeWithCookieData(null);
 	
 	if (writer.initialConfig.cwrcDialogs != null) {
 		var conf = writer.initialConfig.cwrcDialogs;
