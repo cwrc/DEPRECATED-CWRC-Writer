@@ -290,10 +290,12 @@ return function(writer) {
 					
 					if (info.attributes) {
 						var atts = info.attributes.persName;
-						for (var key in duplicates) {
-							delete atts[key];
+						if (atts != null) {
+							for (var key in duplicates) {
+								delete atts[key];
+							}
+							xml += getAttributeString(atts);
 						}
-						xml += getAttributeString(atts);
 					}
 					
 					xml += '>'+TEXT_SELECTION+'</persName>';
@@ -397,10 +399,12 @@ return function(writer) {
 					
 					if (info.attributes) {
 						var atts = info.attributes.orgName;
-						for (var key in duplicates) {
-							delete atts[key];
+						if (atts != null) {
+							for (var key in duplicates) {
+								delete atts[key];
+							}
+							xml += getAttributeString(atts);
 						}
-						xml += getAttributeString(atts);
 					}
 					
 					xml += '>'+TEXT_SELECTION+'</orgName>';
@@ -595,10 +599,12 @@ return function(writer) {
 					
 					if (info.attributes) {
 						var atts = info.attributes.title;
-						for (var key in duplicates) {
-							delete atts[key];
+						if (atts != null) {
+							for (var key in duplicates) {
+								delete atts[key];
+							}
+							xml += getAttributeString(atts);
 						}
-						xml += getAttributeString(atts);
 					}
 					
 					xml += '>'+TEXT_SELECTION+'</title>';
@@ -713,10 +719,12 @@ return function(writer) {
 					
 					if (info.attributes) {
 						var atts = info.attributes.date;
-						for (var key in duplicates) {
-							delete atts[key];
+						if (atts != null) {
+							for (var key in duplicates) {
+								delete atts[key];
+							}
+							xml += getAttributeString(atts);
 						}
-						xml += getAttributeString(atts);
 					}
 					
 					xml += '>'+TEXT_SELECTION+'</date>';
