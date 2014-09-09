@@ -1,8 +1,7 @@
 require.config({
-	baseUrl: 'js',
 	paths: {
 		'text': 'lib/require/text', // requirejs text plugin
-		
+
 		'jquery': ['http://code.jquery.com/jquery-1.9.1.min','lib/jquery/jquery-1.9.1'],
 		'jquery-ui': ['http://code.jquery.com/ui/1.10.4/jquery-ui.min','lib/jquery/jquery-ui-1.10.4.custom'],
 		'jquery.layout': ['http://cdnjs.cloudflare.com/ajax/libs/jquery-layout/1.3.0-rc-30.79/jquery.layout.min','lib/jquery/jquery.layout-latest.min'],
