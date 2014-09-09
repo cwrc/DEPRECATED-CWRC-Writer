@@ -624,7 +624,8 @@ return function(config) {
 				name: 'cwrc',
 				icons: false,
 				url: true,
-				dir: 'js/lib/jstree/themes'
+				dir: w.cwrcRootUrl + 'js/lib/jstree/themes',
+				responsive: false
 			},
 			data: {
 				text: 'Tags',
