@@ -1,7 +1,8 @@
 (function(tinymce) {
 	// make sure snippet is available
+	var $ = require('jquery');
 	require(['jquery.snippet']);
-	
+
 	tinymce.create('tinymce.plugins.ViewSource', {
 		init: function(ed, url) {
 			var t = this;

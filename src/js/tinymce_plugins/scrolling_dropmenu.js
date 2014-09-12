@@ -1,6 +1,6 @@
 (function(tinymce) {
 	var DOM = tinymce.DOM, Event = tinymce.dom.Event;
-
+	var $ = require('jquery');
 	tinymce.create('tinymce.ui.ScrollingMenuButton:tinymce.ui.MenuButton', {
 		ScrollingMenuButton : function(id, s, ed) {
 			this.parent(id, s, ed);
@@ -67,7 +67,7 @@
 
 (function(tinymce) {
 	var is = tinymce.is, DOM = tinymce.DOM, each = tinymce.each, Event = tinymce.dom.Event, Element = tinymce.dom.Element;
-
+	var $ = require('jquery');
 	tinymce.create('tinymce.ui.ScrollingDropMenu:tinymce.ui.DropMenu', {
 		ScrollingDropMenu : function(id, s) {
 			s = s || {};
@@ -377,7 +377,7 @@
 
 (function(tinymce) {
 	var Event = tinymce.dom.Event, each = tinymce.each;
-
+	var $ = require('jquery');
 	tinymce.create('tinymce.ui.FilterMenuKeyboardNav:tinymce.ui.KeyboardNavigation', {
 		FilterMenuKeyboardNav : function(settings, dom) {
 			var t = this, root = settings.root, items = settings.items,

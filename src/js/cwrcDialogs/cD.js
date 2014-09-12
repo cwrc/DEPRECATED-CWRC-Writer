@@ -1,7 +1,7 @@
-
+define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function ($) {
+var cD = {};
 // Tree traversal
 $(function(){
-	cD = {};
 	(function(){
 		// Cwrc Api
 		var cwrcApi = null;
@@ -3298,4 +3298,6 @@ $(function(){
 		initialize();
 
 	})();
+});
+	return cD;
 });

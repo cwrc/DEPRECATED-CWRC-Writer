@@ -3,8 +3,9 @@ require.config({
 		'text': 'lib/require/text', // requirejs text plugin
 
 		'jquery': ['http://code.jquery.com/jquery-1.9.1.min','lib/jquery/jquery-1.9.1'],
-		'jquery-ui': ['http://code.jquery.com/ui/1.10.4/jquery-ui.min','lib/jquery/jquery-ui-1.10.4.custom'],
-		'jquery.layout': ['http://cdnjs.cloudflare.com/ajax/libs/jquery-layout/1.3.0-rc-30.79/jquery.layout.min','lib/jquery/jquery.layout-latest.min'],
+		'jquery-ui': ['lib/jquery/jquery-ui-1.10.4.min'],
+		'jquery-migrate': ['lib/jquery/jquery-migrate-1.2.1'],
+		'jquery.layout': 'lib/jquery/jquery.layout-latest.min',
 		'jquery.tablayout': 'lib/jquery/jquery.layout.resizeTabLayout-1.3',
 		'jquery.contextmenu': 'lib/jquery/jquery.contextmenu',
 		'jquery.tmpl': 'lib/jquery/jquery.tmpl.min',
@@ -24,7 +25,7 @@ require.config({
 		
 		// cwrcDialogs
 		'knockout': ['http://cdnjs.cloudflare.com/ajax/libs/knockout/2.3.0/knockout-min','lib/knockout/knockout-2.3.0'],
-		'bootstrap': ['http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min','lib/bootstrap/bootstrap'],
+		'bootstrap': ['lib/bootstrap/bootstrap.min'],
 		'bootstrap-datepicker': 'lib/bootstrap/bootstrap-datepicker',
 		'cwrc-api': 'cwrcDialogs/cwrc-api',
 		'cwrcDialogs': 'cwrcDialogs/cD'
@@ -36,7 +37,7 @@ require.config({
 		'jquery.contextmenu': ['jquery'],
 		'jquery.tmpl': ['jquery'],
 		'jquery.watermark': ['jquery'],
-		'jquery.snippet': ['jquery'],
+		'jquery.snippet': ['jquery', 'jquery-migrate'],
 		'tinymce': {
 			exports: 'tinymce',
 			init: function() {
@@ -51,9 +52,21 @@ require.config({
 		'cwrcDialogs': {
 			deps: ['jquery', 'jquery-ui', 'knockout', 'bootstrap', 'bootstrap-datepicker', 'cwrc-api']
 		}
+	},
+	map: {
+		// '*' means all modules will get 'jquery-private'
+		// for their 'jquery' dependency.
+		'*': { 'jquery': 'jquery-private' },
+		'jquery-private': { 'jquery': 'jquery' }
 	}
 	// cache busting
 //	urlArgs: "bust=" +  (new Date()).getTime(),
+});
+
+// and the 'jquery-private' module, in the
+// jquery-private.js file:
+define('jquery-private', ['jquery'], function ($) {
+	return $.noConflict(true);
 });
 
 require(['jquery', 'knockout'], function($, knockout) {

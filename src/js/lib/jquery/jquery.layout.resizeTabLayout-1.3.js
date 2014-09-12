@@ -19,6 +19,7 @@
  *	Version:	1.3 - 2013-01-12
  *	Author:		Kevin Dalman (kevin.dalman@gmail.com)
  */
+define('jquery.tablayout',['jquery'], function(jQuery) {
 ;(function ($) {
 var _ = $.layout;
 
@@ -38,4 +39,5 @@ _.callbacks.resizeTabLayout = function (x, ui) {
 		}
 	});
 };
-})( jQuery );
+})( jQuery );}
+);

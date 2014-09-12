@@ -1,5 +1,5 @@
 (function(tinymce) {
-	
+	var $ = require('jquery');
 	tinymce.create('tinymce.plugins.SchemaTags', {
 		init: function(ed, url) {
 			var t = this;
