@@ -452,9 +452,11 @@
 	})(window);
 
 
-(function($, tinymce) {
+(function(tinymce) {
 	var is = tinymce.is, attrRegExp = /^(href|src|style)$/i, undef;
 
+	var $ = require('jquery');
+	
 	// jQuery is undefined
 	if (!$ && window.console) {
 		return console.log("Load jQuery first!");
@@ -755,7 +757,7 @@
 	tinymce.onCreate = function(ty, c, p) {
 		tinymce.extend(p, patches[c]);
 	};
-})(window.jQuery, tinymce);
+})(tinymce);
 
 
 
