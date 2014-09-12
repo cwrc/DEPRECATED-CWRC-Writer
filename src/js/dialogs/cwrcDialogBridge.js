@@ -1,4 +1,4 @@
-define(['jquery', 'jquery-ui', 'cwrcDialogs'], function($, jqueryUi, cwrcDialogs) {
+define(['jquery', 'jquery-ui', 'cwrcDialogs'], function($, jqueryUi, cD) {
 
 // a bridge between the CWRC-Writer and the cwrcDialogs
 return function(writer, config) {

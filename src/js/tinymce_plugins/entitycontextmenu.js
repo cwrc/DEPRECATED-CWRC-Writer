@@ -1,6 +1,6 @@
 (function() {
 	var Event = tinymce.dom.Event, each = tinymce.each, DOM = tinymce.DOM;
-
+	var $ = require('jquery');
 	/**
 	 * This plugin a context menu to TinyMCE editor instances.
 	 *

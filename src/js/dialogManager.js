@@ -1,12 +1,13 @@
 define([
     'jquery',
     'jquery-ui',
+    'cwrcDialogs',
     'dialogs/addEvent','dialogs/addSchema',
     'dialogs/citation','dialogs/correction','dialogs/date','dialogs/fileManager',
     'dialogs/header','dialogs/keyword','dialogs/link','dialogs/message',
     'dialogs/note','dialogs/org','dialogs/person','dialogs/place','dialogs/search','dialogs/title','dialogs/triple',
     'dialogs/cwrcPerson','dialogs/cwrcOrg','dialogs/cwrcPlace','dialogs/cwrcTitle','dialogs/cwrcCitation'
-], function($, jqueryui,
+], function($, jqueryui, cD,
 		AddEvent, AddSchema,
 		Citation, Correction, DateDialog, FileManager,
 		Header, Keyword, Link, Message, Note, Org, Person, Place, Search, Title, Triple,

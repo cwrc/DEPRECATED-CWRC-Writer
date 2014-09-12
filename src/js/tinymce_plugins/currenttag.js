@@ -1,4 +1,5 @@
 (function(tinymce) {
+	var $ = require('jquery');
 	tinymce.create('tinymce.plugins.CurrentTag', {
 		init: function(ed, url) {
 			var t = this;

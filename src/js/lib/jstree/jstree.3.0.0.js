@@ -25,7 +25,7 @@
  * if using jslint please allow for the jQuery global and use following options: 
  * jslint: browser: true, ass: true, bitwise: true, continue: true, nomen: true, plusplus: true, regexp: true, unparam: true, todo: true, white: true
  */
-
+	var jQuery = $;
 	// prevent another load? maybe there is a better way?
 	if($.jstree) {
 		return;
