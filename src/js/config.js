@@ -78,7 +78,7 @@ require(['jquery', 'knockout'], function($, knockout) {
 	         'jquery.tablayout'
 	], function(Writer, Delegator) {
 		$(function() {
-			cwrcWriterInit.call(window, Writer, Delegator);
+			cwrcWriterInit.call(window, $, Writer, Delegator);
 		});
 	});
 });
