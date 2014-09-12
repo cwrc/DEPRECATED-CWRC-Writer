@@ -14,7 +14,7 @@ return function(writer) {
 	
 	var bridge = new cwrcDialogBridge(w, {
 		label: 'Organization',
-		localDialog: 'tagOrg',
+		localDialog: 'org',
 		cwrcType: 'organization'
 	});
 	

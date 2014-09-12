@@ -13,7 +13,7 @@ return function(writer) {
 
 	var bridge = new cwrcDialogBridge(w, {
 		label: 'Person',
-		localDialog: 'tagPerson',
+		localDialog: 'person',
 		cwrcType: 'person'
 	});
 

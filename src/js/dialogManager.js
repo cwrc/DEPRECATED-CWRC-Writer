@@ -2,15 +2,10 @@ define([
     'jquery',
     'jquery-ui',
     'cwrcDialogs',
-    'dialogs/addEvent','dialogs/addSchema',
-    'dialogs/citation','dialogs/correction','dialogs/date','dialogs/fileManager',
-    'dialogs/header','dialogs/keyword','dialogs/link','dialogs/message',
-    'dialogs/note','dialogs/org','dialogs/person','dialogs/place','dialogs/search','dialogs/title','dialogs/triple',
+    'dialogs/addSchema','dialogs/fileManager','dialogs/header','dialogs/message','dialogs/triple',
     'dialogs/cwrcPerson','dialogs/cwrcOrg','dialogs/cwrcPlace','dialogs/cwrcTitle','dialogs/cwrcCitation'
 ], function($, jqueryui, cD,
-		AddEvent, AddSchema,
-		Citation, Correction, DateDialog, FileManager,
-		Header, Keyword, Link, Message, Note, Org, Person, Place, Search, Title, Triple,
+		AddSchema, FileManager, Header, Message, Triple,
 		CwrcPerson, CwrcOrg, CwrcPlace, CwrcTitle, CwrcCitation
 ) {
 
@@ -45,67 +40,87 @@ $.extend($.ui.tooltip.prototype.options, {
  * @class DialogManager
  * @param {Writer} writer
  */
-return function(writer) {	
-	var currentType = null;
+return function(writer) {
+	var w = writer;
 	
 	var dialogs = {
-		message: new Message(writer),
-		search: new Search(writer),
-		note: new Note(writer),
-		correction: new Correction(writer),
-		keyword: new Keyword(writer),
-		date: new DateDialog(writer),
-		link: new Link(writer),
-		addevent: new AddEvent(writer),
-		triple: new Triple(writer),
-		header: new Header(writer),
-		filemanager: new FileManager(writer),
-		person: new CwrcPerson(writer), // cwrcDialogs lookup
-		tagPerson: new Person(writer), // CWRCWriter tagger
-		org: new CwrcOrg(writer), // cwrcDialogs lookup
-		tagOrg: new Org(writer), // CWRCWriter tagger
-		title: new CwrcTitle(writer), // cwrcDialogs lookup
-		tagTitle: new Title(writer), // CWRCWriter tagger
-		citation: new CwrcCitation(writer), // cwrcDialogs lookup
-		tagCitation: new Citation(writer), // CWRCWriter tagger
-		place: new CwrcPlace(writer),
-		tagPlace: new Place(writer),
-		addschema: new AddSchema(writer)
+		message: new Message(w),
+		triple: new Triple(w),
+		header: new Header(w),
+		filemanager: new FileManager(w),
+		addschema: new AddSchema(w),
+		person: new CwrcPerson(w),
+		org: new CwrcOrg(w),
+		title: new CwrcTitle(w),
+		citation: new CwrcCitation(w),
+		place: new CwrcPlace(w),
 	};
 	
 	// log in for CWRC-Dialogs
 	cD.initializeWithCookieData(null);
 	
-	if (writer.initialConfig.cwrcDialogs != null) {
-		var conf = writer.initialConfig.cwrcDialogs;
+	if (w.initialConfig.cwrcDialogs != null) {
+		var conf = w.initialConfig.cwrcDialogs;
 		if (conf.cwrcApiUrl != null) cD.setCwrcApi(conf.cwrcApiUrl);
 		if (conf.geonameUrl != null) cD.setGeonameUrl(conf.geonameUrl);
 		if (conf.viafUrl != null) cD.setViafUrl(conf.viafUrl);
 	}
 	
-	dialogs.event = dialogs.addevent;
+	var schemaDialogs = {};
+	var dialogNames = ['citation', 'correction', 'date', 'keyword', 'link', 'note', 'org', 'person', 'place', 'title'];
+	
+	var loadSchemaDialogs = function(schemaId) {
+		if (schemaId === 'tei') {
+			// TODO destroy previously loaded dialogs
+			if (schemaDialogs[schemaId] == null) {
+				var parent = schemaDialogs[schemaId] = {};
+				var schemaDialogNames = [];
+				schemaDialogNames = $.map(dialogNames, function(name, i) {
+					return 'dialogs/schemas/'+schemaId+'/'+name;
+				});
+				require(schemaDialogNames, function() {
+					if (arguments.length != schemaDialogNames.length) {
+						alert('error loading schema dialogs');
+					} else {
+						for (var i = 0; i < arguments.length; i++) {
+							var name = dialogNames[i];
+							parent[name] = new arguments[i](w);
+						}
+					}
+				});
+			}
+		} else {
+			w.dialogManager.show('message', {
+				title: 'Error',
+				msg: 'This schema doesn\'t have full dialog support yet!',
+				type: 'error'
+			});
+		}
+	};
+	
+	w.event('schemaLoaded').subscribe(function() {
+		loadSchemaDialogs(w.schemaManager.schemaId);
+	});
 	
 	/**
 	 * @lends DialogManager.prototype
 	 */
 	var pm = {
-		getCurrentType: function() {
-			return currentType;
-		},
 		show: function(type, config) {
-			if (dialogs[type]) {
-				currentType = type;
-				dialogs[type].show(config);
+			if (type.indexOf('schema/') === 0) {
+				var typeParts = type.split('/');
+				var type = typeParts[1];
+				schemaDialogs[w.schemaManager.schemaId][type].show(config);
+			} else {
+				if (dialogs[type]) {
+					dialogs[type].show(config);
+				} else if (schemaDialogs[w.schemaManager.schemaId][type]) {
+					schemaDialogs[w.schemaManager.schemaId][type].show(config);
+				}
 			}
 		},
 		confirm: function(config) {
-			currentType = 'message';
 			dialogs.message.confirm(config);
-		},
-		hideAll: function() {
-			for (var key in dialogs) {
-				dialogs[key].hide();
-			}
 		}
 	};
 	

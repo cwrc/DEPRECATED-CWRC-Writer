@@ -5,7 +5,7 @@ return function(writer) {
 	
 	var bridge = new cwrcDialogBridge(w, {
 		label: 'Citation',
-		localDialog: 'tagCitation',
+		localDialog: 'citation',
 		cwrcType: 'title'
 	});
 	

@@ -21,6 +21,7 @@ require.config({
 		
 		'octokit': 'lib/octokit/octokit',
 		
+		'dialogForm': 'dialogs/dialogForm',
 		'attributeWidget': 'dialogs/attributeWidget',
 		
 		// cwrcDialogs

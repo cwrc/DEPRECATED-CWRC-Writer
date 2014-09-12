@@ -5,8 +5,8 @@ return function(writer, config) {
 	var w = writer;
 	
 	var label = config.label;
-	var localDialog = config.localDialog;
 	var cwrcType = config.cwrcType;
+	var localDialog = config.localDialog;
 	
 	var createEditOpts = {
 		success: function(result) {
@@ -21,7 +21,7 @@ return function(writer, config) {
 				result = {
 					id: 'http://cwrc-dev-01.srv.ualberta.ca/islandora/object/'+result.response.pid
 				};
-				w.dialogManager.show(localDialog, {
+				w.dialogManager.show('schema/'+localDialog, {
 					cwrcInfo: result
 				});
 			}
@@ -41,7 +41,7 @@ return function(writer, config) {
 	return {
 		show: function(config) {
 			if (config.entry) {
-				w.dialogManager.show(localDialog, {
+				w.dialogManager.show('schema/'+localDialog, {
 					entry: config.entry
 				});
 			} else {
@@ -84,7 +84,7 @@ return function(writer, config) {
 						
 						delete result.data;
 						
-						w.dialogManager.show(localDialog, {
+						w.dialogManager.show('schema/'+localDialog, {
 							query: query,
 							cwrcInfo: result
 						});

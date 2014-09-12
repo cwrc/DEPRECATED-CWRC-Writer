@@ -14,7 +14,7 @@ return function(writer) {
 	
 	var bridge = new cwrcDialogBridge(w, {
 		label: 'Place',
-		localDialog: 'tagPlace',
+		localDialog: 'place',
 		cwrcType: 'place'
 	});
 	

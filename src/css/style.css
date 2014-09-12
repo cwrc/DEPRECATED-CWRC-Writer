@@ -548,6 +548,11 @@ html, body {
 	font-size: 16px;
 }
 
+.annotationDialog .attributes {
+	position: relative;
+	height: 200px;
+}
+
 #correctionDialog div {
 	margin-bottom: 10px;
 }
