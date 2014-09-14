@@ -1,15 +1,10 @@
-define(['jquery', 'jquery-ui', 'dialogs/cwrcDialogBridge'], function($, jqueryUi, cwrcDialogBridge) {
-	
-return function(writer) {
-	var w = writer;
-	
-	var bridge = new cwrcDialogBridge(w, {
-		label: 'Citation',
-		localDialog: 'citation',
-		cwrcType: 'title'
-	});
-	
-	return bridge;
-};
-
+define(['dialogs/cwrcDialogBridge', 'jquery', 'jquery-ui'], function (CwrcDialogBridge) {
+  'use strict';
+  return function (writer, cwrcDialog) {
+    return new CwrcDialogBridge(writer, cwrcDialog, {
+      label: 'Citation',
+      localDialog: 'citation',
+      cwrcType: 'title'
+    });
+  };
 });

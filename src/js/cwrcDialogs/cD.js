@@ -1,28 +1,37 @@
 define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function ($) {
-var cD = {};
-// Tree traversal
-$(function(){
-	(function(){
+  return function (writer) {
 		// Cwrc Api
+ 		var cD = {};
 		var cwrcApi = null;
-		cD.setCwrcApi = function(url){
+		var url = {
+			cwrcApiUrl: 'http://apps.testing.cwrc.ca/services/ccm-api/',
+			geonameUrl: 'http://apps.testing.cwrc.ca/cwrc-mtp/geonames/',
+			viafUrl: 'http://apps.testing.cwrc.ca/services/viaf/',
+			schemas: {
+				person: 'http://cwrc.ca/schemas/entities.rng',
+				organization: 'http://cwrc.ca/schemas/entities.rng',
+				place: 'http://cwrc.ca/schemas/entities.rng'
+			}
+		};
+		url = $.extend(true, url, writer.initialConfig.cwrcDialogs);
+		cD.setCwrcApi = function(url) {
 			cwrcApi = new CwrcApi(url, $);
-		}
-		cD.setCwrcApi('http://apps.testing.cwrc.ca/services/ccm-api/');
+		};
+		cD.setCwrcApi(url.cwrcApiUrl);
 		//var cwrcApi = new CwrcApi('http://localhost/cwrc/', $);
-		
+
 		// Geonames Url
-		var geonameUrl = "http://apps.testing.cwrc.ca/cwrc-mtp/geonames/";
-		cD.setGeonameUrl = function(url){
+		var geonameUrl = url.geonameUrl;
+		cD.setGeonameUrl = function(url) {
 			geonameUrl = url;
 		}
-		
+
 		// Viaf Url
-		var viafUrl = "http://apps.testing.cwrc.ca/services/viaf/";
+		var viafUrl = url.viafUrl;
 		cD.setViafUrl = function(url){
 			viafUrl = url;
 		}
-		
+
 		// parameters
 
 		var params = {};
@@ -42,15 +51,15 @@ $(function(){
 		$.fn.bsButton = button;
 		var tooltip = $.fn.tooltip.noConflict();
 		$.fn.bsTooltip = tooltip;
-		
+
 		///////////////////////////////////////////////////////////////////////
 		// Helpers
 		///////////////////////////////////////////////////////////////////////
 
-		var last = function(array) {	
+		var last = function(array) {
 			return array[array.length-1];
 		};
-		
+
 		var initialize = function() {
 			entity.initialize();
 			search.initialize();
@@ -78,14 +87,14 @@ $(function(){
 				// 	}
 				// }
 				// console.log(ev.target)
-				// console.log(ko.toJSON(ev.date).substr(1, 10));	
+				// console.log(ko.toJSON(ev.date).substr(1, 10));
 				// $(ev.target).find("input").first().val(ko.toJSON(ev.date).substr(1, 10));
 
 				// console.log($(ev.target).find("input").first().val())
 				// if($(ev.target).find("input").first().val()) {
 				// 	$(ev.target).find("input").first().val(ko.toJSON(ev.date).substr(1, 10));
 				// }
-				
+
 				// console.log($(ev.target).find("input")[0].val(ko.toJSON(ev.date).substr(1, 10)))
 			// });
 		};
@@ -133,16 +142,16 @@ $(function(){
 				var author = {
 					name: ko.observable("")
 				};
-				
+
 				entity.viewModel().modsFields().author.push(author);
-				
+
 				return author;
 			},
 			removeThisAuthor: function(author){
 				entity.viewModel().modsFields().author.remove(author);
 			}
 		}); // Added to create mods entries
-		
+
 		entity.person = {};
 		entity.person.schema = "";
 		entity.person.success = null;
@@ -150,11 +159,11 @@ $(function(){
 		entity.organization = {};
 		entity.organization.schema = "";
 		entity.organization.success = null;
-		
+
 		entity.place = {};
 		entity.place.schema = "";
 		entity.place.success = null;
-		
+
 		entity.title = {};
 		entity.title.schema = "";
 		entity.title.success = null;
@@ -213,7 +222,7 @@ $(function(){
 		};
 
 		entity.initialize = function() {
-					
+
 			// entity.setPersonSchema("./schemas/entities.rng");
 			// entity.setOrganizationSchema("./schemas/entities.rng");
 
@@ -228,7 +237,7 @@ $(function(){
 			'						<button data-bind="click: addGroup" class="btn btn-default btn-xs"><span class="fa fa-plus"</span></button>' +
 			'					</span>' +
 			'				</span>' +
-			'			</div>' +			
+			'			</div>' +
 			'			</div>' +
 			'			<div class="interfaceFieldsContainer" data-bind="template:{name: $root.displayMode, foreach: interfaceFields}"> ' +
 			'			</div>' +
@@ -253,10 +262,10 @@ $(function(){
 			'				<div class="label" data-bind="text:nodeMessage, attr:{class: nodeMessageClass}"></div>' +
 			'			</span>' +
 			'		</script>' +
-			
+
 			'		<script type="text/html" id="header">' +
 			'			<!--header-->' +
-			'			<span>' + 
+			'			<span>' +
 			'				<h4><span data-bind="text: label, style:{margin : fieldPadding()}"></span></h4>' +
 			'			</span>' +
 			'		</script>' +
@@ -344,7 +353,7 @@ $(function(){
 			'	</div>' +
 			'</div>' +
 			'</div>';
-			
+
 			var newTitleDialogTemplate = '' +
 			'<div id="newTitleDialogue" class="bootstrap-scope cwrcDialog" title="">' +
 			'<div class="modal fade" id="cwrcTitleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
@@ -372,7 +381,7 @@ $(function(){
 			'						<span>Title</span>' +
 			'					</div>' +
 			'					<div class="interfaceFieldsContainer"> ' +
-			'						<input data-bind="value: title">' +	
+			'						<input data-bind="value: title">' +
 			'						<div class="label label-info" data-bind="if:validation.title">Required value</div>' +
 			'						<div class="label label-danger" data-bind="ifnot:validation.title">Required value</div>' +
 			'					</div>' +
@@ -398,7 +407,7 @@ $(function(){
 			'									<span class="fa fa-minus"></span>' +
 			'								</button>' +
 			'							</span>' +
-			'						</div>' +	
+			'						</div>' +
 			'					</div>' +
 			'				</div>' +
 			//Date
@@ -415,18 +424,18 @@ $(function(){
 			'						<div class="label label-danger" data-bind="ifnot:validation.date">Invalid date</div>' +
 			'					</div>' +
 			'				</div>' +
-			
+
 			//Project
 			'				<div class="quantifier">' +
 			'					<div>' +
 			'						<span>Project</span>' +
 			'					</div>' +
 			'					<div class="interfaceFieldsContainer"> ' +
-			'						<input data-bind="value: project">' +	
+			'						<input data-bind="value: project">' +
 			'						<!--<div class="label label-info" data-bind="text:nodeMessage, attr:{class: nodeMessageClass}">Required value</div>-->' +
 			'					</div>' +
 			'				</div>' +
-			
+
 			'			</div>' +
 			'			<div class="modal-footer">' +
 			'				<div class="label label-danger" data-bind="ifnot: validated"> Form is not valid</div>' +
@@ -442,11 +451,11 @@ $(function(){
 			$('body').append(newDialogTemplate);
 			$('body').append(newTitleDialogTemplate);
 			$("#cwrcEntityModal").modal(params.modalOptions);
-			$("#cwrcEntityModal").draggable({	
+			$("#cwrcEntityModal").draggable({
 				handle: ".modal-header"
 			});
 			$("#cwrcTitleModal").modal(params.modalOptions);
-			$("#cwrcTitleModal").draggable({	
+			$("#cwrcTitleModal").draggable({
 				handle: ".modal-header"
 			});
 
@@ -484,17 +493,17 @@ $(function(){
 			entity[dialogType].workingContainers.push(startingInterleave);
 			entity.viewModel().validated(true);
 		};
-		
+
 		var completeTitleDialog = function(opts, data) {
 			entity[dialogType].success = opts.success ? opts.success : function(){}; //typeof opts.success === undefined ? function(){} : opts.success;
 			entity[dialogType].error = opts.error ? opts.error : function(){};//typeof opts.error === undefined ? function(){} : opts.error;
 			newTitleDialog(opts, data);
 			setHelp();
 		};
-		
+
 		var newTitleDialog = function(opts, data) {
 			initializeQuantifiers();
-			
+
 			var modsFields = entity.viewModel().modsFields();
 			if(data && data != null){
 				modsFields.modsType(data.modsType);
@@ -502,7 +511,7 @@ $(function(){
 				modsFields.date(data.date ? data.date : "");
 				modsFields.project(data.project ? data.project : "");
 				modsFields.author([])
-				
+
 				if(data.author && data.author != null && data.author.length > 0){
 					data.author.forEach(function(author){
 						var a = modsFields.addNewAuthor();
@@ -516,16 +525,16 @@ $(function(){
 				if (opts.startValue && opts.startValue.trim() !== "") {
 					modsFields.title(opts.startValue);
 				} else {
-					modsFields.title("");	
-				}				
+					modsFields.title("");
+				}
 				modsFields.author([]);
 				modsFields.date("");
 				modsFields.project("");
-				
+
 				modsFields.addNewAuthor();
 			}
-			
-			
+
+
 			modsFields.validation.title(true);
 			modsFields.validation.date(true);
 		}
@@ -552,7 +561,7 @@ $(function(){
 			var root = entity[dialogType].workingContainers[0];
 			root.interfaceFields.push(root.seed);
 			entity.viewModel().interfaceFields(entity[dialogType].workingContainers[0]); // startingIterfaceField
-			
+
 		};
 
 		var visit = function(node) {
@@ -677,11 +686,11 @@ $(function(){
 
 
 			var values = $(appInfo).children('values[type='+ type +']')[0];
-			
+
 			if (!values) {
 				values = $(appInfo).children('values')[0];
 			}
-			
+
 			if (values) {
 
 				var valuesURL = $(values).attr('url');
@@ -791,11 +800,11 @@ $(function(){
 						newInput.label = $(e).children('label').first().text();
 						newInput.help = $(e).children('help-text').first().text();
 						var lastContainer = last(entity[dialogType].workingContainers);
-						
+
 						if (lastContainer.isRequired()) {
 							newInput.nodeMessage("Required value");
 						}
-						
+
 						if (isStartValue === "true") {
 							entity.startValuePath = currentPath.map(function(p){
 								return {name : p,
@@ -818,7 +827,7 @@ $(function(){
 		};
 
 		var processQuantifier = function(node){
-			
+
 			var newQuantifier;
 			var nodeName = node.nodeName.toLowerCase();
 			switch(nodeName) {
@@ -839,7 +848,7 @@ $(function(){
 			///////////////
 
 			newQuantifier.path = entity.elementPath.toString();
-			
+
 			///////////////
 
 			// add to latestWorking quantifier
@@ -876,7 +885,7 @@ $(function(){
 			if (lastContainer.hasInterface) {
 				lastContainer.interfaceFields.push(lastContainer.seed.clone());
 				entity[dialogType].workingContainers.pop();
-				
+
 			} else {
 				entity[dialogType].workingContainers.pop();
 				var parent = last(entity[dialogType].workingContainers);
@@ -886,11 +895,11 @@ $(function(){
 
 		var postprocessQuantifier = function(node){
 			var lastContainer = last(entity[dialogType].workingContainers);
-			
+
 			$.each(lastContainer.seed.interfaceFields(), function(index, item){
-		
+
 				if (isInterfaceIsPresent(item)) {
-					lastContainer.hasInterface = true;			
+					lastContainer.hasInterface = true;
 				}
 			});
 
@@ -898,7 +907,7 @@ $(function(){
 
 				lastContainer.label = lastContainer.seed.interfaceFields()[0].label;
 				lastContainer.seed.interfaceFields()[0].label = "";
-				
+
 				if (lastContainer.minItems === 1) {
 					// lastContainer.interfaceFields.push(lastContainer.seed.clone());
 					lastContainer.addGroup();
@@ -908,17 +917,17 @@ $(function(){
 				entity[dialogType].workingContainers.pop();
 				var parent = last(entity[dialogType].workingContainers);
 				moveInterfaceElements(lastContainer , parent);
-			}	
+			}
 		};
 
 		var moveInterfaceElements = function(from, to) {
 			$.each(from.seed.interfaceFields(), function(index, item){
 				// if (item.hasInterface) {
-				
+
 				to.seed.interfaceFields.push(item);
 
 			});
-			
+
 			// XXX Needed ?
 			if (to.label === "") {
 				to.label = from.label;
@@ -941,7 +950,7 @@ $(function(){
 						entity[dialogType].shouldValidate.push(false);
 					}
 					*/
-				
+
 				}
 				$.each(node.interfaceFields(), function(index, node) {
 					visitStringifyResult(node);
@@ -951,14 +960,14 @@ $(function(){
 				}
 			} else if (node.input !== "label" && node.input !== "header") {
 				// CREATE NODE
-				
+
 				var validate = last(entity[dialogType].shouldValidate);
 				if (validate && $.trim(node.value()) === ""){
-			
+
 					node.nodeMessageClass("label label-danger");
 					entity.viewModel().validated(false);
 				} else {
-					
+
 					node.nodeMessageClass("label label-info");
 				}
 				createNode(node);
@@ -973,7 +982,7 @@ $(function(){
 				thisPathString,
 				selectior,
 				newElement;
-			
+
 			if (node.attributeName !== "") {
 				fullPath.pop();
 				pathString = fullPath.toString();
@@ -983,7 +992,7 @@ $(function(){
 			if (node.attributeName !== "") {
 				--maxDepth;
 			}
-			
+
 			for (var i=0; i< maxDepth; i++) {
 				path = pathString.split(',');
 				thisPathString = path.splice(0, i+1) + "";
@@ -1011,17 +1020,17 @@ $(function(){
 			}
 
 		};
-		
+
 		var validateModsInfo = function(xml){
 			var modsFields = entity.viewModel().modsFields();
-			
+
 			if(modsFields.title().trim().length < 1){
 				modsFields.validation.title(false);
 				entity.viewModel().validated(false);
 			}else{
 				modsFields.validation.title(true);
 			}
-			
+
 			var testDate = modsFields.date().trim();
 			var rx = /^\d{1,4}(-(0[1-9]|1[012])(-(0[1-9]|[12][0-9]|3[01]))?)?$/; //Tests that the date can be eirther YYYY, YYYY-MM, or YYYY-MM-DD
 			if(testDate.length > 0 && !rx.test(testDate)){
@@ -1032,19 +1041,19 @@ $(function(){
 			}
 			modsFields.date(testDate);
 		};
-		
+
 		var addModsInfo = function(xml){
 			var accessConditionText = 'Use of this public-domain resource is governed by the <a href="http://creativecommons.org/licenses/by-nc/3.0/" rel="license">Creative Commons Attribution-NonCommercial 3.0 Unported License</a>.';
 			var mods = $(xml).find("mods");
 			var modsFields = entity.viewModel().modsFields();
-			
+
 			// Create the title element
 			var titleInfo = entity.selfWorking.createElement("titleInfo");
 			var title = entity.selfWorking.createElement("title");
 			title.appendChild(entity.selfWorking.createTextNode(modsFields.title()));
 			$(titleInfo).append(title);
 			mods.append(titleInfo);
-			
+
 			// Create the author names
 			modsFields.author().forEach(function(author){
 				if(author.name().trim().length > 0){
@@ -1053,36 +1062,36 @@ $(function(){
 					var namePart = entity.selfWorking.createElement("namePart");
 					namePart.appendChild(entity.selfWorking.createTextNode(author.name()));
 					$(name).append(namePart);
-				
+
 					var role = entity.selfWorking.createElement("role");
 					var roleTerm = entity.selfWorking.createElement("roleTerm");
 					roleTerm.setAttribute("type", "text");
 					roleTerm.setAttribute("authority", "marcrealtor");
 					roleTerm.appendChild(entity.selfWorking.createTextNode("Author"));
 					$(role).append(roleTerm);
-				
+
 					$(name).append(role);
 					mods.append(name);
 				}
 			});
-			
+
 			// Create genre element
 			var genre = entity.selfWorking.createElement("genre");
 			genre.setAttribute("type", "formatType");
 			genre.appendChild(entity.selfWorking.createTextNode(modsFields.modsType()));
 			mods.append(genre);
-			 
+
 			// create origin info or related item info
 			if(modsFields.date().trim().length > 0){
 				var relatedItem = entity.selfWorking.createElement("relatedItem");
 				var originInfo = entity.selfWorking.createElement("originInfo");
-			
+
 				var dateIssued = entity.selfWorking.createElement("dateIssued");
 				dateIssued.setAttribute("encoding", "w3cdtf");
 				dateIssued.setAttribute("keyDate", "yes");
 				dateIssued.appendChild(entity.selfWorking.createTextNode(modsFields.date()));
 				$(originInfo).append(dateIssued);
-			
+
 				switch(modsFields.modsType()){
 					case 'Audio':
 					case 'Book (whole)':
@@ -1093,60 +1102,60 @@ $(function(){
 					case 'Web resource':
 						mods.append(originInfo);
 						break;
-					
+
 					case 'Book (part)':
 						$(relatedItem).append(originInfo);
 						mods.append(relatedItem);
 						break;
-					
+
 					case 'Journal (part)':
 						var part = entity.selfWorking.createElement("part");
-						
+
 						var date = entity.selfWorking.createElement("date");
 						date.setAttribute("encoding", "w3cdtf");
 						date.appendChild(entity.selfWorking.createTextNode(modsFields.date()));
 						$(part).append(date);
-						
+
 						$(relatedItem).append(part);
 						mods.append(relatedItem);
 						break;
 				}
 			}
-			
+
 			// create access condition
-	
+
 			var accessCondition = entity.selfWorking.createElement("accessCondition");
 			accessCondition.setAttribute("type", "use and reproduction");
 			$(accessCondition).html(accessConditionText);
 
 			mods.append(accessCondition);
-			
+
 			// create record info
 			var now = new Date();
 			var recordInfo = entity.selfWorking.createElement("recordInfo");
-			
+
 			if(modsFields.project().trim().length > 0){
 				var recordContentSource = entity.selfWorking.createElement("recordContentSource");
 				recordContentSource.appendChild(entity.selfWorking.createTextNode(modsFields.project()));
 				$(recordInfo).append(recordContentSource);
 			}
-			
+
 			var recordCreationDate = entity.selfWorking.createElement("recordCreationDate");
 			recordCreationDate.setAttribute("encoding", "w3cdtf");
 			recordCreationDate.appendChild(entity.selfWorking.createTextNode(now.toISOString().substring(0, 10)));
 			$(recordInfo).append(recordCreationDate);
-			
+
 			var recordChangeDate = entity.selfWorking.createElement("recordChangeDate");
 			recordChangeDate.setAttribute("encoding", "w3cdtf");
 			recordChangeDate.appendChild(entity.selfWorking.createTextNode(now.toISOString().substring(0, 10)));
 			$(recordInfo).append(recordChangeDate);
-			
+
 			mods.append(recordInfo);
 		}
 
 		var addRecordInfo = function(xml) {
 			var accessConditionText = 'Use of this public-domain resource is governed by the <a href="http://creativecommons.org/licenses/by-nc/3.0/" rel="license">Creative Commons Attribution-NonCommercial 3.0 Unported License</a>.';
-			
+
 			var recordInfo = entity.selfWorking.createElement("recordInfo");
 			var accessCondition = entity.selfWorking.createElement("accessCondition");
 			accessCondition.setAttribute("type", "use and reproduction");
@@ -1161,7 +1170,7 @@ $(function(){
 			$(xml).find(selector).append(recordInfo);
 			selector = "entity > " + dialogType + " > recordInfo";
 			// var selector = "entity > ";
-			
+
 			// accessCondition.attr("type", "use and reproduction");
 			// var newText = entity.selfWorking.createTextNode(accessConditionText);
 			$(accessCondition).html(accessConditionText);
@@ -1176,20 +1185,20 @@ $(function(){
 			if(!entity.editing) {
 				creationText = todayText;
 			}
-			
+
 			$(recordCreationDate).append(creationText);
 			$(recordChangeDate).append(todayText);
 			$(xml).find(selector).append(recordCreationDate);
 			$(xml).find(selector).append(recordChangeDate);
-			
+
 		};
 
 		var getWorkingXML = function() {
 			var startingXML = '<?xml version="1.0" encoding="UTF-8"?>';
 
 			switch (dialogType) {
-				case 'person' :					
-				case 'organization' :					
+				case 'person' :
+				case 'organization' :
 				case 'place' :
 					startingXML += '<?xml-model href="http://cwrc.ca/schemas/entities.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>';
 					break;
@@ -1199,14 +1208,14 @@ $(function(){
 			}
 
 			var result = null;
-			
+
 			if(dialogType == 'title'){
 				entity.selfWorking = $.parseXML(startingXML + "</mods>");
 				validateModsInfo();
 				addModsInfo(entity.selfWorking);
-				
+
 				var result = xmlToString(entity.selfWorking);
-				
+
 				result = result.replace(/xmlns=""/g, "");
 			}else{
 				entity.selfWorking = $.parseXML(startingXML + '<entity></entity>');
@@ -1214,12 +1223,12 @@ $(function(){
 				visitStringifyResult(entity[dialogType].workingContainers[0]);
 				var result = xmlToString(entity.selfWorking);
 			}
-			
+
 			return result;
 		};
 
 		entity.viewModel().processCallback = function() {
-			savingMessageOn();					
+			savingMessageOn();
 			setTimeout((function(){
 				entity.viewModel().validated(true);
 				var xml = getWorkingXML();
@@ -1227,17 +1236,17 @@ $(function(){
 				if (entity.viewModel().validated()) {
 					var response;
 					if (entity.editing) {
-						response = cwrcApi[dialogType].modifyEntity(entity.editingPID, xml);	
+						response = cwrcApi[dialogType].modifyEntity(entity.editingPID, xml);
 					} else {
-						response = cwrcApi[dialogType].newEntity(xml);	
+						response = cwrcApi[dialogType].newEntity(xml);
 					}
 					var result = {
 						response : response,
 						data : xml
 					};
 
-					entity[dialogType].success(result);	
-					
+					entity[dialogType].success(result);
+
 					if(dialogType === 'title'){
 						$('#cwrcTitleModal').modal('hide');
 					}else{
@@ -1248,7 +1257,7 @@ $(function(){
 				}
 				savingMessageOff();
 			}), 200);
-			
+
 		};
 
 		var xmlToString = function(xmlData) {
@@ -1324,69 +1333,69 @@ $(function(){
 				}
 				return false;
 			};
-			
+
 			that.showRemoveThisButton = function() {
 				if (that.interfaceFields().length > that.minItems) {
 					return true;
 				}
 				return false;
 			};
-			
+
 			that.addGroup = function() {
 				if (that.interfaceFields().length < that.maxItems) {
 					// that.interfaceFields.push(that.seed.clone());	//XXX SEED
 					var newClone = that.seed.clone();
-					
+
 					newClone.interfaceFields()[0].label = "";
 					that.interfaceFields.push(newClone);
 					setHelp();
 				}
 			};
-			
+
 			that.delGroup = function() {
 				if (that.interfaceFields().length > that.minItems) {
 					that.interfaceFields.pop();
 				}
 			};
-			
+
 			that.removeThisGroup = function(group) {
 				if (that.interfaceFields().length > that.minItems) {
 					that.interfaceFields.remove(group);
 				}
 			};
-			
+
 			that.isInterleave = function() {
 				if (that.minItems === 1 && that.maxItems === 1) {
 					return true;
 				}
 				return false;
 			};
-			
+
 			that.isOptional = function() {
 				if (that.minItems === 0 && that.maxItems === 1) {
 					return true;
 				}
 				return false;
 			};
-			
+
 			that.isOneOrMore = function() {
 				if (that.minItems === 1 && that.maxItems === Number.MAX_VALUE) {
 					return true;
 				}
 				return false;
 			};
-			
+
 			that.isZeroOrMore = function() {
 				if (that.minItems === 0 && that.maxItems === Number.MAX_VALUE) {
 					return true;
 				}
 				return false;
 			};
-			
+
 			that.isRequired = function() {
 				return that.isOneOrMore() || that.isInterleave();
 			};
-			
+
 			that.clone = function() {
 				var result = quantifierModel();
 				result.minItems = this.minItems;
@@ -1448,7 +1457,7 @@ $(function(){
 				$.each(that.interfaceFields(), function(index, field){
 					result.interfaceFields.push(field.clone());
 				});
-				
+
 				return result;
 			};
 			return that;
@@ -1496,14 +1505,14 @@ $(function(){
 			that.value= ko.observable();
 			return that;
 		};
-		
+
 		var datePickerInputModel = function() {
 			var that = inputModel();
 			that.input = "datePicker";
 			that.constructor = datePickerInputModel;
 			return that;
 		};
-		
+
 		var headerInputModel = function() {
 			var that = inputModel();
 			that.input = "header";
@@ -1572,7 +1581,7 @@ $(function(){
 		// population functions
 
 		var populateDialog = function(opts) {
-			
+
 			// change this to object
 			/*
 			switch (dialogType) {
@@ -1596,7 +1605,7 @@ $(function(){
 					populateCWRC(opts);
 				break;
 			}
-			
+
 
 		}
 
@@ -1606,30 +1615,30 @@ $(function(){
 				if (path.length > 0 && children[i].nodeName == last(path).name) {
 					last(path).count++;
 				} else {
-					path.push({name: children[i].nodeName, count: 1});	
-				}
-				
-				visitNodeCWRCPopulate(children[i], path);
-				
-				if ((path.length > 0 && i < children.length-1 && children[i+1].nodeName != last(path).name) ||
-					i === children.length - 1) {
-						path.pop();	
+					path.push({name: children[i].nodeName, count: 1});
 				}
 
-				
+				visitNodeCWRCPopulate(children[i], path);
+
+				if ((path.length > 0 && i < children.length-1 && children[i+1].nodeName != last(path).name) ||
+					i === children.length - 1) {
+						path.pop();
+				}
+
+
 			}
 		}
 
 		var populateCWRC = function(opts) {
 			// cwrc
-			
-			var workingXML = $.parseXML(opts.data);			
+
+			var workingXML = $.parseXML(opts.data);
 			var path = [];
 
 			visitChildrenPopulate(workingXML.childNodes, path);
-		
+
 		}
-		
+
 		var extractTitleMODS = function(opts){
 			var mods = $(opts.data);
 			var modsFields = entity.viewModel().modsFields();
@@ -1637,32 +1646,32 @@ $(function(){
 			var result = {
 				author: []
 			};
-			
+
 			// Create the title element
 			element = mods.find("titleInfo>title");
 			result.title = element.text();
-			
+
 			// Create the author names
 			mods.find("name>namePart").each(function(){
 				result.author.push({
 						name: $(this).text()
 					});
 			});
-			
+
 			// Create genre element
 			var genre = mods.find("genre").text();
 			result.modsType = genre;
-			 
+
 			// create origin info or related item info
 			switch(genre){
 				case 'Book (part)':
 					element = mods.find("relatedItem > originInfo > dateIssued");
 					break;
-					
+
 				case 'Journal (part)':
 					element = mods.find("relatedItem > part > date");
 					break;
-					
+
 				default:
 					element = mods.find("originInfo > dateIssued");
 					break;
@@ -1670,19 +1679,19 @@ $(function(){
 			if(element.length > 0){
 				result.date = element.text();
 			}
-			
+
 			element = mods.find("recordInfo > recordContentSource");
 			if(element.length > 0){
 				result.project = element.text();
 			}
-			
+
 			return result;
 		}
 
 		var visitNodeCWRCPopulate = function(node, path) {
-			
+
 			// path.push(node.nodeName);
-				
+
 			visitChildrenPopulate(node.childNodes, path);
 
 			var parentPath = path.slice(0, path.length-1);
@@ -1693,12 +1702,12 @@ $(function(){
 				// var atts = node.parentNode.attributes;
 				// for (var attIndex =0; attIndex < atts.length; ++attIndex) {
 				// 	var currentAtt = atts.item(attIndex);
-				// 	parentPath.push({name: currentAtt.name, count : 1});					
+				// 	parentPath.push({name: currentAtt.name, count : 1});
 				// 	foundAndFilled(currentAtt.value, parentPath, entity.viewModel().interfaceFields());
 				// 	parentPath.pop();
 				// }
 
-			} 
+			}
 
 			// path.pop();
 		}
@@ -1728,7 +1737,7 @@ $(function(){
 					if (result != null) {
 						return false;
 					}
-					
+
 				});
 				console.log("RESULT :::::: " + result);
 				return result;
@@ -1736,7 +1745,7 @@ $(function(){
 				console.log("UNHANDLED INPUT     "+ field.input);
 			}
 
-			// if not found add Group 
+			// if not found add Group
 
 
 			// console.log("name " + currentSection.name)
@@ -1766,7 +1775,7 @@ $(function(){
 			// if (field.input == "quantifier" || field.input == "seed") {
 			// 	var result = null;
 			// 	ko.utils.arrayForEach(field.interfaceFields(), function(currentField){
-					
+
 
 			// 		switch (currentField.input) {
 			// 			case "quantifier":
@@ -1783,7 +1792,7 @@ $(function(){
 			// 		}
 
 			// 		// if (currentField.input == "quantifier" || currentField.input == "seed") {
-						
+
 			// 		// 	if (currentField.interfaceFields && currentField.interfaceFields()[0] && currentField.interfaceFields()[0].path &&
 			// 		// 	  currentField.interfaceFields()[0].path.indexOf(currentSection.name) >= 0) {
 			// 		// 		console.log("if claimed")
@@ -1798,13 +1807,13 @@ $(function(){
 			// 		// 	result = currentField;
 			// 		// }
 
-					
+
 			// 	});
 			// 	console.log("returning result " + result)
 			// 	return result;
 
 
-			// } 
+			// }
 
 			// console.log("not quantifier nore seed")
 			// return null;
@@ -1885,14 +1894,14 @@ $(function(){
 			// 		var fieldPath = field.path.split(',');
 			// 		if (last(fieldPath) === currentSection.name) {
 			// 			++currentCount;
-	
+
 			// 			if (currentCount === nodeNumber) {
 			// 				return field;
 			// 			}
 			// 		}
 			// 	}
 			// });
-			
+
 			// not found, look for in seed
 
 
@@ -1933,7 +1942,7 @@ $(function(){
 
 				if (field == null) {
 					break;
-				} 
+				}
 			}
 			if (!field) {
 				console.log("NOTHING");
@@ -1942,14 +1951,14 @@ $(function(){
 			}
 			// field should be where the value goes
 			if (field) {
-				if (field.input == "radioButton" || field.input == "dynamicCheckbox") {					
+				if (field.input == "radioButton" || field.input == "dynamicCheckbox") {
 					field.value(nodeValue.split(","));
 				} else {
 					field.value(nodeValue);
-				}	
+				}
 				console.log("SETTING VALUE");
 			}
-			
+
 
 		}
 
@@ -1972,17 +1981,17 @@ $(function(){
 							return false;
 						}
 					});
-					
+
 					var foundOnFields = false;
 					// alert(field.interfaceFields().length)
 					// var currentCount = 0;
-					$.each(field.interfaceFields(), function(i, currentField) {						
+					$.each(field.interfaceFields(), function(i, currentField) {
 						if(foundAndFilled(nodeValue, parentPath, currentField)) {
 							// currentCount += 1;
 							// if (currentCount == lastCount) {
 								foundOnFields = true;
-								return false; // break out of loop	
-							// }							
+								return false; // break out of loop
+							// }
 						}
 					});
 					if (foundOnFields) {
@@ -1993,17 +2002,17 @@ $(function(){
 
 							field.addGroup();
 
-							var lastfield = last(field.interfaceFields());						
+							var lastfield = last(field.interfaceFields());
 							return foundAndFilled(nodeValue, parentPath, lastfield);
 						}
-					}					
+					}
 				}
 
 			} else if(field.input === "seed") {
 				var foundOnSeedCheck = false;
-				var currentCount = 0;				
+				var currentCount = 0;
 				$.each(field.interfaceFields(), function(i, currentField) {
-					
+
 					if(foundAndFilled(nodeValue, parentPath, currentField)) {
 						// currentCount += 1;
 						// if (currentCount == lastCount){
@@ -2017,10 +2026,10 @@ $(function(){
 					return true;
 				}
 
-			}else if (field.input !== "header") {	
+			}else if (field.input !== "header") {
 				// set value
 				if (field.path == pathNames) {
-					
+
 					if (! field.isSet) {
 						field.isSet = true;
 						if (field.input == "radioButton" || field.input == "dynamicCheckbox") {
@@ -2028,11 +2037,11 @@ $(function(){
 						} else {
 							field.value(nodeValue);
 						}
-					} else if (field.isSet) {				
+					} else if (field.isSet) {
 						return false;
-					} 				
+					}
 					return true;
-				}				
+				}
 			}
 		}
 
@@ -2048,19 +2057,19 @@ $(function(){
 			foundAndFilled(value, path, entity.viewModel().interfaceFields());
 		}
 
-		// pop create		
+		// pop create
 
 		var popCreateEntity = function(opts) {
 			if (!opts.editing) {
 				entity.editing = false;
-				entity.editingPID = "";	
+				entity.editingPID = "";
 			}
 			completeDialog(opts);
 			// set default value
 
 			if (opts.startValue && opts.startValue.trim() != "") {
-				addStartValue(opts.startValue, entity.startValuePath);	
-			}			
+				addStartValue(opts.startValue, entity.startValuePath);
+			}
 			$('#cwrcEntityModal').modal('show');
 			// hackish
 			setTimeout(function(){
@@ -2072,7 +2081,7 @@ $(function(){
 			dialogType = "person";
 			entity.viewModel().dialogTitle("Add Person");
 			popCreateEntity(opts);
-			
+
 		};
 
 		cD.popCreatePerson = popCreatePerson;
@@ -2081,7 +2090,7 @@ $(function(){
 			dialogType = "organization";
 			entity.viewModel().dialogTitle("Add Organization");
 			popCreateEntity(opts);
-			
+
 		};
 
 		cD.popCreateOrganization = popCreateOrganization;
@@ -2090,16 +2099,16 @@ $(function(){
 			dialogType = "place";
 			entity.viewModel().dialogTitle("Add Place");
 			popCreateEntity(opts);
-			
+
 		};
 
 		cD.popCreatePlace = popCreatePlace;
-		
+
 		var popCreateTitle = function(opts, data) {
 			dialogType = "title";
 			if (!opts.editing) {
 				entity.editing = false;
-				entity.editingPID = "";	
+				entity.editingPID = "";
 			}
 			entity.viewModel().dialogTitle(entity.editing ? "Edit " + data.title : "Add Title");
 			completeTitleDialog(opts, data);
@@ -2108,11 +2117,11 @@ $(function(){
 			setTimeout(function(){
 				$(".modal-body-area").scrollTop(0);
 			},5);
-			
+
 		};
 
 		cD.popCreateTitle = popCreateTitle;
-		
+
 		var popCreate = {
 			person: popCreatePerson,
 			organization : popCreateOrganization,
@@ -2121,7 +2130,7 @@ $(function(){
 		};
 
 		cD.popCreate = popCreate;
-		
+
 		// pop edit
 
 		var prepareEditingDialog = function(opts) {
@@ -2153,7 +2162,7 @@ $(function(){
 		}
 
 		cD.popEditPlace = popEditPlace;
-		
+
 		var popEditTitle = function(opts) {
 			prepareEditingDialog(opts);
 			cD.popCreateTitle(opts, extractTitleMODS(opts));
@@ -2171,8 +2180,8 @@ $(function(){
 		///////////////////////////////////////////////////////////////////////
 		// Search
 		///////////////////////////////////////////////////////////////////////
-		
-		
+
+
 		var search = {};
 		search.buttons = ko.observableArray([]);
 		// search.infoTitle = ko.observable("");
@@ -2193,7 +2202,7 @@ $(function(){
 				page: ko.observable(0),
 				paginate: specs.paginate === null ? function(e){} : function(scope, event){
 					var page = parseInt($(event.currentTarget).attr("data"));
-					
+
 					if(page <= that.maxPage() && page >= 0){
 						specs.paginate(page, that);
 					}
@@ -2206,7 +2215,7 @@ $(function(){
 					}else if(that.page() >= (that.maxPage() - 3) ){
 						return index + that.maxPage() - 5;
 					}
-					
+
 					return index - 2 + that.page();
 				}
 			}
@@ -2217,7 +2226,7 @@ $(function(){
 		search.processCWRCSearch = function(queryString, page) {
 			var perPage = 100;
 			search.linkedDataSources.cwrc.page(page);
-			
+
 			$(".linkedDataMessage").text("");
 			$(".linkedDataMessage").removeClass("fa fa-spin fa-refresh");
 			$("#CWRCDataMessage").addClass("fa fa-spin fa-refresh");
@@ -2232,14 +2241,14 @@ $(function(){
 					});
 					$(".linkedDataMessage").removeClass("fa fa-spin fa-refresh");
 					//$("#CWRCDataMessage").text("Results: " + search.linkedDataSources.cwrc.results().length );
-					
+
 					// Calculate the range displayed in the message
 					var bottom = 1 + (perPage * page);
 					var top = (page + 1) * perPage;
 					top = result["response"]["numFound"] < top ? result["response"]["numFound"] : top;
-					
-					$("#CWRCDataMessage").text("Results: " +  bottom + " - " + top);	
-					
+
+					$("#CWRCDataMessage").text("Results: " +  bottom + " - " + top);
+
 					search.linkedDataSources.cwrc.maxPage(Math.floor(result["response"]["numFound"] / perPage))
 				},
 				error: function(result) {
@@ -2248,7 +2257,7 @@ $(function(){
 			});
 
 		}
-		
+
 		search.processGeoNameData = function(id) {
 			return xmlToString(search.linkedDataSources.geonames.response[id]);
 		}
@@ -2267,7 +2276,7 @@ $(function(){
 					alert("error");
 				}
 			});
-			
+
 			return result;
 		}
 
@@ -2276,7 +2285,7 @@ $(function(){
 			var perPage = 100;
 			var bottom = 1 + (page * perPage);
 			search.linkedDataSources.viaf.page(page);
-			
+
 			$(".linkedDataMessage").text("");
 			$(".linkedDataMessage").removeClass("fa fa-spin fa-refresh");
 			$("#VIAFDataMessage").addClass("fa fa-spin fa-refresh");
@@ -2288,15 +2297,15 @@ $(function(){
 				case "person" :
 				viafPrefix = "local.personalNames+all+";
 				break;
-				case "organization": 
+				case "organization":
 				viafPrefix = "local.corporateNames+all+";
 				break;
-				case "place": 
+				case "place":
 				viafPrefix = "local.geographicNames+all+";
 				break;
-				case "title": 
-				viafPrefix = "local.uniformTitleWorks+="; 
-				break; 
+				case "title":
+				viafPrefix = "local.uniformTitleWorks+=";
+				break;
 			}
 			var quotedQueryString = '"' + queryString + '"';
 			search.linkedDataSources.viaf.ajaxRequest = $.ajax({
@@ -2311,24 +2320,24 @@ $(function(){
 					});
 					$(".linkedDataMessage").removeClass("fa fa-spin fa-refresh");
 					$("#VIAFDataMessage").text("Results: " + search.linkedDataSources.viaf.results().length );
-					
+
 					// Calculate the range displayed in the message
 					var totalResults = parseInt($('searchRetrieveResponse numberOfRecords', response).text());
 					var top = (page + 1) * perPage;
 					top = totalResults < top ? totalResults : top;
-					
-					$("#VIAFDataMessage").text("Results: " +  bottom + " - " + top);	
-					
+
+					$("#VIAFDataMessage").text("Results: " +  bottom + " - " + top);
+
 					search.linkedDataSources.viaf.maxPage(Math.floor(totalResults / perPage));
 				},
 				error : function(xhr, ajaxOptions, thrownError) {
 					if (ajaxOptions !== "abort") {
-						console.log("Error " + ajaxOptions);	
-					}					
+						console.log("Error " + ajaxOptions);
+					}
 				}
 			});
 		}
-		
+
 		search.processGeoNameSearch = function(queryString) {
 			$(".linkedDataMessage").text("");
 			$(".linkedDataMessage").removeClass("fa fa-spin fa-refresh");
@@ -2352,54 +2361,54 @@ $(function(){
 				},
 				error : function(xhr, ajaxOptions, thrownError) {
 					if (ajaxOptions !== "abort") {
-						console.log("Error " + ajaxOptions);	
-					}					
+						console.log("Error " + ajaxOptions);
+					}
 				}
 			});
 		}
 
-		// Scraping functions 
+		// Scraping functions
 
 		search.scrapeResult = function() {
 			if (search.selectedData) {
-				search.selectedData.data = search.processData(search.selectedData.id);	
+				search.selectedData.data = search.processData(search.selectedData.id);
 			}
-		}		
+		}
 
 		search.htmlifyCWRCPerson = function(){
-			
+
 			var data = search.selectedData;
 			var workingXML = $.parseXML(data.data);
-			
+
 			// nationality
 			// var nationalitySelector = "";
 			// data.nationality = $(workingXML).find(nationalitySelector).first().text();
 
 			// birthDeath
 			var dateTypeSelector = "entity > person > description > existDates > dateSingle > dateType";
-			
+
 			var birthNode = $(workingXML).find(dateTypeSelector).filter(function(){ return $(this).text() == 'birth'; });
 			var deathNode = $(workingXML).find(dateTypeSelector).filter(function(){ return $(this).text() == 'death'; });
 			var birthValue = birthNode.siblings("standardDate").text();
 			var deathValue = deathNode.siblings("standardDate").text()
 			// if (birthValue !== "" && deathValue !== "") {
-			// 	data.birthDeath = birthValue + "-" + deathValue;	
+			// 	data.birthDeath = birthValue + "-" + deathValue;
 			// }
 
 			var dateSpacer = '...';
-			
+
 			birthValue = birthValue === "" ? dateSpacer : birthValue;
 			deathValue = deathValue === "" ? dateSpacer : deathValue;
 
 			if(birthValue == dateSpacer && deathValue == dateSpacer) {
 				data.birthDeath = '';
 			} else {
-				data.birthDeath = birthValue + " - " + deathValue;				
+				data.birthDeath = birthValue + " - " + deathValue;
 			}
 
 			// data.birthDeath = birthValue + " - " + deathValue;
 			// data.birthdeath = data.birthDeath === "... - ..." ?  : data.birthDeath;
-			
+
 			// data.birthDeath = "";
 
 			// if (birthValue !== "") {
@@ -2413,7 +2422,7 @@ $(function(){
 			// if (data.birthDeath === " - ") {
 			// 	data.birthDeath = "";
 			// }
-			
+
 
 			// gender
 			var genderSelector = "entity > person > description > genders > gender";
@@ -2421,19 +2430,19 @@ $(function(){
 
 			// url
 			data.url = "http://cwrc-dev-01.srv.ualberta.ca/islandora/object/" + data.id;
-			
+
 			return search.completeHtmlifyPerson(data);
 
 		};
 
 		search.htmlifyCWRCOrganization = function() {
-			
+
 			var data = search.selectedData;
 			var workingXML = $.parseXML(data.data);
 			// url
 			data.url = "http://cwrc-dev-01.srv.ualberta.ca/islandora/object/" + data.id;
 			return search.completeHtmlifyOrganization(data);
-			
+
 		}
 
 		search.getAnchor = function(url) {
@@ -2448,33 +2457,33 @@ $(function(){
 		search.completeHtmlifyOrganization = function(data) {
 			var head = $("<div></div>");
 			var list = $("<ul></ul>");
-			
+
 			// for (var i =0 ; i< data.variantNames.length; ++i) {
 			var listItem = $("<li></li>");
-			
+
 			listItem.append(search.getAnchor(data.url));
 			list.append(listItem);
 			// }
-					
+
 			head.append(list);
-			
+
 			return xmlToString(head[0]);
 		}
 
 		search.htmlifyCWRCTitle = function() {
-			
+
 			var data = search.selectedData;
 			var workingXML = $.parseXML(data.data);
-			// author, 
+			// author,
 			data.authors = [];//"Author";
-			var authorSelector = "mods > name"; // 
+			var authorSelector = "mods > name"; //
 
 			var authors = $(workingXML).find(authorSelector).filter(function(){ return $(this).attr("type") === 'personal'; });
 			$(authors).children("namePart").each(function(i, namePart){
 				data.authors.push($(namePart).text());
 			});
-		
-			//date, 
+
+			//date,
 
 			var dateSelector = "mods > originInfo > dateIssued";
 			data.date = $(workingXML).find(dateSelector).first().text();
@@ -2492,9 +2501,9 @@ $(function(){
 			for (var i=0 ;i<data.authors.length; ++i) {
 				listItem = $("<li></li>");
 				listItem.append("Author: " + data.authors[i]);
-				list.append(listItem);	
+				list.append(listItem);
 			}
-			
+
 			// date
 			listItem = $("<li></li>");
 			listItem.append("Date: " + data.date);
@@ -2503,7 +2512,7 @@ $(function(){
 			listItem = $("<li></li>");
 			listItem.append(search.getAnchor(data.url));
 			list.append(listItem);
-			
+
 
 			head.append(list);
 			return xmlToString(head[0]);
@@ -2513,7 +2522,7 @@ $(function(){
 			var data = search.selectedData;
 			var workingXML = $.parseXML(data.data);
 
-			// First administrative division, country (displayed in line, separated by commas - if possible), 
+			// First administrative division, country (displayed in line, separated by commas - if possible),
 			var firstSelector = "entity > place > description > firstAdministrativeDivision";
 			var countrySelector = "entity > place > description > countryName";
 
@@ -2556,13 +2565,13 @@ $(function(){
 			listItem = $("<li></li>");
 			listItem.append(search.getAnchor(data.url));
 			list.append(listItem);
-			
+
 
 			head.append(list);
 			return xmlToString(head[0]);
 		}
 
-		search.htmlifyVIAFPerson = function(){			
+		search.htmlifyVIAFPerson = function(){
 			var data = search.selectedData;
 			return search.completeHtmlifyPerson(data);
 		};
@@ -2571,13 +2580,13 @@ $(function(){
 			var result = "<div><ul>";
 
 			if (data.nationality && data.nationality !== "") {
-				result += "<li>Nationality: "+ data.nationality +"</li>";	
+				result += "<li>Nationality: "+ data.nationality +"</li>";
 			}
 			if (data.birthDeath && data.birthDeath !== "") {
-				result += "<li>Birth - Death: "+ data.birthDeath +"</li>";	
+				result += "<li>Birth - Death: "+ data.birthDeath +"</li>";
 			}
 			// if (data.gender && data.gender !== "") {
-			// 	result += "<li>Gender: "+ data.gender +"</li>";	
+			// 	result += "<li>Gender: "+ data.gender +"</li>";
 			// }
 			if (data.url && data.url !== "") {
 				result += "<li>URL: <a target='_blank' href='" + data.url + "'>" + data.url +"</a></li>";
@@ -2586,13 +2595,13 @@ $(function(){
 			return result;
 		}
 
-		
+
 
 		search.htmlifyVIAFOrganization = function(){
 			var result = "";
 			var data = search.selectedData;
 
-			result += "<div><ul>";		
+			result += "<div><ul>";
 			if (data.url !== "") {
 				result += "<li>URL: <a href='" + data.url + "'>" + data.url +"</a></li>";
 			}
@@ -2605,7 +2614,7 @@ $(function(){
 			// var result = "";
 			// var data = search.selectedData;
 
-			// result += "<div><ul>";		
+			// result += "<div><ul>";
 			// if (data.url !== "") {
 			// 	result += "<li>URL: <a href='" + data.url + "'>" + data.url +"</a></li>";
 			// }
@@ -2615,36 +2624,36 @@ $(function(){
 			var head = $("<div></div>");
 			var list = $("<ul></ul>");
 			var listItem;
-			
+
 			if (data.authors) {
-				listItem = $("<li></li>");	
+				listItem = $("<li></li>");
 				listItem.append("Author: " + data.authors[0]);
 				list.append(listItem);
 			}
 
 			if (data.date) {
-				listItem = $("<li></li>");	
+				listItem = $("<li></li>");
 				listItem.append("Date: " + data.date);
 				list.append(listItem);
 			}
 
 			if (data.url) {
-				listItem = $("<li></li>");	
+				listItem = $("<li></li>");
 				listItem.append(search.getAnchor(data.url));
 				list.append(listItem);
 			}
-			
+
 			head.append(list);
-			
+
 			return xmlToString(head[0]);
 		};
-		
+
 		search.paginateSearch = function(page, dataSource){
 			for (var key in search.linkedDataSources) {
 				var lds = search.linkedDataSources[key];
 				lds.results.removeAll();
 			}
-			
+
 			var queryString = search.queryString();
 			if(queryString && queryString != null && queryString.length > 0){
 				dataSource.processSearch(search.queryString(), page);
@@ -2653,13 +2662,13 @@ $(function(){
 
 		search.linkedDataSources = {
 			"cwrc": search.getLinkedDataSource({
-				"name": "CWRC", 
+				"name": "CWRC",
 				"processSearch": search.processCWRCSearch,
 				"datatype": ["person", "place", "organization", "title"],
 				"paginate": search.paginateSearch
 			}),
 			"viaf": search.getLinkedDataSource({
-				"name": "VIAF", 
+				"name": "VIAF",
 				"processSearch": search.processVIAFSearch,
 				"datatype": ["person", "organization", "title"],
 				"paginate": search.paginateSearch
@@ -2672,7 +2681,7 @@ $(function(){
 			})
 		}
 
-	
+
 
 		search.selectedLinkedDataSource = "cwrc";
 		search.queryString = ko.observable("");
@@ -2690,7 +2699,7 @@ $(function(){
 				'														' + lds.name +'<span class="pull-right linkedDataMessage" id="'+lds.name+'DataMessage"></span>' +
 				'											</div>' +
 				'											<div id="collapse'+key+'"" class="panel-collapse collapse '+(function(){return index ===0 ? "in" : ""})()+'">' +
-				'												<div class="panel-body">' +				
+				'												<div class="panel-body">' +
 				// paginator
 				'									<div class="paginatorArea" id="'+lds.name+'Paginator" data-bind="{if: $root.linkedDataSources[\'' + key + '\'].showPaginate}">' +
 				//'									<span data-bind="{text: $root.linkedDataSources[\'' + key + '\'].page}">Results 100</span>'+
@@ -2782,14 +2791,14 @@ $(function(){
 			'							<div class="panel">' +
 			// '								<div class="panel-heading">Results</div>' +
 			'								<div class="panel-body">' +
-//		
+//
 			'									<div class="panel-group" id="accordion">' +
 														search.getLinkedDataSourceTemplates() +
 			// '										<!-- ko foreach: linkedDataSources -->' +
 			// '										+<div data-bind="template: { name: \'queryResults\', data: $data }"></div>' +
 			// '										<!-- /ko -->' +
 			'									</div>' +
-//			
+//
 
 			'								</div>' +
 			'							</div>' +
@@ -2809,26 +2818,26 @@ $(function(){
 			'		</div>' +
 			'	</div>' +
 			'</div>';
-			
+
 			$('body').append(searchTemplates);
 
 
 			ko.bindingHandlers.datepicker = {
 				init: function(element, valueAccessor, allBindingsAccessor) {
-			
+
 					var options = {
 						format: "yyyy-mm-dd",
 						viewMode: 2,
 						autoclose: true
 					}
-				
+
 					$(element).siblings(':button').first().bsDatepicker(options);
-				
+
 					ko.utils.registerEventHandler($(element).siblings(':button').first(), "changeDate", function(event) {
 						var value = valueAccessor();
 						if (ko.isObservable(value)) {
 							var dateVal = ko.toJSON(event.date).substr(1, 10);
-							value(dateVal);					
+							value(dateVal);
 							$(element).val(dateVal)
 						}
 
@@ -2838,7 +2847,7 @@ $(function(){
 						var value = valueAccessor();
 						if (ko.isObservable(value)) {
 							var dateVal = event.target.value
-							value(dateVal);				
+							value(dateVal);
 						}
 					});
 				},
@@ -2848,7 +2857,7 @@ $(function(){
 				}
 			};
 
-			
+
 
 			ko.bindingHandlers.onKeyUp = {
 				init: function(element, valueAccessor, allBindingsAccessor, viewModel) {
@@ -2860,24 +2869,24 @@ $(function(){
 
 			ko.applyBindings(search, $("#cDSearch")[0]);
 			$("#cwrcSearchDialog").modal(params.modalOptions);
-			
 
-			$("#cwrcSearchDialog").draggable({	
+
+			$("#cwrcSearchDialog").draggable({
 				handle: ".modal-header"
 			});
-			$("#cwrcSearchDialog").on('hidden.bs.modal', function (e) { 
+			$("#cwrcSearchDialog").on('hidden.bs.modal', function (e) {
   				// stop ajax call if exists
   				search.clear();
 				for(var key in search.linkedDataSources) {
 					var lds = search.linkedDataSources[key];
 					if (lds.ajaxRequest) {
-						lds.ajaxRequest.abort();							
+						lds.ajaxRequest.abort();
 					}
 				}
 				search.clear();
 			});
 
-			$("#cwrcSearchDialog").on('show.bs.modal', function (e) { 
+			$("#cwrcSearchDialog").on('show.bs.modal', function (e) {
 				$('.modal-body-area').css('max-height',$( window ).height()*0.7);
 			});
 
@@ -2914,7 +2923,7 @@ $(function(){
 		// Logic functions
 
 		// models
-		
+
 		search.result = function(specs) {
 			var that = {
 				// processed initially
@@ -2928,41 +2937,41 @@ $(function(){
 			}
 			return that;
 		}
-		
+
 		search.htmlifyGeoNamePlace = function(name, countryName, latitude, longitude, id){
 			var head = $("<div></div>");
 			var list = $("<ul></ul>");
-			
-			
+
+
 			var listItem = $("<li></li>");
 			listItem.append("Country: " + countryName);
 			list.append(listItem);
-			
+
 			listItem = $("<li></li>");
 			listItem.append("Latitude: " + latitude);
 			list.append(listItem);
-			
+
 			listItem = $("<li></li>");
 			listItem.append("Longitude: " + longitude);
 			list.append(listItem);
-			
+
 			var url = "http://www.geonames.org/" + id;
 			listItem = $("<li></li>");
 			listItem.append("URL:&nbsp;<a href='" + url + "' target='_blank'>" + url + "</a>");
 			list.append(listItem);
-			
+
 			head.append(list);
-			
+
 			return xmlToString(head[0]);
 		}
-		
+
 		search.getResultFromGeoName = function(specs, index) {
 			// specs has data and source
 			var that = search.result();
 			that.id = index;
 			that.name = $(specs).find("name").text() + ", " + $(specs).find("countryName").text();
 
-			
+
 			that.htmlify = function(){
 				return search.htmlifyGeoNamePlace($(specs).find("name").text(),
 				 $(specs).find("countryName").text(),
@@ -2970,7 +2979,7 @@ $(function(){
 				 $(specs).find("lng").text(),
 				 $(specs).find("geonameid").text())
 				 };
-			
+
 			return that;
 		}
 
@@ -2980,7 +2989,7 @@ $(function(){
 			that.name = specs["solr_doc"]["fgs_label_s"];
 			that.id = specs["PID"];
 
-			
+
 			switch (dialogType) {
 				case "person":
 				// that.scrape = search.scrapeCWRCPerson;
@@ -2999,7 +3008,7 @@ $(function(){
 				that.htmlify = search.htmlifyCWRCPlace;
 				break;
 			}
-			
+
 			return that;
 		}
 
@@ -3028,15 +3037,15 @@ $(function(){
 
 			var nameSelector = search.viafSelectorHelper("recordData >  ns"+i+"\\:VIAFCluster >  ns"+i+"\\:mainHeadings > ns"+i+"\\:mainHeadingEl > ns"+i+"\\:datafield > ns"+i+"\\:subfield[code='"+codeSelector+"']"); //code attribute a
 			var idSelector = search.viafSelectorHelper("recordData ns"+i+"\\:VIAFCluster ns"+i+"\\:viafID");
-			
+
 
 			that.name =  $(specs).find(nameSelector).first().text(); //$(specs).find(nameSelector).text();
 			that.id = $(specs).find(idSelector).first().text();
-			
+
 			// Extra
 			var urlSelector = search.viafSelectorHelper("recordData >  ns"+i+"\\:VIAFCluster >  ns"+i+"\\:Document");
 			that.url = $(specs).find(urlSelector).first().attr("about");
-			
+
 			switch(dialogType) {
 				case "person":
 					search.completeViafPersonResult(that, specs, i);
@@ -3047,7 +3056,7 @@ $(function(){
 				case "title":
 					search.completeViafTitleResult(that, specs, i);
 				break;
-			}	
+			}
 
 			switch (dialogType) {
 				case "person":
@@ -3088,20 +3097,20 @@ $(function(){
 		}
 
 		search.completeViafOrganizationResult = function(that, specs, i) {
-			
+
 		}
-		
+
 		search.completeViafTitleResult = function(that, specs, i) {
 			var authorSelector = search.viafSelectorHelper("recordData > ns"+i+"\\:VIAFCluster > ns"+i+"\\:mainHeadings > ns"+i+"\\:mainHeadingEl > ns"+i+"\\:datafield > ns"+i+"\\:subfield[code='a']");
 			var dateSelector = search.viafSelectorHelper("recordData > ns"+i+"\\:VIAFCluster > ns"+i+"\\:mainHeadings > ns"+i+"\\:mainHeadingEl > ns"+i+"\\:datafield > ns"+i+"\\:subfield[code='d']");
-			
+
 			var date = $(specs).find(dateSelector).first().text();
 			that.date = date;
-			
+
 			var authors = [];
-			authors.push($(specs).find(authorSelector).first().text());			
+			authors.push($(specs).find(authorSelector).first().text());
 			that.authors = authors;
-			
+
 		}
 
 		search.selectResult = function(result) {
@@ -3124,7 +3133,7 @@ $(function(){
 
 		search.performSearch = function(queryString) {
 			search.selectedData = null;
-			
+
 			for (var key in search.linkedDataSources) {
 				var lds = search.linkedDataSources[key];
 				lds.results.removeAll();
@@ -3137,7 +3146,7 @@ $(function(){
 				for(var key in search.linkedDataSources) {
 					var lds = search.linkedDataSources[key];
 					if (lds.ajaxRequest !== null) {
-						lds.ajaxRequest.abort();	
+						lds.ajaxRequest.abort();
 					}
 				}
 				search.linkedDataSources[search.selectedLinkedDataSource].processSearch(queryString, 0);
@@ -3154,12 +3163,12 @@ $(function(){
 				result.id = search.selectedData.id;
 				result.name = search.selectedData.name;
 				result.repository = search.selectedLinkedDataSource;
-				result.data= search.selectedData.data;	
+				result.data= search.selectedData.data;
 			}
 			return result;
 		}
 
-		search.runCustomAction = function(custom) {			
+		search.runCustomAction = function(custom) {
 			search.scrapeResult();
 			custom.action(search.GetResult());
 			search.clear();
@@ -3171,7 +3180,7 @@ $(function(){
 			search.clear();
 		};
 
-		search.initiateInfo = function() {			
+		search.initiateInfo = function() {
 			$("#search-modal").popover({
 				title : function(){return search.selectedData.name;},
 				content : function(){
@@ -3199,7 +3208,7 @@ $(function(){
 		}
 
 
-		search.removeInfoPopOver = function() {			
+		search.removeInfoPopOver = function() {
 			$("#search-modal").popover("hide");
 		}
 
@@ -3219,20 +3228,20 @@ $(function(){
 			if (opts.buttons) {
 				for (var i = 0; i< opts.buttons.length; ++i) {
 					var button = opts.buttons[i];
-					if (typeof(button.label) === 'string' && 
+					if (typeof(button.label) === 'string' &&
 						typeof(button.action) === 'function') {
-						search.buttons.push(button);	
+						search.buttons.push(button);
 					}
 				}
 			}
-			
+
 			// define panels to be shown
 			var dataId = "";
 			for(dataId in search.linkedDataSources){
 				var dataSource = search.linkedDataSources[dataId];
 				dataSource.showPanel(dataSource.datatype.indexOf(dialogType) > -1);
 			}
-		
+
 			// alert(search.buttons[0].label)
 			search.success = typeof opts.success === undefined ? function(){} : opts.success;
 			search.error = typeof opts.error === undefined ? function(){} : opts.error;
@@ -3247,7 +3256,7 @@ $(function(){
 			search.clear();
 			search.dialogTitle("Search Person");
 			dialogType = "person";
-			
+
 			// search.buttons = opts.buttons ? opts.buttons : [];
 			// search.buttons = opts.buttons;
 			completeSearchDialog(opts);
@@ -3265,21 +3274,21 @@ $(function(){
 		}
 
 		cD.popSearchOrganization = popSearchOrganization;
-		
+
 		var popSearchPlace = function(opts) {
 			search.clear();
 			search.dialogTitle("Search Place");
 			dialogType = "place";
 			completeSearchDialog(opts);
 		}
-		
+
 		cD.popSearchPlace = popSearchPlace;
 
 		var popSearchTitle = function(opts) {
 			search.clear();
 			search.dialogTitle("Search Title");
 			dialogType = "title";
-			completeSearchDialog(opts);	
+			completeSearchDialog(opts);
 		}
 
 		cD.popSearchTitle = popSearchTitle;
@@ -3296,8 +3305,6 @@ $(function(){
 		///////////////////////////////////////////////////////////////////////
 
 		initialize();
-
-	})();
-});
-	return cD;
+    return cD;
+	};
 });

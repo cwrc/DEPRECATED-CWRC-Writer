@@ -1,24 +1,19 @@
-define(['jquery', 'jquery-ui', 'dialogs/cwrcDialogBridge', 'cwrcDialogs'], function($, jqueryUi, cwrcDialogBridge, cD) {
-
-return function(writer) {
-	var w = writer;
-	
-	var schema = null;
-	if (w.initialConfig.cwrcDialogs != null && w.initialConfig.cwrcDialogs.schemas != null) {
-		schema = w.initialConfig.cwrcDialogs.schemas.organization;
-	}
-	if (schema == null) {
-		schema = 'js/cwrcDialogs/schemas/entities.rng';
-	}
-	cD.setOrganizationSchema(schema);
-	
-	var bridge = new cwrcDialogBridge(w, {
-		label: 'Organization',
-		localDialog: 'org',
-		cwrcType: 'organization'
-	});
-	
-	return bridge;
-};
-
+define(['dialogs/cwrcDialogBridge', 'jquery', 'jquery-ui'], function (CwrcDialogBridge) {
+  'use strict';
+  return function (writer, cwrcDialog) {
+    var schema = 'js/cwrcDialogs/schemas/entities.rng',
+      configDefinesSchema = writer.initialConfig !== undefined &&
+        writer.initialConfig.cwrcDialogs !== undefined &&
+        writer.initialConfig.cwrcDialogs.schemas !== undefined &&
+        writer.initialConfig.cwrcDialogs.schemas.organization !== undefined;
+    if (configDefinesSchema) {
+      schema = writer.initialConfig.cwrcDialogs.schemas.organization;
+    }
+    cwrcDialog.setOrganizationSchema(schema);
+    return new CwrcDialogBridge(writer, cwrcDialog, {
+      label: 'Organization',
+      localDialog: 'org',
+      cwrcType: 'organization'
+    });
+  };
 });

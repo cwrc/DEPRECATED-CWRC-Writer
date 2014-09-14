@@ -247,7 +247,12 @@ function CwrcApi(url, jq) {
                                 name : name
                         },
                         success : function(data) {
-                                _this.isInitialized = JSON.parse(data).result;
+																if (typeof data !== 'object') {
+																	_this.isInitialized = JSON.parse(data).result;
+																}
+																else {
+																	_this.isInitialized = data;
+																}
                         },
                         error : function(error) {
                                 result = error;
