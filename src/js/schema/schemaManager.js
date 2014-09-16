@@ -7,87 +7,87 @@ define(['jquery', 'tinymce', 'mapper'], function($, tinymce, Mapper) {
  * @param {Object} config.schemas
  */
 return function(writer, config) {
-	var w = writer;
-	
-	/**
-	 * @lends SchemaManager.prototype
-	 */
-	var sm = {};
-	
-	sm.mapper = new Mapper({writer: w});
-	
-	/**
-	 * A map of schema objects. The key represents the schema ID, the "value" should have the following properties:
-	 * @member {Object}
-	 * @property {String} name A name/label for the schema
-	 * @property {String} url The URL where the schema is located
-	 * @property {string} cssUrl The URL where the schema's CSS is located
-	 */
-	sm.schemas = config.schemas || {};
-	
-	/**
-	 * The ID of the current validation schema, according to config.schemas
-	 * @member {String}
-	 */ 
-	sm.schemaId = null;
-	
-	/**
-	 * A cached copy of the loaded schema
-	 * @member {Document}
-	 */
-	sm.schemaXML = null;
-	/**
-	 * A JSON version of the schema
-	 * @member {Object}
-	 */
-	sm.schemaJSON = null;
-	/**
-	 * Stores a list of all the elements of the loaded schema
-	 * @member {Object}
-	 * @property {Array} elements The list of elements
-	 */
-	sm.schema = {elements: []};
+    var w = writer;
+    
+    /**
+     * @lends SchemaManager.prototype
+     */
+    var sm = {};
+    
+    sm.mapper = new Mapper({writer: w});
+    
+    /**
+     * A map of schema objects. The key represents the schema ID, the "value" should have the following properties:
+     * @member {Object}
+     * @property {String} name A name/label for the schema
+     * @property {String} url The URL where the schema is located
+     * @property {string} cssUrl The URL where the schema's CSS is located
+     */
+    sm.schemas = config.schemas || {};
+    
+    /**
+     * The ID of the current validation schema, according to config.schemas
+     * @member {String}
+     */ 
+    sm.schemaId = null;
+    
+    /**
+     * A cached copy of the loaded schema
+     * @member {Document}
+     */
+    sm.schemaXML = null;
+    /**
+     * A JSON version of the schema
+     * @member {Object}
+     */
+    sm.schemaJSON = null;
+    /**
+     * Stores a list of all the elements of the loaded schema
+     * @member {Object}
+     * @property {Array} elements The list of elements
+     */
+    sm.schema = {elements: []};
 
-	/**
-	 * Add a schema to the list.
-	 * @fires Writer#schemaAdded
-	 * @param {Object} config The config object
-	 * @param {String} config.name The name for the schema
-	 * @param {String} config.url The url to the schema
-	 * @param {String} config.cssUrl The url to the css
-	 * @returns {String} id The id for the schema
-	 * 
-	 */
-	sm.addSchema = function(config) {
-		var id = tinymce.DOM.uniqueId('schema');
-		sm.schemas[id] = config;
-		w.event('schemaAdded').publish(id);
-		return id;
-	},
-	
-	/**
-	 * Load a new schema.
-	 * @fires Writer#schemaLoaded
-	 * @param {String} schemaId The ID of the schema to load (from the config)
-	 * @param {Boolean} startText Whether to include the default starting text
-	 * @param {Function} callback Callback for when the load is complete
-	 */
-	sm.loadSchema = function(schemaId, startText, callback) {
-		var baseUrl = ''; //w.project == null ? '' : w.baseUrl; // handling difference between local and server urls
-		sm.schemaId = schemaId;
-		var schemaUrl = sm.schemas[sm.schemaId].url;
-		var schemaMappingsId = sm.schemas[sm.schemaId].schemaMappingsId;
-		
-		$.when(
-		    $.ajax({
-    			url: schemaUrl,
-    			dataType: 'xml'
-    		}),
-    		sm.mapper.loadMappings(schemaMappingsId)
-		).then(function(resp) {
-		    var data = resp[0];
-		    var status = resp[1];
-		    
+    /**
+     * Add a schema to the list.
+     * @fires Writer#schemaAdded
+     * @param {Object} config The config object
+     * @param {String} config.name The name for the schema
+     * @param {String} config.url The url to the schema
+     * @param {String} config.cssUrl The url to the css
+     * @returns {String} id The id for the schema
+     * 
+     */
+    sm.addSchema = function(config) {
+        var id = tinymce.DOM.uniqueId('schema');
+        sm.schemas[id] = config;
+        w.event('schemaAdded').publish(id);
+        return id;
+    },
+    
+    /**
+     * Load a new schema.
+     * @fires Writer#schemaLoaded
+     * @param {String} schemaId The ID of the schema to load (from the config)
+     * @param {Boolean} startText Whether to include the default starting text
+     * @param {Function} callback Callback for when the load is complete
+     */
+    sm.loadSchema = function(schemaId, startText, callback) {
+        var baseUrl = ''; //w.project == null ? '' : w.baseUrl; // handling difference between local and server urls
+        sm.schemaId = schemaId;
+        var schemaUrl = sm.schemas[sm.schemaId].url;
+        var schemaMappingsId = sm.schemas[sm.schemaId].schemaMappingsId;
+        
+        $.when(
+            $.ajax({
+                url: schemaUrl,
+                dataType: 'xml'
+            }),
+            sm.mapper.loadMappings(schemaMappingsId)
+        ).then(function(resp) {
+            var data = resp[0];
+            var status = resp[1];
+            
             sm.schemaXML = data;
             // get root element
             var startEl = $('start element:first', sm.schemaXML).attr('name');
@@ -223,75 +223,75 @@ return function(writer, config) {
             var status = resp[1];
             w.dialogManager.show('message', {title: 'Error', msg: 'Error loading schema: '+status, type: 'error'});
         });
-	};
-	
-	/**
-	 * Load the CSS and convert it to the internal format
-	 * NB: Doesn't work in Chrome.
-	 * @param {String} url The URL for the CSS
-	 */
-	sm.loadSchemaCSS = function(url) {
-		w.editor.dom.loadCSS(url);
-		if (url.match('converted') != null) {
-			// already converted so exit
-			return;
-		}
-		var name = url.split('/');
-		name = name[name.length-1];
-		var numCss = w.editor.getDoc().styleSheets.length;
-		var cssInt = null;
-		function parseCss() {
-			var stylesheet = null;
-			var stylesheets = w.editor.getDoc().styleSheets;
-			for (var i = 0; i < stylesheets.length; i++) {
-				var s = stylesheets[i];
-				if (s.href && s.href.indexOf(name) != -1) {
-					stylesheet = s;
-					break;
-				}
-			}
-			if (stylesheet) {
-				try {
-					$('#schemaRules', w.editor.dom.doc).remove();
-					
-					var rules = stylesheet.cssRules;
-					var newRules = '';
-					// adapt the rules to our format, should only modify element names in selectors
-					for (var i = 0; i < rules.length; i++) {
-						// chrome won't get proper selector, see: https://code.google.com/p/chromium/issues/detail?id=67782
-						var selector = rules[i].selectorText;
-						var newSelector = selector.replace(/(^|,|\s)(\w+)/g, function(str, p1, p2, offset, s) {
-							var tagName = w.utilities.getTagForEditor(p2);
-							return p1+tagName+'[_tag="'+p2+'"]';
-						});
-						var css = rules[i].cssText;
-						var newCss = css.replace(selector, newSelector);
-						newRules += newCss+'\n';
-					}
-					$('head', w.editor.dom.doc).append('<style id="schemaRules" type="text/css" />');
-					$('#schemaRules', w.editor.dom.doc).text(newRules);
-					stylesheet.disabled = true;
-				} catch (e) {
-					setTimeout(parseCss, 25);
-				}
-			} else {
-				setTimeout(parseCss, 25);
-			}
-		};
-		if (numCss > 0) {
-			parseCss();
-		} else {
-			cssInt = setInterval(function() {
-				var len = w.editor.getDoc().styleSheets.length;
-				if (len > numCss) {
-					clearInterval(cssInt);
-					parseCss();
-				}
-			}, 25);
-		}
-	};
-	
-	return sm;
+    };
+    
+    /**
+     * Load the CSS and convert it to the internal format
+     * NB: Doesn't work in Chrome.
+     * @param {String} url The URL for the CSS
+     */
+    sm.loadSchemaCSS = function(url) {
+        w.editor.dom.loadCSS(url);
+        if (url.match('converted') != null) {
+            // already converted so exit
+            return;
+        }
+        var name = url.split('/');
+        name = name[name.length-1];
+        var numCss = w.editor.getDoc().styleSheets.length;
+        var cssInt = null;
+        function parseCss() {
+            var stylesheet = null;
+            var stylesheets = w.editor.getDoc().styleSheets;
+            for (var i = 0; i < stylesheets.length; i++) {
+                var s = stylesheets[i];
+                if (s.href && s.href.indexOf(name) != -1) {
+                    stylesheet = s;
+                    break;
+                }
+            }
+            if (stylesheet) {
+                try {
+                    $('#schemaRules', w.editor.dom.doc).remove();
+                    
+                    var rules = stylesheet.cssRules;
+                    var newRules = '';
+                    // adapt the rules to our format, should only modify element names in selectors
+                    for (var i = 0; i < rules.length; i++) {
+                        // chrome won't get proper selector, see: https://code.google.com/p/chromium/issues/detail?id=67782
+                        var selector = rules[i].selectorText;
+                        var newSelector = selector.replace(/(^|,|\s)(\w+)/g, function(str, p1, p2, offset, s) {
+                            var tagName = w.utilities.getTagForEditor(p2);
+                            return p1+tagName+'[_tag="'+p2+'"]';
+                        });
+                        var css = rules[i].cssText;
+                        var newCss = css.replace(selector, newSelector);
+                        newRules += newCss+'\n';
+                    }
+                    $('head', w.editor.dom.doc).append('<style id="schemaRules" type="text/css" />');
+                    $('#schemaRules', w.editor.dom.doc).text(newRules);
+                    stylesheet.disabled = true;
+                } catch (e) {
+                    setTimeout(parseCss, 25);
+                }
+            } else {
+                setTimeout(parseCss, 25);
+            }
+        };
+        if (numCss > 0) {
+            parseCss();
+        } else {
+            cssInt = setInterval(function() {
+                var len = w.editor.getDoc().styleSheets.length;
+                if (len > numCss) {
+                    clearInterval(cssInt);
+                    parseCss();
+                }
+            }, 25);
+        }
+    };
+    
+    return sm;
 };
 
 });
