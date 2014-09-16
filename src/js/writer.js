@@ -3,9 +3,9 @@ define([
     'tinymce',
     'tinymce-copyevent',
     'eventManager','schemaManager','dialogManager','utilities',
-    'tagger','converter','fileManager','entitiesModel','dialogs/settings'
+    'tagger','converter','fileManager','annotationsManager','dialogs/settings'
 ], function($, tinymce, tinymceCopyEvent,
-		EventManager, SchemaManager, DialogManager, Utilities, Tagger, Converter, FileManager, EntitiesModel, SettingsDialog) {
+		EventManager, SchemaManager, DialogManager, Utilities, Tagger, Converter, FileManager, AnnotationsManager, SettingsDialog) {
 
 /**
  * @class Writer
@@ -544,16 +544,17 @@ return function(config) {
 
 		w.eventManager = new EventManager(w);
 		w.schemaManager = new SchemaManager(w, {schemas: config.schemas});
-		w.dialogManager = new DialogManager(w);
 		w.utilities = new Utilities(w);
 		w.tagger = new Tagger(w);
 		w.converter = new Converter(w);
 		w.fileManager = new FileManager(w);
-		w.entitiesModel = new EntitiesModel(w);
+		w.annotationsManager = new AnnotationsManager(w);
 		w.settings = new SettingsDialog(w, {
 			showEntityBrackets: true,
 			showStructBrackets: false
 		});
+		w.dialogManager = new DialogManager(w);
+		
 		if (config.delegator != null) {
 			w.delegator = new config.delegator(w);
 		} else {
@@ -578,8 +579,12 @@ return function(config) {
 		}
 
 		$(window).unload(function(e) {
-			// clear the editor first (large docs can cause the browser to freeze)
-			w.utilities.getRootTag().remove();
+			try {
+				// clear the editor first (large docs can cause the browser to freeze)
+				w.utilities.getRootTag().remove();
+			} catch(e) {
+				
+			}
 		});
 
 

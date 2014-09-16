@@ -333,7 +333,7 @@ return function(config) {
 			var type = node.attr('_type');
 			var tag = node.attr('_tag');
 			if (tag == null) {
-				tag = w.entitiesModel.getParentTag(type, w.schemaManager.schemaId);
+				tag = w.schemaManager.mapper.getParentTag(type);
 			}
 			
 			nodeData = {

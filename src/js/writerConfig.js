@@ -14,22 +14,26 @@
 		"tei": {
 			"name": "CWRC Basic TEI Schema",
 			"url": "http://cwrc.ca/schemas/cwrc_tei_lite.rng",
-			"cssUrl": "css/tei_converted.css"
+			"cssUrl": "css/tei_converted.css",
+			"schemaMappingsId": "tei"
 		},
 		"events": {
 			"name": "Events Schema",
 			"url": "http://cwrc.ca/schemas/orlando_events.rng",
-			"cssUrl": "css/orlando_converted.css"
+			"cssUrl": "css/orlando_converted.css",
+            "schemaMappingsId": "orlando"
 		},
 		"biography": {
 			"name": "Biography Schema",
 			"url": "http://cwrc.ca/schemas/orlando_biography.rng",
-			"cssUrl": "css/orlando_converted.css"
+			"cssUrl": "css/orlando_converted.css",
+            "schemaMappingsId": "orlando"
 		},
 		"writing": {
 			"name": "Writing Schema",
 			"url": "http://cwrc.ca/schemas/orlando_writing.rng",
-			"cssUrl": "css/orlando_converted.css"
+			"cssUrl": "css/orlando_converted.css",
+            "schemaMappingsId": "orlando"
 		}
 	}
 }

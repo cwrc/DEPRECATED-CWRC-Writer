@@ -85,6 +85,7 @@ DialogForm.processForm = function(dialogInstance) {
 				dialogInstance.currentData[mapping] = formEl.find('input:checked').val();
 				break;
 			case 'textbox':
+			case 'hidden':
 			case 'select':
 				dialogInstance.currentData[mapping] = formEl.val();
 				break;
@@ -136,6 +137,7 @@ DialogForm.prototype = {
 					}
 					break;
 				case 'textbox':
+				case 'hidden':
 				case 'select':
 					formEl.val('');
 					break;
@@ -153,6 +155,7 @@ DialogForm.prototype = {
 		if (this.mode === DialogForm.ADD) {
 			if (config.cwrcInfo != null) {
 				$('[data-type="tagAs"]', this.$el).html(config.cwrcInfo.name);
+				$('[data-mapping="ref"]', this.$el).val(config.cwrcInfo.ref);
 				this.currentData.cwrcInfo = config.cwrcInfo;
 			}
 		} else if (this.mode === DialogForm.EDIT) {

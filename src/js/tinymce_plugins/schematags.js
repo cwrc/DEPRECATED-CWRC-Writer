@@ -55,7 +55,7 @@
 							var w = t.editor.writer;
 							id = t.editor.currentEntity;
 							var type = w.entities[id].props.type;
-							filterKey = w.entitiesModel.getParentTag(type, w.schemaManager.schemaId);
+							filterKey = w.schemaManager.mapper.getParentTag(type);
 						} else {
 							if (window.console) {
 								console.warn('In unknown tag', node);
@@ -108,7 +108,7 @@
 					w.dialogManager.show('header');
 					return;
 				} else {
-					var type = w.entitiesModel.getEntityTypeForTag(key, w.schemaManager.schemaId);
+					var type = w.schemaManager.mapper.getEntityTypeForTag(key);
 					if (type != null) {
 						w.tagger.addEntity(type);
 						return;

@@ -21,6 +21,9 @@ require.config({
 		
 		'octokit': 'lib/octokit/octokit',
 		
+		'schemaManager': 'schema/schemaManager',
+		'mapper': 'schema/mapper',
+		
 		'dialogForm': 'dialogs/dialogForm',
 		'attributeWidget': 'dialogs/attributeWidget',
 		

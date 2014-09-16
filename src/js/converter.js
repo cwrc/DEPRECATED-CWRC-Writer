@@ -121,7 +121,7 @@ return function(writer) {
 		var structEntry = w.structs[id];
 		var entityEntry = w.entities[id];
 		if (entityEntry && tag) {
-			array = w.entitiesModel.getMappingTags(entityEntry, w.schemaManager.schemaId);
+			array = w.schemaManager.mapper.getMapping(entityEntry);
 		} else if (structEntry) {
 			var openingTag = '<'+tag;
 			var cwrcAnnotationId = node[0].getAttribute('annotationId');
@@ -356,7 +356,7 @@ return function(writer) {
 			$.extend(entry.annotation.range, range);
 		}
 		
-		var annotation = w.entitiesModel.getAnnotation(entry.props.type, entry, format);
+		var annotation = w.annotationsManager.getAnnotation(entry.props.type, entry, format);
 		return annotation;
 	}
 	
@@ -753,10 +753,10 @@ return function(writer) {
 						// body is external resource (e.g. link), or it's a generic type so must use motivation instead
 						typeUri = rdf.find('oa\\:motivatedBy, motivatedBy').last().attr('rdf:resource');
 					}
-					var type = w.entitiesModel.getEntityTypeForAnnotation(typeUri);
+					var type = w.annotationsManager.getEntityTypeForAnnotation(typeUri);
 					
 					// get type specific info
-					// TODO move all this to entitiesModel?
+					// TODO move all this to annotationsManager?
 					var typeInfo = {};
 					switch (type) {
 						case 'date':
@@ -968,10 +968,10 @@ return function(writer) {
 							}
 						}
 					} else {
-						entityType = w.entitiesModel.getEntityTypeForTag(this.nodeName, w.schemaManager.schemaId);
+						entityType = w.schemaManager.mapper.getEntityTypeForTag(this.nodeName);
 					}
 					
-					var info = w.entitiesModel.getReverseMapping(this, entityType, w.schemaManager.schemaId);
+					var info = w.schemaManager.mapper.getReverseMapping(this, entityType);
 					
 					w.entities[id] = {
 						props: {
@@ -1195,9 +1195,9 @@ return function(writer) {
 			
 			var type = entity.props.type;
 			//	var tag = $(node).attr('_tag');
-			//	var type = w.entitiesModel.getEntityTypeForTag(tag, w.schemaManager.schemaId);
+			//	var type = w.schemaManager.mapper.getEntityTypeForTag(tag);
 
-			var textTagName = w.entitiesModel.getTextTag(type, w.schemaManager.schemaId);
+			var textTagName = w.schemaManager.mapper.getTextTag(type);
 			if (textTagName != '') {
 				var textTag = $('[_tag="'+textTagName+'"]', $node);
 				if (type === 'correction') {

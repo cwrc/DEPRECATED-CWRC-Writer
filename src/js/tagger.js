@@ -19,7 +19,7 @@ return function(writer) {
 	 * @param {range} range The DOM range to insert the tags around
 	 */
 	tagger.insertBoundaryTags = function(id, type, range) {
-		var parentTag = w.entitiesModel.getParentTag(type, w.schemaManager.schemaId);
+		var parentTag = w.schemaManager.mapper.getParentTag(type);
 		
 		if (type === 'note' || type === 'citation' || type === 'keyword') {
 			var tag = w.editor.dom.create('span', {
@@ -257,7 +257,7 @@ return function(writer) {
 		if (tag.entity) {
 			w.editor.currentBookmark = w.editor.selection.getBookmark(1);
 			var type = tag.entity.props.type;
-			w.dialogManager.show(type, {type: type, title: w.entitiesModel.getTitle(type), pos: pos, entry: tag.entity});
+			w.dialogManager.show(type, {type: type, entry: tag.entity});
 		} else if (tag.struct) {
 			if ($(tag.struct, w.editor.getBody()).attr('_tag')) {
 				w.editor.execCommand('editSchemaTag', tag.struct, pos);
@@ -319,7 +319,7 @@ return function(writer) {
 		var result = w.utilities.isSelectionValid();
 		if (result === w.VALID || result === w.NO_COMMON_PARENT) {
 			w.editor.currentBookmark = w.editor.selection.getBookmark(1);
-			w.dialogManager.show(type, {type: type, title: w.entitiesModel.getTitle(type), pos: w.editor.contextMenuPos});
+			w.dialogManager.show(type, {type: type});
 		} else if (result === w.NO_SELECTION) {
 			w.dialogManager.show('message', {
 				title: 'Error',
@@ -346,7 +346,7 @@ return function(writer) {
 					callback: function(confirmed) {
 						if (confirmed) {
 							w.editor.currentBookmark = w.editor.selection.getBookmark(1);
-							w.dialogManager.show(type, {type: type, title: w.entitiesModel.getTitle(type), pos: w.editor.contextMenuPos});
+							w.dialogManager.show(type, {type: type});
 						}
 					}
 				});

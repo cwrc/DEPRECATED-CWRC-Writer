@@ -37,7 +37,7 @@
 						var w = t.editor.writer;
 						id = t.editor.currentEntity;
 						var type = w.entities[id].props.type;
-						tag = w.entitiesModel.getParentTag(type, w.schemaManager.schemaId);
+						tag = w.schemaManager.mapper.getParentTag(type);
 					}
 					if (tag != null) {
 						var pi = t.editor.dom.create('a', {name: id, 'href' : "javascript:;", role: 'button', onmousedown : "return false;", 'class' : 'mcePath_' + (de++)}, tag);

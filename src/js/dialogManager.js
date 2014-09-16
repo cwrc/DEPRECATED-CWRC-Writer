@@ -76,7 +76,7 @@ return function(writer) {
 				var parent = schemaDialogs[schemaId] = {};
 				var schemaDialogNames = [];
 				schemaDialogNames = $.map(dialogNames, function(name, i) {
-					return 'dialogs/schemas/'+schemaId+'/'+name;
+					return 'schema/'+schemaId+'/dialogs/'+name;
 				});
 				require(schemaDialogNames, function() {
 					if (arguments.length != schemaDialogNames.length) {
