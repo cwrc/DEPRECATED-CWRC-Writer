@@ -1,5 +1,5 @@
 // TODO add IDs
-define(['jquery', 'entity'], function($, Entity) {
+define(['jquery'], function($) {
 
 function Mapper(config) {
     this.w = config.writer;
