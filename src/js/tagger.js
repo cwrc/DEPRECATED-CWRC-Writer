@@ -217,7 +217,7 @@ return function(writer) {
                         newTagStart.attr('name', newId);
                         newTagEnd.attr('name', newId);
 
-                        var newEntity = jQuery.extend(true, {}, w.entities[id]);
+                        var newEntity = $.extend(true, {}, w.entities[id]);
                         newEntity.props.id = newId;
                         w.entities[newId] = newEntity;
                     }
@@ -459,7 +459,7 @@ return function(writer) {
                 type: 'error'
             });
         } else {
-            var newEntity = jQuery.extend(true, {}, w.editor.entityCopy);
+            var newEntity = $.extend(true, {}, w.editor.entityCopy);
             newEntity.props.id = tinymce.DOM.uniqueId('ent_');
             
             w.editor.selection.moveToBookmark(w.editor.currentBookmark);
