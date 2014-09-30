@@ -1,118 +1,63 @@
-define([
-    'jquery',
-    'jquery-ui'
-], function($, jqueryUi) {
+define(['jquery', 'jquery-ui', 'dialogForm'], function($, jqueryUi, DialogForm) {
     
-return function(writer) {
-    var w = writer;
-    
-    var id = 'correctionDialog';
-    
-    var mode = null;
-    var ADD = 0;
-    var EDIT = 1;
-    
-    var sicText = null;
-    
-    $(document.body).append(''+
-    '<div id="'+id+'" class="annotationDialog">'+
-        '<div>'+
-            '<p>Correction</p><textarea id="correctionInput" name="correction"></textarea>'+
-        '</div>'+
-    '</div>');
-    
-    $('#'+id+'_teiParent').parent().accordion({
-        heightStyle: 'content',
-        animate: false,
-        collapsible: true,
-        active: false
-    });
-    
-    var correction = $('#correctionDialog');
-    correction.dialog({
-        modal: true,
-        resizable: false,
-        closeOnEscape: false,
-        open: function(event, ui) {
-            $('#correctionDialog').parent().find('.ui-dialog-titlebar-close').hide();
-        },
-        height: 250,
-        width: 385,
-        autoOpen: false,
-        buttons: {
-            'Tag Correction': function() {
-                correctionResult();
-            },
-            'Cancel': function() {
-                correctionResult(true);
+    return function(writer) {
+        var w = writer;
+        
+        var id = 'correction';
+        
+        var html = ''+
+        '<div id="'+id+'Dialog" class="annotationDialog">'+
+            '<div>'+
+                '<p>Correction</p><textarea data-type="textbox" data-mapping="custom.corrText"></textarea>'+
+            '</div>'+
+        '</div>';
+        
+        var dialog = new DialogForm({
+            writer: w,
+            id: id,
+            width: 385,
+            height: 250,
+            type: 'correction',
+            title: 'Tag Correction',
+            html: html
+        });
+        
+        dialog.$el.on('beforeShow', function(e, config, dialog) {
+            var sicText;
+            if (dialog.mode === DialogForm.ADD) {
+                sicText = w.editor.currentBookmark.rng.toString();
+            } else {
+                sicText = config.entry.getCustomValue('sicText');
             }
-        }
-    });
-    var correctionInput = $('#correctionDialog textarea')[0];
-    
-    var correctionResult = function(cancelled) {
-        var data = null;
-        if (!cancelled) {
-            data = {
-                corrText: correctionInput.value,
-                sicText: sicText
-            };
-        }
-        if (mode == EDIT && data != null) {
-            if (sicText == null) {
-                // edit the correction text
-                var entityStart = $('[name="'+w.editor.currentEntity+'"]', writer.editor.getBody())[0];
-                var textNode = w.utilities.getNextTextNode(entityStart);
-                textNode.textContent = data.corrText;
+            if (sicText !== undefined && sicText !== '') {
+                dialog.currentData.customValues.sicText = sicText;
             }
-            w.tagger.editEntity(w.editor.currentEntity, data);
-        } else {
-            if (data != null) {
-                if (sicText == null) {
+        });
+        
+        dialog.$el.on('beforeSave', function(e, dialog) {
+            var sicText = dialog.currentData.customValues.sicText;
+            var corrText = dialog.currentData.customValues.corrText;
+            if (dialog.mode === DialogForm.EDIT) {
+                // TODO
+//                if (sicText == undefined) {
+//                    // edit the correction text
+//                    var entityStart = $('[name="'+w.entitiesManager.getCurrentEntity()+'"]', writer.editor.getBody())[0];
+//                    var textNode = w.utilities.getNextTextNode(entityStart);
+//                    textNode.textContent = data.corrText;
+//                }
+            } else {
+                if (sicText == undefined) {
                     // insert the correction text so we can make an entity out of that
-                    w.editor.execCommand('mceInsertContent', false, data.corrText);
+                    w.editor.execCommand('mceInsertContent', false, corrText);
                 }
             }
-            w.tagger.finalizeEntity('correction', data);
-        }
-        correction.dialog('close');
-    };
-    
-    return {
-        show: function(config) {
-            mode = config.entry ? EDIT : ADD;
-            
-            correctionInput.value = '';
-            $('#'+id+'_teiParent').parent().accordion('option', 'active', false);
-            
-            var prefix = 'Add ';
-            
-            if (mode == ADD) {
-                sicText = w.editor.currentBookmark.rng.toString();
-                if (sicText == '') sicText = null;
-                correctionInput.value = '';
-            } else {
-                var data = config.entry.info;
-                
-                prefix = 'Edit ';
-                if (data.sicText) sicText = data.sicText;
-                else sicText = null;
-                correctionInput.value = data.corrText;
+        });
+        
+        return {
+            show: function(config) {
+                dialog.show(config);
             }
-            
-            var title = prefix+config.title;
-            correction.dialog('option', 'title', title);
-            if (config.pos) {
-                correction.dialog('option', 'position', [config.pos.x, config.pos.y]);
-            } else {
-                correction.dialog('option', 'position', 'center');
-            }
-            correction.dialog('open');
-        },
-        hide: function() {
-            correction.dialog('close');
-        }
+        };
     };
-};
 
 });

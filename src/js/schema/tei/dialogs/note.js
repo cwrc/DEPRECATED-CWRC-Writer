@@ -70,8 +70,7 @@ return function(writer) {
                     var noteUrl = w.cwrcRootUrl+'xml/note_tei.xml';
                     cwrcWriter.fileManager.loadDocumentFromUrl(noteUrl);
                 } else {
-                    var data = config.entry.info;
-                    var xmlDoc = cwrcWriter.utilities.stringToXML(data.content);
+                    var xmlDoc = $.parseXML(config.entry.getCustomValue('content'));
                     if (xmlDoc.firstChild.nodeName === 'note') {
                         // remove the annotationId attribute
                         xmlDoc.firstChild.removeAttribute('annotationId');
@@ -103,7 +102,7 @@ return function(writer) {
         tinymce.DOM.counter = iframe.contentWindow.tinymce.DOM.counter + 1;
         
         var content = cwrcWriter.converter.getDocumentContent();
-        dialog.currentData.content = content;
+        dialog.currentData.customValues.content = content;
     });
     
     return {

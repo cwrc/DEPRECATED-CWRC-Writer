@@ -32,17 +32,17 @@ return function(config) {
     
     $('#sequence').button().click(function() {
         w.entitiesList.update('sequence');
-        w.highlightEntity(w.editor.currentEntity);
+        w.entitiesManager.highlightEntity(w.entitiesManager.getCurrentEntity());
     });
     $('#category').button().click(function() {
         w.entitiesList.update('category');
-        w.highlightEntity(w.editor.currentEntity);
+        w.entitiesManager.highlightEntity(w.entitiesManager.getCurrentEntity());
     });
     $('#sortBy').buttonset();
     $('#metaKeys').button().click(function() {
         showMetaKeys = !showMetaKeys;
         w.entitiesList.update();
-        w.highlightEntity(w.editor.currentEntity);
+        w.entitiesManager.highlightEntity(w.entitiesManager.getCurrentEntity());
     });
     
     /**
@@ -117,10 +117,10 @@ return function(config) {
             var categories = {};
             entityTags.each(function(index, el) {
                 id = $(el).attr('name');
-                if (w.entities[id] == null) {
+                if (w.entitiesManager.getEntity(id) === undefined) {
                     var deleted = w.deletedEntities[id];
                     if (deleted != null) {
-                        w.entities[id] = deleted;
+                        w.entitiesManager.setEntity(id, deleted);
                         entry = deleted;
                         delete w.deletedEntities[id];
                     } else {
@@ -128,12 +128,12 @@ return function(config) {
                         return;
                     }
                 } else {
-                    entry = w.entities[id];
+                    entry = w.entitiesManager.getEntity(id);
                 }
-                if (categories[entry.props.type] == null) {
-                    categories[entry.props.type] = [];
+                if (categories[entry.getType()] == null) {
+                    categories[entry.getType()] = [];
                 }
-                categories[entry.props.type].push(entry);
+                categories[entry.getType()].push(entry);
             });
             var category;
             for (id in categories) {
@@ -146,10 +146,10 @@ return function(config) {
         } else if (sort == 'sequence') {
             entityTags.each(function(index, el) {
                 id = $(this).attr('name');
-                if (w.entities[id] == null) {
+                if (w.entitiesManager.getEntity(id) === undefined) {
                     var deleted = w.deletedEntities[id];
                     if (deleted != null) {
-                        w.entities[id] = deleted;
+                        w.entitiesManager.setEntity(id, deleted);
                         entry = deleted;
                         delete w.deletedEntities[id];
                     } else {
@@ -157,7 +157,7 @@ return function(config) {
                         return;
                     }
                 } else {
-                    entry = w.entities[id];
+                    entry = w.entitiesManager.getEntity(id);
                 }
                 if (entry) {
                     entitiesString += _buildEntity(entry);
@@ -176,7 +176,7 @@ return function(config) {
             }
         }).mousedown(function(event) {
             $(this).removeClass('over');
-            w.highlightEntity(this.getAttribute('name'), null, true);
+            w.entitiesManager.highlightEntity(this.getAttribute('name'), null, true);
         }).contextMenu('entitiesMenu', {
             bindings: {
                 'editEntity': function(tag) {
@@ -213,8 +213,8 @@ return function(config) {
             }
         });
         
-        if (w.editor.currentEntity) {
-            $('#entities > ul > li[name="'+w.editor.currentEntity+'"]').addClass('selected').find('div[class="info"]').show();
+        if (w.entitiesManager.getCurrentEntity()) {
+            $('#entities > ul > li[name="'+w.entitiesManager.getCurrentEntity()+'"]').addClass('selected').find('div[class="info"]').show();
         }
     };
     
@@ -232,10 +232,10 @@ return function(config) {
                 }
             }
         };
-        buildString(entity.info);
+        buildString(entity.getAttributes());
         infoString += '</ul>';
-        return '<li class="'+entity.props.type+'" name="'+entity.props.id+'">'+
-            '<span class="box"/><span class="entityTitle">'+entity.props.title+'</span><div class="info">'+infoString+'</div>'+
+        return '<li class="'+entity.getType()+'" name="'+entity.getId()+'">'+
+            '<span class="box"/><span class="entityTitle">'+entity.getTitle()+'</span><div class="info">'+infoString+'</div>'+
         '</li>';
     };
     

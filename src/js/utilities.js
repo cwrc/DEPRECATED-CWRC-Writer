@@ -645,6 +645,7 @@ return function(writer) {
     u.getChildrenForTag = function(config, callback) {
         config.type = config.type || 'element';
         var children = [];
+        var i;
         
         if (useLocalStorage) {
             var localData = localStorage['cwrc.'+config.tag+'.'+config.type+'.children'];
@@ -662,7 +663,7 @@ return function(writer) {
             if (children.indexOf('anyName') != -1) {
                 children = [];
                 // anyName means include all elements
-                for (var i = 0; i < w.schemaManager.schema.elements.length; i++) {
+                for (i = 0; i < w.schemaManager.schema.elements.length; i++) {
                     var el = w.schemaManager.schema.elements[i];
                     children.push({
                         name: el
@@ -687,14 +688,14 @@ return function(writer) {
         
         if (config.returnType == 'object') {
             var childrenObj = {};
-            for (var i = 0; i < children.length; i++) {
+            for (i = 0; i < children.length; i++) {
                 var c = children[i];
                 childrenObj[c.name] = c;
             }
             return childrenObj;
         } else if (config.returnType == 'names') {
             var names = [];
-            for (var i = 0; i < children.length; i++) {
+            for (i = 0; i < children.length; i++) {
                 names.push(children[i].name);
             }
             return names;
@@ -716,7 +717,7 @@ return function(writer) {
                 }
             }
         });
-    };
+    }
     
     /**
      * @param tag The element name to get parents of
@@ -732,7 +733,7 @@ return function(writer) {
                 parents = JSON.parse(localData);
             }
         }
-        if (parents.length == 0) {
+        if (parents.length === 0) {
             var element = $('element[name="'+tag+'"]', w.schemaManager.schemaXML);
             var defName = element.parents('define').attr('name');
             var defHits = {};

@@ -82,7 +82,7 @@ return function(writer) {
             range.setEndBefore(marker);
         }
         w.editor.selection.setRng(range);
-        w.highlightEntity(marker.getAttribute('name'), w.editor.selection.getBookmark());
+        w.entitiesManager.highlightEntity(marker.getAttribute('name'), w.editor.selection.getBookmark());
     };
     
     /**
@@ -181,16 +181,14 @@ return function(writer) {
         if (newTags.length > 0) updateRequired = true;
         
         // deleted tags
-        for (var id in w.entities) {
+        w.entitiesManager.eachEntity(function(id, entity) {
             var nodes = w.editor.dom.select('[name="'+id+'"]');
             if (nodes.length === 0) {
                 updateRequired = true;
-                w.deletedEntities[id] = w.entities[id];
-                delete w.entities[id];
-                w.event('entityRemoved').publish(id);
-                break;
+                w.deletedEntities[id] = w.entitiesManager.getEntity(id);
+                w.entitiesManager.removeEntity(id);
             }
-        }
+        });
         for (var id in w.structs) {
             var nodes = w.editor.dom.select('#'+id);
             if (nodes.length === 0) {
@@ -206,29 +204,28 @@ return function(writer) {
      * Looks for duplicate tags (from copy paste operations) and creates new entity/struct entries.
      */
     tagger.findDuplicateTags = function() {
-        for (var id in w.entities) {
+        w.entitiesManager.eachEntity(function(id, entity) {
             var match = $('span[class~="start"][name="'+id+'"]', w.editor.getBody());
             if (match.length > 1) {
                 match.each(function(index, el) {
                     if (index > 0) {
-                        var newId = tinymce.DOM.uniqueId('ent_');
+                        var newEntity = w.entitiesManager.cloneEntity(id);
+                        var newId = newEntity.getId();
+                        w.entitiesManager.setEntity(newId, newEntity);
+                        
                         var newTagStart = $(el);
                         var newTagEnd = $(tagger.getCorrespondingEntityTag(newTagStart));
                         newTagStart.attr('name', newId);
                         newTagEnd.attr('name', newId);
-
-                        var newEntity = $.extend(true, {}, w.entities[id]);
-                        newEntity.props.id = newId;
-                        w.entities[newId] = newEntity;
                     }
                 });
             }
-        }
+        });
         for (var id in w.structs) {
             var match = $('*[id='+id+']', w.editor.getBody());
             if (match.length == 2) {
                 var newStruct = match.last();
-                var newId = tinymce.DOM.uniqueId('struct_');
+                var newId = w.getUniqueId('struct_');
                 newStruct.attr('id', newId);
                 w.structs[newId] = {};
                 for (var key in w.structs[id]) {
@@ -242,10 +239,10 @@ return function(writer) {
     tagger.getCurrentTag = function(id) {
         var tag = {entity: null, struct: null};
         if (id != null) {
-            if (w.entities[id]) tag.entity = w.entities[id];
+            if (w.entitiesManager.getEntity(id) !== undefined) tag.entity = w.entitiesManager.getEntity(id);
             else if (w.structs[id]) tag.struct = $('#'+id, w.editor.getBody());
         } else {
-            if (w.editor.currentEntity != null) tag.entity = w.entities[w.editor.currentEntity];
+            if (w.entitiesManager.getCurrentEntity() != null) tag.entity = w.entitiesManager.getEntity(w.entitiesManager.getCurrentEntity());
             else if (w.editor.currentStruct != null) tag.struct = $('#'+w.editor.currentStruct, w.editor.getBody());
         }
         return tag;
@@ -256,7 +253,7 @@ return function(writer) {
         var tag = tagger.getCurrentTag(id);
         if (tag.entity) {
             w.editor.currentBookmark = w.editor.selection.getBookmark(1);
-            var type = tag.entity.props.type;
+            var type = tag.entity.getType();
             w.dialogManager.show(type, {type: type, entry: tag.entity});
         } else if (tag.struct) {
             if ($(tag.struct, w.editor.getBody()).attr('_tag')) {
@@ -284,14 +281,14 @@ return function(writer) {
      */
     tagger.removeTag = function(id) {
         if (id != null) {
-            if (w.entities[id]) {
+            if (w.entitiesManager.getEntity(id) !== undefined) {
                 tagger.removeEntity(id);
             } else if (w.structs[id]) {
                 tagger.removeStructureTag(id);
             }
         } else {
-            if (w.editor.currentEntity != null) {
-                tagger.removeEntity(w.editor.currentEntity);
+            if (w.entitiesManager.getCurrentEntity() != null) {
+                tagger.removeEntity(w.entitiesManager.getCurrentEntity());
             } else if (w.editor.currentStruct != null) {
                 tagger.removeStructureTag(w.editor.currentStruct);
             }
@@ -355,38 +352,71 @@ return function(writer) {
     };
     
     /**
+     * Updates the tag and infos for an entity.
+     * @param {Entity} entity
+     * @param {Object} info The info object
+     * @param {Object} info.attributes Key/value pairs of attributes
+     * @param {Object} info.cwrcInfo CWRC lookup info
+     * @param {Object} info.customValues Any additional custom values
+     */
+    function updateEntityInfo(entity, info) {
+        var id = entity.getId();
+        var type = entity.getType();
+        
+        // add attributes to tag
+        var disallowedAttributes = ['id', 'class', 'style'];
+        var tag = w.editor.$('[name='+id+'][_tag]');
+        if (tag.length === 1) {
+            for (var key in info.attributes) {
+                if (disallowedAttributes.indexOf(key) === -1) {
+                    var val = info.attributes[key];
+                    tag.attr(key, w.utilities.escapeHTMLString(val));
+                }
+            }
+        }
+        
+        // set attributes
+        entity.setAttributes(info.attributes);
+        delete info.attributes;
+        
+        // set lookup info
+        if (info.cwrcInfo !== undefined) {
+            entity.setLookupInfo(info.cwrcInfo);
+            delete info.cwrcInfo;
+        }
+        
+        // set custom values
+        for (var key in info.customValues) {
+            entity.setCustomValue(key, info.customValues[key]);
+        }
+        
+        if (type === 'note' || type === 'citation') {
+            var content = $($.parseXML(entity.getCustomValues().content)).text();
+            entity.setContent(content);
+        } else if (type === 'keyword') {
+            var content = entity.getCustomValues().keywords.join(', ');
+            entity.setContent(content);
+        }
+    }
+    
+    /**
      * Add the remaining entity info to its entry
      * @protected
-     * @fires Writer#entityAdded
      * @param {String} type Then entity type
      * @param {Object} info The entity info
      */
     tagger.finalizeEntity = function(type, info) {
         w.editor.selection.moveToBookmark(w.editor.currentBookmark);
         if (info != null) {
-            var id = tagger.addEntityTag(type);
+            var id = w.getUniqueId('ent_');
+            var content = tagger.addEntityTag(id, type);
             
-            // add attributes to tag
-            if (info.attributes) {
-                var tag = w.editor.$('[name='+id+'][_tag]');
-                if (tag.length === 1) {
-                    var tagName = tag.attr('_tag');
-                    for (var key in info.attributes[tagName]) {
-                        var val = info.attributes[tagName][key];
-                        tag.attr(key, w.utilities.escapeHTMLString(val));
-                    }
-                }
-            }
-            
-            var entry = w.entities[id];
-            entry.info = info;
-            if (type === 'note' || type === 'citation') {
-                var content = $($.parseXML(entry.info.content)).text();
-                entry.props.title = w.utilities.getTitleFromContent(content);
-            } else if (type === 'keyword') {
-                var content = entry.info.keywords.join(', ');
-                entry.props.title = w.utilities.getTitleFromContent(content);
-            }
+            var entry = w.entitiesManager.addEntity({
+                id: id,
+                type: type,
+                content: content
+            });
+            updateEntityInfo(entry, info);
             
             $.when(
                 w.delegator.getUriForEntity(entry),
@@ -396,21 +426,19 @@ return function(writer) {
                 w.delegator.getUriForSelector(),
                 w.delegator.getUriForUser()
             ).then(function(entityUri, annoUri, docUri, targetUri, selectorUri, userUri) {
-                if (info.cwrcInfo && info.cwrcInfo.id) {
+                var lookupInfo = entry.getLookupInfo();
+                if (lookupInfo !== undefined && lookupInfo.id) {
                     // use the id already provided
-                    entityUri = info.cwrcInfo.id;
+                    entityUri = lookupInfo.id;
                 }
-                entry.annotation = {
+                entry.setUris({
                     entityId: entityUri,
                     annotationId: annoUri,
                     docId: docUri,
                     targetId: targetUri,
                     selectorId: selectorUri,
-                    userId: userUri,
-                    range: {}
-                };
-                
-                w.event('entityAdded').publish(id);
+                    userId: userUri
+                });
             });
         }
         w.editor.currentBookmark = null;
@@ -424,7 +452,7 @@ return function(writer) {
      * @param {Object} info The entity info
      */
     tagger.editEntity = function(id, info) {
-        w.entities[id].info = info;
+        updateEntityInfo(w.entitiesManager.getEntity(id), info);
         w.event('entityEdited').publish(id);
     };
     
@@ -459,20 +487,21 @@ return function(writer) {
                 type: 'error'
             });
         } else {
-            var newEntity = $.extend(true, {}, w.editor.entityCopy);
-            newEntity.props.id = tinymce.DOM.uniqueId('ent_');
+            var newEntity = w.entitiesManager.cloneEntity(w.editor.entityCopy.getId());
+            var newId = newEntity.getId();
+            w.entitiesManager.setEntity(newId, newEntity);
             
             w.editor.selection.moveToBookmark(w.editor.currentBookmark);
             var sel = w.editor.selection;
             sel.collapse();
             var rng = sel.getRng(true);
             
-            var type = newEntity.props.type;
+            var type = newEntity.getType();
             var content;
             if (type === 'note' || type === 'citation' || type === 'keyword') {
                 content = '\uFEFF';
             } else {
-                content = newEntity.props.content;
+                content = newEntity.getContent();
             }
             
             var text = w.editor.getDoc().createTextNode(content);
@@ -480,11 +509,9 @@ return function(writer) {
             sel.select(text);
             
             rng = sel.getRng(true);
-            tagger.insertBoundaryTags(newEntity.props.id, newEntity.props.type, rng);
+            tagger.insertBoundaryTags(newEntity.getId(), newEntity.getType(), rng);
             
-            w.entities[newEntity.props.id] = newEntity;
-            
-            w.event('entityPasted').publish(newEntity.props.id);
+            w.event('entityPasted').publish(newEntity.getId());
         }
     };
     
@@ -494,20 +521,23 @@ return function(writer) {
      * @param {String} id The entity id
      */
     tagger.removeEntity = function(id) {
-        id = id || w.editor.currentEntity;
+        id = id || w.entitiesManager.getCurrentEntity();
         
-        delete w.entities[id];
-        var node = $('span[name="'+id+'"]', w.editor.getBody());
+        var node = $('[name="'+id+'"]', w.editor.getBody());
         var parent = node[0].parentNode;
         node.remove();
         parent.normalize();
         
-        w.event('entityRemoved').publish(id);
-        
-        w.editor.currentEntity = null;
+        w.entitiesManager.removeEntity(id);
     };
     
-    tagger.addEntityTag = function(type) {
+    /**
+     * Add an entity tag.
+     * @param {String} id The id for the entity
+     * @param {String} type The entity type
+     * @returns {String} The text content of the tag
+     */
+    tagger.addEntityTag = function(id, type) {
         _doCustomTaggerUndo();
         
         var sel = w.editor.selection;
@@ -527,25 +557,13 @@ return function(writer) {
             content = content.replace(/^\s+|\s+$/g, '');
         }
         
-        var title = w.utilities.getTitleFromContent(content);
-        var id = tinymce.DOM.uniqueId('ent_');
-        w.entities[id] = {
-            props: {
-                id: id,
-                type: type,
-                title: title,
-                content: content
-            },
-            info: {}
-        };
-        
-        if (content != '') {
+        if (content !== '') {
             tagger.insertBoundaryTags(id, type, range);
         } else {
             w.emptyTagId = id;
         }
         
-        return id;
+        return content;
     };
     
     /**
@@ -563,7 +581,7 @@ return function(writer) {
         var attributes = params.attributes;
         var action = params.action;
         
-        var id = tinymce.DOM.uniqueId('struct_');
+        var id = w.getUniqueId('struct_');
         attributes.id = id;
         attributes._textallowed = w.utilities.canTagContainText(attributes._tag);
         w.structs[id] = attributes;

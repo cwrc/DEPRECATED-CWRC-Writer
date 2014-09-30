@@ -12,6 +12,7 @@ require.config({
         'jquery.watermark': 'lib/jquery/jquery.watermark.min',
         'jquery.jstree': 'lib/jstree/jstree.3.0.0',
         'jquery.snippet': 'lib/snippet/jquery.snippet.min',
+        'jquery.xpath': 'lib/jquery/jquery.xpath',
         
         'tinymce': 'lib/tinymce/tiny_mce_src',
         'tinymce-copyevent': 'lib/tinymce/copy_event',
@@ -42,6 +43,7 @@ require.config({
         'jquery.tmpl': ['jquery'],
         'jquery.watermark': ['jquery'],
         'jquery.snippet': ['jquery', 'jquery-migrate'],
+        'jquery.xpath': ['jquery'],
         'tinymce': {
             exports: 'tinymce',
             init: function() {

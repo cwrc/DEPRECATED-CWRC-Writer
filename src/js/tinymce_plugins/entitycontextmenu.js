@@ -73,7 +73,7 @@
                 t._getMenu(ed).showMenu(x, y);
 //                Event.add(ed.getDoc(), 'click', hideMenu);
 
-                ed.nodeChanged();
+//                ed.nodeChanged();
             };
 
             function hide(ed, e) {
@@ -139,56 +139,56 @@
                 title: 'Tag Person',
                 icon_src: url+'user.png',
                 onclick : function() {
-                    ed.execCommand('addEntity', 'person');
+                    ed.writer.tagger.addEntity('person');
                 }
             }).setDisabled(col);
             m.add({
                 title: 'Tag Place',
                 icon_src: url+'world.png',
                 onclick : function() {
-                    ed.execCommand('addEntity', 'place');
+                    ed.writer.tagger.addEntity('place');
                 }
             }).setDisabled(col);
             m.add({
                 title: 'Tag Date',
                 icon_src: url+'calendar.png',
                 onclick : function() {
-                    ed.execCommand('addEntity', 'date');
+                    ed.writer.tagger.addEntity('date');
                 }
             }).setDisabled(col);
 //            m.add({
 //                title: 'Tag Event',
 //                icon_src: url+'cake.png',
 //                onclick : function() {
-//                    ed.execCommand('addEntity', 'event');
+//                    ed.writer.tagger.addEntity('event');
 //                }
 //            }).setDisabled(col);
             m.add({
                 title: 'Tag Organization',
                 icon_src: url+'group.png',
                 onclick : function() {
-                    ed.execCommand('addEntity', 'org');
+                    ed.writer.tagger.addEntity('org');
                 }
             }).setDisabled(col);
             m.add({
                 title: 'Tag Citation',
                 icon_src: url+'vcard.png',
                 onclick : function() {
-                    ed.execCommand('addEntity', 'citation');
+                    ed.writer.tagger.addEntity('citation');
                 }
             }).setDisabled(col);
             m.add({
                 title: 'Tag Note',
                 icon_src: url+'note.png',
                 onclick : function() {
-                    ed.execCommand('addEntity', 'note');
+                    ed.writer.tagger.addEntity('note');
                 }
             }).setDisabled(col);
             m.add({
                 title: 'Tag Text/Title',
                 icon_src: url+'book.png',
                 onclick : function() {
-                    ed.execCommand('addEntity', 'textTitle', t.curPos);
+                    ed.writer.tagger.addEntity('title');
                 }
             }).setDisabled(col);
             
@@ -206,7 +206,7 @@
             ed.execCommand('createSchemaTagsControl', {menu: tagMenu, disabled: col, pos: t.curPos});
             m.addSeparator();
             
-            col = (ed.currentEntity == null && ed.currentStruct == null);
+            col = (ed.writer.entitiesManager.getCurrentEntity() == null && ed.currentStruct == null);
             
             var changeTagMenu = m.addMenu({
                 id: 'changeTagContextMenu',
@@ -235,7 +235,7 @@
                 }
             }).setDisabled(col);
             m.addSeparator();
-            col = ed.currentEntity == null;
+            col = ed.writer.entitiesManager.getCurrentEntity() == null;
             m.add({
                 title: 'Copy Entity',
                 icon_src: url+'tag_blue_copy.png',

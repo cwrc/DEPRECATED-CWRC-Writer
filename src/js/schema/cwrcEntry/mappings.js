@@ -3,7 +3,7 @@ define(['jquery', 'mapper'], function($, Mapper) {
 return {
 
 person: {
-    parentTag: 'name',
+    parentTag: 'NAME',
     mapping: function(entity) {
         var info = entity.info;
         var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;

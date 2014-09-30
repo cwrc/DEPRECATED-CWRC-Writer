@@ -18,6 +18,7 @@ return function(writer) {
         '<div style="position: absolute; top: 85px; left: 5px; right: 5px; bottom: 5px; border: 1px solid #ccc;">'+
             '<iframe style="width: 100%; height: 100%; border: none;"/>'+ // set src dynamically
         '</div>'+
+        '<input type="hidden" id="'+id+'_ref" data-type="hidden" data-mapping="ref"/>'+
     '</div>';
     
     var dialog = new DialogForm({
@@ -31,6 +32,11 @@ return function(writer) {
     });
     
     dialog.$el.on('beforeShow', function(e, config) {
+        var cwrcInfo = dialog.currentData.cwrcInfo;
+        if (cwrcInfo !== undefined) {
+            $('#'+id+'_ref').val(cwrcInfo.id);
+        }
+        
         iframe = dialog.$el.find('iframe')[0];
         iframe.src = 'note.htm';
         
@@ -68,8 +74,7 @@ return function(writer) {
                     var noteUrl = w.cwrcRootUrl+'xml/citation_tei.xml';
                     cwrcWriter.fileManager.loadDocumentFromUrl(noteUrl);
                 } else {
-                    var data = config.entry.info;
-                    var xmlDoc = cwrcWriter.utilities.stringToXML(data.content);
+                    var xmlDoc = $.parseXML(config.entry.getCustomValue('content'));
                     if (xmlDoc.firstChild.nodeName === 'note') {
                         // remove the annotationId attribute
                         xmlDoc.firstChild.removeAttribute('annotationId');
@@ -101,7 +106,7 @@ return function(writer) {
         tinymce.DOM.counter = iframe.contentWindow.tinymce.DOM.counter + 1;
         
         var content = cwrcWriter.converter.getDocumentContent();
-        dialog.currentData.content = content;
+        dialog.currentData.customValues.content = content;
     });
     
     return {

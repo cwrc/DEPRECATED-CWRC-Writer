@@ -243,9 +243,10 @@ return function(writer, config) {
     
     function _doEntitiesOverlap() {
         // remove highlights
-        w.highlightEntity();
+        w.entitiesManager.highlightEntity();
         
-        for (var id in w.entities) {
+        var overlap = false;
+        w.entitiesManager.eachEntity(function(id, entity) {
             var markers = w.editor.dom.select('[name="' + id + '"]');
             var start = markers[0];
             var end = markers[1];
@@ -255,12 +256,12 @@ return function(writer, config) {
                 while (currentNode != end  && currentNode != null) {
                     currentNode = currentNode.nextSibling;
                     if (currentNode.nodeType == 1 && currentNode.hasAttribute('_entity') && currentNode != end) {
-                        return true;
+                        overlap = true;
                     }
                 }
             }
-        }
-        return false;
+        });
+        return overlap;
     };
     
     w.event('schemaAdded').subscribe(buildSchema);

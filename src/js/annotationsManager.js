@@ -1,13 +1,13 @@
 define(['jquery'], function($) {
 
+// TODO certain annotations are tied in with specific schema
+    
 /**
  * @class AnnotationsManager
  * @param {Writer} writer
  */
 return function(writer) {
     var w = writer;
-    
-    var TEXT_SELECTION = '[[[editorText]]]'; // constant represents the user's text selection when adding an entity
     
     var prefixMap = {
         'bibo': 'http://purl.org/ontology/bibo/',
@@ -29,25 +29,26 @@ return function(writer) {
     
     /**
      * Creates a common annotation object.
-     * @param {Object} config The config object
-     * @param {Object} config.data Provides data to fill out the annotation
-     * @param {Array} config.types The annotation type(s)
-     * @param {Array} config.motivations The annotation motivations(s)
-     * @param {String} format The annotation format to return: 'json' or 'xml'
+     * @param {Entity} entity The entity.
+     * @param {Array} types The annotation type(s).
+     * @param {Array} [motivations] The annotation motivations(s).
+     * @param {String} format The annotation format to return: 'json' or 'xml'.
      * @returns {JSON|XML} 
      */
-    function commonAnnotation(config, format) {
+    function commonAnnotation(entity, types, motivations, format) {
         format = format || 'xml';
         
-        var data = config.data;
-        var types = config.types;
-        var motivations = config.motivations;
-        
+        var uris = entity.getUris();
+        var certainty = entity.getAttribute('cert') || entity.getAttribute('certainty')|| entity.getAttribute('CERTAINTY');
+        var range = entity.getRange();
+        var cwrcInfo = entity.getLookupInfo();
+        var attributes = entity.getAttributes();
+
         if (!$.isArray(types)) {
             types = [types];
         }
         
-        if (motivations == null) {
+        if (motivations === null) {
             motivations = ['oa:tagging','oa:identifying'];
         }
         if (!$.isArray(motivations)) {
@@ -55,15 +56,15 @@ return function(writer) {
         }
         
         var date = new Date().toISOString();
-        var annotationId = data.annotationId;
+        var annotationId = uris.annotationId;
         var body = '';
-        var annotatedById = data.userId;
+        var annotatedById = uris.userId;
         var userName = '';
         var userMbox = '';
-        var entityId = data.entityId;
-        var docId = data.docId;
-        var targetId = data.targetId;
-        var selectorId = data.selectorId;
+        var entityId = uris.entityId;
+        var docId = uris.docId;
+        var targetId = uris.targetId;
+        var selectorId = uris.selectorId;
         
         var annotation;
         
@@ -98,12 +99,12 @@ return function(writer) {
             }
             
             var certaintyString = '';
-            if (data.certainty != null) {
+            if (certainty != null) {
                 // fix for discrepancy between schemas
-                if (data.certainty === 'reasonably certain') {
-                    data.certainty = 'reasonable';
+                if (certainty === 'reasonably certain') {
+                    certainty = 'reasonable';
                 }
-                certaintyString = '<cw:hasCertainty rdf:resource="http://cwrc.ca/ns/cw#'+data.certainty+'"/>';
+                certaintyString = '<cw:hasCertainty rdf:resource="http://cwrc.ca/ns/cw#'+certainty+'"/>';
             }
             
             var selectorString = ''+
@@ -112,31 +113,31 @@ return function(writer) {
                 '<rdf:type rdf:resource="http://www.w3.org/ns/oa#SpecificResource"/>'+
                 '<oa:hasSelector rdf:resource="'+selectorId+'"/>'+
             '</rdf:Description>';
-            if (data.range.end) {
+            if (range.end) {
                 selectorString += ''+
                 '<rdf:Description rdf:about="'+selectorId+'">'+
-                    '<oa:start>xpointer(string-range('+data.range.start+',"",'+data.range.startOffset+'))</oa:start>'+
-                    '<oa:end>xpointer(string-range('+data.range.end+',"",'+data.range.endOffset+'))</oa:end>'+
+                    '<oa:start>xpointer(string-range('+range.start+',"",'+range.startOffset+'))</oa:start>'+
+                    '<oa:end>xpointer(string-range('+range.end+',"",'+range.endOffset+'))</oa:end>'+
                     '<rdf:type rdf:resource="http://www.w3.org/ns/oa#TextPositionSelector"/>'+
                 '</rdf:Description>';
             } else {
                 selectorString += ''+
                 '<rdf:Description rdf:about="'+selectorId+'">'+
-                    '<rdf:value>xpointer('+data.range.start+')</rdf:value>'+
+                    '<rdf:value>xpointer('+range.start+')</rdf:value>'+
                     '<rdf:type rdf:resource="http://www.w3.org/ns/oa#FragmentSelector"/>'+
                 '</rdf:Description>';
             }
             
             var cwrcInfoString = '';
-            if (data.cwrcInfo != null) {
-                delete data.cwrcInfo.data; // remove extra XML data
-                var cwrcInfo = JSON.stringify(data.cwrcInfo);
+            if (cwrcInfo !== undefined) {
+                delete cwrcInfo.data; // remove extra XML data
+                var cwrcInfo = JSON.stringify(cwrcInfo);
                 cwrcInfoString = '<cw:cwrcInfo>'+cwrcInfo+'</cw:cwrcInfo>';
             }
             
             var cwrcAttributesString = '';
-            if (data.cwrcAttributes != null) {
-                var cwrcAttributes = JSON.stringify(data.cwrcAttributes);
+            if (attributes != null) {
+                var cwrcAttributes = JSON.stringify(attributes);
                 cwrcAttributesString = '<cw:cwrcAttributes>'+cwrcAttributes+'</cw:cwrcAttributes>';
             }
             
@@ -179,7 +180,7 @@ return function(writer) {
                     },
                     'name': userName
                 },
-                'serializedAt': data,
+                'serializedAt': date,
                 'serializedBy': '',
                 'hasBody': {
                     '@id': entityId,
@@ -196,32 +197,32 @@ return function(writer) {
                 }
             };
             
-            if (data.certainty != null) {
-                annotation.hasCertainty = 'cw:'+data.certainty;
+            if (certainty !== undefined) {
+                annotation.hasCertainty = 'cw:'+certainty;
             }
             
-            if (data.cwrcInfo != null) {
-                annotation.cwrcInfo = data.cwrcInfo;
+            if (cwrcInfo !== undefined) {
+                annotation.cwrcInfo = cwrcInfo;
             }
             
-            if (data.cwrcAttributes != null) {
-                annotation.cwrcAttributes = data.cwrcAttributes;
+            if (attributes !== undefined) {
+                annotation.cwrcAttributes = attributes;
             }
             
-            if (data.range.end) {
+            if (range.end) {
                 annotation.hasTarget.hasSelector = {
                     '@id': selectorId,
                     '@type': 'oa:TextPositionSelector',
                     'dcterms:conformsTo': 'http://tools.ietf.org/rfc/rfc3023',
-                    'oa:start': 'xpointer(string-range('+data.range.start+',"",'+data.range.startOffset+'))',
-                    'oa:end': 'xpointer(string-range('+data.range.end+',"",'+data.range.endOffset+'))',
+                    'oa:start': 'xpointer(string-range('+range.start+',"",'+range.startOffset+'))',
+                    'oa:end': 'xpointer(string-range('+range.end+',"",'+range.endOffset+'))',
                 };
             } else {
                 annotation.hasTarget.hasSelector = {
                     '@id': selectorId,
                     '@type': 'oa:FragmentSelector',
                     'dcterms:conformsTo': 'http://tools.ietf.org/rfc/rfc3023',
-                    'rdf:value': 'xpointer('+data.range.start+')'
+                    'rdf:value': 'xpointer('+range.start+')'
                 };
             }
         }
@@ -237,57 +238,29 @@ return function(writer) {
         person: {
             annotationType: 'foaf:Person',
             annotation: function(entity, format) {
-                var data = entity.annotation;
-                data.certainty = entity.info.certainty;
-                data.cwrcInfo = entity.info.cwrcInfo;
-                data.cwrcAttributes = {
-                    attributes: entity.info.attributes,
-                    role: entity.info.role,
-                    type: entity.info.type
-                };
-                return commonAnnotation({data: data, types: 'foaf:Person'}, format);
+                return commonAnnotation(entity, 'foaf:Person', null, format);
             }
         },
         org: {
             annotationType: 'foaf:Organization',
             annotation: function(entity, format) {
-                var data = entity.annotation;
-                data.certainty = entity.info.certainty;
-                data.cwrcInfo = entity.info.cwrcInfo;
-                data.cwrcAttributes = {
-                    attributes: entity.info.attributes
-                };
-                
-                return commonAnnotation({data: data, types: 'foaf:Organization'}, format);
+                return commonAnnotation(entity, 'foaf:Organization', null, format);
             }
         },
         place: {
             annotationType: 'geo:SpatialThing',
             annotation: function(entity, format) {
-                var data = entity.annotation;
-                data.certainty = entity.info.certainty;
-                data.cwrcInfo = entity.info.cwrcInfo;
-                data.cwrcAttributes = {
-                    precision: entity.info.precision
-                };
-                return commonAnnotation({data: data, types: 'geo:SpatialThing'}, format);
+                return commonAnnotation(entity, 'geo:SpatialThing', null, format);
             }
         },
         title: {
             annotationType: 'dcterms:title',
             annotation: function(entity, format) {
-                var data = entity.annotation;
-                data.certainty = entity.info.certainty;
-                data.cwrcInfo = entity.info.cwrcInfo;
-                data.cwrcAttributes = {
-                    attributes: entity.info.attributes
-                };
-                
-                var anno = commonAnnotation({data: data, types: ['dcterms:BibliographicResource', 'dcterms:title']}, format);
+                var anno = commonAnnotation(entity, ['dcterms:BibliographicResource', 'dcterms:title'], null, format);
                 
                 if (format === 'xml') {
-                    var levelXml = $.parseXML('<cw:pubType xmlns:cw="http://cwrc.ca/ns/cw#">'+entity.info.level+'</cw:pubType>');
-                    var body = $('[rdf\\:about="'+data.entityId+'"]', anno);
+                    var levelXml = $.parseXML('<cw:pubType xmlns:cw="http://cwrc.ca/ns/cw#">'+entity.getAttribute('level')+'</cw:pubType>');
+                    var body = $('[rdf\\:about="'+entity.getUris().entityId+'"]', anno);
                     body.prepend(levelXml.firstChild);
                 } else {
                     anno.motivation = 'oa:identifying';
@@ -299,37 +272,31 @@ return function(writer) {
         date: {
             annotationType: 'time:TemporalEntity',
             annotation: function(entity, format) {
-                var data = entity.annotation;
-                data.certainty = entity.info.certainty;
-                data.cwrcAttributes = {
-                    attributes: entity.info.attributes
-                };
-                
                 var types = [];
-                if (entity.info.date) {
+                if (entity.getAttribute('when') !== undefined) {
                     types.push('time:Instant');
                 } else {
                     types.push('time:Interval');
                 }
                 types.push('time:TemporalEntity');
                 
-                var anno = commonAnnotation({data: data, types: types}, format);
+                var anno = commonAnnotation(entity, types, null, format);
                 
                 if (format === 'xml') {
                     var dateXml;
-                    if (entity.info.date) {
-                        dateXml = $.parseXML('<xsd:date xmlns:xsd="http://www.w3.org/2001/XMLSchema#">'+entity.info.date+'</xsd:date>');
+                    if (entity.getAttribute('when') !== undefined) {
+                        dateXml = $.parseXML('<xsd:date xmlns:xsd="http://www.w3.org/2001/XMLSchema#">'+entity.getAttribute('when')+'</xsd:date>');
                     } else {
                         // TODO properly encode date range
-                        dateXml = $.parseXML('<xsd:date xmlns:xsd="http://www.w3.org/2001/XMLSchema#">'+entity.info.startDate+'/'+entity.info.endDate+'</xsd:date>');
+                        dateXml = $.parseXML('<xsd:date xmlns:xsd="http://www.w3.org/2001/XMLSchema#">'+entity.getAttribute('from')+'/'+entity.getAttribute('to')+'</xsd:date>');
                     }
-                    var body = $('[rdf\\:about="'+data.entityId+'"]', anno);
+                    var body = $('[rdf\\:about="'+entity.getUris().entityId+'"]', anno);
                     body.prepend(dateXml.firstChild);
                 } else {
-                    if (entity.info.date) {
-                        anno.hasBody['xsd:date'] = entity.info.date;
+                    if (entity.getAttribute('when') !== undefined) {
+                        anno.hasBody['xsd:date'] = entity.getAttribute('when');
                     } else {
-                        anno.hasBody['xsd:date'] = entity.info.startDate+'/'+entity.info.endDate;
+                        anno.hasBody['xsd:date'] = entity.getAttribute('from')+'/'+entity.getAttribute('to');
                     }
                 }
                 
@@ -339,43 +306,26 @@ return function(writer) {
         note: {
             annotationType: 'bibo:Note',
             annotation: function(entity, format) {
-                var data = entity.annotation;
-                data.cwrcAttributes = {
-                    type: entity.info.type
-                };
-                
-                var anno = commonAnnotation({data: data, types: 'bibo:Note', motivations: 'oa:commenting'}, format);
-                
-                return anno;
+                return commonAnnotation(entity, 'bibo:Note', 'oa:commenting', format);
             }
         },
         citation: {
             annotationType: 'dcterms:BibliographicResource',
             annotation: function(entity, format) {
-                var data = entity.annotation;
-                data.cwrcInfo = entity.info.cwrcInfo;
-                
-                var anno = commonAnnotation({data: data, types: 'dcterms:BibliographicResource', motivations: 'cw:citing'}, format);
-                
-                return anno;
+                return commonAnnotation(entity, 'dcterms:BibliographicResource', 'cw:citing', format);
             }
         },
         correction: {
             annotationType: 'oa:editing',
             annotation: function(entity, format) {
-                var data = entity.annotation;
-                data.cwrcAttributes = {
-                    attributes: entity.info.attributes
-                };
-                
-                var anno = commonAnnotation({data: data, types: 'cnt:ContentAsText', motivations: 'oa:editing'}, format);
+                var anno = commonAnnotation(entity, 'cnt:ContentAsText', 'oa:editing', format);
                 
                 if (format === 'xml') {
-                    var corrXml = $.parseXML('<cnt:chars xmlns:cnt="http://www.w3.org/2011/content#">'+entity.info.corrText+'</cnt:chars>');
-                    var body = $('[rdf\\:about="'+data.entityId+'"]', anno);
+                    var corrXml = $.parseXML('<cnt:chars xmlns:cnt="http://www.w3.org/2011/content#">'+entity.getCustomValue('corrText')+'</cnt:chars>');
+                    var body = $('[rdf\\:about="'+entity.getUris().entityId+'"]', anno);
                     body.prepend(corrXml.firstChild);
                 } else {
-                    anno.hasBody['cnt:chars'] = entity.info.corrText;
+                    anno.hasBody['cnt:chars'] = entity.getCustomValue('corrText');
                 }
 
                 return anno;
@@ -384,19 +334,18 @@ return function(writer) {
         keyword: {
             annotationType: 'skos:Concept',
             annotation: function(entity, format) {
-                var data = entity.annotation;
+                var anno = commonAnnotation(entity, ['oa:Tag', 'cnt:ContentAsText', 'skos:Concept'], 'oa:classifying', format);
                 
-                var anno = commonAnnotation({data: data, types: ['oa:Tag', 'cnt:ContentAsText', 'skos:Concept'], motivations: 'oa:classifying'}, format);
-                
+                var keywords = entity.getCustomValue('keywords');
                 if (format === 'xml') {
-                    var body = $('[rdf\\:about="'+data.entityId+'"]', anno);
-                    for (var i = 0; i < entity.info.keywords.length; i++) {
-                        var keyword = entity.info.keywords[i];
+                    var body = $('[rdf\\:about="'+entity.getUris().entityId+'"]', anno);
+                    for (var i = 0; i < keywords.length; i++) {
+                        var keyword = keywords[i];
                         var keywordXml = $.parseXML('<cnt:chars xmlns:cnt="http://www.w3.org/2011/content#">'+keyword+'</cnt:chars>');
                         body.prepend(keywordXml.firstChild);
                     }
                 } else {
-                    anno.hasBody['cnt:chars'] = entity.info.keywords;
+                    anno.hasBody['cnt:chars'] = keywords;
                 }
 
                 return anno;
@@ -405,18 +354,7 @@ return function(writer) {
         link: {
             annotationType: 'oa:linking',
             annotation: function(entity, format) {
-                var data = entity.annotation;
-                data.entityId = entity.info.url;
-                
-                var anno = commonAnnotation({data: data, types: 'cnt:ContentAsText', motivations: 'oa:linking'}, format);
-                
-                if (format === 'xml') {
-                    $('[rdf\\:about="'+entity.info.url+'"]', anno).remove();
-                } else {
-                    
-                }
-                
-                return anno;
+                return commonAnnotation(entity, 'cnt:ContentAsText', 'oa:linking', format);
             }
         }
     };
@@ -453,14 +391,14 @@ return function(writer) {
     
     /**
      * Get the annotation object for the entity.
-     * @param {String} type The entity type.
-     * @param {Object} entity The entity data object (from the global entities list).
+     * @param {Entity} entity The entity.
      * @param {Object} entity.annotation The annotation data associated with the entity.
      * @param {String} format The annotation format ('xml' or 'json').
      * @returns {Object} The annotation object. 
      */
-    annman.getAnnotation = function(type, entity, format) {
+    annman.getAnnotation = function(entity, format) {
         format = format || 'xml';
+        var type = entity.getType();
         var e = entities[type];
         var anno;
         if (e && e.annotation) {

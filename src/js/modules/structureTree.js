@@ -308,13 +308,13 @@ return function(config) {
                 ignoreSelect = true; // set to true so tree.highlightNode code isn't run by editor's onNodeChange handler
                 w.selectStructureTag(id, selectContents);
             }
-        } else if (w.entities[id] != null) {
+        } else if (w.entitiesManager.getEntity(id) !== undefined) {
             tree.currentlySelectedEntity = id;
             tree.currentlySelectedNode = null;
             tree.selectionType = null;
             aChildren.addClass('nodeSelected').removeClass('contentsSelected');
 //            ignoreSelect = true;
-            w.highlightEntity(id, null, true);
+            w.entitiesManager.highlightEntity(id, null, true);
         }
         ignoreSelect = false;
     }
@@ -343,7 +343,7 @@ return function(config) {
             };
             
             if (type === 'note' || type === 'citation') {
-                var content = w.utilities.stringToXML(w.entities[id].info.content);
+                var content = w.utilities.stringToXML(w.entitiesManager.getEntity(id).getCustomValues().content);
                 var root = $(tag, content).first();
                 
                 function processChildren(children, parent, id) {
@@ -362,7 +362,7 @@ return function(config) {
                 processChildren(root.children(), nodeData, id);
             } else if (type === 'keyword') {
                 nodeData.children = [];
-                var keywords = w.entities[id].info.keywords;
+                var keywords = w.entitiesManager.getEntity(id).getCustomValues().keywords;
                 for (var i = 0; i < keywords.length; i++) {
                     nodeData.children.push({
                         text: 'keyword',
@@ -381,7 +381,7 @@ return function(config) {
             // TODO move this out of here
             // new struct check
             if (id == '' || id == null) {
-                id = tinymce.DOM.uniqueId('struct_');
+                id = w.getUniqueId('struct_');
                 if (w.schemaManager.schema.elements.indexOf(tag) != -1) {
                     node.attr('id', id).attr('_tag', tag);
                     w.structs[id] = {
@@ -396,7 +396,7 @@ return function(config) {
                     match.each(function(index, el) {
                         if (index > 0) {
                             var newStruct = $(el);
-                            var newId = tinymce.DOM.uniqueId('struct_');
+                            var newId = w.getUniqueId('struct_');
                             newStruct.attr('id', newId);
                             w.structs[newId] = {};
                             for (var key in w.structs[id]) {
@@ -482,13 +482,13 @@ return function(config) {
                 tree.currentlySelectedNode = id;
                 tree.selectionType = selectContents ? tree.CONTENTS_SELECTED : tree.NODE_SELECTED;
                 
-                if (w.entities[id] != null) {
+                if (w.entitiesManager.getEntity(id) !== undefined) {
                     tree.currentlySelectedEntity = id;
                     tree.currentlySelectedNode = null;
                     tree.selectionType = null;
                     $target.addClass('nodeSelected').removeClass('contentsSelected');
                     ignoreSelect = true;
-                    w.highlightEntity(id, null, true);
+                    w.entitiesManager.highlightEntity(id, null, true);
                 } else if (w.structs[id] != null) {
                     tree.currentlySelectedEntity = null;
                     if (w.structs[id]._tag == w.header) {
@@ -642,9 +642,9 @@ return function(config) {
                 
                 var parentNode = $tree.jstree('get_node', node.parents[0]);
                 
-                if (w.entities[node.li_attr.name]) {
+                if (w.entitiesManager.getEntity(node.li_attr.name) !== undefined) {
                     // entity tag
-                    w.highlightEntity(node.li_attr.name); // highlight the entity, otherwise editing will not function
+                    w.entitiesManager.highlightEntity(node.li_attr.name); // highlight the entity, otherwise editing will not function
                     return {
                         'editEntity': {
                             label: 'Edit Entity',

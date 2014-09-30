@@ -152,7 +152,7 @@ return function(writer) {
      */
     del.getUriForEntity = function(entity) {
         var guid = w.utilities.createGuid();
-        var uri = 'http://id.cwrc.ca/'+entity.props.type+'/'+guid;
+        var uri = 'http://id.cwrc.ca/'+entity.getType()+'/'+guid;
         var dfd = new $.Deferred();
         dfd.resolve(uri);
         return dfd.promise();

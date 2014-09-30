@@ -9,7 +9,7 @@ return function(writer) {
     '<div id="'+id+'Dialog">'+
         '<div>'+
             '<label for="'+id+'_input">HTTP Link</label>'+
-            '<input type="text" id="'+id+'_input" data-type="textbox" data-mapping="url" style="margin-right: 10px;"/>'+
+            '<input type="text" id="'+id+'_input" data-type="textbox" data-mapping="target" style="margin-right: 10px;"/>'+
             '<button>Check Link</button>'+
         '</div>'+
     '</div>';

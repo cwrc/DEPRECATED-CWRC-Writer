@@ -53,8 +53,8 @@
                         var id = node.getAttribute('id');
                         if (id === 'entityHighlight') {
                             var w = t.editor.writer;
-                            id = t.editor.currentEntity;
-                            var type = w.entities[id].props.type;
+                            id = w.entitiesManager.getCurrentEntity();
+                            var type = w.entitiesManager.getEntity(id).getType();
                             filterKey = w.schemaManager.mapper.getParentTag(type);
                         } else {
                             if (window.console) {

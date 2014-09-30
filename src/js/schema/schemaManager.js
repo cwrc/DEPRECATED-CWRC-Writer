@@ -59,7 +59,7 @@ return function(writer, config) {
      * 
      */
     sm.addSchema = function(config) {
-        var id = tinymce.DOM.uniqueId('schema');
+        var id = w.getUniqueId('schema');
         sm.schemas[id] = config;
         w.event('schemaAdded').publish(id);
         return id;

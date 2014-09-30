@@ -2,10 +2,12 @@ define([
     'jquery',
     'tinymce',
     'tinymce-copyevent',
-    'eventManager','schemaManager','dialogManager','utilities',
+    'eventManager','schemaManager','dialogManager','entitiesManager','utilities',
     'tagger','converter','fileManager','annotationsManager','dialogs/settings'
 ], function($, tinymce, tinymceCopyEvent,
-        EventManager, SchemaManager, DialogManager, Utilities, Tagger, Converter, FileManager, AnnotationsManager, SettingsDialog) {
+        EventManager, SchemaManager, DialogManager, EntitiesManager, Utilities, Tagger,
+        Converter, FileManager, AnnotationsManager, SettingsDialog
+) {
 
 /**
  * @class Writer
@@ -23,16 +25,6 @@ return function(config) {
     
     w.layout = null; // jquery ui layout object
     w.editor = null; // reference to the tinyMCE instance we're creating, set in setup
-    
-    /**
-     * Entities store.
-     * Each entry contains 3 properties:
-     * info: tag info about the entity
-     * info.cwrcInfo: info from the cwrcDialogs lookups
-     * props: metadata for use by CWRCWriter
-     * annotation: annotation uris and object
-     */
-    w.entities = {};
     
     w.structs = {}; // structs store
     
@@ -92,47 +84,14 @@ return function(config) {
     
     w.emptyTagId = null; // stores the id of the entities tag to be added
     
-    w.highlightEntity = function(id, bm, doScroll) {
-        if (id == null || id !== w.editor.currentEntity) {
-            var prevHighlight = $('.entityHighlight', w.editor.getBody());
-            if (prevHighlight.length !== 0) {
-                prevHighlight.each(function(index, el) {
-                    var $p = $(el);
-                    var parent = $p.parent()[0];
-                    if ($p.contents().length !== 0) {
-                        $p.contents().unwrap();
-                    } else {
-                        $p.remove();
-                    }
-                    parent.normalize();
-                });
-            }
-            if (w.editor.currentEntity != null) {
-                w.event('entityUnfocused').publish(w.editor.currentEntity);
-            }
-            
-            w.editor.currentEntity = null;
-            
-            if (id) {
-                w.editor.currentEntity = id;
-                var type = w.entities[id].props.type;
-                
-                var entityTags = $('[name="'+id+'"]', w.editor.getBody());
-                entityTags.wrap('<span class="entityHighlight '+type+'"/>');
-
-                // maintain the original caret position
-                if (bm) {
-                    w.editor.selection.moveToBookmark(bm);
-                }
-                
-                if (doScroll) {
-                    var val = entityTags.offset().top;
-                    $(w.editor.dom.doc.body).scrollTop(val);
-                }
-                
-                w.event('entityFocused').publish(id);
-            }
-        }
+    /**
+     * Gets a unique ID for use within CWRC-Writer.
+     * @param {String} prefix The prefix to attach to the ID.
+     * @returns {String} id
+     */
+    w.getUniqueId = function(prefix) {
+        var id = tinymce.DOM.uniqueId(prefix);
+        return id;
     };
     
     /**
@@ -193,7 +152,7 @@ return function(config) {
     };
     
     w.removeHighlights = function() {
-        w.highlightEntity();
+        w.entitiesManager.highlightEntity();
     };
     
     /**
@@ -260,18 +219,16 @@ return function(config) {
         }
         
         // update current entity
-        if (ed.currentEntity) {
+        if (w.entitiesManager.getCurrentEntity() !== null) {
             var content = '';
-            var entity = w.entities[ed.currentEntity];
-            if (entity.props.type === 'note' || entity.props.type === 'citation') {
+            var entity = w.entitiesManager.getEntity(w.entitiesManager.getCurrentEntity());
+            if (entity.getType() === 'note' || entity.getType() === 'citation') {
                 // shouldn't actually be here since you can't get "inside" these entities
-                content = $($.parseXML(entity.info.content)).text();
+                content = $($.parseXML(entity.getCustomValues().content)).text();
             } else {
                 content = $('.entityHighlight', ed.getBody()).text();
             }
-            entity.props.content = content;
-            entity.props.title = w.utilities.getTitleFromContent(content);
-            w.event('entityEdited').publish(ed.currentEntity);
+            entity.setContent(content);
         }
         
         if (w.emptyTagId) {
@@ -280,7 +237,7 @@ return function(config) {
                 var range = ed.selection.getRng(true);
                 range.setStart(range.commonAncestorContainer, range.startOffset-1);
                 range.setEnd(range.commonAncestorContainer, range.startOffset+1);
-                w.insertBoundaryTags(w.emptyTagId, w.entities[w.emptyTagId].props.type, range);
+                w.insertBoundaryTags(w.emptyTagId, w.entitiesManager.getEntity(w.emptyTagId).getType(), range);
                 
                 // TODO get working in IE
                 var tags = $('[name='+w.emptyTagId+']', ed.getBody());
@@ -291,7 +248,7 @@ return function(config) {
                 
                 w.event('entityEdited').publish(w.emptyTagId);
             } else {
-                delete w.entities[w.emptyTagId];
+                w.entitiesManager.removeEntity(w.emptyTagId);
             }
             w.emptyTagId = null;
         }
@@ -450,7 +407,7 @@ return function(config) {
             w.event('nodeChanged').publish(ed.currentNode);
             
             if (w.emptyTagId) {
-                delete w.entities[w.emptyTagId];
+                w.entitiesManager.removeEntity(w.emptyTagId);
                 w.emptyTagId = null;
             }
         }
@@ -493,7 +450,7 @@ return function(config) {
         var parent = range.commonAncestorContainer;
         if (parent.nodeType === Node.ELEMENT_NODE && parent.hasAttribute('_entity')) {
             entityClick = true;
-            w.highlightEntity(); // remove highlight
+            w.entitiesManager.highlightEntity(); // remove highlight
             if ((w.editor.dom.hasClass(parent, 'start') && evt.which == 37) || 
                 (w.editor.dom.hasClass(parent, 'end') && evt.which != 39)) {
                 var prevNode = w.utilities.getPreviousTextNode(parent);
@@ -516,13 +473,13 @@ return function(config) {
         var id, type;
         if (entity != null) {
             id = entity.getAttribute('name');
-            type = w.entities[id].props.type;
+            type = w.entitiesManager.getEntity(id).getType();
             if (entityClick && (type === 'note' || type === 'citation' || type === 'keyword')) {
                 // entity marker's clicked so edit the entity
                 w.tagger.editTag(id);
             }
         } else {
-            w.highlightEntity();
+            w.entitiesManager.highlightEntity();
             var parentNode = $(ed.selection.getNode());
             if (parentNode.attr('_tag')) {
                 var id = parentNode.attr('id');
@@ -531,9 +488,9 @@ return function(config) {
             return;
         }
         
-        if (id === ed.currentEntity) return;
+        if (id === w.entitiesManager.getCurrentEntity()) return;
         
-        w.highlightEntity(id, ed.selection.getBookmark());
+        w.entitiesManager.highlightEntity(id, ed.selection.getBookmark());
     };
     
     
@@ -544,6 +501,7 @@ return function(config) {
 
         w.eventManager = new EventManager(w);
         w.schemaManager = new SchemaManager(w, {schemas: config.schemas});
+        w.entitiesManager = new EntitiesManager(w);
         w.utilities = new Utilities(w);
         w.tagger = new Tagger(w);
         w.converter = new Converter(w);
@@ -585,21 +543,6 @@ return function(config) {
             } catch(e) {
                 
             }
-        });
-
-
-        // event subscriptions for editor methods
-        w.event('entityAdded').subscribe(function(entityId) {
-            w.highlightEntity(entityId);
-        });
-        w.event('entityEdited').subscribe(function(entityId) {
-            w.highlightEntity(entityId);
-        });
-        w.event('entityRemoved').subscribe(function(entityId) {
-            w.highlightEntity();
-        });
-        w.event('entityPasted').subscribe(function(entityId) {
-            w.highlightEntity(entityId);
         });
 
         /**
@@ -670,7 +613,6 @@ return function(config) {
                 ed.writer = w;
                 
                 // custom properties added to the editor
-                ed.currentEntity = null; // the id of the currently highlighted entity
                 ed.currentStruct = null; // the id of the currently selected structural tag
                 ed.currentBookmark = null; // for storing a bookmark used when adding a tag
                 ed.currentNode = null; // the node that the cursor is currently in

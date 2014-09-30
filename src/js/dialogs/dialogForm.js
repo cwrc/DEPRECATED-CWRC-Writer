@@ -12,10 +12,16 @@ function DialogForm(config) {
     var width = config.width || 400;
     var html = config.html;
     
+    // set to false to cancel saving
+    this.isValid = true;
+    
     this.type = config.type;
     this.tag = config.tag;
     this.mode = null;
-    this.currentData = null;
+    this.currentData = {
+        attributes: {},
+        customValues: {}
+    };;
     this.currentId = null;
 
     $(document.body).append(html);
@@ -67,7 +73,7 @@ function DialogForm(config) {
         }
     });
     $('[data-type="attributes"]', this.$el).first().each($.proxy(function(index, el) {
-        this.attributesWidget = new AttributeWidget({writer: this.w, parentId: id+'_teiParent'});
+        this.attributesWidget = new AttributeWidget({writer: this.w, parentId: id+'_teiParent', dialogForm: this});
         this.attWidgetInit = false;
     }, this));
 }
@@ -76,37 +82,55 @@ DialogForm.ADD = 0;
 DialogForm.EDIT = 1;
 
 DialogForm.processForm = function(dialogInstance) {
-    $('[data-type]', dialogInstance.$el).each(function(index, el) {
+    var data = dialogInstance.currentData;
+    
+    // process attributes first, since other form elements should override them if there's a discrepancy
+    if ($('[data-type="attributes"]', dialogInstance.$el).length === 1) {
+        var atts = dialogInstance.attributesWidget.getData();
+        $.extend(data.attributes, atts);
+    }
+    
+    $('[data-type]', dialogInstance.$el).not('[data-type="attributes"]').each(function(index, el) {
         var formEl = $(this);
         var type = formEl.data('type');
         var mapping = formEl.data('mapping');
-        switch (type) {
-            case 'radio':
-                dialogInstance.currentData[mapping] = formEl.find('input:checked').val();
-                break;
-            case 'textbox':
-            case 'hidden':
-            case 'select':
-                dialogInstance.currentData[mapping] = formEl.val();
-                break;
-            case 'attributes':
-                dialogInstance.currentData[mapping] = dialogInstance.attributesWidget.getData();
-                break;
+        if (mapping !== undefined) {
+            var isCustom = mapping.indexOf('custom.') == 0;
+            if (isCustom) {
+                mapping = mapping.replace(/^custom\./, '');
+            }
+            switch (type) {
+                case 'radio':
+                    var val = formEl.find('input:checked').val();
+                    if (isCustom) {
+                        data.customValues[mapping] = val;
+                    } else {
+                        data.attributes[mapping] = val;
+                    }
+                    break;
+                case 'textbox':
+                case 'hidden':
+                case 'select':
+                    var val = formEl.val();
+                    if (isCustom) {
+                        data.customValues[mapping] = val;
+                    } else {
+                        data.attributes[mapping] = val;
+                    }
+                    break;
+            }
         }
     });
     
-    for (var key in dialogInstance.currentData) {
-        if (dialogInstance.currentData[key] == undefined || dialogInstance.currentData[key] == '') {
-            delete dialogInstance.currentData[key];
+    for (var key in data.attributes) {
+        if (data.attributes[key] === undefined || data.attributes[key] === '') {
+            delete data.attributes[key];
         }
     }
 };
 
 function initAttributeWidget(dialogInstance) {
     var atts = dialogInstance.w.utilities.getChildrenForTag({tag: dialogInstance.tag, type: 'attribute', returnType: 'array'});
-    for (var i = 0; i < atts.length; i++) {
-        atts[i].parent = dialogInstance.tag;
-    }
     dialogInstance.attributesWidget.buildWidget(atts);
     dialogInstance.attWidgetInit = true;
 };
@@ -150,60 +174,73 @@ DialogForm.prototype = {
             $(this).accordion('option', 'active', false);
         });
         
-        this.currentData = {};
+        this.currentData = {
+            attributes: {},
+            customValues: {}
+        };
         
         if (this.mode === DialogForm.ADD) {
             if (config.cwrcInfo != null) {
                 $('[data-type="tagAs"]', this.$el).html(config.cwrcInfo.name);
-                $('[data-mapping="ref"]', this.$el).val(config.cwrcInfo.ref);
                 this.currentData.cwrcInfo = config.cwrcInfo;
             }
         } else if (this.mode === DialogForm.EDIT) {
-            this.currentId = config.entry.props.id;
+            this.currentId = config.entry.getId();
             
-            var data = config.entry.info;
+            var data = config.entry.getAttributes();
             
-            if (data.cwrcInfo != null) {
-                this.currentData.cwrcInfo = data.cwrcInfo;
-                $('[data-type="tagAs"]', this.$el).html(data.cwrcInfo.name);
+            var cwrcInfo = config.entry.getLookupInfo();
+            
+            var customValues = config.entry.getCustomValues();
+            
+            if (cwrcInfo != null) {
+                this.currentData.cwrcInfo = cwrcInfo;
+                $('[data-type="tagAs"]', this.$el).html(cwrcInfo.name);
             }
             
             var that = this;
             $('[data-type]', this.$el).each(function(index, el) {
                 var formEl = $(this);
                 var type = formEl.data('type');
-                var mapping = formEl.data('mapping');
-                var value = data[mapping];
-                if (value != null) {
-                    switch (type) {
-                        case 'select':
-                            formEl.val(value);
-                            formEl.parents('[data-transform="accordion"]').accordion('option', 'active', 0);
-                            break;
-                        case 'radio':
-                            $('input[value="'+value+'"]', formEl).prop('checked', true);
-                            if (formEl.data('transform') === 'buttonset') {
-                                $('input[value="'+value+'"]', formEl).button('refresh');
+                if (type === 'attributes') {
+                    var showWidget = that.attributesWidget.setData(data);
+                    if (showWidget) {
+                        formEl.parents('[data-transform="accordion"]').accordion('option', 'active', 0);
+                    }
+                } else {
+                    var mapping = formEl.data('mapping');
+                    if (mapping !== undefined) {
+                        var isCustom = mapping.indexOf('custom.') == 0;
+                        var value;
+                        if (isCustom) {
+                            mapping = mapping.replace(/^custom\./, '');
+                            value = customValues[mapping];
+                        } else {
+                            value = data[mapping];
+                        }
+                        if (value !== undefined) {
+                            switch (type) {
+                                case 'select':
+                                    formEl.val(value);
+                                    formEl.parents('[data-transform="accordion"]').accordion('option', 'active', 0);
+                                    break;
+                                case 'radio':
+                                    $('input[value="'+value+'"]', formEl).prop('checked', true);
+                                    if (formEl.data('transform') === 'buttonset') {
+                                        $('input[value="'+value+'"]', formEl).button('refresh');
+                                    }
+                                    break;
+                                case 'textbox':
+                                    formEl.val(value);
+                                    break;
                             }
-                            break;
-                        case 'textbox':
-                            formEl.val(value);
-                            break;
-                        case 'attributes':
-                            if (value[that.tag] == null) {
-                                value[that.tag] = {};
-                            }
-                            var showWidget = that.attributesWidget.setData(value);
-                            if (showWidget) {
-                                formEl.parents('[data-transform="accordion"]').accordion('option', 'active', 0);
-                            }
-                            break;
+                        }
                     }
                 }
             });
         }
         
-        this.$el.trigger('beforeShow', [config]);
+        this.$el.trigger('beforeShow', [config, this]);
         
         this.$el.dialog('open');
     },
@@ -212,13 +249,15 @@ DialogForm.prototype = {
         DialogForm.processForm(this);
         
         this.$el.trigger('beforeSave', [this]);
-        this.$el.trigger('beforeClose');
-        this.$el.dialog('close');
-        
-        if (this.mode === DialogForm.EDIT && this.currentData != null) {
-            this.w.tagger.editEntity(this.currentId, this.currentData);
-        } else {
-            this.w.tagger.finalizeEntity(this.type, this.currentData);
+        if (this.isValid === true) {
+            this.$el.trigger('beforeClose');
+            this.$el.dialog('close');
+            
+            if (this.mode === DialogForm.EDIT && this.currentData != null) {
+                this.w.tagger.editEntity(this.currentId, this.currentData);
+            } else {
+                this.w.tagger.finalizeEntity(this.type, this.currentData);
+            }
         }
     }
 };

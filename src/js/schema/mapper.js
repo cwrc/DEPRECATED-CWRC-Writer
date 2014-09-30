@@ -1,5 +1,5 @@
 // TODO add IDs
-define(['jquery'], function($) {
+define(['jquery', 'entity', 'jquery.xpath'], function($, Entity) {
 
 function Mapper(config) {
     this.w = config.writer;
@@ -12,9 +12,31 @@ Mapper.TEXT_SELECTION = '[[[editorText]]]'; // constant represents the user's te
 Mapper.getAttributeString = function(attObj) {
     var str = '';
     for (var key in attObj) {
-        str += ' '+key+'="'+attObj[key]+'"';
+        var val = attObj[key];
+        if (val !== undefined && val !== '') {
+            str += ' '+key+'="'+val+'"';
+        }
     }
     return str;
+};
+
+/**
+ * Gets the range string for the entity
+ * @param {Entity} entity
+ * @returns {String}
+ */
+Mapper.getRangeString = function(entity) {
+    var rangeString = '';
+    var range = entity.getRange();
+    
+    var annoId = range.annotationId || entity.getId();
+    rangeString += ' annotationId="'+annoId+'"';
+    
+    if (range.offsetId !== undefined) {
+        rangeString += ' offsetId="'+range.offsetId+'"';
+    }
+    
+    return rangeString;
 };
 
 /**
@@ -24,15 +46,92 @@ Mapper.getAttributeString = function(attObj) {
  */
 Mapper.getAttributesFromXml = function(xml) {
     var attrs = {};
-    var nodeAttrs = attrs[xml.nodeName] = {};
     $.map(xml.attributes, function(att) {
         if (att.name === 'annotationId' || att.name === 'offsetId' || att.name === 'cwrcStructId') {
             // don't include
         } else {
-            nodeAttrs[att.name] = att.value;
+            attrs[att.name] = att.value;
         }
     });
     return attrs;
+};
+
+/**
+ * Gets the standard mapping for a tag and attributes.
+ * Doesn't close the tag, so that further attributes can be added.
+ * @param {String} tag The tag to use
+ * @param {Entity} entity The Entity from which to fetch attributes
+ * @returns {String}
+ */
+Mapper.getTagAndDefaultAttributes = function(tag, entity) {
+    var xml = '<'+tag;
+    xml += Mapper.getRangeString(entity);
+    xml += Mapper.getAttributeString(entity.getAttributes());
+    return xml;
+};
+
+/**
+ * Similar to the Mapper.getTagAndDefaultAttributes method but closes the tag.
+ * @param tag
+ * @param entity
+ * @returns
+ */
+Mapper.getDefaultMapping = function(tag, entity) {
+    var xml = Mapper.getTagAndDefaultAttributes(tag, entity);
+    xml += '>'+Mapper.TEXT_SELECTION+'</'+tag+'>';
+    return xml;
+};
+
+Mapper.getDefaultReverseMapping = function(xml, customMappings, nsPrefix) {
+    var obj = {};
+    
+    nsPrefix = nsPrefix || '';
+    var nsUri = xml.namespaceURI;
+    var nsResolver = function(prefix) {
+        if (prefix == nsPrefix) return nsUri;
+    };
+    
+    if (customMappings !== undefined) {
+        for (var key in customMappings) {
+            obj[key] = {};
+            for (var key2 in customMappings[key]) {
+                var xpath = customMappings[key][key2];
+                var result = $(xml).xpath(xpath, nsResolver)[0];
+                if (result !== undefined) {
+                    var val;
+                    switch (result.nodeType) {
+                        case Node.ELEMENT_NODE:
+                            val = Mapper.xmlToString(result);
+                            break;
+                        case Node.TEXT_NODE:
+                            val = $(result).text();
+                            break;
+                        case Node.ATTRIBUTE_NODE:
+                            val = $(result).val();
+                    }
+                    if (val !== undefined) {
+                        obj[key][key2] = val;
+                    }
+                }
+            }
+        }
+    }
+    obj.attributes = Mapper.getAttributesFromXml(xml);
+    return obj;
+};
+
+Mapper.xmlToString = function(xmlData) {
+    var xmlString = '';
+    try {
+        if (window.ActiveXObject) {
+            xmlString = xmlData.xml;
+        } else {
+            xmlString = (new XMLSerializer()).serializeToString(xmlData);
+        }
+    } catch (e) {
+        alert(e);
+    }
+    return xmlString;
 };
 
 Mapper.prototype = {
@@ -53,7 +152,7 @@ Mapper.prototype = {
     },
     
     getMapping: function(entity) {
-        var mapping = this.mappings[entity.props.type].mapping;
+        var mapping = this.mappings[entity.getType()].mapping;
         if (mapping === undefined) {
             return ['', '']; // return array of empty strings if there is no mapping
         }
@@ -91,7 +190,7 @@ Mapper.prototype = {
         for (var type in this.mappings) {
             testTag = this.mappings[type].parentTag;
             if (($.isArray(testTag) && testTag.indexOf(tag) !== -1) || testTag === tag) {
-                return e;
+                return type;
             }
         }
         return null;

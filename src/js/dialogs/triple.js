@@ -103,7 +103,7 @@ return function(writer) {
                 var uri = '';
                 var id = s.attr('name');
                 if (id != null) {
-                    uri = w.entities[id].annotation.annotationId;
+                    uri = w.entitiesManager.getEntity(id).getUris().annotationId;
                 }
                 components[index] = {text: w.utilities.escapeHTMLString(s.text()), uri: uri, external: false};
             }
@@ -144,8 +144,8 @@ return function(writer) {
     };
     
     var buildEntity = function(entity) {
-        return '<li class="'+entity.props.type+'" name="'+entity.props.id+'">'+
-            '<span class="box"/><span class="entityTitle">'+entity.props.title+'</span>'+
+        return '<li class="'+entity.getType()+'" name="'+entity.getId()+'">'+
+            '<span class="box"/><span class="entityTitle">'+entity.getTitle()+'</span>'+
         '</li>';
     };
     
@@ -156,10 +156,10 @@ return function(writer) {
             $('#currentRelation p').html('');
             
             var entitiesString = '';
-            for (var key in w.entities) {
-                var e = w.entities[key];
-                entitiesString += buildEntity(e);
-            }
+            
+            w.entitiesManager.eachEntity(function(id, entity) {
+                entitiesString += buildEntity(entity);
+            });
             
             $('#subjectColumn > ul, #objectColumn > ul').html(entitiesString);
             $('#tripleDialog .entitiesList > li').hover(function() {
@@ -176,7 +176,7 @@ return function(writer) {
                 $(this).parents('.column').find('input').val('');
                 if ($(this).parents('#subjectColumn').length > 0) {
                     if ($(this).hasClass('selected')) {
-                        var type = w.entities[$(this).attr('name')].props.type;
+                        var type = w.entitiesManager.getEntity($(this).attr('name')).getType();
                         loadPredicates(type);
                     } else {
                         $('#predicateColumn > ul').empty();

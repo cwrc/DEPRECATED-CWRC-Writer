@@ -35,8 +35,8 @@
                     var id = n.getAttribute('id');
                     if (id === 'entityHighlight') {
                         var w = t.editor.writer;
-                        id = t.editor.currentEntity;
-                        var type = w.entities[id].props.type;
+                        id = t.entitiesManager.getCurrentEntity();
+                        var type = w.entitiesManager.getEntity(id).getType();
                         tag = w.schemaManager.mapper.getParentTag(type);
                     }
                     if (tag != null) {
@@ -64,7 +64,7 @@
                 if (node.getAttribute('_tag')) {
                     if ($(node).text() == '') {
                         var id = node.getAttribute('id');
-                        t.editor.execCommand('removeTag', id);
+                        t.editor.writer.tagger.removeTag(id);
                     } else {
                         var range = t.editor.selection.getRng(true);
                         if (node.nextSibling) {

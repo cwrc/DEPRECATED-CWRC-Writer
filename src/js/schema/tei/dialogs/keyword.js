@@ -52,11 +52,11 @@ return function(writer) {
         row.remove();
     }
     
-    dialog.$el.on('beforeSave', function() {
-        dialog.currentData.keywords = [];
+    dialog.$el.on('beforeSave', function(e, dialog) {
+        dialog.currentData.customValues.keywords = [];
         $('#'+id+'Dialog .keywordRow').each(function(index, el) {
             var keyword = $('input', el).val();
-            dialog.currentData.keywords.push(keyword);
+            dialog.currentData.customValues.keywords.push(keyword);
         });
     });
     
@@ -66,11 +66,9 @@ return function(writer) {
             if (dialog.mode === DialogForm.ADD) {
                 addRow();
             } else {
-                entityId = config.entry.props.id;
-                
-                var data = config.entry.info;
+                var keywords = config.entry.getCustomValue('keywords');
                 var prevRow = null;
-                $.each(data.keywords, function(index, val) {
+                $.each(keywords, function(index, val) {
                     var row = addRow(prevRow);
                     row.find('input').val(val);
                     prevRow = row;

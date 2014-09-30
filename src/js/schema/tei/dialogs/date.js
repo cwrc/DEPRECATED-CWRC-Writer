@@ -17,14 +17,14 @@ return function(writer) {
             '<input type="radio" name="dateType" value="range" id="'+id+'_type_range"/><label for="'+id+'_type_range">Date Range</label>'+
         '</div>'+
         '<div id="'+id+'_date">'+
-            '<label for="'+id+'_cwrc_datePicker">Date:</label><br/><input type="text" id="'+id+'_cwrc_datePicker" />'+
+            '<label for="'+id+'_cwrc_datePicker">Date:</label><br/><input type="text" data-type="textbox" data-mapping="when" id="'+id+'_cwrc_datePicker" />'+
         '</div>'+
         '<div id="'+id+'_range">'+
-            '<label for="'+id+'_startDate">Start date:</label><br/><input type="text" id="'+id+'_startDate" style="margin-bottom: 5px;"/><br />'+
-            '<label for="'+id+'_endDate">End date:</label><br/><input type="text" id="'+id+'_endDate" />'+
+            '<label for="'+id+'_startDate">Start date:</label><br/><input type="text" data-type="textbox" data-mapping="from" id="'+id+'_startDate" style="margin-bottom: 5px;"/><br />'+
+            '<label for="'+id+'_endDate">End date:</label><br/><input type="text" data-type="textbox" data-mapping="to" id="'+id+'_endDate" />'+
         '</div>'+
         '<div>Format: YYYY, YYYY-MM, or YYYY-MM-DD<br/>e.g. 2010, 2010-10, 2010-10-31</div>'+
-        '<div id="'+id+'_certainty" data-transform="buttonset" data-type="radio" data-mapping="certainty">'+
+        '<div id="'+id+'_certainty" data-transform="buttonset" data-type="radio" data-mapping="cert">'+
             '<p>This identification is:</p>'+
             '<input type="radio" id="'+id+'_definite" name="'+id+'_id_certainty" value="definite" data-default="true" /><label for="'+id+'_definite">Definite</label>'+
             '<input type="radio" id="'+id+'_reasonable" name="'+id+'_id_certainty" value="reasonably certain" /><label for="'+id+'_reasonable">Reasonably Certain</label>'+
@@ -49,15 +49,12 @@ return function(writer) {
         html: html
     });
     
-    $('#'+id+'_certainty input').change(function() {
-        dialog.attributesWidget.setData({date: {cert: $(this).val()}});
-    });
     $('#'+id+'_type input').click(function() {
         toggleDate($(this).val());
     });
     
-    var dateInput = $('#'+id+'_cwrc_datePicker')[0];
-    $(dateInput).focus(function() {
+    var $dateInput = $('#'+id+'_cwrc_datePicker');
+    $dateInput.focus(function() {
         $(this).css({borderBottom: ''});
     });
     
@@ -78,12 +75,12 @@ return function(writer) {
     // TODO find a better way to do this
     $('#ui-datepicker-div').wrap('<div class="cwrc" />');
     
-    var startDate = $('#'+id+'_startDate')[0];
-    $(startDate).focus(function() {
+    var $startDate = $('#'+id+'_startDate');
+    $startDate.focus(function() {
         $(this).css({borderBottom: ''});
     });
-    var endDate = $('#'+id+'_endDate')[0];
-    $(endDate).focus(function() {
+    var $endDate = $('#'+id+'_endDate');
+    $endDate.focus(function() {
         $(this).css({borderBottom: ''});
     });
     
@@ -142,72 +139,72 @@ return function(writer) {
 
             toggleDate('date');
             $('#'+id+'_type_date').prop('checked', true).button('refresh');
-            dateInput.value = dateValue;
-            startDate.value = '';
-            endDate.value = '';
+            $dateInput.val(dateValue);
+            $startDate.val('');
+            $endDate.val('');
         } else {
-            var data = config.entry.info;
-            if (data.date) {
+            var data = config.entry.getAttributes();
+            if (data.when !== undefined) {
                 toggleDate('date');
                 $('#'+id+'_type_date').prop('checked', true).button('refresh');
-                dateInput.value = data.date;
-                startDate.value = '';
-                endDate.value = '';
+                $dateInput.val(data.when);
+                $startDate.val('');
+                $endDate.val('');
             } else {
                 toggleDate('range');
                 $('#'+id+'_type_range').prop('checked', true).button('refresh');
-                dateInput.value = '';
-                startDate.value = data.startDate;
-                endDate.value = data.endDate;
+                $dateInput.val('');
+                $startDate.val(data.from);
+                $endDate.val(data.to);
             }
         }
         
-        $(dateInput).css({borderBottom: ''});
-        $(startDate).css({borderBottom: ''});
-        $(endDate).css({borderBottom: ''});
-        $(dateInput).focus();
+        $dateInput.css({borderBottom: ''});
+        $startDate.css({borderBottom: ''});
+        $endDate.css({borderBottom: ''});
+        $dateInput.focus();
     });
     
-    dialog.$el.on('beforeSave', function() {
+    dialog.$el.on('beforeSave', function(e, dialog) {
+        var error = false;
         var type = $('#'+id+'_type input:checked').val();
-        if (type == 'date') {
-            var dateString = dateInput.value;
+        if (type === 'date') {
+            var dateString = $dateInput.val();
             if (dateString.match(/^\d{4}-\d{2}-\d{2}$/) || dateString.match(/^\d{4}-\d{2}$/) || dateString.match(/^\d{4}$/)) {
-                dialog.currentData.date = dateString;
+                dialog.currentData.attributes.when = dateString;
             } else {
-                $(dateInput).css({borderBottom: '1px solid red'});
-                return false;
+                $dateInput.css({borderBottom: '1px solid red'});
+                error = true;
             }
         } else {
-            var startString = startDate.value;
-            var endString = endDate.value;
-            var error = false;
+            var startString = $startDate.val();
+            var endString = $endDate.val();
             var padStart = '';
             var padEnd = '';
             
             if (startString.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                dialog.currentData.startDate = startString;
+                dialog.currentData.attributes.from = startString;
             } else if (startString.match(/^\d{4}-\d{2}$/)) {
-                dialog.currentData.startDate = startString;
+                dialog.currentData.attributes.from = startString;
                 padStart = '-01';
             } else if (startString.match(/^\d{4}$/)) {
-                dialog.currentData.startDate = startString;
+                dialog.currentData.attributes.from = startString;
                 padStart = '-01-01';
             } else {
-                $(startDate).css({borderBottom: '1px solid red'});
+                $startDate.css({borderBottom: '1px solid red'});
                 error = true;
             }
             
             if (endString.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                dialog.currentData.endDate = endString;
+                dialog.currentData.attributes.to = endString;
             } else if (endString.match(/^\d{4}-\d{2}$/)) {
-                dialog.currentData.endDate = endString;
+                dialog.currentData.attributes.to = endString;
                 padEnd = '-01';
             } else if (endString.match(/^\d{4}$/)) {
-                dialog.currentData.endDate = endString;
+                dialog.currentData.attributes.to = endString;
                 padEnd = '-01-01';
             } else {
-                $(endDate).css({borderBottom: '1px solid red'});
+                $endDate.css({borderBottom: '1px solid red'});
                 error = true;
             }
             
@@ -215,12 +212,16 @@ return function(writer) {
             var end = $.datepicker.parseDate('yy-mm-dd', endString+padEnd);
             
             if (start > end) {
-                $(startDate).css({borderBottom: '1px solid red'});
-                $(endDate).css({borderBottom: '1px solid red'});
+                $startDate.css({borderBottom: '1px solid red'});
+                $endDate.css({borderBottom: '1px solid red'});
                 error = true;
             }
-            
-            if (error) return false;
+        }
+        
+        if (error) {
+            dialog.isValid = false;
+        } else {
+            dialog.isValid = true;
         }
     });
     
