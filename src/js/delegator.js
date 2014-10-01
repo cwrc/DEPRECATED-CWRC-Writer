@@ -265,16 +265,16 @@ return function(writer) {
         });
     };
     
-    /**
-     * @callback Delegator~validateCallback
-     * @param {Boolean} isValid
-     */
-    
     function _getTemplateBranch() {
         var octo = new Octokit({token: '15286e8222a7bc13504996e8b451d82be1cba397'});
         var templateRepo = octo.getRepo('cwrc', 'CWRC-Writer-Templates');
-        var branch = templateRepo.getBranch('master');
-        return branch;
+        // if we're on development then also get the templates development branch
+        var isDev = window.location.pathname.indexOf('/dev/') !== -1;
+        if (isDev) {
+            return templateRepo.getBranch('development');
+        } else {
+            return templateRepo.getBranch('master');
+        }
     }
     
     /**
