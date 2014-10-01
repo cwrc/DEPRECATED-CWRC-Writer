@@ -2977,7 +2977,7 @@ $(function(){
 		search.getResultFromCWRC = function(specs) {
 			// specs has data and source
 			var that = search.result();
-			that.name = specs["solr_doc"]["fgs_label_s"];
+			that.name = specs["object_label"];
 			that.id = specs["PID"];
 
 			
