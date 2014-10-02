@@ -515,11 +515,11 @@ return function(writer) {
             if (rootName != w.root.toLowerCase()) {
                 // roots don't match so load the appropriate schema
                 var schemaId = 'tei';
-                if (rootName == 'events') {
+                if (rootName === 'events') {
                     schemaId = 'events';
-                } else if (rootName == 'biography') {
+                } else if (rootName === 'biography') {
                     schemaId = 'biography';
-                } else if (rootName == 'writing') {
+                } else if (rootName === 'writing') {
                     schemaId = 'writing';
                 }
                 w.schemaManager.loadSchema(schemaId, false, function() {
@@ -628,7 +628,12 @@ return function(writer) {
                 offset = parseInt(parts[2]);
             }
             
-            var foopath = xpath.replace(/\/\//g, '//foo:'); // default namespace hack (http://stackoverflow.com/questions/9621679/javascript-xpath-and-default-namespaces)
+            var foopath;
+            if (defaultNamespace !== null) {
+                foopath = xpath.replace(/\/\//g, '//foo:'); // default namespace hack (http://stackoverflow.com/questions/9621679/javascript-xpath-and-default-namespaces)
+            } else {
+                foopath = xpath;
+            }
             var result;
             try {
                 result = doc.evaluate(foopath, doc, nsResolver, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
@@ -1192,7 +1197,19 @@ return function(writer) {
 
             var textTagName = w.schemaManager.mapper.getTextTag(type);
             if (textTagName !== '') {
-                var textTag = $('[_tag="'+textTagName+'"]', $node);
+                var selector;
+                if ($.isArray(textTagName)) {
+                    selector = '';
+                    $.each(textTagName, function(i, tag) {
+                        selector += '[_tag="'+tag+'"]';
+                        if (i < textTagName.length - 1) {
+                            selector += ',';
+                        }
+                    });
+                } else {
+                    selector = '[_tag="'+textTagName+'"]';
+                }
+                var textTag = $(selector, $node).first();
                 if (type === 'correction') {
                     entity.getCustomValues().sicText = textTag.text();
                 }
@@ -1204,7 +1221,7 @@ return function(writer) {
             
             var id = $node.attr('id');
             var structsEntry = w.structs[id];
-            if (structsEntry != null) {
+            if (structsEntry !== undefined) {
                 delete structsEntry;
             }
             
