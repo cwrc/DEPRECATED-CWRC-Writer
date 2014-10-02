@@ -656,33 +656,39 @@ return function(writer) {
         
         if (children.length == 0) {
             var element = _getElement(config.tag);
-            var defHits = {};
-            var level = 0;
-            _getChildrenJSON(element, defHits, level, config.type, children);
-            
-            if (children.indexOf('anyName') != -1) {
-                children = [];
-                // anyName means include all elements
-                for (i = 0; i < w.schemaManager.schema.elements.length; i++) {
-                    var el = w.schemaManager.schema.elements[i];
-                    children.push({
-                        name: el
-                    });
+            if (element === null) {
+                if (window.console) {
+                    console.warn('Cannot find element for:'+config.tag);
                 }
-            }
-            
-            // get from XML, slower
-//            var element = $('element[name="'+config.tag+'"]', w.schemaManager.schemaXML);
-//            _getChildrenXML(element, defHits, level, config.type, children);
-            
-            children.sort(function(a, b) {
-                if (a.name > b.name) return 1;
-                if (a.name < b.name) return -1;
-                return 0;
-            });
-            
-            if (useLocalStorage) {
-                localStorage['cwrc.'+config.tag+'.'+config.type+'.children'] = JSON.stringify(children);
+            } else {
+                var defHits = {};
+                var level = 0;
+                _getChildrenJSON(element, defHits, level, config.type, children);
+                
+                if (children.indexOf('anyName') != -1) {
+                    children = [];
+                    // anyName means include all elements
+                    for (i = 0; i < w.schemaManager.schema.elements.length; i++) {
+                        var el = w.schemaManager.schema.elements[i];
+                        children.push({
+                            name: el
+                        });
+                    }
+                }
+                
+                // get from XML, slower
+    //            var element = $('element[name="'+config.tag+'"]', w.schemaManager.schemaXML);
+    //            _getChildrenXML(element, defHits, level, config.type, children);
+                
+                children.sort(function(a, b) {
+                    if (a.name > b.name) return 1;
+                    if (a.name < b.name) return -1;
+                    return 0;
+                });
+                
+                if (useLocalStorage) {
+                    localStorage['cwrc.'+config.tag+'.'+config.type+'.children'] = JSON.stringify(children);
+                }
             }
         }
         
