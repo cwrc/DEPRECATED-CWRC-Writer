@@ -74,7 +74,7 @@ return function(writer, config) {
     '</div>'+
     '</div>'+
     '<div id="helpDialog">'+
-        '<p>For help with CWRC-Writer click <a href="https://drive.google.com/a/ualberta.ca/?tab=mo#folders/0B3fHpXyQEt3bXzZiT3ppWEdMODQ" target="_blank">here</a>.</p>'+
+        '<p>For help with CWRC-Writer click <a href="http://cwrc.ca/CWRC-Writer_Documentation/" target="_blank">here</a>.</p>'+
     '</div>');
     
     $settingsDialog = $('#settingsDialog');
