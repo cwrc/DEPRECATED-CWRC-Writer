@@ -14,7 +14,7 @@ return function(writer) {
     
     /**
      * Inserts entity boundary tags around the supplied DOM range.
-     * @param {string} id The id of then entity 
+     * @param {string} id The id of the entity 
      * @param {string} type The entity type
      * @param {range} range The DOM range to insert the tags around
      */
@@ -356,6 +356,7 @@ return function(writer) {
      * @param {Entity} entity
      * @param {Object} info The info object
      * @param {Object} info.attributes Key/value pairs of attributes
+     * @param {Object} info.properties Key/value pairs of Entity properties
      * @param {Object} info.cwrcInfo CWRC lookup info
      * @param {Object} info.customValues Any additional custom values
      */
@@ -379,6 +380,15 @@ return function(writer) {
         entity.setAttributes(info.attributes);
         delete info.attributes;
         
+        // set properties
+        if (info.properties !== undefined) {
+            for (var key in info.properties) {
+                if (entity.hasOwnProperty(key)) {
+                    entity[key] = info.properties[key];
+                }
+            }
+        }
+        
         // set lookup info
         if (info.cwrcInfo !== undefined) {
             entity.setLookupInfo(info.cwrcInfo);
@@ -390,12 +400,16 @@ return function(writer) {
             entity.setCustomValue(key, info.customValues[key]);
         }
         
+        // TODO remove schema specific custom values
         if (type === 'note' || type === 'citation') {
             var content = $($.parseXML(entity.getCustomValues().content)).text();
             entity.setContent(content);
         } else if (type === 'keyword') {
-            var content = entity.getCustomValues().keywords.join(', ');
-            entity.setContent(content);
+            var keywords = entity.getCustomValues().keywords;
+            if (keywords !== undefined) {
+                var content = keywords.join(', ');
+                entity.setContent(content);
+            }
         }
     }
     

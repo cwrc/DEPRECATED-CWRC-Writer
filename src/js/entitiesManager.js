@@ -39,7 +39,11 @@ EntitiesManager.prototype = {
             config.id = this.w.getUniqueId('ent_');
         }
         
-        var entity = new Entity(config, this.w);
+        if (config.tag === undefined) {
+            config.tag = this.w.schemaManager.mapper.getParentTag(config.type);
+        }
+        
+        var entity = new Entity(config);
         this.entities[entity.id] = entity;
         
         this.w.event('entityAdded').publish(entity.id);

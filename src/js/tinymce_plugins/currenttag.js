@@ -36,8 +36,7 @@
                     if (id === 'entityHighlight') {
                         var w = t.editor.writer;
                         id = t.entitiesManager.getCurrentEntity();
-                        var type = w.entitiesManager.getEntity(id).getType();
-                        tag = w.schemaManager.mapper.getParentTag(type);
+                        tag = w.entitiesManager.getEntity(id).getTag();
                     }
                     if (tag != null) {
                         var pi = t.editor.dom.create('a', {name: id, 'href' : "javascript:;", role: 'button', onmousedown : "return false;", 'class' : 'mcePath_' + (de++)}, tag);

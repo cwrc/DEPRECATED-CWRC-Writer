@@ -59,11 +59,11 @@ Mapper.getAttributesFromXml = function(xml) {
 /**
  * Gets the standard mapping for a tag and attributes.
  * Doesn't close the tag, so that further attributes can be added.
- * @param {String} tag The tag to use
  * @param {Entity} entity The Entity from which to fetch attributes
  * @returns {String}
  */
-Mapper.getTagAndDefaultAttributes = function(tag, entity) {
+Mapper.getTagAndDefaultAttributes = function(entity) {
+    var tag = entity.getTag();
     var xml = '<'+tag;
     xml += Mapper.getRangeString(entity);
     xml += Mapper.getAttributeString(entity.getAttributes());
@@ -72,12 +72,12 @@ Mapper.getTagAndDefaultAttributes = function(tag, entity) {
 
 /**
  * Similar to the Mapper.getTagAndDefaultAttributes method but closes the tag.
- * @param tag
- * @param entity
+ * @param {Entity} entity
  * @returns
  */
-Mapper.getDefaultMapping = function(tag, entity) {
-    var xml = Mapper.getTagAndDefaultAttributes(tag, entity);
+Mapper.getDefaultMapping = function(entity) {
+    var xml = Mapper.getTagAndDefaultAttributes(entity);
+    var tag = entity.getTag();
     xml += '>'+Mapper.TEXT_SELECTION+'</'+tag+'>';
     return xml;
 };
@@ -108,6 +108,9 @@ Mapper.getDefaultReverseMapping = function(xml, customMappings, nsPrefix) {
                             break;
                         case Node.ATTRIBUTE_NODE:
                             val = $(result).val();
+                            break;
+                        case undefined:
+                            val = result;
                     }
                     if (val !== undefined) {
                         obj[key][key2] = val;

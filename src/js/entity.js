@@ -3,10 +3,8 @@ define([], function() {
 /**
  * @class Entity
  * @param {Object} config
- * @param {Writer} writer
  */
-function Entity(config, writer) {
-    this.w = writer;
+function Entity(config) {
     
     /**
      * The ID of the entity.
@@ -19,6 +17,12 @@ function Entity(config, writer) {
      * @type String
      */
     this.type;
+    
+    /**
+     * The parent tag of the entity.
+     * @type String
+     */
+    this.tag;
     
     /**
      * The text content of the entity.
@@ -74,6 +78,7 @@ function Entity(config, writer) {
     
     this.id = config.id;
     this.type = config.type;
+    this.tag = config.tag;
     
     if (config.content !== undefined) {
         this.setContent(config.content);
@@ -109,6 +114,12 @@ Entity.prototype = {
     },
     getType: function() {
         return this.type;
+    },
+    getTag: function() {
+        return this.tag;
+    },
+    setTag: function(tag) {
+        this.tag = tag;
     },
     getContent: function() {
         return this.content;

@@ -54,8 +54,7 @@
                         if (id === 'entityHighlight') {
                             var w = t.editor.writer;
                             id = w.entitiesManager.getCurrentEntity();
-                            var type = w.entitiesManager.getEntity(id).getType();
-                            filterKey = w.schemaManager.mapper.getParentTag(type);
+                            filterKey = w.entitiesManager.getEntity(id).getTag();
                         } else {
                             if (window.console) {
                                 console.warn('In unknown tag', node);

@@ -350,7 +350,8 @@ return function(writer) {
             // get the xpath for the entity's tag
             entity[0].setAttribute('annotationId', entityId);
             var range = {};
-            range.start = '//'+entity[0].getAttribute('_tag')+'[@annotationId="'+entityId+'"]';
+            var tag = entry.getTag();
+            range.start = '//'+tag+'[@annotationId="'+entityId+'"]';
             range.annotationId = entityId;
             $.extend(entry.getRange(), range);
         }
@@ -872,9 +873,6 @@ return function(writer) {
                     if (type === 'note' || type === 'citation') {
                         var el = rangeObj.el;
                         if (el != null) {
-                            if (type === 'citation') {
-                                el = el.children('bibl');
-                            }
                             typeInfo.content = w.utilities.xmlToString(el[0]);
                             rangeObj.el.contents().remove();
                         }
@@ -977,7 +975,7 @@ return function(writer) {
                     
                     var info = w.schemaManager.mapper.getReverseMapping(this, entityType);
                     
-                    var entity = w.entitiesManager.addEntity({
+                    var config = {
                         id: id,
                         type: entityType,
                         attributes: info.attributes,
@@ -987,7 +985,14 @@ return function(writer) {
                             id: id,
                             parentStart: structId
                         }
-                    });
+                    };
+                    if (info.properties !== undefined) {
+                        for (var key in info.properties) {
+                            config[key] = info.properties[key];
+                        }
+                    }
+                    
+                    var entity = w.entitiesManager.addEntity(config);
                     
                     // TODO need handling for entities tagged inside correction
                     if (!isNote && entityType !== 'correction') {

@@ -8,7 +8,7 @@ person: {
     parentTag: 'persName',
     textTag: '',
     mapping: function(entity) {
-        return Mapper.getDefaultMapping('persName', entity);
+        return Mapper.getDefaultMapping(entity);
     },
     reverseMapping: function(xml) {
         return Mapper.getDefaultReverseMapping(xml, {
@@ -21,7 +21,7 @@ org: {
     parentTag: 'orgName',
     textTag: '',
     mapping: function(entity) {
-        return Mapper.getDefaultMapping('orgName', entity);
+        return Mapper.getDefaultMapping(entity);
     },
     reverseMapping: function(xml) {
         return Mapper.getDefaultReverseMapping(xml, {
@@ -34,7 +34,7 @@ place: {
     parentTag: 'placeName',
     textTag: 'placeName',
     mapping: function(entity) {
-        var xml = Mapper.getTagAndDefaultAttributes('placeName', entity);
+        var xml = Mapper.getTagAndDefaultAttributes(entity);
         xml += '>'+Mapper.TEXT_SELECTION+'';
         
         var precision = entity.getCustomValue('precision');
@@ -44,8 +44,8 @@ place: {
             if (id !== undefined) xml += ' annotationId="'+id+'"';
             xml += ' precision="'+precision+'" />';
         }
-        
-        xml += '</placeName>';
+        var tag = entity.getTag();
+        xml += '</'+tag+'>';
         return xml;
     },
     reverseMapping: function(xml) {
@@ -60,7 +60,7 @@ title: {
     parentTag: 'title',
     textTag: '',
     mapping: function(entity) {
-        return Mapper.getDefaultMapping('title', entity);
+        return Mapper.getDefaultMapping(entity);
     },
     reverseMapping: function(xml) {
         return Mapper.getDefaultReverseMapping(xml, {
@@ -109,7 +109,7 @@ link: {
     parentTag: 'ref',
     textTag: '',
     mapping: function(entity) {
-        return Mapper.getDefaultMapping('ref', entity);
+        return Mapper.getDefaultMapping(entity);
     },
     reverseMapping: function(xml) {
         return Mapper.getDefaultReverseMapping(xml);
@@ -120,7 +120,7 @@ date: {
     parentTag: 'date',
     textTag: '',
     mapping: function(entity) {
-        return Mapper.getDefaultMapping('date', entity);
+        return Mapper.getDefaultMapping(entity);
     },
     reverseMapping: function(xml) {
         return Mapper.getDefaultReverseMapping(xml);
@@ -131,7 +131,7 @@ note: {
     parentTag: 'note',
     textTag: '',
     mapping: function(entity) {
-        var xml = Mapper.getTagAndDefaultAttributes('note', entity);
+        var xml = Mapper.getTagAndDefaultAttributes(entity);
         xml += '>';
         
         var content = entity.getCustomValue('content');
@@ -140,7 +140,8 @@ note: {
             var noteContent = $('note', xmlDoc)[0];
             xml += noteContent.innerHTML;
         }
-        xml += '</note>';
+        var tag = entity.getTag();
+        xml += '</'+tag+'>';
         return xml;
     },
     reverseMapping: function(xml) {
@@ -152,7 +153,7 @@ note: {
 
 citation: {
     parentTag: 'note',
-    textTag: '',
+    textTag: 'bibl',
     mapping: function(entity) {
         var xml = '<note';
         xml += Mapper.getRangeString(entity);

@@ -49,6 +49,14 @@ return function(writer, config) {
     sm.schema = {elements: []};
 
     /**
+     * Gets the schema object for the currently loaded schema.
+     * @returns {Object}
+     */
+    sm.getCurrentSchema = function() {
+        return sm.schemas[sm.schemaId];
+    },
+    
+    /**
      * Add a schema to the list.
      * @fires Writer#schemaAdded
      * @param {Object} config The config object
