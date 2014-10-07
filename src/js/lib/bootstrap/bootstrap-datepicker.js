@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ========================================================= */
- 
+define('bootstrap-datepicker',['jquery', 'bootstrap'], function(jQuery) {
 !function( $ ) {
 	
 	// Picker object
@@ -480,4 +480,5 @@
 		return this;
 	};
 	
-}( window.jQuery );
+}(jQuery);
+});

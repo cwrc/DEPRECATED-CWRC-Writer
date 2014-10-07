@@ -22,7 +22,33 @@
     </teiHeader>
     <text>
         <body>
-            <div/>
+            <div type="letter">
+                <head>
+                    <title>Sample Letter - Bertrand Russell to <persName annotationId="ent_73" cert="probable" ref="279399399">Patricia Spence</persName> - October 21, 1935</title>
+                </head>
+                <opener>
+                    <note annotationId="ent_91">
+                        <p>Bad writing due to shaky train</p><p>In train</p><p>
+                            <placeName annotationId="ent_71" cert="definite">Oslo</placeName> to Bergen</p>
+                    </note>
+                    <dateline>
+                        <date annotationId="ent_69" cert="definite" when="1935-10-21">21.10.35</date>
+                    </dateline>
+                    <salute>Dearest -</salute>
+                </opener><p>I have had no letter from you since I left <placeName annotationId="ent_67" cert="definite">Stockholm</placeName>, but I had a nice one from John in an envelope you had sent him. I had sent him one addressed to Copenhagen but he hadn't used it.</p><p>When I reached Oslo yesterday evening, Brynjulf Bull should have been there to meet me, but wasn't. He is not on the telephone, so I took a taxi to his address, which turned out to be a students' club with no one about on Sundays, so I went to a hotel feeling rather non-plussed. But presently he turned up. He had got the <pb n="2"/> time of my arrival wrong, and 
+                        <corr annotationId="ent_65">when</corr>
+                    he had found he had missed me he phoned to every hotel in Oslo till he hit on the right one. He left me at 10, and then I had to do a Sunday Referee article. Today my journey lasts from 9 till 9 - fortunately one of the most beautiful railway journeys in the world. Tomorrow I lecture at <placeName annotationId="ent_63" cert="probable" ref="5">Bergen</placeName> to the Anglo-Norwegian Society. Next day I go back to Oslo, lecture there Fri. and Sat. and then start for home via Bergen.</p>
+                <pb n="3"/>
+                <p>Bull is a nice young man but incompetent - can't quite stand the communists, but finds the socialists too mild.</p><p>I am unhappily wondering what you are feeling about me.</p>
+                <closer>
+                    <salute>I love you very much -</salute>
+                    <signed>
+                        <persName sameAs="http://www.freebase.com/view/en/bertrand_russell">
+                            <persName annotationId="ent_109" cert="definite" type="real" ref="http://viaf.org/viaf/36924137">B</persName>
+                        </persName>
+                    </signed>
+                </closer>
+            </div>
         </body>
     </text>
 </TEI>
