@@ -1,9 +1,7 @@
 define(['jquery', 'jquery-ui', 'dialogForm', 'jquery.watermark'], function($, jqueryUi, DialogForm) {
     
-return function(writer) {
+return function(id, writer) {
     var w = writer;
-    
-    var id = 'keyword';
     
     var html = ''+
     '<div id="'+id+'Dialog">'+

@@ -4,10 +4,8 @@ define([
     'dialogForm'
 ], function($, jqueryUi, DialogForm) {
     
-return function(writer) {
+return function(id, writer) {
     var w = writer;
-    
-    var id = 'org';
     
     var html = ''+
     '<div id="'+id+'Dialog" class="annotationDialog">'+

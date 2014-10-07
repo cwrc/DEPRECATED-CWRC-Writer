@@ -1,9 +1,7 @@
 define(['jquery', 'jquery-ui', 'tinymce', 'dialogForm'], function($, jqueryUi, tinymce, DialogForm) {
     
-return function(writer) {
+return function(id, writer) {
     var w = writer;
-    
-    var id = 'citation';
     
     var iframe = null;
     var cwrcWriter = null;

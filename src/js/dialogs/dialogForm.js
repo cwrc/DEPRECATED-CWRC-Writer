@@ -20,6 +20,7 @@ function DialogForm(config) {
     this.mode = null;
     this.currentData = {
         attributes: {},
+        properties: {},
         customValues: {}
     };;
     this.currentId = null;
@@ -95,28 +96,26 @@ DialogForm.processForm = function(dialogInstance) {
         var type = formEl.data('type');
         var mapping = formEl.data('mapping');
         if (mapping !== undefined) {
-            var isCustom = mapping.indexOf('custom.') == 0;
+            var dataKey = 'attributes';
+            var isCustom = mapping.indexOf('custom.') === 0;
+            var isProperty = mapping.indexOf('prop.') === 0;
             if (isCustom) {
                 mapping = mapping.replace(/^custom\./, '');
+                dataKey = 'customValues';
+            } else if (isProperty) {
+                mapping = mapping.replace(/^prop\./, '');
+                dataKey = 'properties';
             }
             switch (type) {
                 case 'radio':
                     var val = formEl.find('input:checked').val();
-                    if (isCustom) {
-                        data.customValues[mapping] = val;
-                    } else {
-                        data.attributes[mapping] = val;
-                    }
+                    data[dataKey][mapping] = val;
                     break;
                 case 'textbox':
                 case 'hidden':
                 case 'select':
                     var val = formEl.val();
-                    if (isCustom) {
-                        data.customValues[mapping] = val;
-                    } else {
-                        data.attributes[mapping] = val;
-                    }
+                    data[dataKey][mapping] = val;
                     break;
             }
         }
@@ -176,6 +175,7 @@ DialogForm.prototype = {
         
         this.currentData = {
             attributes: {},
+            properties: {},
             customValues: {}
         };
         
@@ -210,14 +210,20 @@ DialogForm.prototype = {
                 } else {
                     var mapping = formEl.data('mapping');
                     if (mapping !== undefined) {
-                        var isCustom = mapping.indexOf('custom.') == 0;
                         var value;
+                        
+                        var isCustom = mapping.indexOf('custom.') === 0;
+                        var isProperty = mapping.indexOf('prop.') === 0;
                         if (isCustom) {
                             mapping = mapping.replace(/^custom\./, '');
                             value = customValues[mapping];
+                        } else if (isProperty) {
+                            mapping = mapping.replace(/^prop\./, '');
+                            value = config.entry[mapping];
                         } else {
                             value = data[mapping];
                         }
+                        
                         if (value !== undefined) {
                             switch (type) {
                                 case 'select':

@@ -1,9 +1,7 @@
 define(['jquery', 'jquery-ui', 'tinymce', 'dialogForm'], function($, jqueryUi, tinymce, DialogForm) {
     
-return function(writer) {
+return function(id, writer) {
     var w = writer;
-    
-    var id = 'note';
     
     var iframe = null;
     var cwrcWriter = null;
@@ -47,41 +45,37 @@ return function(writer) {
         }
         
         function postSetup() {
-            if (w.schemaManager.schemaId == 'tei') {
-                iframe.contentWindow.tinymce.DOM.counter = tinymce.DOM.counter + 1;
+            iframe.contentWindow.tinymce.DOM.counter = tinymce.DOM.counter + 1;
+            
+            cwrcWriter.event('documentLoaded').subscribe(function() {
+                // TODO remove forced XML/no overlap
+                cwrcWriter.mode = cwrcWriter.XML;
+                cwrcWriter.allowOverlap = false;
                 
-                cwrcWriter.event('documentLoaded').subscribe(function() {
-                    // TODO remove forced XML/no overlap
-                    cwrcWriter.mode = cwrcWriter.XML;
-                    cwrcWriter.allowOverlap = false;
-                    
-                    cwrcWriter.editor.focus();
-                });
-                
-                // in case document is loaded before tree
-                cwrcWriter.event('structureTreeInitialized').subscribe(function(tree) {
-                    setTimeout(tree.update, 50); // need slight delay to get indents working for some reason
-                });
-                cwrcWriter.event('entitiesListInitialized').subscribe(function(el) {
-                    setTimeout(el.update, 50);
-                });
-                
-                if (dialog.mode === DialogForm.ADD) {
-                    var noteUrl = w.cwrcRootUrl+'xml/note_tei.xml';
-                    cwrcWriter.fileManager.loadDocumentFromUrl(noteUrl);
-                } else {
-                    var xmlDoc = $.parseXML(config.entry.getCustomValue('content'));
-                    if (xmlDoc.firstChild.nodeName === 'note') {
-                        // remove the annotationId attribute
-                        xmlDoc.firstChild.removeAttribute('annotationId');
-                        // insert the appropriate wrapper tags
-                        var xml = $.parseXML('<TEI><text><body/></text></TEI>');
-                        xmlDoc = $(xml).find('body').append(xmlDoc.firstChild).end()[0];
-                    }
-                    cwrcWriter.fileManager.loadDocumentFromXml(xmlDoc);
-                }
+                cwrcWriter.editor.focus();
+            });
+            
+            // in case document is loaded before tree
+            cwrcWriter.event('structureTreeInitialized').subscribe(function(tree) {
+                setTimeout(tree.update, 50); // need slight delay to get indents working for some reason
+            });
+            cwrcWriter.event('entitiesListInitialized').subscribe(function(el) {
+                setTimeout(el.update, 50);
+            });
+            
+            if (dialog.mode === DialogForm.ADD) {
+                var noteUrl = w.cwrcRootUrl+'xml/note_tei.xml';
+                cwrcWriter.fileManager.loadDocumentFromUrl(noteUrl);
             } else {
-                alert('Current schema not supported yet!');
+                var xmlDoc = $.parseXML(config.entry.getCustomValue('content'));
+                if (xmlDoc.firstChild.nodeName === 'note') {
+                    // remove the annotationId attribute
+                    xmlDoc.firstChild.removeAttribute('annotationId');
+                    // insert the appropriate wrapper tags
+                    var xml = $.parseXML('<TEI><text><body/></text></TEI>');
+                    xmlDoc = $(xml).find('body').append(xmlDoc.firstChild).end()[0];
+                }
+                cwrcWriter.fileManager.loadDocumentFromXml(xmlDoc);
             }
         }
         

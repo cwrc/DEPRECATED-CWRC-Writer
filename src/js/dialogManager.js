@@ -57,7 +57,8 @@ return function(writer) {
     };
     
     // log in for CWRC-Dialogs
-    cD.initializeWithCookieData(null);
+//    cD.initializeWithCookieData(null);
+    cD.initializeWithLogin('CWRC-WriterTestUser', 'quirkyCWRCwriter');
     
     if (w.initialConfig.cwrcDialogs != null) {
         var conf = w.initialConfig.cwrcDialogs;
@@ -69,38 +70,32 @@ return function(writer) {
     var schemaDialogs = {};
     var dialogNames = ['citation', 'correction', 'date', 'keyword', 'link', 'note', 'org', 'person', 'place', 'title'];
     
-    var loadSchemaDialogs = function(schemaId) {
-        if (schemaId === 'tei') {
-            // TODO destroy previously loaded dialogs
-            if (schemaDialogs[schemaId] == null) {
-                var parent = schemaDialogs[schemaId] = {};
-                var schemaDialogNames = [];
-                schemaDialogNames = $.map(dialogNames, function(name, i) {
-                    return 'schema/'+schemaId+'/dialogs/'+name;
-                });
-                require(schemaDialogNames, function() {
-                    if (arguments.length != schemaDialogNames.length) {
-                        alert('error loading schema dialogs');
-                    } else {
-                        for (var i = 0; i < arguments.length; i++) {
-                            var name = dialogNames[i];
-                            parent[name] = new arguments[i](w);
-                        }
+    var loadSchemaDialogs = function() {
+        var schemaId = w.schemaManager.schemaId;
+        var schemaMappingsId = w.schemaManager.getCurrentSchema().schemaMappingsId;
+        
+        // TODO destroy previously loaded dialogs
+        if (schemaDialogs[schemaMappingsId] == null) {
+            var parent = schemaDialogs[schemaMappingsId] = {};
+            var schemaDialogNames = [];
+            schemaDialogNames = $.map(dialogNames, function(name, i) {
+                return 'schema/'+schemaMappingsId+'/dialogs/'+name;
+            });
+            require(schemaDialogNames, function() {
+                if (arguments.length != schemaDialogNames.length) {
+                    alert('error loading schema dialogs');
+                } else {
+                    for (var i = 0; i < arguments.length; i++) {
+                        var name = dialogNames[i];
+                        var id = schemaId+'_'+name+'Form';
+                        parent[name] = new arguments[i](id, w);
                     }
-                });
-            }
-        } else {
-            w.dialogManager.show('message', {
-                title: 'Error',
-                msg: 'This schema doesn\'t have full dialog support yet!',
-                type: 'error'
+                }
             });
         }
     };
     
-    w.event('schemaLoaded').subscribe(function() {
-        loadSchemaDialogs(w.schemaManager.schemaId);
-    });
+    w.event('schemaLoaded').subscribe(loadSchemaDialogs);
     
     /**
      * @lends DialogManager.prototype
@@ -110,12 +105,12 @@ return function(writer) {
             if (type.indexOf('schema/') === 0) {
                 var typeParts = type.split('/');
                 var type = typeParts[1];
-                schemaDialogs[w.schemaManager.schemaId][type].show(config);
+                schemaDialogs[w.schemaManager.getCurrentSchema().schemaMappingsId][type].show(config);
             } else {
                 if (dialogs[type]) {
                     dialogs[type].show(config);
-                } else if (schemaDialogs[w.schemaManager.schemaId][type]) {
-                    schemaDialogs[w.schemaManager.schemaId][type].show(config);
+                } else if (schemaDialogs[w.schemaManager.getCurrentSchema().schemaMappingsId][type]) {
+                    schemaDialogs[w.schemaManager.getCurrentSchema().schemaMappingsId][type].show(config);
                 }
             }
         },

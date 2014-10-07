@@ -4,10 +4,8 @@ define(['jquery',
         'dialogForm'
 ], function($, jqueryUi, moment, DialogForm) {
     
-return function(writer) {
+return function(id, writer) {
     var w = writer;
-    
-    var id = 'date';
     
     var html = ''+
     '<div id="'+id+'Dialog" class="annotationDialog">'+
@@ -58,7 +56,7 @@ return function(writer) {
         $(this).css({borderBottom: ''});
     });
     
-    $('#'+id+'_cwrc_datePicker').datepicker({
+    $dateInput.datepicker({
         dateFormat: 'yy-mm-dd',
         constrainInput: false,
         changeMonth: true,
@@ -105,6 +103,9 @@ return function(writer) {
     });
     
     var toggleDate = function(type) {
+        $dateInput.val('');
+        $startDate.val('');
+        $endDate.val('');
         if (type == 'date') {
             $('#'+id+'_date').show();
             $('#'+id+'_range').hide();
