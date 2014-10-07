@@ -74,7 +74,7 @@ return function(writer) {
 	
 	// log in for CWRC-Dialogs
 	//cD.initializeWithCookieData(null);
-	cD.initializeWithLogin('CWRC-WriterTestUser', 'quirkyCWRCwriter');
+	cD.initializeWithLogin('CWRC-WriterTestUser','quirkyCWRCwriter');
 	
 	if (writer.initialConfig.cwrcDialogs != null) {
 		var conf = writer.initialConfig.cwrcDialogs;
