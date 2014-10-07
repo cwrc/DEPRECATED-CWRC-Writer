@@ -1166,6 +1166,7 @@ return function(writer) {
                         } else if (type === 'correction') {
                             content = entry.getCustomValues().corrText;
                         } else {
+                            w.entitiesManager.highlightEntity(); // remove highlight
                             w.entitiesManager.highlightEntity(id);
                             content = $('.entityHighlight', body).text();
                             w.entitiesManager.highlightEntity();
