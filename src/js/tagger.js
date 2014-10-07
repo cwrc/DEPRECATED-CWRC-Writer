@@ -425,10 +425,12 @@ return function(writer) {
             var id = w.getUniqueId('ent_');
             var content = tagger.addEntityTag(id, type);
             
+            // TODO fire entityAdded after updateEntityInfo so listeners have all the associated info
             var entry = w.entitiesManager.addEntity({
                 id: id,
                 type: type,
-                content: content
+                content: content,
+                attributes: info.attributes
             });
             updateEntityInfo(entry, info);
             
