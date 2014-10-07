@@ -342,6 +342,7 @@ return function(config) {
                 state: {opened: level < 3}
             };
             
+            // TODO remove schema specific custom values
             if (type === 'note' || type === 'citation') {
                 var content = w.utilities.stringToXML(w.entitiesManager.getEntity(id).getCustomValues().content);
                 var root = $(tag, content).first();
@@ -363,7 +364,14 @@ return function(config) {
             } else if (type === 'keyword') {
                 nodeData.children = [];
                 var keywords = w.entitiesManager.getEntity(id).getCustomValues().keywords;
-                for (var i = 0; i < keywords.length; i++) {
+                if (keywords !== undefined) {
+                    for (var i = 0; i < keywords.length; i++) {
+                        nodeData.children.push({
+                            text: 'keyword',
+                            li_attr: {name: id}
+                        });
+                    }
+                } else {
                     nodeData.children.push({
                         text: 'keyword',
                         li_attr: {name: id}
