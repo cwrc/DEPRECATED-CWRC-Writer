@@ -18,12 +18,21 @@ return function(writer, config) {
                     type: 'error'
                 });
             } else {
-                result = {
-                    id: 'http://cwrc-dev-01.srv.ualberta.ca/islandora/object/'+result.response.pid
-                };
-                w.dialogManager.show('schema/'+localDialog, {
-                    cwrcInfo: result
-                });
+                if (result.response !== undefined && result.response.pid !== undefined) {
+                    w.dialogManager.show('schema/'+localDialog, {
+                        cwrcInfo: {
+                            id: 'http://cwrc-dev-01.srv.ualberta.ca/islandora/object/'+result.response.pid
+                        }
+                    });
+                } else {
+                    var error = 'Error creating entity';
+                    if (result.reponse.error !== undefined) {
+                        error += ': '+result.response.error;
+                    }
+                    w.dialogManager.show('message', {
+                        title: 'Error ', msg: error, modal: true, type: 'error'
+                    });
+                }
             }
         },
         error: function(errorThrown) {
