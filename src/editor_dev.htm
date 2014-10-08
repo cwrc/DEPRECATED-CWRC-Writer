@@ -51,7 +51,7 @@
 						config = config[0];
 						project = project[0];
 						config.project = project;
-						config.cwrcRootUrl = window.location.protocol+'//'+window.location.host+'/editor/dev/';
+						config.cwrcRootUrl = window.location.protocol+'//'+window.location.host+'/editor/test/';
 						doInit(config);
 					},function(xhr) {
 						if (configXHR.state() === 'resolved') {
