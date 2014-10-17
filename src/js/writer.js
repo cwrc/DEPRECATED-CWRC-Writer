@@ -102,6 +102,8 @@ return function(config) {
     w.selectStructureTag = function(id, selectContentsOnly) {
         selectContentsOnly = selectContentsOnly == null ? false : selectContentsOnly;
         
+        w.removeHighlights();
+        
         var node = $('#'+id, w.editor.getBody());
         var nodeEl = node[0];
         if (nodeEl != null) {

@@ -142,6 +142,11 @@ EntitiesManager.prototype = {
      * @param {Boolean} doScroll True to scroll to the entity
      */
     highlightEntity: function(id, bm, doScroll) {
+        // clear selection
+        var rng = this.w.editor.dom.createRng();
+        this.w.editor.selection.setRng(rng);
+        
+        
         if (id == null || id !== this.currentEntity) {
             var body = this.w.editor.getBody();
             var prevHighlight = $('.entityHighlight', body);
