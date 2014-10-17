@@ -535,13 +535,24 @@ return function(writer) {
      * Remove an entity
      * @fires Writer#entityRemoved
      * @param {String} id The entity id
+     * @param {Boolean} [removeContents] Remove the contents as well
      */
-    tagger.removeEntity = function(id) {
+    tagger.removeEntity = function(id, removeContents) {
         id = id || w.entitiesManager.getCurrentEntity();
+        removeContents = removeContents || false;
         
         var node = $('[name="'+id+'"]', w.editor.getBody());
         var parent = node[0].parentNode;
-        node.remove();
+        if (removeContents) {
+            node.remove();
+        } else {
+            var contents = node.contents();
+            if (contents.length > 0) {
+                contents.unwrap();
+            } else {
+                node.remove();
+            }
+        }
         parent.normalize();
         
         w.entitiesManager.removeEntity(id);
@@ -720,7 +731,7 @@ return function(writer) {
      * Remove a structure tag
      * @fires Writer#tagRemoved
      * @param {String} id Then tag id
-     * @param {Boolean} removeContents True to remove tag contents only
+     * @param {Boolean} [removeContents] True to remove tag contents only
      */
     tagger.removeStructureTag = function(id, removeContents) {
         _doCustomTaggerUndo();
