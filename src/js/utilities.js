@@ -388,23 +388,53 @@ return function(writer) {
         }
     }
 
-    function _queryDown(context, matchingFunc) {
+    /**
+     * Moves recursively down a JSON "tree", calling the passed function on each property.
+     * Function should return false to stop the recursion.
+     * @param {Object} context The starting point for the recursion.
+     * @param {Function} matchingFunc The function that's called on each property.
+     * @param {Boolean} [processRefs] Automatically process refs, i.e. fetch their definitions
+     */
+    function _queryDown(context, matchingFunc, processRefs) {
         var continueQuery = true;
+        
+        var defHits = {};
         
         function doQuery(c) {
             if (continueQuery) {
                 continueQuery = matchingFunc.call(this, c);
                 if (continueQuery == undefined) continueQuery = true;
                 for (var key in c) {
+                    
                     // filter out attributes
                     if (key != '$parent' && key.search('@') != 0) {
+                        
                         var prop = c[key];
-                        if (isArray(prop)) {
-                            for (var i = 0; i < prop.length; i++) {
-                                doQuery(prop[i]);
+                        
+                        if (processRefs === true && key === 'ref') {
+                            var refs;
+                            if (isArray(prop)) {
+                                refs = prop;
+                            } else {
+                                refs = [prop];
                             }
-                        } else if (isObject(prop)) {
-                            doQuery(prop);
+                            var defs = [];
+                            for (var j = 0; j < refs.length; j++) {
+                                var name = refs[j]['@name'];
+                                if (defHits[name] === undefined) {
+                                    defHits[name] = true;
+                                    var def = _getDefinition(name);
+                                    doQuery(def);
+                                }
+                            }
+                        } else {
+                            if (isArray(prop)) {
+                                for (var i = 0; i < prop.length; i++) {
+                                    doQuery(prop[i]);
+                                }
+                            } else if (isObject(prop)) {
+                                doQuery(prop);
+                            }
                         }
                     }
                 }
@@ -638,11 +668,11 @@ return function(writer) {
      * Gets a list from the schema of valid children for a particular tag
      * @param config The config object
      * @param config.tag The element name to get children of
+     * @param [config.path] The path to the tag (optional)
      * @param config.type The type of children to get: "element" or "attribute"
      * @param config.returnType Either: "array", "object", "names" (which is an array of just the element names)
-     * @param callback The function to call with the results
      */
-    u.getChildrenForTag = function(config, callback) {
+    u.getChildrenForTag = function(config) {
         config.type = config.type || 'element';
         var children = [];
         var i;
@@ -656,6 +686,10 @@ return function(writer) {
         
         if (children.length == 0) {
             var element = _getElement(config.tag);
+            // can't find element in define so try path
+            if (element === null && config.path !== undefined) {
+                element = u.getJsonEntryFromPath(config.path);
+            }
             if (element === null) {
                 if (window.console) {
                     console.warn('Cannot find element for:'+config.tag);
@@ -708,6 +742,32 @@ return function(writer) {
         } else {
             return children;
         }
+    };
+    
+    /**
+     * Uses a path to find the related entry in the JSON schema.
+     * @param {String} path A forward slash delimited pseudo-xpath
+     * @returns {Object}
+     */
+    u.getJsonEntryFromPath = function(path) {
+        var tags = path.split('/');
+        var context = w.schemaManager.schemaJSON.grammar;
+        var match = null;
+        for (var i = 0; i < tags.length; i++) {
+            var tag = tags[i];
+            if (tag !== '') {
+                _queryDown(context, function(item) {
+                    if (item['@name'] && item['@name'] === tag) {
+                        context = item;
+                        if (i === tags.length - 1) {
+                            match = item;
+                        }
+                        return true;
+                    }
+                }, true);
+            }
+        }
+        return match;
     };
     
     function _getParentElementsFromDef(defName, defHits, level, parents) {

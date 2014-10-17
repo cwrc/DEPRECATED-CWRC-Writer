@@ -68,7 +68,8 @@
                     
                     var validKeys = [];
                     if (filterKey != t.editor.writer.header) {
-                        validKeys = t.editor.writer.utilities.getChildrenForTag({tag: filterKey, returnType: 'names'});
+                        var path = t.editor.writer.utilities.getElementXPath(node);
+                        validKeys = t.editor.writer.utilities.getChildrenForTag({tag: filterKey, path: path, returnType: 'names'});
                     }
                     var item;
                     var count = 0, disCount = 0;

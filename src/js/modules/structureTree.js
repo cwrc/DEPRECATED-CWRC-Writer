@@ -676,17 +676,22 @@ return function(config) {
                     var info = w.structs[node.li_attr.name];
                     if (info._tag == w.root || info._tag == w.header) return {};
                     
-                    var parentInfo = w.structs[parentNode.li_attr.name];
+                    var tag = $('#'+info.id, w.editor.getBody())[0];
+                    var path = w.utilities.getElementXPath(tag);
+                    var validKeys = w.utilities.getChildrenForTag({tag: info._tag, path: path, type: 'element', returnType: 'array'});
                     
-                    var validKeys = w.utilities.getChildrenForTag({tag: info._tag, type: 'element', returnType: 'array'});
-    //                var parentKeys = w.utilities.getParentsForTag({tag: info._tag, returnType: 'array'});
+//                  var parentKeys = w.utilities.getParentsForTag({tag: info._tag, returnType: 'array'});
+                    
                     var siblingKeys = {};
+                    var parentInfo = w.structs[parentNode.li_attr.name];
                     if (parentInfo) {
-                        siblingKeys = w.utilities.getChildrenForTag({tag: parentInfo._tag, type: 'element', returnType: 'array'});
+                        tag = $('#'+parentInfo.id, w.editor.getBody())[0];
+                        path = w.utilities.getElementXPath(tag);
+                        siblingKeys = w.utilities.getChildrenForTag({tag: parentInfo._tag, path: path, type: 'element', returnType: 'array'});
                     }
                     
                     var submenu = _getSubmenu(validKeys, info);
-    //                var parentSubmenu = _getSubmenu(parentKeys, info);
+//                  var parentSubmenu = _getSubmenu(parentKeys, info);
                     var siblingSubmenu = _getSubmenu(siblingKeys, info);
                     var items = {
                         'before': {
