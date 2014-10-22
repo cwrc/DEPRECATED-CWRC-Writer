@@ -1,4 +1,4 @@
-define(['jquery', 'mapper'], function($, Mapper) {
+define(['jquery', 'mapper', 'annotationsManager'], function($, Mapper, AnnotationsManager) {
 
 // TODO add resp for note type entities
     
@@ -14,6 +14,9 @@ person: {
         return Mapper.getDefaultReverseMapping(xml, {
             cwrcInfo: {id: '@ref'}
         });
+    },
+    annotation: function(entity, format) {
+        return AnnotationsManager.commonAnnotation(entity, 'foaf:Person', null, format);
     }
 },
 
@@ -27,6 +30,9 @@ org: {
         return Mapper.getDefaultReverseMapping(xml, {
             cwrcInfo: {id: '@ref'}
         });
+    },
+    annotation: function(entity, format) {
+        return AnnotationsManager.commonAnnotation(entity, 'foaf:Organization', null, format);
     }
 },
 
@@ -53,6 +59,9 @@ place: {
             cwrcInfo: {id: '@ref'},
             customValues: {precision: 'tei:precision/@precision'}
         }, 'tei');
+    },
+    annotation: function(entity, format) {
+        return AnnotationsManager.commonAnnotation(entity, 'geo:SpatialThing', null, format);
     }
 },
 
@@ -66,6 +75,19 @@ title: {
         return Mapper.getDefaultReverseMapping(xml, {
             cwrcInfo: {id: '@ref'}
         });
+    },
+    annotation: function(entity, format) {
+        var anno = AnnotationsManager.commonAnnotation(entity, ['dcterms:BibliographicResource', 'dcterms:title'], null, format);
+        
+        if (format === 'xml') {
+            var levelXml = $.parseXML('<cw:pubType xmlns:cw="http://cwrc.ca/ns/cw#">'+entity.getAttribute('level')+'</cw:pubType>');
+            var body = $('[rdf\\:about="'+entity.getUris().entityId+'"]', anno);
+            body.prepend(levelXml.firstChild);
+        } else {
+            anno.motivation = 'oa:identifying';
+        }
+        
+        return anno;
     }
 },
 
@@ -103,6 +125,19 @@ correction: {
         return Mapper.getDefaultReverseMapping(xml, {
             customValues: {sicText: 'tei:sic/text()', corrText: 'tei:corr/text(), text()'}
         }, 'tei');
+    },
+    annotation: function(entity, format) {
+        var anno = AnnotationsManager.commonAnnotation(entity, 'cnt:ContentAsText', 'oa:editing', format);
+        
+        if (format === 'xml') {
+            var corrXml = $.parseXML('<cnt:chars xmlns:cnt="http://www.w3.org/2011/content#">'+entity.getCustomValue('corrText')+'</cnt:chars>');
+            var body = $('[rdf\\:about="'+entity.getUris().entityId+'"]', anno);
+            body.prepend(corrXml.firstChild);
+        } else {
+            anno.hasBody['cnt:chars'] = entity.getCustomValue('corrText');
+        }
+
+        return anno;
     }
 },
 
@@ -114,6 +149,9 @@ link: {
     },
     reverseMapping: function(xml) {
         return Mapper.getDefaultReverseMapping(xml);
+    },
+    annotation: function(entity, format) {
+        return AnnotationsManager.commonAnnotation(entity, 'cnt:ContentAsText', 'oa:linking', format);
     }
 },
 
@@ -125,6 +163,37 @@ date: {
     },
     reverseMapping: function(xml) {
         return Mapper.getDefaultReverseMapping(xml);
+    },
+    annotation: function(entity, format) {
+        var types = [];
+        if (entity.getAttribute('when') !== undefined) {
+            types.push('time:Instant');
+        } else {
+            types.push('time:Interval');
+        }
+        types.push('time:TemporalEntity');
+        
+        var anno = AnnotationsManager.commonAnnotation(entity, types, null, format);
+        
+        if (format === 'xml') {
+            var dateXml;
+            if (entity.getAttribute('when') !== undefined) {
+                dateXml = $.parseXML('<xsd:date xmlns:xsd="http://www.w3.org/2001/XMLSchema#">'+entity.getAttribute('when')+'</xsd:date>');
+            } else {
+                // TODO properly encode date range
+                dateXml = $.parseXML('<xsd:date xmlns:xsd="http://www.w3.org/2001/XMLSchema#">'+entity.getAttribute('from')+'/'+entity.getAttribute('to')+'</xsd:date>');
+            }
+            var body = $('[rdf\\:about="'+entity.getUris().entityId+'"]', anno);
+            body.prepend(dateXml.firstChild);
+        } else {
+            if (entity.getAttribute('when') !== undefined) {
+                anno.hasBody['xsd:date'] = entity.getAttribute('when');
+            } else {
+                anno.hasBody['xsd:date'] = entity.getAttribute('from')+'/'+entity.getAttribute('to');
+            }
+        }
+        
+        return anno;
     }
 },
 
@@ -149,6 +218,9 @@ note: {
         return Mapper.getDefaultReverseMapping(xml, {
             customValues: {content: '.'}
         }, 'tei');
+    },
+    annotation: function(entity, format) {
+        return AnnotationsManager.commonAnnotation(entity, 'bibo:Note', 'oa:commenting', format);
     }
 },
 
@@ -177,6 +249,9 @@ citation: {
             cwrcInfo: {id: 'tei:bibl/@ref'},
             customValues: {content: '.'}
         }, 'tei');
+    },
+    annotation: function(entity, format) {
+        return AnnotationsManager.commonAnnotation(entity, 'dcterms:BibliographicResource', 'cw:citing', format);
     }
 },
 
@@ -203,6 +278,23 @@ keyword: {
         return Mapper.getDefaultReverseMapping(xml, {
             customValues: {keywords: 'tei:term/text()'}
         }, 'tei');
+    },
+    annotation: function(entity, format) {
+        var anno = AnnotationsManager.commonAnnotation(entity, ['oa:Tag', 'cnt:ContentAsText', 'skos:Concept'], 'oa:classifying', format);
+        
+        var keywords = entity.getCustomValue('keywords');
+        if (format === 'xml') {
+            var body = $('[rdf\\:about="'+entity.getUris().entityId+'"]', anno);
+            for (var i = 0; i < keywords.length; i++) {
+                var keyword = keywords[i];
+                var keywordXml = $.parseXML('<cnt:chars xmlns:cnt="http://www.w3.org/2011/content#">'+keyword+'</cnt:chars>');
+                body.prepend(keywordXml.firstChild);
+            }
+        } else {
+            anno.hasBody['cnt:chars'] = keywords;
+        }
+
+        return anno;
     }
 },
 

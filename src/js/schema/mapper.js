@@ -164,6 +164,10 @@ Mapper.prototype = {
         return dfd;
     },
     
+    getMappings: function() {
+        return this.mappings;
+    },
+    
     getMapping: function(entity) {
         var mapping = this.mappings[entity.getType()].mapping;
         if (mapping === undefined) {
