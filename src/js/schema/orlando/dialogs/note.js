@@ -73,7 +73,7 @@ return function(id, writer) {
                     xmlDoc.firstChild.removeAttribute('annotationId');
                     // insert the appropriate wrapper tags
                     var xml = $.parseXML('<'+writer.root+'><DIV0></DIV0></'+writer.root+'>');
-                    xmlDoc = $(xml).find('DIV0').append(xmlDoc.firstChild).end()[0];
+                    xmlDoc = $(xml).find('DIV0').append($(xmlDoc.firstChild).contents()).end()[0];
                 }
             }
             cwrcWriter.fileManager.loadDocumentFromXml(xmlDoc);

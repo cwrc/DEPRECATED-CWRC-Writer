@@ -841,16 +841,20 @@ return function(writer) {
                     // range
                     var rangeObj = {};
                     var id;
+                    var el;
+                    // matching element
                     if (selectorType.indexOf('FragmentSelector') !== -1) {
                         var xpointer = selector.find('rdf\\:value, value').text();
                         var xpathObj = parseXpointer(xpointer, doc);
                         
                         id = xpathObj.parentId;
+                        el = xpathObj.el;
                         rangeObj = {
                             id: id,
                             el: xpathObj.el,
                             parentStart: xpathObj.parentId
                         };
+                    // offset
                     } else {
                         var xpointerStart = selector.find('oa\\:start, start').text();
                         var xpointerEnd = selector.find('oa\\:end, end').text();
@@ -870,10 +874,15 @@ return function(writer) {
                         }
                     }
                     
-                    if (type === 'note' || type === 'citation') {
-                        var el = rangeObj.el;
-                        if (el != null) {
-                            typeInfo.content = w.utilities.xmlToString(el[0]);
+                    // process the element for attributes, etc.
+                    if (el !== undefined) {
+                        var entityType = w.schemaManager.mapper.getEntityTypeForTag(el[0]);
+                        var info = w.schemaManager.mapper.getReverseMapping(el[0], entityType);
+                        $.extend(propObj, info.customValues);
+                        $.extend(cwrcAttributes, info.attributes);
+                        
+                        if (type === 'note' || type === 'citation') {
+//                            typeInfo.content = w.utilities.xmlToString(el[0]);
                             rangeObj.el.contents().remove();
                         }
                     }
@@ -948,54 +957,9 @@ return function(writer) {
             if (this.nodeType !== Node.TEXT_NODE) {
                 var node = $(this);
                 if (node.attr('annotationId')) {
-                    var id = w.getUniqueId('ent_');
-                    
-                    var structId = w.getUniqueId('struct_');
-                    node.attr('cwrcStructId', structId);
-                    
-                    var entityType;
-                    var isNote = false;
-                    if (this.nodeName === 'note') {
-                        // multiple possible types for note
-                        entityType = 'note';
-                        isNote = true;
-                        if (this.firstChild.nodeType === Node.ELEMENT_NODE) {
-                            switch (this.firstChild.nodeName) {
-                                case 'bibl':
-                                    entityType = 'citation';
-                                    break;
-                                case 'term':
-                                    entityType = 'keyword';
-                                    break;
-                            }
-                        }
-                    } else {
-                        entityType = w.schemaManager.mapper.getEntityTypeForTag(this.nodeName);
-                    }
-                    
-                    var info = w.schemaManager.mapper.getReverseMapping(this, entityType);
-                    
-                    var config = {
-                        id: id,
-                        type: entityType,
-                        attributes: info.attributes,
-                        customValues: info.customValues,
-                        cwrcLookupInfo: info.cwrcInfo,
-                        range: {
-                            id: id,
-                            parentStart: structId
-                        }
-                    };
-                    if (info.properties !== undefined) {
-                        for (var key in info.properties) {
-                            config[key] = info.properties[key];
-                        }
-                    }
-                    
-                    var entity = w.entitiesManager.addEntity(config);
-                    
-                    // TODO need handling for entities tagged inside correction
-                    if (!isNote && entityType !== 'correction') {
+                    var entityType = processEntity(this);
+                    if (entityType !== 'note' && entityType !== 'citation') {
+                        // TODO test handling for entities inside correction and keyword
                         processEntities(node);
                     }
                 } else {
@@ -1003,6 +967,44 @@ return function(writer) {
                 }
             }
         });
+    }
+    
+    /**
+     * Process the tag of an entity, and creates a new entry in the manager.
+     * @param {Element} el The XML element
+     * @returns {String} entityType
+     */
+    function processEntity(el) {
+        var node = $(el);
+        var id = w.getUniqueId('ent_');
+        
+        var structId = w.getUniqueId('struct_');
+        node.attr('cwrcStructId', structId);
+        
+        var entityType = w.schemaManager.mapper.getEntityTypeForTag(el);
+        
+        var info = w.schemaManager.mapper.getReverseMapping(el, entityType);
+        
+        var config = {
+            id: id,
+            type: entityType,
+            attributes: info.attributes,
+            customValues: info.customValues,
+            cwrcLookupInfo: info.cwrcInfo,
+            range: {
+                id: id,
+                parentStart: structId
+            }
+        };
+        if (info.properties !== undefined) {
+            for (var key in info.properties) {
+                config[key] = info.properties[key];
+            }
+        }
+        
+        var entity = w.entitiesManager.addEntity(config);
+        
+        return entityType;
     }
     
     /**
@@ -1199,7 +1201,7 @@ return function(writer) {
             
             var type = entity.getType();
             //    var tag = $(node).attr('_tag');
-            //    var type = w.schemaManager.mapper.getEntityTypeForTag(tag);
+            //    var type = w.schemaManager.mapper.getEntityTypeForTag(node);
 
             var textTagName = w.schemaManager.mapper.getTextTag(type);
             if (textTagName !== '') {

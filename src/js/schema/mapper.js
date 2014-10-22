@@ -85,18 +85,12 @@ Mapper.getDefaultMapping = function(entity) {
 Mapper.getDefaultReverseMapping = function(xml, customMappings, nsPrefix) {
     var obj = {};
     
-    nsPrefix = nsPrefix || '';
-    var nsUri = xml.namespaceURI;
-    var nsResolver = function(prefix) {
-        if (prefix == nsPrefix) return nsUri;
-    };
-    
     if (customMappings !== undefined) {
         for (var key in customMappings) {
             obj[key] = {};
             for (var key2 in customMappings[key]) {
                 var xpath = customMappings[key][key2];
-                var result = $(xml).xpath(xpath, nsResolver)[0];
+                var result = Mapper.getXpathResult(xml, xpath, nsPrefix);
                 if (result !== undefined) {
                     var val;
                     switch (result.nodeType) {
@@ -121,6 +115,22 @@ Mapper.getDefaultReverseMapping = function(xml, customMappings, nsPrefix) {
     }
     obj.attributes = Mapper.getAttributesFromXml(xml);
     return obj;
+};
+
+Mapper.getXpathResult = function(xmlContext, xpath, nsPrefix) {
+    nsPrefix = nsPrefix || '';
+    var nsUri = xmlContext.namespaceURI;
+    if (nsUri === null && nsPrefix !== '') {
+        // remove namespaces
+        var regex = new RegExp(nsPrefix+':', 'g');
+        xpath = xpath.replace(regex, '');
+    }
+    var nsResolver = function(prefix) {
+        if (prefix == nsPrefix) return nsUri;
+    };
+    
+    var result = $(xmlContext).xpath(xpath, nsResolver)[0];
+    return result;
 };
 
 Mapper.xmlToString = function(xmlData) {
@@ -184,19 +194,36 @@ Mapper.prototype = {
     
     /**
      * Checks if the tag is for an entity.
-     * @param tag The tag to check.
+     * @param {Element|String} el The tag to check.
      * @returns {String} The entity type, or null
      */
-    getEntityTypeForTag: function(tag) {
-        var testTag;
-        // TODO need way to differentiate between citation and note
+    getEntityTypeForTag: function(el) {
+        var tag;
+        var isElement = false;
+        if (typeof el === 'string') {
+            tag = el;
+        } else {
+            isElement = true;
+            tag = el.nodeName;
+        }
+
+        var resultType = null;
         for (var type in this.mappings) {
-            testTag = this.mappings[type].parentTag;
-            if (($.isArray(testTag) && testTag.indexOf(tag) !== -1) || testTag === tag) {
-                return type;
+            var xpath = this.mappings[type].xpathSelector;
+            if (xpath !== undefined && isElement) {
+                var result = Mapper.getXpathResult(el, xpath, this.w.schemaManager.getCurrentSchema().schemaMappingsId);
+                if (result !== undefined) {
+                    resultType = type;
+                    break; // prioritize xpath
+                }
+            } else {
+                var parentTag = this.mappings[type].parentTag;
+                if (($.isArray(parentTag) && parentTag.indexOf(tag) !== -1) || parentTag === tag) {
+                    resultType = type;
+                }
             }
         }
-        return null;
+        return resultType;
     },
     
     /**

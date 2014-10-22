@@ -70,6 +70,7 @@ title: {
 },
 
 correction: {
+    xpathSelector: 'self::tei:choice|self::tei:corr',
     parentTag: ['choice', 'corr'],
     textTag: 'sic',
     mapping: function(entity) {
@@ -153,6 +154,7 @@ note: {
 
 citation: {
     parentTag: 'note',
+    xpathSelector: 'self::tei:note/tei:bibl',
     textTag: 'bibl',
     mapping: function(entity) {
         var xml = '<note';
@@ -180,6 +182,7 @@ citation: {
 
 keyword: {
     parentTag: 'note',
+    xpathSelector: 'self::tei:note/tei:term',
     textTag: '',
     mapping: function(entity) {
         var keywords = entity.getCustomValue('keywords');

@@ -41,8 +41,8 @@ place: {
     },
     reverseMapping: function(xml) {
         return Mapper.getDefaultReverseMapping(xml, {
-            customValues: {tag: 'cwrc:PLACE/fn:node-name(.)'}
-        }, 'cwrc');
+            customValues: {tag: 'fn:node-name(child::*)'}
+        });
     }
 },
 
@@ -57,6 +57,7 @@ title: {
 },
 
 date: {
+    xpathSelector: 'self::orlando:DATE|self::orlando:DATERANGE|self::orlando:DATESTRUCT',
     parentTag: ['DATE', 'DATERANGE', 'DATESTRUCT'],
     mapping: function(entity) {
         return Mapper.getDefaultMapping(entity);
@@ -69,18 +70,26 @@ date: {
 },
 
 note: {
+    xpathSelector: 'self::orlando:RESEARCHNOTE|self::orlando:SCHOLARNOTE',
     parentTag: ['RESEARCHNOTE', 'SCHOLARNOTE'],
     mapping: function(entity) {
         var tag = entity.getTag();
         var xml = Mapper.getTagAndDefaultAttributes(entity);
         xml += '>';
-        xml += entity.getCustomValue('content');
+        
+        var content = entity.getCustomValue('content');
+        if (content) {
+            var xmlDoc = $.parseXML(content);
+            var noteContent = $('DIV0, '+tag, xmlDoc).last()[0];
+            xml += noteContent.innerHTML;
+        }
+        
         xml += '</'+tag+'>';
         return xml;
     },
     reverseMapping: function(xml) {
         return Mapper.getDefaultReverseMapping(xml, {
-            customValues: {parent: 'fn:node-name(.)', content: './text()'}
+            customValues: {parent: 'fn:node-name(.)', content: '.'}
         });
     }
 },
@@ -106,7 +115,7 @@ citation: {
     },
     reverseMapping: function(xml) {
         return Mapper.getDefaultReverseMapping(xml, {
-            customValues: {content: 'cwrc:BIBCIT/text()'}
+            customValues: {content: './text()'}
         }, 'cwrc');
     }
 },
