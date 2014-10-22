@@ -32,7 +32,7 @@ return function(id, writer) {
             '<input type="radio" id="'+id+'_unknown" name="'+id+'_id_certainty" value="UNKNOWN" /><label for="'+id+'_unknown">Unknown date</label>'+
             '<input type="radio" id="'+id+'_rough" name="'+id+'_id_certainty" value="ROUGHLYDATED" /><label for="'+id+'_rough">Rough certainty</label>'+
         '</div>'+
-        '<div id="'+id+'_calendar" data-transform="buttonset" data-mapping="CALENDAR">'+
+        '<div id="'+id+'_calendar" data-transform="buttonset" data-type="radio" data-mapping="CALENDAR">'+
             '<p>Calendar type:</p>'+
             '<input type="radio" name="calendarType" value="NEWSTYLE" id="'+id+'_calendar_new" checked="checked"/><label for="'+id+'_calendar_new">New style</label>'+
             '<input type="radio" name="calendarType" value="BC" id="'+id+'_calendar_old"/><label for="'+id+'_calendar_old">BC</label>'+
