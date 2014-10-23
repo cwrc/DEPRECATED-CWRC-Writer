@@ -82,6 +82,11 @@ return function(writer) {
     
     
     /**
+     * A document is being loaded into the editor
+     * @event Writer#loadingDocument
+     */
+    w.event('loadingDocument');
+    /**
      * A document was loaded into the editor
      * @event Writer#documentLoaded
      */

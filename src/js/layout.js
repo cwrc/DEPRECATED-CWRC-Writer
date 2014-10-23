@@ -1,5 +1,6 @@
 function setupLayoutAndModules(w, EntitiesList, Relations, Selection, StructureTree, Validation) {
     var $ = require('jquery');
+    
     w.layout = $('#cwrc_wrapper').layout({
         defaults: {
             maskIframesOnResize: true,
@@ -95,7 +96,29 @@ function setupLayoutAndModules(w, EntitiesList, Relations, Selection, StructureT
         }
     });
     
+    var isLoading = false;
+    var doneLayout = false;
+    var onLoad = function() {
+        isLoading = true;
+    };
+    var onLoadDone = function() {
+        isLoading = false;
+        if (doneLayout) {
+            $('#cwrc_loadingMask').fadeOut();
+            w.event('documentLoaded').unsubscribe(onLoadDone);
+        }
+    };
+    w.event('loadingDocument').subscribe(onLoad);
+    w.event('documentLoaded').subscribe(onLoadDone);
+    
     setTimeout(function() {
+        w.layout.options.onresizeall_end = function() {
+            doneLayout = true;
+            if (isLoading === false) {
+                $('#cwrc_loadingMask').fadeOut();
+                w.layout.options.onresizeall_end = null;
+            }
+        };
         w.layout.resizeAll(); // now that the editor is loaded, set proper sizing
     }, 250);
 }

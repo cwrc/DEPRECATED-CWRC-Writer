@@ -85,8 +85,14 @@ return function(writer) {
         }
     };
     
+    /**
+     * Loads a document through the delegator
+     * @fires Writer#loadingDocument
+     * @param {String} docName The name of the document
+     */
     fm.loadDocument = function(docName) {
         w.currentDocId = docName;
+        w.event('loadingDocument').publish();
         w.delegator.loadDocument(docName, function(xml) {
             if (xml != null) {
                 w.converter.processDocument(xml);
@@ -98,11 +104,12 @@ return function(writer) {
     
     /**
      * Loads a document into the editor
-     * @param docUrl An URL pointing to an XML document
+     * @fires Writer#loadingDocument
+     * @param {String} docUrl An URL pointing to an XML document
      */
     fm.loadDocumentFromUrl = function(docUrl) {
         w.currentDocId = docUrl;
-        
+        w.event('loadingDocument').publish();
         $.ajax({
             url: docUrl,
             type: 'GET',
@@ -124,9 +131,11 @@ return function(writer) {
     
     /**
      * Loads a document into the editor.
+     * @fires Writer#loadingDocument
      * @param docXml An XML DOM
      */
     fm.loadDocumentFromXml = function(docXml) {
+        w.event('loadingDocument').publish();
         window.location.hash = '';
         w.converter.processDocument(docXml);
     };
@@ -145,12 +154,18 @@ return function(writer) {
         });
     };
     
+    /**
+     * Loads the initial document into the editor
+     * @fires Writer#loadingDocument
+     * @param {String} start The anchor from the editor's URL
+     */
     fm.loadInitialDocument = function(start) {
         start = start.substr(1); // remove hash
         if (start === 'load') {
             w.dialogManager.filemanager.showLoader();
         } else if (start.match(/^templates\//) !== null) {
             start += '.xml';
+            w.event('loadingDocument').publish();
             w.delegator.loadTemplate(start, function(xml) {
                 w.converter.processDocument(xml);
             });
