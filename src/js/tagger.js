@@ -268,6 +268,22 @@ return function(writer) {
     tagger.changeTag = function(params) {
         var tag = tagger.getCurrentTag(params.id);
         if (tag.entity) {
+            w.dialogManager.confirm({
+                title: 'Remove Entity?',
+                msg: 'Changing this tag will remove the associated annotation. Do you want to proceed?',
+                callback: function(yes) {
+                    if (yes) {
+                        var node = $('#'+tag.entity.id+',[name="'+tag.entity.id+'"]', w.editor.getBody()).first();
+                        node.wrapInner('<span id="tempSelection"/>');
+                        tagger.removeEntity(tag.entity.id);
+                        var selectionContents = $('#tempSelection', w.editor.getBody());
+                        w.editor.selection.select(selectionContents[0].firstChild);
+                        w.editor.currentBookmark = w.editor.selection.getBookmark();
+                        selectionContents.contents().unwrap();
+                        w.editor.execCommand('addSchemaTag', {key: params.key});
+                    }
+                }
+            });
         } else if (tag.struct) {
             if ($(tag.struct, w.editor.getBody()).attr('_tag')) {
                 w.editor.execCommand('changeSchemaTag', {tag: tag.struct, pos: params.pos, key: params.key});
