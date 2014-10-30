@@ -738,8 +738,7 @@ return function(writer) {
                 tagName = w.utilities.getTagForEditor(attributes._tag);
             }
             
-            // TODO doesn't preserve hiearchy of tag contents 
-            tag.contents().unwrap().wrap('<'+tagName+' id="'+id+'" />');
+            var contents = tag.contents().unwrap().wrapAll('<'+tagName+' id="'+id+'" />');
             
             tag = $('#'+id, w.editor.getBody());
             for (var key in attributes) {
