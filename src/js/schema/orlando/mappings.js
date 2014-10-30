@@ -111,8 +111,8 @@ date: {
             var body = $('[rdf\\:about="'+entity.getUris().entityId+'"]', anno);
             body.prepend(dateXml.firstChild);
         } else {
-            if (entity.getAttribute('when') !== undefined) {
-                anno.hasBody['xsd:date'] = entity.getAttribute('WHEN');
+            if (entity.getAttribute('VALUE') !== undefined) {
+                anno.hasBody['xsd:date'] = entity.getAttribute('VALUE');
             } else {
                 anno.hasBody['xsd:date'] = entity.getAttribute('FROM')+'/'+entity.getAttribute('TO');
             }
@@ -133,7 +133,7 @@ note: {
         var content = entity.getCustomValue('content');
         if (content) {
             var xmlDoc = $.parseXML(content);
-            var noteContent = $('DIV0, '+tag, xmlDoc).last()[0];
+            var noteContent = $(tag, xmlDoc).first()[0];
             xml += noteContent.innerHTML;
         }
         

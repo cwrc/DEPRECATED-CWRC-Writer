@@ -6,7 +6,7 @@ return function(id, writer) {
     var html = ''+
     '<div id="'+id+'Dialog">'+
         '<div>'+
-            '<label for="'+id+'_input">HTTP Link</label>'+
+            '<label for="'+id+'_input">Hypertext link (URL or URI)</label>'+
             '<input type="text" id="'+id+'_input" data-type="textbox" data-mapping="URL" style="margin-right: 10px;"/>'+
             '<button>Check Link</button>'+
         '</div>'+

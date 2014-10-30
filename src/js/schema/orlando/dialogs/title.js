@@ -30,7 +30,6 @@ return function(id, writer) {
         width: 430,
         height: 300,
         type: 'title',
-        tag: 'title',
         title: 'Tag Title',
         html: html
     });

@@ -43,7 +43,6 @@ return function(id, writer) {
         writer: w,
         id: id,
         type: 'date',
-        tag: 'date',
         title: 'Tag Date',
         height: 430,
         width: 550,
@@ -214,7 +213,7 @@ return function(id, writer) {
         } else {
             var dateString = $dateInput.val();
             if (dateString.match(/^\d{4}-\d{2}-\d{2}$/) || dateString.match(/^\d{4}-\d{2}$/) || dateString.match(/^\d{4}$/)) {
-                dialog.currentData.attributes.WHEN = dateString;
+                dialog.currentData.attributes.VALUE = dateString;
             } else {
                 $dateInput.css({borderBottom: '1px solid red'});
                 error = true;

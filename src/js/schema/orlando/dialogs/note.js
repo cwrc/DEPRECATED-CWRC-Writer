@@ -29,6 +29,22 @@ return function(id, writer) {
         html: html
     });
     
+    $('#'+id+'_type input').click(function() {
+        var newTag = $(this).val();
+        var allOtherTags = $(this).siblings('input').map(function(index, el) {
+            return $(el).val();
+        }).get();
+        var tagsSelector = '';
+        for (var i = 0, len = allOtherTags.length; i < len; i++) {
+            tagsSelector += '*[_tag="'+allOtherTags[i]+'"]';
+            if (len > 1 && i !== len-1) {
+                tagsSelector += ',';
+            }
+        }
+        var parentTag = $(tagsSelector, cwrcWriter.editor.getBody()).first();
+        cwrcWriter.tagger.changeTagValue(parentTag, newTag);
+    });
+    
     dialog.$el.on('beforeShow', function(e, config) {
         iframe = dialog.$el.find('iframe')[0];
         iframe.src = 'note.htm';
@@ -64,17 +80,16 @@ return function(id, writer) {
             
             var xmlDoc;
             if (dialog.mode === DialogForm.ADD) {
-                xmlDoc = $.parseXML('<'+writer.root+'><DIV0></DIV0></'+writer.root+'>');
+                xmlDoc = $.parseXML('<'+writer.root+'><RESEARCHNOTE></RESEARCHNOTE></'+writer.root+'>');
             } else {
                 var parent = config.entry.getTag();
                 xmlDoc = $.parseXML(config.entry.getCustomValue('content'));
-                if (xmlDoc.firstChild.nodeName === parent) {
-                    // remove the annotationId attribute
-                    xmlDoc.firstChild.removeAttribute('annotationId');
-                    // insert the appropriate wrapper tags
-                    var xml = $.parseXML('<'+writer.root+'><DIV0></DIV0></'+writer.root+'>');
-                    xmlDoc = $(xml).find('DIV0').append($(xmlDoc.firstChild).contents()).end()[0];
-                }
+                var annotation = $(parent, xmlDoc).first();
+                // remove the annotationId attribute
+                annotation.removeAttr('annotationId');
+                // insert the appropriate wrapper tags
+                var xml = $.parseXML('<'+writer.root+'><'+parent+'></'+parent+'></'+writer.root+'>');
+                xmlDoc = $(xml).find(parent).append(annotation.contents()).end()[0];
             }
             cwrcWriter.fileManager.loadDocumentFromXml(xmlDoc);
         }

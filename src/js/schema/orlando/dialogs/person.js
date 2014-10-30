@@ -21,7 +21,6 @@ return function(id, writer) {
         width: 200,
         height: 150,
         type: 'person',
-        tag: 'persName',
         title: 'Tag Person',
         html: html
     });
