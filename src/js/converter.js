@@ -500,6 +500,8 @@ return function(writer) {
                 schemaId = 'writing';
             } else if (fileName.toLowerCase().indexOf('tei') != -1) {
                 schemaId = 'tei';
+            } else if (fileName.toLowerCase().indexOf('entry') != -1) {
+                schemaId = 'cwrcEntry';
             } else {
                 schemaId = 'customSchema';
                 w.schemaManager.schemas.customSchema = {
@@ -522,6 +524,8 @@ return function(writer) {
                     schemaId = 'biography';
                 } else if (rootName === 'writing') {
                     schemaId = 'writing';
+                } else if (rootName === 'cwrc') {
+                    schemaId = 'cwrcEntry';
                 }
                 w.schemaManager.loadSchema(schemaId, false, function() {
                     doProcessing(doc);

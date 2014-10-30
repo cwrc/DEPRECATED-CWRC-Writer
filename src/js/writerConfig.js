@@ -34,6 +34,12 @@
             "url": "http://cwrc.ca/schemas/orlando_writing.rng",
             "cssUrl": "css/orlando_converted.css",
             "schemaMappingsId": "orlando"
+        },
+        "cwrcEntry": {
+            "name": "CWRC Entry Schema",
+            "url": "http://cwrc.ca/schemas/cwrc_entry.rng",
+            "cssUrl": "css/cwrc_converted.css",
+            "schemaMappingsId": "cwrcEntry"
         }
     }
 }

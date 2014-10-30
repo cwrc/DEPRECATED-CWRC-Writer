@@ -109,14 +109,18 @@ return function(writer, config) {
 //          w.editor.schema.addCustomElements(w.root);
 //          w.editor.schema.addCustomElements(w.root.toLowerCase());
             
-            var additionalBlockElements;
-            if (w.root == 'TEI') {
+            // TODO remove schema specfic code
+            var additionalBlockElements = [];
+            if (w.root === 'TEI') {
                 additionalBlockElements = ['argument', 'back', 'bibl', 'biblFull', 'biblScope', 'body', 'byline', 'category', 'change', 'cit', 'classCode', 'elementSpec', 'macroSpec', 'classSpec', 'closer', 'creation', 'date', 'distributor', 'div', 'div1', 'div2', 'div3', 'div4', 'div5', 'div6', 'div7', 'docAuthor', 'edition', 'editionStmt', 'editor', 'eg', 'epigraph', 'extent', 'figure', 'front', 'funder', 'group', 'head', 'dateline', 'idno', 'item', 'keywords', 'l', 'label', 'langUsage', 'lb', 'lg', 'list', 'listBibl', 'note', 'noteStmt', 'opener', 'p', 'principal', 'publicationStmt', 'publisher', 'pubPlace', 'q', 'rendition', 'resp', 'respStmt', 'salute', 'samplingDecl', 'seriesStmt', 'signed', 'sp', 'sponsor', 'tagUsage', 'taxonomy', 'textClass', 'titlePage', 'titlePart', 'trailer', 'TEI', 'teiHeader', 'text', 'authority', 'availability', 'fileDesc', 'sourceDesc', 'revisionDesc', 'catDesc', 'encodingDesc', 'profileDesc', 'projectDesc', 'docDate', 'docEdition', 'docImprint', 'docTitle'];
                 
                 w.header = 'teiHeader';
                 // FIXME temp fix for doc structure
                 w.idName = 'xml:id';
-            } else {                    
+            } else if (w.root === 'CWRC') {
+                w.header = 'CWRCHEADER';
+                w.idName = 'ID';
+            } else {
                 additionalBlockElements = ['DIV0', 'DIV1', 'EVENTS', 'ORLANDOHEADER', 'DOCAUTHOR', 'DOCEDITOR', 'DOCEXTENT', 'PUBLICATIONSTMT', 'TITLESTMT', 'PUBPLACE', 'L', 'P', 'HEADING', 'CHRONEVENT', 'CHRONSTRUCT'];
                 
                 w.header = 'ORLANDOHEADER';

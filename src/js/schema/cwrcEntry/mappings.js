@@ -1,286 +1,227 @@
-define(['jquery', 'mapper'], function($, Mapper) {
+define(['jquery', 'mapper', 'annotationsManager'], function($, Mapper, AnnotationsManager) {
 
 return {
 
 person: {
     parentTag: 'NAME',
     mapping: function(entity) {
-        var info = entity.info;
-        var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
-        var offsetId = entity.annotation.range.cwrcOffsetId;
-        
-        var xml = '<NAME';
-        if (id) xml += ' annotationId="'+id+'"';
-        if (offsetId) xml += ' offsetId="'+offsetId+'"';
-        if (info.standard) xml += ' STANDARD="'+info.standard+'"';
-        
-        xml += '>'+Mapper.TEXT_SELECTION+'</NAME>';
-        return xml;
+        return Mapper.getDefaultMapping(entity);
     },
     reverseMapping: function(xml) {
-        var obj = {};
-        var $xml = $(xml);
-
-        obj.standard = $xml.attr('STANDARD');
-        
-        return obj;
+        return Mapper.getDefaultReverseMapping(xml);
+    },
+    annotation: function(entity, format) {
+        return AnnotationsManager.commonAnnotation(entity, 'foaf:Person', null, format);
     }
 },
 
 org: {
     parentTag: 'ORGNAME',
     mapping: function(entity) {
-        var info = entity.info;
-        var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
-        var offsetId = entity.annotation.range.cwrcOffsetId;
-        
-        var xml = '<ORGNAME';
-        if (id) xml += ' annotationId="'+id+'"';
-        if (offsetId) xml += ' offsetId="'+offsetId+'"';
-        if (info.standard) xml += ' STANDARD="'+info.standard+'"';
-        
-        xml += '>'+Mapper.TEXT_SELECTION+'</ORGNAME>';
-        return xml;
+        return Mapper.getDefaultMapping(entity);
     },
     reverseMapping: function(xml) {
-        var obj = {};
-        var $xml = $(xml);
-        
-        obj.standard = $xml.attr('STANDARD');
-        
-        return obj;
+        return Mapper.getDefaultReverseMapping(xml);
+    },
+    annotation: function(entity, format) {
+        return AnnotationsManager.commonAnnotation(entity, 'foaf:Organization', null, format);
     }
 },
 
 place: {
     parentTag: 'PLACE',
     mapping: function(entity) {
-        var info = entity.info;
-        var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
-        var offsetId = entity.annotation.range.cwrcOffsetId;
-        
-        var xml = '<PLACE';
-        if (id) xml += ' annotationId="'+id+'"';
-        if (offsetId) xml += ' offsetId="'+offsetId+'"';
-        
-        xml += '>'+Mapper.TEXT_SELECTION+'</PLACE>';
-        return xml;
+        return Mapper.getDefaultMapping(entity);
     },
     reverseMapping: function(xml) {
-        var obj = {};
-        var $xml = $(xml);
-        
-        return obj;
+        return Mapper.getDefaultReverseMapping(xml);
+    },
+    annotation: function(entity, format) {
+        return AnnotationsManager.commonAnnotation(entity, 'geo:SpatialThing', null, format);
     }
 },
 
 title: {
     parentTag: 'TITLE',
     mapping: function(entity) {
-        var info = entity.info;
-        var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
-        var offsetId = entity.annotation.range.cwrcOffsetId;
-        
-        var xml = '<TITLE';
-        if (id) xml += ' annotationId="'+id+'"';
-        if (offsetId) xml += ' offsetId="'+offsetId+'"';
-        if (info.level) xml += ' LEVEL="'+info.level+'"';
-        
-        xml += '>'+Mapper.TEXT_SELECTION+'</TITLE>';
-        return xml;
+        return Mapper.getDefaultMapping(entity);
     },
     reverseMapping: function(xml) {
-        var obj = {};
-        var $xml = $(xml);
+        return Mapper.getDefaultReverseMapping(xml);
+    },
+    annotation: function(entity, format) {
+        var anno = AnnotationsManager.commonAnnotation(entity, ['dcterms:BibliographicResource', 'dcterms:title'], null, format);
         
-        obj.level = $xml.attr('LEVEL');
+        if (format === 'xml') {
+            var levelXml = $.parseXML('<cw:pubType xmlns:cw="http://cwrc.ca/ns/cw#">'+entity.getAttribute('TITLETYPE')+'</cw:pubType>');
+            var body = $('[rdf\\:about="'+entity.getUris().entityId+'"]', anno);
+            body.prepend(levelXml.firstChild);
+        } else {
+            anno.motivation = 'oa:identifying';
+        }
         
-        return obj;
+        return anno;
     }
 },
 
 date: {
-    parentTag: 'DATE',
+    xpathSelector: 'self::cwrcEntry:DATE|self::cwrcEntry:DATERANGE',
+    parentTag: ['DATE', 'DATERANGE'],
     mapping: function(entity) {
-        var info = entity.info;
-        var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
-        var offsetId = entity.annotation.range.cwrcOffsetId;
-        
-        var xml = '';
-        if (info.date) {
-            xml += '<DATE';
-            if (id) xml += ' annotationId="'+id+'"';
-            if (offsetId) xml += ' offsetId="'+offsetId+'"';
-            xml +=' VALUE="'+info.date+'">'+Mapper.TEXT_SELECTION+'</DATE>';
-        } else if (info.startDate) {
-            xml += '<DATERANGE';
-            if (id) xml += ' annotationId="'+id+'"';
-            if (offsetId) xml += ' offsetId="'+offsetId+'"';
-            xml += ' FROM="'+info.startDate+'" TO="'+info.endDate+'">'+Mapper.TEXT_SELECTION+'</DATERANGE>';
-        }
-        return xml;
+        return Mapper.getDefaultMapping(entity);
     },
     reverseMapping: function(xml) {
-        var obj = {};
-        var $xml = $(xml);
-        
-        if ($xml.attr('VALUE')) {
-            obj.date = $xml.attr('VALUE');
-            $xml.removeAttr('VALUE');
+        return Mapper.getDefaultReverseMapping(xml, {
+            properties: {tag: 'fn:node-name(.)'}
+        });
+    },
+    annotation: function(entity, format) {
+        var types = [];
+        if (entity.getAttribute('FROM') !== undefined) {
+            types.push('time:Interval');
         } else {
-            obj.startDate = $xml.attr('FROM');
-            obj.endDate = $xml.attr('TO');
-            $xml.removeAttr('FROM').removeAttr('TO');
+            types.push('time:Instant');
+        }
+        types.push('time:TemporalEntity');
+        
+        var anno = AnnotationsManager.commonAnnotation(entity, types, null, format);
+        
+        if (format === 'xml') {
+            var dateXml;
+            if (entity.getAttribute('VALUE') !== undefined) {
+                dateXml = $.parseXML('<xsd:date xmlns:xsd="http://www.w3.org/2001/XMLSchema#">'+entity.getAttribute('VALUE')+'</xsd:date>');
+            } else {
+                // TODO properly encode date range
+                dateXml = $.parseXML('<xsd:date xmlns:xsd="http://www.w3.org/2001/XMLSchema#">'+entity.getAttribute('FROM')+'/'+entity.getAttribute('TO')+'</xsd:date>');
+            }
+            var body = $('[rdf\\:about="'+entity.getUris().entityId+'"]', anno);
+            body.prepend(dateXml.firstChild);
+        } else {
+            if (entity.getAttribute('VALUE') !== undefined) {
+                anno.hasBody['xsd:date'] = entity.getAttribute('VALUE');
+            } else {
+                anno.hasBody['xsd:date'] = entity.getAttribute('FROM')+'/'+entity.getAttribute('TO');
+            }
         }
         
-        obj.attributes = Mapper.getAttributesFromXml(xml);
-        
-        return obj;
+        return anno;
     }
 },
 
 note: {
+    xpathSelector: 'self::cwrcEntry:RESEARCHNOTE|self::cwrcEntry:SCHOLARNOTE',
     parentTag: ['RESEARCHNOTE', 'SCHOLARNOTE'],
     mapping: function(entity) {
-        var info = entity.info;
-        var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
-        var offsetId = entity.annotation.range.cwrcOffsetId;
+        var tag = entity.getTag();
+        var xml = Mapper.getTagAndDefaultAttributes(entity);
+        xml += '>';
         
-        var el = 'RESEARCHNOTE';
-        if (info.type && info.type == 'scholarNote') {
-            el = 'SCHOLARNOTE';
-        }
-        var xml = '<'+el;
-        if (id) xml += ' annotationId="'+id+'"';
-        if (offsetId) xml += ' offsetId="'+offsetId+'"';
-        if (info.content) {
-            var xmlDoc = w.utilities.stringToXML(info.content);
-            var noteContent = $('note', xmlDoc)[0];
+        var content = entity.getCustomValue('content');
+        if (content) {
+            var xmlDoc = $.parseXML(content);
+            var noteContent = $(tag, xmlDoc).first()[0];
             xml += noteContent.innerHTML;
         }
-        xml += '>';
-        xml += '</'+el+'>';
+        
+        xml += '</'+tag+'>';
         return xml;
     },
     reverseMapping: function(xml) {
-        var obj = {};
-        
-        obj.type = xml.nodeName.toLowerCase() == 'researchnote' ? 'researchNote' : 'scholarNote';
-        obj.content = w.utilities.xmlToString(xml);
-        
-        return obj;
+        return Mapper.getDefaultReverseMapping(xml, {
+            customValues: {parent: 'fn:node-name(.)', content: '.'}
+        });
+    },
+    annotation: function(entity, format) {
+        return AnnotationsManager.commonAnnotation(entity, 'bibo:Note', 'oa:commenting', format);
     }
 },
 
 citation: {
     parentTag: 'BIBCITS',
+    textTag: 'BIBCIT',
     mapping: function(entity) {
-        var info = entity.info;
-        var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
-        var offsetId = entity.annotation.range.cwrcOffsetId;
+        var range = entity.getRange();
+        var id = range.annotationId;
+        var offsetId = range.offsetId;
+        var content = entity.getCustomValue('content');
         
         var xml = '<BIBCITS';
         if (id) xml += ' annotationId="'+id+'"';
         if (offsetId) xml += ' offsetId="'+offsetId+'"';
-        xml += '><BIBCIT>';
-        if (info.content) {
-            var xmlDoc = w.utilities.stringToXML(info.content);
-            var noteContent = $('note', xmlDoc)[0];
-            xml += noteContent.innerHTML;
-        }
+        xml += '><BIBCIT';
+        if (id) xml += ' annotationId="'+id+'"';
+        xml += '>';
+        xml += content;
         xml += '</BIBCIT></BIBCITS>';
         return xml;
     },
     reverseMapping: function(xml) {
-        var obj = {};
-        
-        obj.content = w.utilities.xmlToString(xml);
-        
-        return obj;
+        return Mapper.getDefaultReverseMapping(xml, {
+            customValues: {content: './text()'}
+        }, 'cwrc');
+    },
+    annotation: function(entity, format) {
+        return AnnotationsManager.commonAnnotation(entity, 'dcterms:BibliographicResource', 'cw:citing', format);
     }
 },
 
 correction: {
     parentTag: 'SIC',
     mapping: function(entity) {
-        var info = entity.info;
-        var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
-        var offsetId = entity.annotation.range.cwrcOffsetId;
-        
-        var xml;
-        if (info.corrText) {
-            xml = '<SIC';
-            if (id) xml += ' annotationId="'+id+'"';
-            if (offsetId) xml += ' offsetId="'+offsetId+'"';
-            xml += ' CORR="'+info.corrText+'">'+Mapper.TEXT_SELECTION+'</SIC>';
-        } else {
-            xml = '<SIC';
-            if (id) xml += ' annotationId="'+id+'"';
-            if (offsetId) xml += ' offsetId="'+offsetId+'"';
-            xml += '>'+Mapper.TEXT_SELECTION+'</SIC>';
-        }
-        return xml;
+        return Mapper.getDefaultMapping(entity);
     },
     reverseMapping: function(xml) {
-        var obj = {};
-        var $xml = $(xml);
+        return Mapper.getDefaultReverseMapping(xml);
+    },
+    annotation: function(entity, format) {
+        var anno = AnnotationsManager.commonAnnotation(entity, 'cnt:ContentAsText', 'oa:editing', format);
         
-        if ($xml.attr('CORR')) {
-            obj.corrText = $xml.attr('CORR');
+        if (format === 'xml') {
+            var corrXml = $.parseXML('<cnt:chars xmlns:cnt="http://www.w3.org/2011/content#">'+entity.getAttribute('CORR')+'</cnt:chars>');
+            var body = $('[rdf\\:about="'+entity.getUris().entityId+'"]', anno);
+            body.prepend(corrXml.firstChild);
+        } else {
+            anno.hasBody['cnt:chars'] = entity.getAttribute('CORR');
         }
-        obj.sicText = $xml.text();
-        
-        return obj;
+
+        return anno;
     }
 },
 
 keyword: {
     parentTag: 'KEYWORDCLASS',
     mapping: function(entity) {
-        var info = entity.info;
-        var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
-        var offsetId = entity.annotation.range.cwrcOffsetId;
-        
-        var xml = '';
-        for (var i = 0; i < info.keywords.length; i++) {
-            xml += '<KEYWORDCLASS KEYWORDTYPE="'+info.keywords[i]+'"';
-            if (id) xml += ' annotationId="'+id+'"';
-            if (offsetId) xml += ' offsetId="'+offsetId+'"';
-            xml +='>'+Mapper.TEXT_SELECTION+'</KEYWORDCLASS>';
-        }
-        return xml;
+        return Mapper.getDefaultMapping(entity);
     },
     reverseMapping: function(xml) {
-        var obj = {};
-        var $xml = $(xml);
+        return Mapper.getDefaultReverseMapping(xml);
+    },
+    annotation: function(entity, format) {
+        var anno = AnnotationsManager.commonAnnotation(entity, ['oa:Tag', 'cnt:ContentAsText', 'skos:Concept'], 'oa:classifying', format);
         
-        obj.keywords = [$xml.attr('KEYWORDTYPE')];
-        
-        return obj;
+        var keyword = entity.getAttribute('KEYWORDTYPE');
+        if (format === 'xml') {
+            var body = $('[rdf\\:about="'+entity.getUris().entityId+'"]', anno);
+            var keywordXml = $.parseXML('<cnt:chars xmlns:cnt="http://www.w3.org/2011/content#">'+keyword+'</cnt:chars>');
+            body.prepend(keywordXml.firstChild);
+        } else {
+            anno.hasBody['cnt:chars'] = keyword;
+        }
+
+        return anno;
     }
 },
 
 link: {
     parentTag: 'XREF',
     mapping: function(entity) {
-        var info = entity.info;
-        var id = entity.annotation.range.cwrcAnnotationId || entity.props.id;
-        var offsetId = entity.annotation.range.cwrcOffsetId;
-        
-        var xml = '<XREF';
-        if (id) xml += ' annotationId="'+id+'"';
-        if (offsetId) xml += ' offsetId="'+offsetId+'"';
-        if (info.url) xml += ' URL="'+info.url+'"';
-        xml += '>'+Mapper.TEXT_SELECTION+'</XREF>';
-        return xml;
+        return Mapper.getDefaultMapping(entity);
     },
     reverseMapping: function(xml) {
-        var obj = {};
-        var $xml = $(xml);
-        
-        obj.url = $xml.attr('URL');
-        
-        return obj;
+        return Mapper.getDefaultReverseMapping(xml);
+    },
+    annotation: function(entity, format) {
+        return AnnotationsManager.commonAnnotation(entity, 'cnt:ContentAsText', 'oa:linking', format);
     }
 },
 

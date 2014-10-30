@@ -21,6 +21,7 @@ return function(writer) {
     tagger.insertBoundaryTags = function(id, type, range) {
         var parentTag = w.schemaManager.mapper.getParentTag(type);
         
+        // TODO remove schema specific handling of keyword
         if (type === 'note' || type === 'citation' || type === 'keyword') {
             var tag = w.editor.dom.create('span', {
                 '_entity': true, '_note': true, '_tag': parentTag, '_type': type, 'class': 'entity '+type+' start', 'name': id, 'id': id
@@ -263,6 +264,25 @@ return function(writer) {
             }
         }
     };
+    
+    /**
+     * Changes the _tag attribute to a new one.
+     * @param {jQuery} $tag A jQuery representation of the tag.
+     * @param {String} newTagName The name of the new tag.
+     */
+    tagger.changeTagValue = function($tag, newTagName) {
+        var oldAtts = $tag[0].attributes;
+        var newAtts = {};
+        for (var i = 0; i < oldAtts.length; i++) {
+            var att = oldAtts[i];
+            var val = att.value;
+            if (att.name === '_tag') {
+                val = newTagName;
+            }
+            newAtts[att.name] = val;
+        }
+        tagger.editStructureTag($tag, newAtts);
+    }
     
     // a general change/replace function
     tagger.changeTag = function(params) {
@@ -717,7 +737,10 @@ return function(writer) {
             } else {
                 tagName = w.utilities.getTagForEditor(attributes._tag);
             }
+            
+            // TODO doesn't preserve hiearchy of tag contents 
             tag.contents().unwrap().wrap('<'+tagName+' id="'+id+'" />');
+            
             tag = $('#'+id, w.editor.getBody());
             for (var key in attributes) {
                 if (key.match(/^_/) != null || w.converter.reservedAttributes[key] !== true) {
