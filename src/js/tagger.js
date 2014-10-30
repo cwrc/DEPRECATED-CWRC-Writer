@@ -738,7 +738,7 @@ return function(writer) {
                 tagName = w.utilities.getTagForEditor(attributes._tag);
             }
             
-            var contents = tag.contents().unwrap().wrapAll('<'+tagName+' id="'+id+'" />');
+            tag.contents().unwrap().wrapAll('<'+tagName+' id="'+id+'" />');
             
             tag = $('#'+id, w.editor.getBody());
             for (var key in attributes) {
