@@ -169,7 +169,7 @@ Mapper.prototype = {
     },
     
     getMapping: function(entity) {
-        var mapping = this.mappings[entity.getType()].mapping;
+        var mapping = this.mappings.entities[entity.getType()].mapping;
         if (mapping === undefined) {
             return ['', '']; // return array of empty strings if there is no mapping
         }
@@ -188,7 +188,7 @@ Mapper.prototype = {
      * @returns {Object} The entity object.
      */
     getReverseMapping: function(xml, type) {
-        var entry = this.mappings[type];
+        var entry = this.mappings.entities[type];
         var mapping = entry.reverseMapping;
         if (mapping) {
             return mapping(xml);
@@ -212,8 +212,8 @@ Mapper.prototype = {
         }
 
         var resultType = null;
-        for (var type in this.mappings) {
-            var xpath = this.mappings[type].xpathSelector;
+        for (var type in this.mappings.entities) {
+            var xpath = this.mappings.entities[type].xpathSelector;
             if (xpath !== undefined && isElement) {
                 var result = Mapper.getXpathResult(el, xpath, this.w.schemaManager.getCurrentSchema().schemaMappingsId);
                 if (result !== undefined) {
@@ -221,7 +221,7 @@ Mapper.prototype = {
                     break; // prioritize xpath
                 }
             } else {
-                var parentTag = this.mappings[type].parentTag;
+                var parentTag = this.mappings.entities[type].parentTag;
                 if (($.isArray(parentTag) && parentTag.indexOf(tag) !== -1) || parentTag === tag) {
                     resultType = type;
                 }
@@ -236,7 +236,7 @@ Mapper.prototype = {
      * @returns {String}
      */
     getParentTag: function(type) {
-        var tag = this.mappings[type].parentTag;
+        var tag = this.mappings.entities[type].parentTag;
         if (tag === undefined) {
             return '';
         }
@@ -252,11 +252,35 @@ Mapper.prototype = {
      * @returns {String}
      */
     getTextTag: function(type) {
-        var tag = this.mappings[type].textTag;
+        var tag = this.mappings.entities[type].textTag;
         if (tag === undefined) {
             return '';
         }
         return tag;
+    },
+    
+    /**
+     * Returns the name of the header tag for the current schema.
+     * @returns {String}
+     */
+    getHeaderTag: function() {
+        return this.mappings.header;
+    },
+    
+    /**
+     * Returns the name for the ID attribute for the current schema.
+     * @returns {String}
+     */
+    getIdAttributeName: function() {
+        return this.mappings.id;
+    },
+    
+    /**
+     * Returns the block level elements for the current schema.
+     * @returns {Array}
+     */
+    getBlockLevelElements: function() {
+        return this.mappings.blockElements;
     }
 };
 

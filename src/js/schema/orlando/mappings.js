@@ -2,6 +2,12 @@ define(['jquery', 'mapper', 'annotationsManager'], function($, Mapper, Annotatio
 
 return {
 
+id: 'ID',
+header: 'ORLANDOHEADER',
+blockElements: ['DIV0', 'DIV1', 'EVENTS', 'ORLANDOHEADER', 'DOCAUTHOR', 'DOCEDITOR', 'DOCEXTENT', 'PUBLICATIONSTMT', 'TITLESTMT', 'PUBPLACE', 'L', 'P', 'HEADING', 'CHRONEVENT', 'CHRONSTRUCT'],
+
+entities: {
+    
 person: {
     parentTag: 'NAME',
     mapping: function(entity) {
@@ -246,6 +252,8 @@ event: {
     },
     reverseMapping: function(xml) {
     }
+}
+
 }
 
 };
