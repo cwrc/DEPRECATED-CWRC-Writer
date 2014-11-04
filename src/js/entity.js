@@ -101,6 +101,7 @@ function Entity(config) {
 }
 
 Entity.getTitleFromContent = function(content) {
+    var content = content.replace(/\s+/g, ' ');
     if (content.length <= 34) return content;
     var title = content.substring(0, 34) + '&#8230;';
     return title;
