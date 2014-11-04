@@ -1,4 +1,4 @@
-define(['jquery'], function($) {
+define(['jquery', 'entity'], function($, Entity) {
 
 /**
  * @class Tagger
@@ -18,8 +18,13 @@ return function(writer) {
      * @param {string} type The entity type
      * @param {range} range The DOM range to insert the tags around
      */
-    tagger.insertBoundaryTags = function(id, type, range) {
-        var parentTag = w.schemaManager.mapper.getParentTag(type);
+    tagger.insertBoundaryTags = function(id, type, range, tag) {
+        var parentTag;
+        if (tag !== undefined) {
+            parentTag = tag;
+        } else {
+            parentTag = w.schemaManager.mapper.getParentTag(type);
+        }
         
         if (w.schemaManager.mapper.isEntityTypeNote(type)) {
             // handling for note type entities
@@ -453,15 +458,30 @@ return function(writer) {
         w.editor.selection.moveToBookmark(w.editor.currentBookmark);
         if (info != null) {
             var id = w.getUniqueId('ent_');
-            var content = tagger.addEntityTag(id, type);
             
-            // TODO fire entityAdded after updateEntityInfo so listeners have all the associated info
-            var entry = w.entitiesManager.addEntity({
+            var tag = w.schemaManager.mapper.getParentTag(type);
+            if (info.properties && info.properties.tag) {
+                tag = info.properties.tag;
+            }
+            
+            // create entity here so we can set content properly before adding it to the manager
+            var entity = new Entity({
                 id: id,
                 type: type,
-                content: content,
-                attributes: info.attributes
+                tag: tag,
+                attributes: info.attributes,
+                customValues: info.customValues,
+                cwrcLookupInfo: info.cwrcInfo
             });
+            
+            var content = tagger.addEntityTag(id, type, tag);
+            var isNote = w.schemaManager.mapper.isEntityTypeNote(type);
+            if (isNote) {
+                content = w.schemaManager.mapper.getNoteContentForEntity(entity, true);
+            }
+            entity.setContent(content);
+            
+            var entry = w.entitiesManager.addEntity(entity);
             updateEntityInfo(entry, info);
             
             $.when(
@@ -592,9 +612,10 @@ return function(writer) {
      * Add an entity tag.
      * @param {String} id The id for the entity
      * @param {String} type The entity type
+     * @param {String} [tag] The entity tag
      * @returns {String} The text content of the tag
      */
-    tagger.addEntityTag = function(id, type) {
+    tagger.addEntityTag = function(id, type, tag) {
         _doCustomTaggerUndo();
         
         var sel = w.editor.selection;
@@ -615,7 +636,7 @@ return function(writer) {
         }
         
         if (content !== '') {
-            tagger.insertBoundaryTags(id, type, range);
+            tagger.insertBoundaryTags(id, type, range, tag);
         } else {
             w.emptyTagId = id;
         }

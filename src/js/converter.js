@@ -1151,7 +1151,7 @@ return function(writer) {
                         var range = w.editor.selection.getRng(true);
                         range.setStart(startNode, startOffset);
                         range.setEnd(endNode, endOffset);
-                        w.tagger.insertBoundaryTags(id, type, range);
+                        w.tagger.insertBoundaryTags(id, type, range, entry.getTag());
                     } else {
                         // then tag already exists
                         $(startNode).attr({
@@ -1164,6 +1164,7 @@ return function(writer) {
                     }
                     if (entry.getContent() === undefined) {
                         // get and set the text content
+                        // TODO remove schema specific properties
                         var content = '';
                         if (type === 'note' || type === 'citation') {
                             content = $($.parseXML(entry.getCustomValues().content)).text();

@@ -31,19 +31,26 @@ EntitiesManager.prototype = {
     /**
      * Creates and adds an entity to the collection.
      * @fires Writer#entityAdded
-     * @param {Object} config The entity config.
+     * @param {Object|Entity} config The entity config.
      * @returns {Entity} The newly created Entity
      */
     addEntity: function(config) {
-        if (config.id === undefined) {
-            config.id = this.w.getUniqueId('ent_');
+        var entity;
+        if (config.constructor.name === 'Entity') {
+            entity = config;
+        } else {
+            if (config.id === undefined) {
+                config.id = this.w.getUniqueId('ent_');
+            }
+            
+            if (config.tag === undefined) {
+                config.tag = this.w.schemaManager.mapper.getParentTag(config.type);
+            }
+            
+            entity = new Entity(config);
         }
         
-        if (config.tag === undefined) {
-            config.tag = this.w.schemaManager.mapper.getParentTag(config.type);
-        }
         
-        var entity = new Entity(config);
         this.entities[entity.id] = entity;
         
         this.w.event('entityAdded').publish(entity.id);

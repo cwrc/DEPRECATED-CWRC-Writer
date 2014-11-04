@@ -38,7 +38,6 @@ function Entity(config) {
     this.title;
     
     /**
-     * TODO change this to directly support attribute widget
      * Values that can be directly mapped onto the entity's tag.
      * @type Object
      */
