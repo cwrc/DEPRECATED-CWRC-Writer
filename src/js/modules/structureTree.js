@@ -330,6 +330,7 @@ return function(config) {
         // entity tag
         if (node.attr('_entity') && (node.attr('_tag') || node.attr('_note'))) {
             var id = node.attr('name');
+            var entity = w.entitiesManager.getEntity(id);
             var type = node.attr('_type');
             var tag = node.attr('_tag');
             if (tag == null) {
@@ -342,42 +343,47 @@ return function(config) {
                 state: {opened: level < 3}
             };
             
-            // TODO remove schema specific custom values
-            if (type === 'note' || type === 'citation') {
-                var content = w.utilities.stringToXML(w.entitiesManager.getEntity(id).getCustomValues().content);
-                var root = $(tag, content).first();
-                
-                function processChildren(children, parent, id) {
-                    children.each(function(index, el) {
-                        if (parent.children == null) parent.children = [];
-                        var childData = {
-                            text: el.nodeName,
-                            li_attr: {name: id}
-                        };
-                        parent.children.push(childData);
-                        
-                        processChildren($(el).children(), childData, id);
-                    });
-                }
-                
-                processChildren(root.children(), nodeData, id);
-            } else if (type === 'keyword') {
-                nodeData.children = [];
-                var keywords = w.entitiesManager.getEntity(id).getCustomValues().keywords;
-                if (keywords !== undefined) {
-                    for (var i = 0; i < keywords.length; i++) {
+            if (w.schemaManager.mapper.isEntityTypeNote(type)) {
+                var content = w.schemaManager.mapper.getNoteContentForEntity(entity);
+                switch($.type(content)) {
+                    case 'array':
+                        nodeData.children = [];
+                        for (var i = 0; i < content.length; i++) {
+                            nodeData.children.push({
+                                text: content[i],
+                                li_attr: {name: id}
+                            });
+                        }
+                        break;
+                    case 'string':
+                        nodeData.children = [];
                         nodeData.children.push({
-                            text: 'keyword',
+                            text: content,
                             li_attr: {name: id}
                         });
-                    }
-                } else {
-                    nodeData.children.push({
-                        text: 'keyword',
-                        li_attr: {name: id}
-                    });
+                        break;
+                    case 'object':
+                        if (content.nodeType !== undefined) {
+                            var root = $(tag, content).first();
+                            
+                            function processChildren(children, parent, id) {
+                                children.each(function(index, el) {
+                                    if (parent.children == null) parent.children = [];
+                                    var childData = {
+                                        text: el.nodeName,
+                                        li_attr: {name: id}
+                                    };
+                                    parent.children.push(childData);
+                                    
+                                    processChildren($(el).children(), childData, id);
+                                });
+                            }
+                            
+                            processChildren(root.children(), nodeData, id);
+                        }
                 }
             }
+            
         // structure tag
         } else if (node.attr('_tag')) {
             var id = node.attr('id');

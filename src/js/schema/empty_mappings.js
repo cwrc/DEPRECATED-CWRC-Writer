@@ -2,12 +2,23 @@ define(['jquery', 'mapper'], function($, Mapper) {
 
 return {
 
+// the name of the ID attribute
+id: '',
+// the name of the header tag
+header: '',
+// additional block level elements that should be added to TinyMCE
+blockElements: [],
+
+entities: {
+    
 person: {
     parentTag: '',
     textTag: '',
     mapping: function(entity) {
     },
     reverseMapping: function(xml) {
+    },
+    annotation: function(entity, format) {
     }
 },
 
@@ -17,6 +28,8 @@ org: {
     mapping: function(entity) {
     },
     reverseMapping: function(xml) {
+    },
+    annotation: function(entity, format) {
     }
 },
 
@@ -26,6 +39,8 @@ place: {
     mapping: function(entity) {
     },
     reverseMapping: function(xml) {
+    },
+    annotation: function(entity, format) {
     }
 },
 
@@ -35,6 +50,8 @@ title: {
     mapping: function(entity) {
     },
     reverseMapping: function(xml) {
+    },
+    annotation: function(entity, format) {
     }
 },
 
@@ -44,6 +61,8 @@ correction: {
     mapping: function(entity) {
     },
     reverseMapping: function(xml) {
+    },
+    annotation: function(entity, format) {
     }
 },
 
@@ -53,6 +72,8 @@ link: {
     mapping: function(entity) {
     },
     reverseMapping: function(xml) {
+    },
+    annotation: function(entity, format) {
     }
 },
 
@@ -62,6 +83,8 @@ date: {
     mapping: function(entity) {
     },
     reverseMapping: function(xml) {
+    },
+    annotation: function(entity, format) {
     }
 },
 
@@ -71,6 +94,8 @@ note: {
     mapping: function(entity) {
     },
     reverseMapping: function(xml) {
+    },
+    annotation: function(entity, format) {
     }
 },
 
@@ -80,6 +105,8 @@ citation: {
     mapping: function(entity) {
     },
     reverseMapping: function(xml) {
+    },
+    annotation: function(entity, format) {
     }
 },
 
@@ -89,6 +116,8 @@ keyword: {
     mapping: function(entity) {
     },
     reverseMapping: function(xml) {
+    },
+    annotation: function(entity, format) {
     }
 },
 
@@ -98,7 +127,11 @@ event: {
     mapping: function(entity) {
     },
     reverseMapping: function(xml) {
+    },
+    annotation: function(entity, format) {
     }
+}
+
 }
 
 };

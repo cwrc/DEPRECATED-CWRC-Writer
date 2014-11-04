@@ -206,6 +206,15 @@ date: {
 note: {
     parentTag: 'note',
     textTag: '',
+    isNote: true,
+    getNoteContent: function(entity, returnString) {
+        var xml = $.parseXML(entity.getCustomValue('content'));
+        if (returnString) {
+            return $(xml).text();
+        } else {
+            return xml;
+        }
+    },
     mapping: function(entity) {
         var xml = Mapper.getTagAndDefaultAttributes(entity);
         xml += '>';
@@ -234,6 +243,15 @@ citation: {
     parentTag: 'note',
     xpathSelector: 'self::tei:note/tei:bibl',
     textTag: 'bibl',
+    isNote: true,
+    getNoteContent: function(entity, returnString) {
+        var xml = $.parseXML(entity.getCustomValue('content'));
+        if (returnString) {
+            return $(xml).text();
+        } else {
+            return xml;
+        }
+    },
     mapping: function(entity) {
         var xml = '<note';
         xml += Mapper.getRangeString(entity);
@@ -265,6 +283,15 @@ keyword: {
     parentTag: 'note',
     xpathSelector: 'self::tei:note/tei:term',
     textTag: '',
+    isNote: true,
+    getNoteContent: function(entity, returnString) {
+        var keywords = entity.getCustomValue('keywords');
+        if (returnString) {
+            return keywords.join(', ');
+        } else {
+            return keywords;
+        }
+    },
     mapping: function(entity) {
         var keywords = entity.getCustomValue('keywords');
         var rangeString = Mapper.getRangeString(entity);

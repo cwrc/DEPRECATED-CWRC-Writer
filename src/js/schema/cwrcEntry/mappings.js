@@ -117,6 +117,15 @@ date: {
 note: {
     xpathSelector: 'self::cwrcEntry:RESEARCHNOTE|self::cwrcEntry:SCHOLARNOTE',
     parentTag: ['RESEARCHNOTE', 'SCHOLARNOTE'],
+    isNote: true,
+    getNoteContent: function(entity, returnString) {
+        var xml = $.parseXML(entity.getCustomValue('content'));
+        if (returnString) {
+            return $(xml).text();
+        } else {
+            return xml;
+        }
+    },
     mapping: function(entity) {
         var tag = entity.getTag();
         var xml = Mapper.getTagAndDefaultAttributes(entity);
@@ -145,6 +154,15 @@ note: {
 citation: {
     parentTag: 'BIBCITS',
     textTag: 'BIBCIT',
+    isNote: true,
+    getNoteContent: function(entity, returnString) {
+        var xml = $.parseXML(entity.getCustomValue('content'));
+        if (returnString) {
+            return $(xml).text();
+        } else {
+            return xml;
+        }
+    },
     mapping: function(entity) {
         var range = entity.getRange();
         var id = range.annotationId;
@@ -196,6 +214,10 @@ correction: {
 
 keyword: {
     parentTag: 'KEYWORDCLASS',
+    isNote: true,
+    getNoteContent: function(entity, returnString) {
+        return entity.getAttribute('KEYWORDTYPE');
+    },
     mapping: function(entity) {
         return Mapper.getDefaultMapping(entity);
     },

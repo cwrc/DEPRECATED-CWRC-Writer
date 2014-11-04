@@ -231,6 +231,36 @@ Mapper.prototype = {
     },
     
     /**
+     * Checks if the particular entity type is "a note or note-like".
+     * @param {String} type The entity type
+     * @return {Boolean}
+     */
+    isEntityTypeNote: function(type) {
+        var isNote = this.mappings.entities[type].isNote;
+        if (isNote === undefined) {
+            return false;
+        } else {
+            return isNote;
+        }
+    },
+    
+    /**
+     * Gets the content of a note/note-like entity.
+     * @param {Entity} entity The entity
+     * @param {Boolean} returnString True to return a string
+     * @returns {String|Array|XML}
+     */
+    getNoteContentForEntity: function(entity, returnString) {
+        var entry = this.mappings.entities[entity.getType()];
+        if (entry.isNote) {
+            var content = entry.getNoteContent(entity, returnString);
+            return content;
+        } else {
+            return '';
+        }
+    },
+    
+    /**
      * Returns the parent tag for entity when converted to a particular schema.
      * @param type The entity type.
      * @returns {String}

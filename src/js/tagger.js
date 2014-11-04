@@ -21,8 +21,8 @@ return function(writer) {
     tagger.insertBoundaryTags = function(id, type, range) {
         var parentTag = w.schemaManager.mapper.getParentTag(type);
         
-        // TODO remove schema specific handling of keyword
-        if (type === 'note' || type === 'citation' || type === 'keyword') {
+        if (w.schemaManager.mapper.isEntityTypeNote(type)) {
+            // handling for note type entities
             var tag = w.editor.dom.create('span', {
                 '_entity': true, '_note': true, '_tag': parentTag, '_type': type, 'class': 'entity '+type+' start', 'name': id, 'id': id
             }, '');
@@ -282,7 +282,7 @@ return function(writer) {
             newAtts[att.name] = val;
         }
         tagger.editStructureTag($tag, newAtts);
-    }
+    };
     
     // a general change/replace function
     tagger.changeTag = function(params) {
@@ -436,16 +436,10 @@ return function(writer) {
             entity.setCustomValue(key, info.customValues[key]);
         }
         
-        // TODO remove schema specific custom values
-        if (type === 'note' || type === 'citation') {
-            var content = $($.parseXML(entity.getCustomValues().content)).text();
+        var isNote = w.schemaManager.mapper.isEntityTypeNote(type);
+        if (isNote) {
+            var content = w.schemaManager.mapper.getNoteContentForEntity(entity, true);
             entity.setContent(content);
-        } else if (type === 'keyword') {
-            var keywords = entity.getCustomValues().keywords;
-            if (keywords !== undefined) {
-                var content = keywords.join(', ');
-                entity.setContent(content);
-            }
         }
     }
     
@@ -665,20 +659,10 @@ return function(writer) {
         var tagName = w.utilities.getTagForEditor(attributes._tag);
         var open_tag = '<'+tagName;
         for (var key in attributes) {
-            if (key == 'id' || key.match(/^_/) != null) {
+            if (key.match(/^_/) != null || w.converter.reservedAttributes[key] !== true) {
                 open_tag += ' '+key+'="'+attributes[key]+'"';
-            } 
-        }
-        // TODO find a better way of handling this
-        if (attributes._tag == 'title') {
-            if (attributes.level != null) {
-                open_tag += ' level="'+attributes.level+'"';
-            }
-            if (attributes.type != null) {
-                open_tag += ' type="'+attributes.type+'"';
             }
         }
-        
         open_tag += '>';
         var close_tag = '</'+tagName+'>';
         
