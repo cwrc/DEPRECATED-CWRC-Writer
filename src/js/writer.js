@@ -60,7 +60,7 @@ return function(config) {
     
     // editor mode
     w.mode = config.mode;
-    if (w.mode != null && w.mode === 'xml') {
+    if (w.mode !== undefined && w.mode === 'xml') {
         w.mode = w.XML;
     } else {
         w.mode = w.XMLRDF;
@@ -68,7 +68,7 @@ return function(config) {
     
     // can entities overlap?
     w.allowOverlap = false;
-    if (config.allowOverlap != null && typeof config.allowOverlap === 'boolean') {
+    if (config.allowOverlap !== undefined && typeof config.allowOverlap === 'boolean') {
         w.allowOverlap = config.allowOverlap;
     }
     if (w.allowOverlap && w.mode === w.XML) {

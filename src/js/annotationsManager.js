@@ -284,7 +284,7 @@ AnnotationsManager.prototype = {
     getAnnotation: function(entity, format) {
         format = format || 'xml';
         var type = entity.getType();
-        var annoMappings = this.w.schemaManager.mapper.getMappings();
+        var annoMappings = this.w.schemaManager.mapper.getMappings().entities;
         var e = annoMappings[type];
         var anno;
         if (e && e.annotation !== undefined) {
