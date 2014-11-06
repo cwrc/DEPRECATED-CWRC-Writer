@@ -244,7 +244,7 @@ return function(writer) {
         }
         
         // fix for when start and/or end containers are element nodes
-        if (range.startContainer.nodeType == Node.ELEMENT_NODE) {
+        if (range.startContainer.nodeType === Node.ELEMENT_NODE) {
             var end = range.endContainer;
             if (end.nodeType != Node.TEXT_NODE || range.endOffset === 0) {
                 end = findTextNode(range.endContainer, 'back');
@@ -253,7 +253,7 @@ return function(writer) {
             }
             range.setStart(end, 0);
         }
-        if (range.endContainer.nodeType == Node.ELEMENT_NODE) {
+        if (range.endContainer.nodeType === Node.ELEMENT_NODE) {
             // don't need to check nodeType here since we've already ensured startContainer is text
             range.setEnd(range.startContainer, range.startContainer.length);
         }
@@ -318,11 +318,15 @@ return function(writer) {
         
         // TODO add handling for when inside overlapping entity tags
         if (range.startContainer.parentNode != range.endContainer.parentNode) {
-            if (range.endOffset == 0 && range.endContainer.previousSibling == range.startContainer.parentNode) {
+            if (range.endOffset === 0 && range.endContainer.previousSibling === range.startContainer.parentNode) {
                 // fix for when the user double-clicks a word that's already been tagged
                 range.setEnd(range.startContainer, range.startContainer.length);
             } else {
-                return w.NO_COMMON_PARENT;
+                if (isStructTag) {
+                    return w.NO_COMMON_PARENT;
+                } else {
+                    return w.OVERLAP;
+                }
             }
         }
         
@@ -352,6 +356,36 @@ return function(writer) {
         return w.VALID;
     };
 
+    /**
+     * Check to see if any of the entities overlap.
+     * @returns {Boolean}
+     */
+    u.doEntitiesOverlap = function() {
+        // remove highlights
+        w.entitiesManager.highlightEntity();
+        
+        var overlap = false;
+        w.entitiesManager.eachEntity(function(id, entity) {
+            var markers = w.editor.dom.select('[name="'+id+'"]');
+            if (markers.length > 1) {
+                var start = markers[0];
+                var end = markers[markers.length-1];
+                var currentNode = start;
+                while (currentNode != end  && currentNode != null) {
+                    currentNode = currentNode.nextSibling;
+                    if (currentNode.nodeType === Node.ELEMENT_NODE && currentNode !== end) {
+                        overlap = true;
+                        break;
+                    }
+                }
+            }
+            if (overlap) {
+                return false; // stop looping through entities
+            }
+        });
+        return overlap;
+    };
+    
     u.isTagBlockLevel = function(tagName) {
         if (tagName == w.root) return true;
         return w.editor.schema.getBlockElements()[tagName] != null;
@@ -816,16 +850,18 @@ return function(writer) {
             }
         }
         
+        var i;
+        var len = parents.length;
         if (config.returnType == 'object') {
             var parentsObj = {};
-            for (var i = 0; i < parents.length; i++) {
+            for (i = 0; i < len; i++) {
                 var c = parents[i];
                 parentsObj[c.name] = c;
             }
             return parentsObj;
         } else if (config.returnType == 'names') {
             var names = [];
-            for (var i = 0; i < parents.length; i++) {
+            for (i = 0; i < len; i++) {
                 names.push(parents[i].name);
             }
             return names;

@@ -181,7 +181,7 @@ return function(writer, config) {
         
         if (doModeChange) {
             if (w.allowOverlap && editorMode !== 'xmlrdfoverlap') {
-                var overlaps = _doEntitiesOverlap();
+                var overlaps = w.utilities.doEntitiesOverlap();
                 if (overlaps) {
                     doModeChange = false;
                     $settingsDialog.one('dialogclose', function() {
@@ -239,29 +239,6 @@ return function(writer, config) {
         
         $('select[name="editormode"]', $settingsDialog).val(defaultSettings.mode);
         $('select[name="schema"]', $settingsDialog).val(defaultSettings.validationSchema);
-    };
-    
-    function _doEntitiesOverlap() {
-        // remove highlights
-        w.entitiesManager.highlightEntity();
-        
-        var overlap = false;
-        w.entitiesManager.eachEntity(function(id, entity) {
-            var markers = w.editor.dom.select('[name="' + id + '"]');
-            var start = markers[0];
-            var end = markers[1];
-            if (end != null) {
-                // check if end exists, if not, it's a note type entity
-                var currentNode = start;
-                while (currentNode != end  && currentNode != null) {
-                    currentNode = currentNode.nextSibling;
-                    if (currentNode.nodeType == 1 && currentNode.hasAttribute('_entity') && currentNode != end) {
-                        overlap = true;
-                    }
-                }
-            }
-        });
-        return overlap;
     };
     
     w.event('schemaAdded').subscribe(buildSchema);
