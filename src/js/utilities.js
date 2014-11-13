@@ -790,6 +790,7 @@ return function(writer) {
         for (var i = 0; i < tags.length; i++) {
             var tag = tags[i];
             if (tag !== '') {
+                tag = tag.replace(/\[\d+\]$/, ''); // remove any indexing
                 _queryDown(context, function(item) {
                     if (item['@name'] && item['@name'] === tag) {
                         context = item;
