@@ -302,10 +302,11 @@ return function(writer) {
                         node.wrapInner('<span id="tempSelection"/>');
                         tagger.removeEntity(tag.entity.id);
                         var selectionContents = $('#tempSelection', w.editor.getBody());
+                        var parentTag = selectionContents.parent();
                         w.editor.selection.select(selectionContents[0].firstChild);
                         w.editor.currentBookmark = w.editor.selection.getBookmark();
                         selectionContents.contents().unwrap();
-                        w.editor.execCommand('addSchemaTag', {key: params.key});
+                        w.editor.execCommand('addSchemaTag', {key: params.key, parentTag: parentTag});
                     }
                 }
             });

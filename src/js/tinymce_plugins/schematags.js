@@ -7,7 +7,7 @@
             //TODO: this needs to be more configurable.
             t.imageUrl = ed.writer.cwrcRootUrl+'img/';
             t.editor = ed;
-            t.currentKey = null;
+            t.currentTagName = null;
             t.action = null;
             
             t.ADD = 0;
@@ -99,10 +99,12 @@
             });
             
             t.editor.addCommand('addSchemaTag', function(params) {
-                var key = params.key;
-                var pos = params.pos;
                 var w = t.editor.writer;
+                
+                var key = params.key;
+                var parentTag = params.parentTag;
                 t.action = params.action;
+                
                 if (key == w.header) {
                     t.editor.execCommand('addStructureTag', {bookmark: t.editor.currentBookmark, attributes: {_tag: key}, action: t.action});
                     w.dialogManager.show('header');
@@ -128,6 +130,9 @@
                     return;
                 }
                 
+                var path = t.editor.writer.utilities.getElementXPath(parentTag[0]);
+                path += '/'+key;
+                
                 // reset bookmark after possible modification by isSelectionValid
                 t.editor.currentBookmark = t.editor.selection.getBookmark(1);
                 if (tagId != null) {
@@ -135,26 +140,30 @@
                 }                
                 
                 t.mode = t.ADD;
-                t.showDialog(key, pos);
+                t.showDialog(key, path);
             });
             
-            t.editor.addCommand('editSchemaTag', function(tag, pos) {
-                var key = tag.attr('_tag');
-                if (key == t.editor.writer.header) {
+            t.editor.addCommand('editSchemaTag', function(tag) {
+                var tagName = tag.attr('_tag');
+                if (tagName == t.editor.writer.header) {
                     t.editor.writer.d.show('header');
                     return;
                 }
-                t.currentKey = key;
+                
+                var path = t.editor.writer.utilities.getElementXPath(tag[0]);
+                
+                t.currentTagName = tagName;
                 t.tag = tag;
                 t.mode = t.EDIT;
-                t.showDialog(key, pos);
+                t.showDialog(tagName, path);
             });
             
             t.editor.addCommand('changeSchemaTag', function(params) {
-                t.currentKey = params.key;
+                t.currentTagName = params.key;
                 t.tag = params.tag;
+                var path = t.editor.writer.utilities.getElementXPath(params.tag[0]);
                 t.mode = t.EDIT;
-                t.showDialog(params.key, params.pos);
+                t.showDialog(params.key, path);
             });
             
             $(document.body).append(''+
@@ -175,6 +184,7 @@
                 closeOnEscape: false,
                 height: 460,
                 width: 550,
+                minHeight: 400,
                 minWidth: 510,
                 autoOpen: false,
                 open: function(event, ui) {
@@ -226,9 +236,9 @@
                     icon_src: t.imageUrl + 'tag_blue.png',
                     onclick : function() {
                         if (mode == 'change') {
-                            t.editor.execCommand('changeTag', {key: this.key, pos: pos, id: $(node).attr('id')});
+                            t.editor.execCommand('changeTag', {key: this.key, id: $(node).attr('id')});
                         } else {
-                            t.editor.execCommand('addSchemaTag', {key: this.key, pos: pos});
+                            t.editor.execCommand('addSchemaTag', {key: this.key, parentTag: $(node)});
                         }
                     }
                 });
@@ -243,7 +253,7 @@
             menuitem.setDisabled(true);
         },
         
-        showDialog: function(key, pos) {
+        showDialog: function(tagName, tagPath) {
             var t = this;
             var w = t.editor.writer;
             
@@ -254,7 +264,7 @@
                 structsEntry = w.structs[$(t.tag).attr('id')];
             }
             
-            t.currentKey = key;
+            t.currentTagName = tagName;
             
             t.isDirty = false;
             
@@ -262,12 +272,12 @@
             
             $('.attributeSelector ul, .level1Atts, .highLevelAtts, .schemaHelp', parent).empty();
             
-            var helpText = this.editor.execCommand('getDocumentationForTag', key);
+            var helpText = this.editor.execCommand('getDocumentationForTag', tagName);
             if (helpText != '') {
-                $('.schemaHelp', parent).html('<h3>'+key+' Documentation</h3><p>'+helpText+'</p>');
+                $('.schemaHelp', parent).html('<h3>'+tagName+' Documentation</h3><p>'+helpText+'</p>');
             }
             
-            var atts = t.editor.writer.utilities.getChildrenForTag({tag: key, type: 'attribute', returnType: 'array'});
+            var atts = t.editor.writer.utilities.getChildrenForTag({tag: tagName, path: tagPath, type: 'attribute', returnType: 'array'});
             
             // build atts
             var level1Atts = '';
@@ -369,12 +379,8 @@
                 t.isDirty = true;
             });
             
-            t.schemaDialog.dialog('option', 'title', key);
-            if (pos) {
-                t.schemaDialog.dialog('option', 'position', [pos.x, pos.y]);
-            } else {
-                t.schemaDialog.dialog('option', 'position', 'center');
-            }
+            t.schemaDialog.dialog('option', 'title', tagName);
+//            t.schemaDialog.dialog('option', 'position', 'center');
             t.schemaDialog.dialog('open');
             
             $('#schemaOkButton').focus();
@@ -411,7 +417,7 @@
                 return;
             }
             
-            attributes._tag = t.currentKey;
+            attributes._tag = t.currentTagName;
             
             t.schemaDialog.dialog('close');
             // check if beforeClose cancelled or not

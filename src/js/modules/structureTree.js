@@ -591,7 +591,8 @@ return function(config) {
                         var actionType = parentText.match(/\w+$/)[0].toLowerCase();
                         w.editor.currentBookmark = w.editor.selection.getBookmark(1);
                         w.editor.currentBookmark.tagId = tagInfo.id;
-                        w.editor.execCommand('addSchemaTag', {key: obj.item.key, action: actionType});
+                        var parentTag = $('#'+tagInfo.id, w.editor.getBody());
+                        w.editor.execCommand('addSchemaTag', {key: obj.item.key, action: actionType, parentTag: parentTag});
                     }
                 }
             };
