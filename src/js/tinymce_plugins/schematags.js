@@ -309,8 +309,13 @@
                         var attVal, selected;
                         for (var j = 0; j < att.choices.length; j++) {
                             attVal = att.choices[j];
-                            selected = att.defaultValue == attVal ? ' selected="selected"' : '';
-                            currAttString += '<option value="'+attVal+'"'+selected+'>'+attVal+'</option>';
+                            if (typeof attVal === 'object') {
+                                attVal = attVal['#text'];
+                            }
+                            if (attVal !== undefined) {
+                                selected = att.defaultValue == attVal ? ' selected="selected"' : '';
+                                currAttString += '<option value="'+attVal+'"'+selected+'>'+attVal+'</option>';
+                            }
                         }
                         currAttString += '</select>';
 //                    } else if ($('ref', attDef).length > 0) {
