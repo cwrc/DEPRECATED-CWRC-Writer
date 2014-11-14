@@ -3,10 +3,12 @@ define([
     'jquery-ui',
     'cwrcDialogs',
     'dialogs/addSchema','dialogs/fileManager','dialogs/header','dialogs/message','dialogs/triple',
-    'dialogs/cwrcPerson','dialogs/cwrcOrg','dialogs/cwrcPlace','dialogs/cwrcTitle','dialogs/cwrcCitation'
+    'dialogs/cwrcPerson','dialogs/cwrcOrg','dialogs/cwrcPlace','dialogs/cwrcTitle','dialogs/cwrcCitation',
+    'dialogs/schemaTags'
 ], function($, jqueryui, cD,
         AddSchema, FileManager, Header, Message, Triple,
-        CwrcPerson, CwrcOrg, CwrcPlace, CwrcTitle, CwrcCitation
+        CwrcPerson, CwrcOrg, CwrcPlace, CwrcTitle, CwrcCitation,
+        SchemaTags
 ) {
 
 // add event listeners to all of our jquery ui dialogs
@@ -56,6 +58,7 @@ return function(writer) {
         title: new CwrcTitle(w),
         citation: new CwrcCitation(w),
         place: new CwrcPlace(w),
+        schemaTags: new SchemaTags(w)
     };
     
     // log in for CWRC-Dialogs

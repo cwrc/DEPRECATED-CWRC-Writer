@@ -224,7 +224,7 @@
                 title: 'Edit Tag',
                 icon_src: url+'tag_blue_edit.png',
                 onclick : function() {
-                    ed.execCommand('editTag', null, t.curPos);
+                    ed.execCommand('editTag', null);
                 }
             }).setDisabled(col);
             m.add({

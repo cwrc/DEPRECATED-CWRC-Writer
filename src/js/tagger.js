@@ -255,7 +255,7 @@ return function(writer) {
     };
     
     // a general edit function for entities and structure tags
-    tagger.editTag = function(id, pos) {
+    tagger.editTag = function(id) {
         var tag = tagger.getCurrentTag(id);
         if (tag.entity) {
             w.editor.currentBookmark = w.editor.selection.getBookmark(1);
@@ -263,7 +263,7 @@ return function(writer) {
             w.dialogManager.show(type, {type: type, entry: tag.entity});
         } else if (tag.struct) {
             if ($(tag.struct, w.editor.getBody()).attr('_tag')) {
-                w.editor.execCommand('editSchemaTag', tag.struct, pos);
+                w.dialogManager.schemaTags.editSchemaTag(tag.struct);
             } else {
                 alert('Tag not recognized!');
             }
@@ -306,13 +306,13 @@ return function(writer) {
                         w.editor.selection.select(selectionContents[0].firstChild);
                         w.editor.currentBookmark = w.editor.selection.getBookmark();
                         selectionContents.contents().unwrap();
-                        w.editor.execCommand('addSchemaTag', {key: params.key, parentTag: parentTag});
+                        w.dialogManager.schemaTags.addSchemaTag({key: params.key, parentTag: parentTag});
                     }
                 }
             });
         } else if (tag.struct) {
             if ($(tag.struct, w.editor.getBody()).attr('_tag')) {
-                w.editor.execCommand('changeSchemaTag', {tag: tag.struct, key: params.key});
+                w.dialogManager.schemaTags.changeSchemaTag({tag: tag.struct, key: params.key});
             }
         } 
     };

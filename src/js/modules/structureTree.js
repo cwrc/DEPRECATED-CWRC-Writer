@@ -592,7 +592,7 @@ return function(config) {
                         w.editor.currentBookmark = w.editor.selection.getBookmark(1);
                         w.editor.currentBookmark.tagId = tagInfo.id;
                         var parentTag = $('#'+tagInfo.id, w.editor.getBody());
-                        w.editor.execCommand('addSchemaTag', {key: obj.item.key, action: actionType, parentTag: parentTag});
+                        w.dialogManager.schemaTags.addSchemaTag({key: obj.item.key, action: actionType, parentTag: parentTag});
                     }
                 }
             };
