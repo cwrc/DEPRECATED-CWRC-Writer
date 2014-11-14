@@ -203,7 +203,7 @@
                 m.element.addClass('defaultSkin');
                 m.element.addClass('mceDropDown');
             });
-            ed.execCommand('createSchemaTagsControl', {menu: tagMenu, disabled: col, pos: t.curPos});
+            ed.execCommand('createSchemaTagsControl', {menu: tagMenu, disabled: col});
             m.addSeparator();
             
             col = (ed.writer.entitiesManager.getCurrentEntity() == null && ed.currentStruct == null);
@@ -218,7 +218,7 @@
                 m.element.addClass('defaultSkin');
                 m.element.addClass('mceDropDown');
             });
-            ed.execCommand('createSchemaTagsControl', {menu: changeTagMenu, disabled: col, pos: t.curPos, mode: 'change'});
+            ed.execCommand('createSchemaTagsControl', {menu: changeTagMenu, disabled: col, mode: 'change'});
             
             m.add({
                 title: 'Edit Tag',

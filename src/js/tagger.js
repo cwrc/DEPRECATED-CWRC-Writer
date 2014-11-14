@@ -312,7 +312,7 @@ return function(writer) {
             });
         } else if (tag.struct) {
             if ($(tag.struct, w.editor.getBody()).attr('_tag')) {
-                w.editor.execCommand('changeSchemaTag', {tag: tag.struct, pos: params.pos, key: params.key});
+                w.editor.execCommand('changeSchemaTag', {tag: tag.struct, key: params.key});
             }
         } 
     };

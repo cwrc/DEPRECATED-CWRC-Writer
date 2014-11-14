@@ -15,6 +15,8 @@ $.extend($.ui.dialog.prototype.options, {
         $(event.target).on('dialogopen', function(event) {
             // wrap our dialogs in the cwrc css scope
             $(event.target).parent('.ui-dialog').prev('.ui-widget-overlay').andSelf().wrapAll('<div class="cwrc" />');
+            // centre the dialog
+            $(this).dialog('option', 'position', {my: 'center', at: 'center', of: window});
             // resize if necessary
             var docHeight = $(document).height();
             if ($(this).dialog('option', 'height') >= docHeight) {

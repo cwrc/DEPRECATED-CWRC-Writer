@@ -380,7 +380,6 @@
             });
             
             t.schemaDialog.dialog('option', 'title', tagName);
-//            t.schemaDialog.dialog('option', 'position', 'center');
             t.schemaDialog.dialog('open');
             
             $('#schemaOkButton').focus();
