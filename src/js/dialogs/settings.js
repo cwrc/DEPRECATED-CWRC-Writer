@@ -121,7 +121,6 @@ return function(writer, config) {
             click: function() {
                 setDefaults();
                 applySettings();
-                $settingsDialog.dialog('close');
             },
         },{
             text: 'Cancel',
@@ -132,7 +131,6 @@ return function(writer, config) {
             text: 'Ok',
             click: function() {
                 applySettings();
-                $settingsDialog.dialog('close');
             }
         }]
     });
@@ -180,20 +178,36 @@ return function(writer, config) {
         }
         
         if (doModeChange) {
+            var message;
+            var existingOverlaps = w.utilities.doEntitiesOverlap();
             if (w.allowOverlap && editorMode !== 'xmlrdfoverlap') {
-                var overlaps = w.utilities.doEntitiesOverlap();
-                if (overlaps) {
-                    doModeChange = false;
-                    $settingsDialog.one('dialogclose', function() {
-                        w.dialogManager.show('message', {
-                            title: 'Error',
-                            msg: 'You have overlapping entities and are trying to change to a mode which doesn\'t permit overlaps.  Please remove the overlapping entities and try again.',
-                            type: 'error'
-                        });
+                if (editorMode === 'xml') {
+                    message = 'If you select the XML only mode, no RDF will be created when tagging entities.<br/>Furthermore, the existing RDF annotations will be discarded.<br/><br/>Do you wish to continue?';
+                } else if (existingOverlaps) {
+                    message = 'You have overlapping entities and are attemping to switch to a mode which prohibits them.<br/>The overlapping entities will be discarded if you continue.<br/><br/>Do you wish to continue?';
+                }
+                if (message !== undefined) {
+                    w.dialogManager.confirm({
+                        title: 'Warning',
+                        msg: message,
+                        callback: function(confirmed) {
+                            if (confirmed) {
+                                w.utilities.removeOverlappingEntities();
+                                // TODO convert boundary type entities to tag type
+                                doApplySettings(editorMode);
+                            }
+                        }
                     });
                 }
+            } else {
+                doApplySettings(editorMode);
             }
-            if (doModeChange) {
+        } else {
+            doApplySettings();
+        }
+        
+        function doApplySettings(editorMode) {
+            if (editorMode !== undefined) {
                 if (editorMode === 'xml') {
                     w.mode = w.XML;
                     w.allowOverlap = false;
@@ -205,30 +219,32 @@ return function(writer, config) {
                     w.allowOverlap = true;
                 }
             }
+            
+            settings.fontSize = $('select[name="fontsize"]', $settingsDialog).val();
+            settings.fontFamily = $('select[name="fonttype"]', $settingsDialog).val();
+            
+            if (settings.showEntityBrackets != $('#showentitybrackets').prop('checked')) {
+                w.editor.$('body').toggleClass('showEntityBrackets');
+            }
+            settings.showEntityBrackets = $('#showentitybrackets').prop('checked');
+            
+            if (settings.showStructBrackets != $('#showstructbrackets').prop('checked')) {
+                w.editor.$('body').toggleClass('showStructBrackets');
+            }
+            settings.showStructBrackets = $('#showstructbrackets').prop('checked');
+            
+            // TODO add handling for schemaChanged
+            w.schemaManager.schemaId = $('select[name="schema"]', $settingsDialog).val();
+            w.event('schemaChanged').publish(w.schemaManager.schemaId);
+            
+            var styles = {
+                fontSize: settings.fontSize,
+                fontFamily: settings.fontFamily
+            };
+            w.editor.dom.setStyles(w.editor.dom.getRoot(), styles);
+            
+            $settingsDialog.dialog('close');
         }
-        
-        settings.fontSize = $('select[name="fontsize"]', $settingsDialog).val();
-        settings.fontFamily = $('select[name="fonttype"]', $settingsDialog).val();
-        
-        if (settings.showEntityBrackets != $('#showentitybrackets').prop('checked')) {
-            w.editor.$('body').toggleClass('showEntityBrackets');
-        }
-        settings.showEntityBrackets = $('#showentitybrackets').prop('checked');
-        
-        if (settings.showStructBrackets != $('#showstructbrackets').prop('checked')) {
-            w.editor.$('body').toggleClass('showStructBrackets');
-        }
-        settings.showStructBrackets = $('#showstructbrackets').prop('checked');
-        
-        // TODO add handling for schemaChanged
-        w.schemaManager.schemaId = $('select[name="schema"]', $settingsDialog).val();
-        w.event('schemaChanged').publish(w.schemaManager.schemaId);
-        
-        var styles = {
-            fontSize: settings.fontSize,
-            fontFamily: settings.fontFamily
-        };
-        w.editor.dom.setStyles(w.editor.dom.getRoot(), styles);
     };
     
     function setDefaults() {

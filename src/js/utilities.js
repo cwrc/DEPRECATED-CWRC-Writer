@@ -373,7 +373,7 @@ return function(writer) {
                 var currentNode = start;
                 while (currentNode != end  && currentNode != null) {
                     currentNode = currentNode.nextSibling;
-                    if (currentNode.nodeType === Node.ELEMENT_NODE && currentNode !== end) {
+                    if (currentNode && currentNode.nodeType === Node.ELEMENT_NODE && currentNode !== end) {
                         overlap = true;
                         break;
                     }
@@ -384,6 +384,28 @@ return function(writer) {
             }
         });
         return overlap;
+    };
+    
+    /**
+     * Removes entities that overlap other entities.
+     */
+    u.removeOverlappingEntities = function() {
+        w.entitiesManager.highlightEntity();
+        
+        w.entitiesManager.eachEntity(function(id, entity) {
+            var markers = w.editor.dom.select('[name="'+id+'"]');
+            if (markers.length > 1) {
+                var start = markers[0];
+                var end = markers[markers.length-1];
+                var currentNode = start;
+                while (currentNode != end  && currentNode != null) {
+                    currentNode = currentNode.nextSibling;
+                    if (currentNode && currentNode.nodeType === Node.ELEMENT_NODE && currentNode !== end) {
+                        w.tagger.removeEntity(id);
+                    }
+                }
+            }
+        });
     };
     
     u.isTagBlockLevel = function(tagName) {

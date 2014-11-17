@@ -60,6 +60,7 @@ EntitiesManager.prototype = {
     
     /**
      * Remove an entity from the collection.
+     * NB: does not remove any associated tags in the document.
      * @fires Writer#entityRemoved
      * @param {String} id Then entity ID.
      * @param id
