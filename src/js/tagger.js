@@ -674,7 +674,7 @@ return function(writer) {
         var tagName = w.utilities.getTagForEditor(attributes._tag);
         var open_tag = '<'+tagName;
         for (var key in attributes) {
-            if (key.match(/^_/) != null || w.converter.reservedAttributes[key] !== true) {
+            if (key === 'id' || key.match(/^_/) != null || w.converter.reservedAttributes[key] !== true) {
                 open_tag += ' '+key+'="'+attributes[key]+'"';
             }
         }
