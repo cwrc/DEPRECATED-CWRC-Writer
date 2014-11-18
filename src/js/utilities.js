@@ -370,17 +370,10 @@ return function(writer) {
             if (markers.length > 1) {
                 var start = markers[0];
                 var end = markers[markers.length-1];
-                var currentNode = start;
-                while (currentNode != end  && currentNode != null) {
-                    currentNode = currentNode.nextSibling;
-                    if (currentNode && currentNode.nodeType === Node.ELEMENT_NODE && currentNode !== end) {
-                        overlap = true;
-                        break;
-                    }
+                if (start.parentNode !== end.parentNode) {
+                    overlap = true;
+                    return false; // stop looping through entities
                 }
-            }
-            if (overlap) {
-                return false; // stop looping through entities
             }
         });
         return overlap;
@@ -397,12 +390,44 @@ return function(writer) {
             if (markers.length > 1) {
                 var start = markers[0];
                 var end = markers[markers.length-1];
-                var currentNode = start;
-                while (currentNode != end  && currentNode != null) {
-                    currentNode = currentNode.nextSibling;
-                    if (currentNode && currentNode.nodeType === Node.ELEMENT_NODE && currentNode !== end) {
-                        w.tagger.removeEntity(id);
+                if (start.parentNode !== end.parentNode) {
+                    w.tagger.removeEntity(id);
+                }
+            }
+        });
+    };
+    
+    /**
+     * Converts boundary entities (i.e. entities that overlapped) to tag entities, if possible.
+     */
+    u.convertBoundaryEntitiesToTags = function() {
+        w.entitiesManager.eachEntity(function(id, entity) {
+            var markers = w.editor.dom.select('[name="'+id+'"]');
+            if (markers.length > 1) {
+                var canConvert = true;
+                var parent = markers[0].parentNode;
+                for (var i = 0; i < markers.length; i++) {
+                    if (markers[i].parentNode !== parent) {
+                        canConvert = false;
+                        break;
                     }
+                }
+                if (canConvert) {
+                    var $tag = $(w.editor.dom.create('span', {}, ''));
+                    var atts = markers[0].attributes;
+                    for (var i = 0; i < atts.length; i++) {
+                        var att = atts[i];
+                        $tag.attr(att.name, att.value);
+                    }
+                    
+                    $tag.addClass('end');
+                    $tag.attr('id', $tag.attr('name'));
+                    $tag.attr('_tag', entity.getTag());
+                    // TODO add entity.getAttributes() as well?
+                    
+                    $(markers).wrapAll($tag);
+                    $(markers).contents().unwrap();
+                    // TODO normalize child text?
                 }
             }
         });

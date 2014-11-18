@@ -180,6 +180,7 @@ return function(writer, config) {
         if (doModeChange) {
             var message;
             var existingOverlaps = w.utilities.doEntitiesOverlap();
+            // overlap currently allowed and we're switching to a non-overlap mode
             if (w.allowOverlap && editorMode !== 'xmlrdfoverlap') {
                 if (editorMode === 'xml') {
                     message = 'If you select the XML only mode, no RDF will be created when tagging entities.<br/>Furthermore, the existing RDF annotations will be discarded.<br/><br/>Do you wish to continue?';
@@ -193,11 +194,13 @@ return function(writer, config) {
                         callback: function(confirmed) {
                             if (confirmed) {
                                 w.utilities.removeOverlappingEntities();
-                                // TODO convert boundary type entities to tag type
+                                w.utilities.convertBoundaryEntitiesToTags();
                                 doApplySettings(editorMode);
                             }
                         }
                     });
+                } else {
+                    doApplySettings(editorMode);
                 }
             } else {
                 doApplySettings(editorMode);
