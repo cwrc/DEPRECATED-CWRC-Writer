@@ -191,6 +191,27 @@
                     ed.writer.tagger.addEntity('title');
                 }
             }).setDisabled(col);
+            m.add({
+                title: 'Tag Correction',
+                icon_src: url+'error.png',
+                onclick : function() {
+                    ed.writer.tagger.addEntity('correction');
+                }
+            }).setDisabled(col);
+            m.add({
+                title: 'Tag Keyword',
+                icon_src: url+'page_key.png',
+                onclick : function() {
+                    ed.writer.tagger.addEntity('keyword');
+                }
+            }).setDisabled(col);
+            m.add({
+                title: 'Tag Link',
+                icon_src: url+'link.png',
+                onclick : function() {
+                    ed.writer.tagger.addEntity('link');
+                }
+            }).setDisabled(col);
             
             m.addSeparator();
             var tagMenu = m.addMenu({
