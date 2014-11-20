@@ -1,7 +1,7 @@
 {
     "cwrcRootUrl": "",
     "cwrcDialogs": {
-        "cwrcApiUrl": "http://apps.testing.cwrc.ca/services/ccm-api/",
+        "cwrcApiUrl": "http://cwrc-dev-01.srv.ualberta.ca/islandora/cwrc_entities/",
         "geonameUrl": "http://apps.testing.cwrc.ca/cwrc-mtp/geonames/",
         "viafUrl": "http://apps.testing.cwrc.ca/services/viaf/",
         "schemas": {

@@ -109,7 +109,7 @@ function CwrcEntity(type, url, jq) {
                 var restrictions = searchObject.restrictions !== undefined ? searchObject.restrictions : [];
 
                 return jq.ajax({
-                        url : url + '/' + type + "/search",
+                        url : url + "search/" + type,  
                         type : 'GET',
                         async : true,
                         data: {
@@ -223,9 +223,10 @@ function CwrcApi(url, jq) {
         }
 
         // Class creation
-        if (!url.indexOf("/", this.length - 1) !== -1) {
+        if (url.indexOf("/", (url.length-1) ) == -1) {
                 url = url + "/";
         }
+
         // Private variables
         var _this = this;
 
