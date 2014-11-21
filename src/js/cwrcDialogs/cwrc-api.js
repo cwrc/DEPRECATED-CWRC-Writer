@@ -167,7 +167,7 @@ function CwrcEntity(type, url, jq) {
                         }
                 });
 
-                return jq.parseJSON(result);
+                return result;
         }
 
         this.modifyEntity = function(pid, data) {
@@ -189,7 +189,8 @@ function CwrcEntity(type, url, jq) {
                         }
                 });
 
-                return jq.parseJSON(result);
+                //return jq.parseJSON(result);
+                return result;
         }
 
         this.deleteEntity = function(pid) {
@@ -210,7 +211,7 @@ function CwrcEntity(type, url, jq) {
                         }
                 });
 
-                return jq.parseJSON(result);
+                return result;
         }
         
         this.listEntity = function(totalPerPage, page){
