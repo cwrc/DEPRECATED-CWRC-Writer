@@ -134,7 +134,7 @@ function CwrcEntity(type, url, jq) {
                 var result = result;
 
                 jq.ajax({
-                        url : url + '/' + type + "/" + pid,
+                        url : url + type + "/" + pid,
                         type : 'GET',
                         async : false,
                         success : function(data) {
@@ -152,7 +152,7 @@ function CwrcEntity(type, url, jq) {
                 var result = result;
 
                 jq.ajax({
-                        url : url + '/' + type,
+                        url : url + type,
                         type : 'POST',
                         data : {
                                 method : 'post',
@@ -174,7 +174,7 @@ function CwrcEntity(type, url, jq) {
                 var result = result;
 
                 jq.ajax({
-                        url : url + '/' + type + '/' + pid,
+                        url : url + type + '/' + pid,
                         type : 'POST',
                         data : {
                                 method : 'put',
@@ -196,7 +196,7 @@ function CwrcEntity(type, url, jq) {
                 var result = result;
 
                 jq.ajax({
-                        url : url + '/' + type + "/" + pid,
+                        url : url + type + "/" + pid,
                         type : 'POST',
                         async : false,
                         data: {
