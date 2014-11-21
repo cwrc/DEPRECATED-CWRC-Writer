@@ -112,6 +112,7 @@ function CwrcEntity(type, url, jq) {
                         url : url + "search/" + type,  
                         type : 'GET',
                         async : true,
+                        dataType : "json",
                         data: {
                                 query: searchObject.query,
                                 limit: limit,
@@ -119,7 +120,7 @@ function CwrcEntity(type, url, jq) {
                                 restrictions: restrictions
                         },
                         success : function(data) {
-                                result = data === "" ? {} : JSON.parse(data);
+                                result = data === "" ? {} : data;
                                 
                                 searchObject.success(result);
                         },

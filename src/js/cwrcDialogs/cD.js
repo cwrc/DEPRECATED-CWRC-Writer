@@ -2215,7 +2215,7 @@ $(function(){
 		}
 
 		search.processCWRCSearch = function(queryString, page) {
-			var perPage = 100;
+            var perPage = 100;
 			search.linkedDataSources.cwrc.page(page);
 			
 			$(".linkedDataMessage").text("");
