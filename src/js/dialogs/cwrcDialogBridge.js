@@ -26,8 +26,8 @@ return function(writer, config) {
                     });
                 } else {
                     var error = 'Error creating entity';
-                    if (result.response.error !== undefined) {
-                        error += ': '+result.response.error;
+                    if (result.response.message !== undefined) {
+                        error += ': '+result.response.message;
                     }
                     w.dialogManager.show('message', {
                         title: 'Error ', msg: error, modal: true, type: 'error'
