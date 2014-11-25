@@ -84,11 +84,11 @@ return function(config) {
                     var tag = tags[i];
                     var tagName = tag.match(/^\w+(?=\[)?/);
                     if (tagName != null) {
-                        var index = tag.match(/\d+/);
+                        var index = tag.match(/\[(\d+)\]/);
                         if (index === null) {
                             index = 0;
                         } else {
-                            index = parseInt(index[0]);
+                            index = parseInt(index[1]);
                             index--; // xpath is 1-based and "eq()" is 0-based
                         }
                         editorPath += '*[_tag="'+tagName[0]+'"]:eq('+index+') > ';
