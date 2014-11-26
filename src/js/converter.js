@@ -80,14 +80,19 @@ return function(writer) {
         }
         
         var root = body.children('[_tag='+w.root+']');
-        // make sure TEI has the right namespace for validation purposes
+        // make sure the root has the right namespaces for validation purposes
+        var struct = w.structs[root.attr('id')];
+        // add them to the structs entry and they'll get added to the markup later
+        struct['xmlns:cw'] = 'http://cwrc.ca/ns/cw#';
         if (w.root === 'TEI') {
-            var struct = w.structs[root.attr('id')];
-            // add them to the structs entry and they'll get added to the markup later
             struct['xmlns'] = 'http://www.tei-c.org/ns/1.0';
-            struct['xmlns:rdf'] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
-            struct['xmlns:w'] = 'http://cwrctc.artsrn.ualberta.ca/#';
         }
+        if (includeRDF) {
+            struct['xmlns:rdf'] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
+        } else {
+            delete struct['xmlns:rdf'];
+        }
+        
         var tags = _nodeToStringArray(root);
         xmlString += tags[0];
         
@@ -102,6 +107,11 @@ return function(writer) {
         bodyString = bodyString.replace(/\uFEFF/g, ''); // remove characters inserted by node selecting
         
         body.replaceWith(clone);
+        
+        if (includeRDF === false) {
+            // strip out RDF related ids
+            bodyString = bodyString.replace(/\s?(annotation|offset)Id=".*?"/g, '');
+        }
         
         if (separateRDF) {
             xmlString = bodyString + tags[1];
