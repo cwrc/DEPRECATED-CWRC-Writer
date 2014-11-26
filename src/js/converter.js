@@ -494,6 +494,7 @@ return function(writer) {
      */
     converter.processDocument = function(doc) {
         var rootName = doc.firstChild.nodeName;
+        var schemaId;
         // TODO need a better way of tying this to the schemas config
         // grab the schema from xml-model
         if (rootName == 'xml-model') {
@@ -501,7 +502,6 @@ return function(writer) {
             var schemaUrl = xmlModelData.match(/href="([^"]*)"/)[1];
             var urlParts = schemaUrl.match(/^(.*):\/\/([a-z\-.]+)(?=:[0-9]+)?\/(.*)/);
             var fileName = urlParts[3];
-            var schemaId = '';
             if (fileName.indexOf('events') != -1) {
                 schemaId = 'events';
             } else if (fileName.toLowerCase().indexOf('biography') != -1) {
@@ -519,24 +519,29 @@ return function(writer) {
                     url: schemaUrl
                 };
             }
-            w.schemaManager.loadSchema(schemaId, false, function() {
-                doProcessing(doc);
-            });
         // determine the schema based on the root element
         } else {
             rootName = rootName.toLowerCase();
-            if (rootName != w.root.toLowerCase()) {
-                // roots don't match so load the appropriate schema
-                var schemaId = 'tei';
-                if (rootName === 'events') {
-                    schemaId = 'events';
-                } else if (rootName === 'biography') {
-                    schemaId = 'biography';
-                } else if (rootName === 'writing') {
-                    schemaId = 'writing';
-                } else if (rootName === 'cwrc') {
-                    schemaId = 'cwrcEntry';
-                }
+            if (rootName === 'tei') {
+                schemaId = 'tei';
+            } else if (rootName === 'events') {
+                schemaId = 'events';
+            } else if (rootName === 'biography') {
+                schemaId = 'biography';
+            } else if (rootName === 'writing') {
+                schemaId = 'writing';
+            } else if (rootName === 'cwrc') {
+                schemaId = 'cwrcEntry';
+            }
+        }
+        if (schemaId === undefined) {
+            w.dialogManager.show('message', {
+                title: 'Error',
+                msg: 'Couldn\'t load the document because the schema could not be determined.',
+                type: 'error'
+            });
+        } else {
+            if (schemaId !== w.schemaManager.schemaId) {
                 w.schemaManager.loadSchema(schemaId, false, function() {
                     doProcessing(doc);
                 });
@@ -559,13 +564,10 @@ return function(writer) {
         // process RDF and/or entities
         if (rdfs.length) {
             var mode = parseInt(rdfs.find('cw\\:mode, mode').first().text());
-            // TODO determine overlap
             if (mode === w.XML) {
                 w.mode = w.XML;
-//                w.allowOverlap = false;
             } else {
                 w.mode = w.XMLRDF;
-//                w.allowOverlap = true;
             }
             processRdf(rdfs);
             rdfs.remove();
@@ -583,6 +585,12 @@ return function(writer) {
             w.editor.setContent(editorString, {format: 'raw'}); // format is raw to prevent html parser and serializer from messing up whitespace
             
             insertEntities();
+            var isOverlapping = w.utilities.doEntitiesOverlap();
+            if (isOverlapping) {
+                w.allowOverlap = true;
+            } else {
+                w.allowOverlap = false;
+            }
             
             w.event('documentLoaded').publish();
             
@@ -599,18 +607,22 @@ return function(writer) {
             // reset the undo manager
             w.editor.undoManager.clear();
         
-//            var msg;
-//            if (w.mode == w.XML) {
-//                msg = 'This document is set to edit in XML (no overlap) mode: XML and RDF will be created with no overlapping annotations.';
-//            } else {
-//                msg = 'This document is set to edit in XML and RDF (overlapping entities) mode; XML and RDF will be kept in sync where possible, but where overlap occurs RDF will be created without corresponding XML.';
-//            }
-//            
-//            w.dialogManager.show('message', {
-//                title: 'CWRC-Writer Mode',
-//                msg: msg,
-//                type: 'info'
-//            });
+            var msg;
+            if (w.mode === w.XML) {
+                msg = '<b>XML only</b><br/>Only XML tags and no RDF/Semantic Web annotations will be created.';
+            } else {
+                if (w.allowOverlap) {
+                    msg = '<b>XML and RDF (overlap)</b><br/>XML tags and RDF/Semantic Web annotations equivalent to the XML tags will be created, to the extent that the hierarchy of the XML schema allows. Annotations that overlap will be created in RDF only, with no equivalent XML tags.';
+                } else {
+                    msg = '<b>XML and RDF (no overlap)</b><br/>XML tags and RDF/Semantic Web annotations equivalent to the XML tags will be created, consistent with the hierarchy of the XML schema, so annotations will not be allowed to overlap.';
+                }
+            }
+            
+            w.dialogManager.show('message', {
+                title: 'CWRC-Writer Mode',
+                msg: msg,
+                type: 'info'
+            });
         } else {
             w.dialogManager.show('message', {
                 title: 'Error',

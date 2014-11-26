@@ -128,7 +128,7 @@ return function(writer, config) {
                 $settingsDialog.dialog('close');
             }
         },{
-            text: 'Ok',
+            text: 'Apply',
             click: function() {
                 applySettings();
             }
