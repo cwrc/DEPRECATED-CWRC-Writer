@@ -831,22 +831,24 @@ return function(writer) {
      * @returns {Object}
      */
     u.getJsonEntryFromPath = function(path) {
-        var tags = path.split('/');
         var context = w.schemaManager.schemaJSON.grammar;
         var match = null;
+        var doGet = function(item) {
+            if (item['@name'] && item['@name'] === tag) {
+                context = item;
+                if (i === tags.length - 1) {
+                    match = item;
+                }
+                return true;
+            }
+        };
+        
+        var tags = path.split('/');
         for (var i = 0; i < tags.length; i++) {
             var tag = tags[i];
             if (tag !== '') {
                 tag = tag.replace(/\[\d+\]$/, ''); // remove any indexing
-                _queryDown(context, function(item) {
-                    if (item['@name'] && item['@name'] === tag) {
-                        context = item;
-                        if (i === tags.length - 1) {
-                            match = item;
-                        }
-                        return true;
-                    }
-                }, true);
+                _queryDown(context, doGet, true);
             }
         }
         return match;
