@@ -62,8 +62,8 @@ return function(writer) {
     };
     
     // log in for CWRC-Dialogs
-//    cD.initializeWithCookieData(null);
-    cD.initializeWithLogin('CWRC-WriterTestUser', 'quirkyCWRCwriter');
+    // cD.initializeWithCookieData(null);
+    // cD.initializeWithLogin('CWRC-WriterTestUser', 'quirkyCWRCwriter');
     
     if (w.initialConfig.cwrcDialogs != null) {
         var conf = w.initialConfig.cwrcDialogs;
