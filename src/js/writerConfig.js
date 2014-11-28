@@ -1,9 +1,9 @@
 {
     "cwrcRootUrl": "",
     "cwrcDialogs": {
-        "cwrcApiUrl": "http://cwrc-dev-01.srv.ualberta.ca/islandora/cwrc_entities/v1/",
-        "geonameUrl": "http://cwrc-dev-01.srv.ualberta.ca/cwrc-mtp/geonames/",
-        "viafUrl": "http://cwrc-dev-01.srv.ualberta.ca/services/viaf/",
+        "cwrcApiUrl": "http://apps.testing.cwrc.ca/islandora/cwrc_entities/v1/",
+        "geonameUrl": "http://apps.testing.cwrc.ca/cwrc-mtp/geonames/",
+        "viafUrl": "http://apps.testing.cwrc.ca/services/viaf/",
         "googleGeocodeUrl": "http://maps.googleapis.com/maps/api/geocode/xml",
         "schemas": {
             "person": "http://cwrc.ca/schemas/entities.rng",
