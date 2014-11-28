@@ -2,27 +2,33 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
 var cD = {};
 // Tree traversal
 $(function(){
+	cD = {};
 	(function(){
 		// Cwrc Api
 		var cwrcApi = null;
 		cD.setCwrcApi = function(url){
 			cwrcApi = new CwrcApi(url, $);
 		}
-		cD.setCwrcApi('http://apps.testing.cwrc.ca/services/ccm-api/');
-		//var cwrcApi = new CwrcApi('http://localhost/cwrc/', $);
 		
 		// Geonames Url
-		var geonameUrl = "http://apps.testing.cwrc.ca/cwrc-mtp/geonames/";
+		var geonameUrl = null; 
 		cD.setGeonameUrl = function(url){
 			geonameUrl = url;
 		}
 		
 		// Viaf Url
-		var viafUrl = "http://apps.testing.cwrc.ca/services/viaf/";
+		var viafUrl = null; 
 		cD.setViafUrl = function(url){
 			viafUrl = url;
 		}
 		
+
+		// Google geocode api url
+		var googleGeocodeUrl = null; 
+		cD.setGoogleGeocodeUrl = function(url){
+			googleGeocodeUrl = url;
+		}
+
 		// parameters
 
 		var params = {};
@@ -2253,6 +2259,10 @@ $(function(){
 			return xmlToString(search.linkedDataSources.geonames.response[id]);
 		}
 
+		search.processGoogleGeocodeData = function(id) {
+			return xmlToString(search.linkedDataSources.googlegeocode.response[id]);
+		}
+
 		search.processViafData = function(id) {
 			var url = viafUrl + "/" + id + "/viaf.xml";
 			var result = "";
@@ -2358,6 +2368,40 @@ $(function(){
 			});
 		}
 
+		search.processGoogleGeocodeSearch = function(queryString) {
+			$(".linkedDataMessage").text("");
+			$(".linkedDataMessage").removeClass("fa fa-spin fa-refresh");
+			$("#GoogleGeocodeDataMessage").addClass("fa fa-spin fa-refresh");
+			search.processData = search.processGoogleGeocodeData;
+			var quotedQueryString = encodeURI(queryString);
+			search.linkedDataSources.viaf.ajaxRequest = $.ajax({
+				url: googleGeocodeUrl,
+				// dataType : 'json',
+				dataType : "xml",
+				processData : false,
+				data : "address=" + quotedQueryString,
+				success: function(response) {
+					search.linkedDataSources.googlegeocode.response = [];
+					console.log(response);
+
+					$('GeocodeResponse result', response).each(function(index, spec){
+						search.linkedDataSources.googlegeocode.results.push(search.getResultFromGoogleGeocode(spec, index));
+						search.linkedDataSources.googlegeocode.response.push(spec);
+					});
+
+
+					
+					$(".linkedDataMessage").removeClass("fa fa-spin fa-refresh");
+					$("#GoogleGeocodeDataMessage").text("Results: " + search.linkedDataSources.googlegeocode.results().length);
+				},
+				error : function(xhr, ajaxOptions, thrownError) {
+					if (ajaxOptions !== "abort") {
+						console.log("Error " + ajaxOptions);	
+					}					
+				}
+			});
+		}
+
 		// Scraping functions 
 
 		search.scrapeResult = function() {
@@ -2440,7 +2484,7 @@ $(function(){
 			var anchor = $("<a></a>");
 			anchor.attr("target", "_blank");
 			anchor.attr("href", url);
-			anchor.append("URL:" + url);
+			anchor.append("URL: " + url);
 
 			return anchor;
 		}
@@ -2667,6 +2711,12 @@ $(function(){
 			"geonames": search.getLinkedDataSource({
 				"name": "GeoNames",
 				"processSearch": search.processGeoNameSearch,
+				"datatype": ["place"],
+				"paginate": null
+			}),
+			"googlegeocode" : search.getLinkedDataSource({
+				"name": "GoogleGeocode",
+				"processSearch": search.processGoogleGeocodeSearch,
 				"datatype": ["place"],
 				"paginate": null
 			})
@@ -2955,6 +3005,26 @@ $(function(){
 			
 			return xmlToString(head[0]);
 		}
+
+		search.htmlifyGoogleGeocodePlace = function(lat, lng, url) {
+			var head = $("<div></div>");
+			var list = $("<ul></ul>");
+			var listItem = $("<li></li>");
+			listItem.append("Latitude: " + lat);
+			list.append(listItem);
+			
+			listItem = $("<li></li>");
+			listItem.append("Longitude: " + lng);
+			list.append(listItem);
+
+			listItem = $("<li></li>");
+			listItem.append(search.getAnchor(url));
+			list.append(listItem);
+
+			head.append(list);
+			
+			return xmlToString(head[0]);
+		}
 		
 		search.getResultFromGeoName = function(specs, index) {
 			// specs has data and source
@@ -2969,8 +3039,25 @@ $(function(){
 				 $(specs).find("lat").text(),
 				 $(specs).find("lng").text(),
 				 $(specs).find("geonameid").text())
-				 };
+			};
 			
+			return that;
+		}
+
+		search.getResultFromGoogleGeocode = function(specs, index) {
+			var that = search.result();
+			that.id = index;
+			that.name = $(specs).find("formatted_address").text();
+
+			that.htmlify = function() {
+				var location = $(specs).find("geometry").find("location");
+				var url = "https://www.google.ca/maps/place/" + encodeURI($(specs).find("formatted_address").text());
+
+				return search.htmlifyGoogleGeocodePlace($(location).find("lat").text(), 
+														$(location).find("lng").text(), 
+														url);
+			}
+
 			return that;
 		}
 
@@ -3299,5 +3386,5 @@ $(function(){
 
 	})();
 });
-	return cD;
+return cD;
 });

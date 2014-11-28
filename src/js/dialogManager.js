@@ -63,13 +63,19 @@ return function(writer) {
     
     // log in for CWRC-Dialogs
 //    cD.initializeWithCookieData(null);
-    cD.initializeWithLogin('CWRC-WriterTestUser', 'quirkyCWRCwriter');
+//    cD.initializeWithLogin('CWRC-WriterTestUser', 'quirkyCWRCwriter');
     
-    if (w.initialConfig.cwrcDialogs != null) {
+    if (w.initialConfig.cwrcDialogs !== undefined) {
         var conf = w.initialConfig.cwrcDialogs;
-        if (conf.cwrcApiUrl != null) cD.setCwrcApi(conf.cwrcApiUrl);
-        if (conf.geonameUrl != null) cD.setGeonameUrl(conf.geonameUrl);
-        if (conf.viafUrl != null) cD.setViafUrl(conf.viafUrl);
+        if (conf.cwrcApiUrl) cD.setCwrcApi(conf.cwrcApiUrl);
+        if (conf.geonameUrl) cD.setGeonameUrl(conf.geonameUrl);
+        if (conf.viafUrl) cD.setViafUrl(conf.viafUrl);
+        if (conf.googleGeocodeUrl) cD.setGoogleGeocodeUrl(conf.googleGeocodeUrl);
+        if (conf.schemas) {
+            if (conf.schemas.person) cD.setPersonSchema(conf.schemas.person);
+            if (conf.schemas.place) cD.setPlaceSchema(conf.schemas.place);
+            if (conf.schemas.organization) cD.setOrganizationSchema(conf.schemas.organization);
+        }
     }
     
     var schemaDialogs = {};

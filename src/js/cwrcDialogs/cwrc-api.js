@@ -109,9 +109,10 @@ function CwrcEntity(type, url, jq) {
                 var restrictions = searchObject.restrictions !== undefined ? searchObject.restrictions : [];
 
                 return jq.ajax({
-                        url : url + '/' + type + "/search",
+                        url : url + "search/" + type,  
                         type : 'GET',
                         async : true,
+                        dataType : "json",
                         data: {
                                 query: searchObject.query,
                                 limit: limit,
@@ -119,7 +120,7 @@ function CwrcEntity(type, url, jq) {
                                 restrictions: restrictions
                         },
                         success : function(data) {
-                                result = data === "" ? {} : JSON.parse(data);
+                                result = data === "" ? {} : data;
                                 
                                 searchObject.success(result);
                         },
@@ -133,7 +134,7 @@ function CwrcEntity(type, url, jq) {
                 var result = result;
 
                 jq.ajax({
-                        url : url + '/' + type + "/" + pid,
+                        url : url + type + "/" + pid,
                         type : 'GET',
                         async : false,
                         success : function(data) {
@@ -151,7 +152,7 @@ function CwrcEntity(type, url, jq) {
                 var result = result;
 
                 jq.ajax({
-                        url : url + '/' + type,
+                        url : url + type,
                         type : 'POST',
                         data : {
                                 method : 'post',
@@ -166,14 +167,14 @@ function CwrcEntity(type, url, jq) {
                         }
                 });
 
-                return jq.parseJSON(result);
+                return result;
         }
 
         this.modifyEntity = function(pid, data) {
                 var result = result;
 
                 jq.ajax({
-                        url : url + '/' + type + '/' + pid,
+                        url : url + type + '/' + pid,
                         type : 'POST',
                         data : {
                                 method : 'put',
@@ -188,14 +189,15 @@ function CwrcEntity(type, url, jq) {
                         }
                 });
 
-                return jq.parseJSON(result);
+                //return jq.parseJSON(result);
+                return result;
         }
 
         this.deleteEntity = function(pid) {
                 var result = result;
 
                 jq.ajax({
-                        url : url + '/' + type + "/" + pid,
+                        url : url + type + "/" + pid,
                         type : 'POST',
                         async : false,
                         data: {
@@ -209,7 +211,7 @@ function CwrcEntity(type, url, jq) {
                         }
                 });
 
-                return jq.parseJSON(result);
+                return result;
         }
         
         this.listEntity = function(totalPerPage, page){
@@ -223,9 +225,10 @@ function CwrcApi(url, jq) {
         }
 
         // Class creation
-        if (!url.indexOf("/", this.length - 1) !== -1) {
+        if (url.indexOf("/", (url.length-1) ) == -1) {
                 url = url + "/";
         }
+
         // Private variables
         var _this = this;
 
@@ -331,7 +334,7 @@ function CwrcApi(url, jq) {
                 return result;
         }
         
-        this.updateIsInitialized();
+        //this.updateIsInitialized();
 
         return this;
 }
