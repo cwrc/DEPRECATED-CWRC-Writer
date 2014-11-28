@@ -95,12 +95,12 @@
 						config = config[0];
 						project = project[0];
 						config.project = project;
-						config.cwrcRootUrl = window.location.protocol+'//'+window.location.host+'/editor/dev/';
+						config.cwrcRootUrl = window.location.protocol+'//'+window.location.host+window.location.pathname.replace(window.location.pathname.split('/').pop(),'');
 						doInit(config);
 					},function(xhr) {
 						if (configXHR.state() === 'resolved') {
 							var config = $.parseJSON(configXHR.responseText);
-							config.cwrcRootUrl = window.location.protocol+'//'+window.location.host+'/cwrc/src/';
+							config.cwrcRootUrl = window.location.protocol+'//'+window.location.host+window.location.pathname.replace(window.location.pathname.split('/').pop(),'');
 							doInit(config);
 						} else {
 							alert('Error loading writerConfig.js');
