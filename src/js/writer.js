@@ -497,9 +497,10 @@ return function(config) {
     
     
     /**
-     * Begin init functions
+     * Initialize the editor.
+     * @param {String} textareaId The ID of the textarea to transform into the editor.
      */
-    function init() {
+    w.init = function(textareaId) {
 
         w.eventManager = new EventManager(w);
         w.schemaManager = new SchemaManager(w, {schemas: config.schemas});
@@ -520,7 +521,7 @@ return function(config) {
         } else {
             alert('Error: you must specify a delegator in the CWRCWriter config for full functionality!');
         }
-        if (config.id == null) {
+        if (textareaId == null) {
             alert('Error: no ID supplied for CWRCWriter!');
         }
         
@@ -554,7 +555,7 @@ return function(config) {
 //                    script_url : 'js/tinymce/jscripts/tiny_mce/tiny_mce.js',
         tinymce.init({
             mode: 'exact',
-            elements: config.id,
+            elements: textareaId,
             theme: 'advanced',
             content_css: w.cwrcRootUrl+'css/editor.css',
             
@@ -803,7 +804,6 @@ return function(config) {
             }
         });
     };
-    init();
     
     return w;
 };

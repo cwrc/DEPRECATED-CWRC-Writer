@@ -1,4 +1,4 @@
-require.config({
+var require = {
     paths: {
         'text': 'lib/require/text', // requirejs text plugin
 
@@ -66,25 +66,5 @@ require.config({
         'jquery-private': { 'jquery': 'jquery' }
     }
     // cache busting
-//    urlArgs: "bust=" +  (new Date()).getTime(),
-});
-
-// and the 'jquery-private' module, in the
-// jquery-private.js file:
-define('jquery-private', ['jquery'], function ($) {
-    return $.noConflict(true);
-});
-
-require(['jquery', 'knockout'], function($, knockout) {
-    window.ko = knockout; // requirejs shim isn't working for knockout
-    
-    require(['writer',
-             'delegator',
-             'jquery.layout',
-             'jquery.tablayout'
-    ], function(Writer, Delegator) {
-        $(function() {
-            cwrcWriterInit.call(window, $, Writer, Delegator);
-        });
-    });
-});
+    // urlArgs: "bust=" +  (new Date()).getTime(),
+};
