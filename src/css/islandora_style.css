@@ -28,18 +28,18 @@ A:hover
 
 /* Header */
 
-#cwrc_header
+.cwrc_header
 {
   padding: 0px 0px 0px 0px;
   background-color: #000;
 }
 
-#cwrc_header #page_selector
+.cwrc_header #page_selector
 {
   margin: 8px 0px 0px 15px;
 }
 
-#cwrc_header .header-nav
+.cwrc_header .header-nav
 {
   float: left;
   height: 35px;
@@ -47,7 +47,7 @@ A:hover
   margin: 0px 0px 0px 20px;
 }
 
-#cwrc_header .header-nav a
+.cwrc_header .header-nav a
 {
   float: left;
   width: 30px;
@@ -62,40 +62,40 @@ A:hover
 
 }
 
-#cwrc_header .header-nav a.disabled,
-#cwrc_header .header-nav a.disabled:hover
+.cwrc_header .header-nav a.disabled,
+.cwrc_header .header-nav a.disabled:hover
 {
   opacity: 0.6 !important; /* Chrome 4+, FF2+, Saf3.1+, Opera 9+, IE9, iOS 3.2+, Android 2.1+ */
   filter: alpha(opacity=60) !important; /* IE6-IE8 */
 }
 
-#cwrc_header .header-nav a:hover
+.cwrc_header .header-nav a:hover
 {
   opacity: 1 !important; /* Chrome 4+, FF2+, Saf3.1+, Opera 9+, IE9, iOS 3.2+, Android 2.1+ */
   filter: alpha(opacity=100) !important; /* IE6-IE8 */
 }
 
-#cwrc_header .header-nav a#page-prev
+.cwrc_header .header-nav a#page-prev
 {
   background-position: -9px -1px;
 }
 
-#cwrc_header .header-nav a#page-next
+.cwrc_header .header-nav a#page-next
 {
   background-position: -42px -1px;
 }
 
-#cwrc_header #header-inner
+.cwrc_header #header-inner
 {
   
 }
 
-#cwrc_header #header-inner h1
+.cwrc_header #header-inner h1
 {
   padding: 8px 20px 0px;
 }
 
-#cwrc_header h2
+.cwrc_header h2
 {
   padding: 8px 15px 0px 0px;
 }
@@ -204,7 +204,7 @@ A:hover
 
 /* Image Annotation Tab */
 
-#westTabs .comment_title
+.westTabs .comment_title
 {
   position: relative;
   
@@ -225,13 +225,13 @@ A:hover
           border-radius: 5px 5px 5px 5px; /* Opera 10.5, IE9, Saf5, Chrome, FF4+, iOS 4, Android 2.1+ */
 }
 
-#westTabs .comment_title:hover /* I know that's a div - maybe change to <a> ? */
+.westTabs .comment_title:hover /* I know that's a div - maybe change to <a> ? */
 {
   background: #e3e3e3;
   color: #212121;
 }
 
-#westTabs .comment_title.annotation-opened
+.westTabs .comment_title.annotation-opened
 {
   -webkit-border-radius: 5px 5px 0px 0px; /* Saf3-4, iOS 1-3.2, Android �1.6 */
           border-radius: 5px 5px 0px 0px; /* Opera 10.5, IE9, Saf5, Chrome, FF4+, iOS 4, Android 2.1+ */
@@ -240,7 +240,7 @@ A:hover
   border-bottom: 0px solid #ddd;
 }
 
-#westTabs .comment_text
+.westTabs .comment_text
 {
   margin: 0px 0px 0px 0px;
   padding: 5px 10px 5px 10px;
@@ -258,7 +258,7 @@ A:hover
           border-radius: 0px 0px 5px 5px; /* Opera 10.5, IE9, Saf5, Chrome, FF4+, iOS 4, Android 2.1+ */
 }
 
-#westTabs #comment_annos_block .mycolor
+.westTabs #comment_annos_block .mycolor
 {
   position: absolute;
   right: 8px;
@@ -273,24 +273,24 @@ A:hover
           border-radius: 8px; /* Opera 10.5, IE9, Saf5, Chrome, FF4+, iOS 4, Android 2.1+ */
 }
 
-#westTabs #comment_annos_block .comment_showhide
+.westTabs #comment_annos_block .comment_showhide
 {
   position: absolute;
   top: 8px;
   left: 8px;
 }
 
-#westTabs .comment_text a.delete-annotation
+.westTabs .comment_text a.delete-annotation
 {
   margin: 0px 0px 0px 0px;
 }
 
-#westTabs .comment_text a.delete-annotation:hover
+.westTabs .comment_text a.delete-annotation:hover
 {
   text-decoration: underline;
 }
 
-#westTabs .comment_text a.delete-annotation img
+.westTabs .comment_text a.delete-annotation img
 {
   cursor: pointer;
   margin: 10px 0px 0px 0px;
@@ -301,7 +301,7 @@ A:hover
 
 
 /* Entities Tab */
-#westTabs .title
+.westTabs .title
 {
 /* FIXME conflicts */
 /*
@@ -316,13 +316,13 @@ A:hover
  */
 }
 
-#westTabs .title.box
+.westTabs .title.box
 {
   margin-left: 0px;
   vertical-align: 0px;
 }
 
-#westTabs #entities ul li
+.westTabs #entities ul li
 {
   margin: 5px 0px;
 
@@ -330,7 +330,7 @@ A:hover
           border-radius: 5px 5px 5px 5px; /* Opera 10.5, IE9, Saf5, Chrome, FF4+, iOS 4, Android 2.1+ */
 }
 
-#westTabs #entities ul li li
+.westTabs #entities ul li li
 {
   margin: 2px 5px 2px 5px;
   font-size: 12px;
@@ -339,7 +339,7 @@ A:hover
           border-radius: 0px; /* Opera 10.5, IE9, Saf5, Chrome, FF4+, iOS 4, Android 2.1+ */
 }
 
-#westTabs #entities ul li span.box
+.westTabs #entities ul li span.box
 {
   -webkit-border-radius: 5px 5px 5px 5px; /* Saf3-4, iOS 1-3.2, Android �1.6 */
           border-radius: 5px 5px 5px 5px; /* Opera 10.5, IE9, Saf5, Chrome, FF4+, iOS 4, Android 2.1+ */

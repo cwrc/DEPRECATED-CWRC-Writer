@@ -6,6 +6,7 @@ define(['jquery', 'jquery-ui', 'jquery.contextmenu'], function($, jqueryUi, jque
  * @param {Object} config
  * @param {Writer} config.writer
  * @param {String} config.parentId
+ * @param {jQuery} config.parentElement
  */
 return function(config) {
     
@@ -14,14 +15,25 @@ return function(config) {
     var metaKeys = ['_id', '_ref'];
     var showMetaKeys = false;
     
-    $('#'+config.parentId).append('<div id="entities" class="tabWithLayout">'+
-            '<ul class="entitiesList ui-layout-center"></ul>'+
-            '<div id="entitiesOptions" class="ui-layout-south tabButtons">'+
-            '<div id="sortBy"><span>Sort By</span> '+
-            '<input type="radio" id="sequence" name="sortBy" checked="checked" /><label for="sequence">Sequence</label>'+
-            '<input type="radio" id="category" name="sortBy" /><label for="category">Category</label></div>'+
-            '<div><input type="checkbox" id="metaKeys" /><label for="metaKeys">Show Metadata</label></div>'+
-            '</div></div>');
+    var id = w.getUniqueId('entities_');
+    
+    var $parent;
+    if (config.parentElement !== undefined) {
+        $parent = config.parentElement;
+    } else if (config.parentId !== undefined) {
+        $parent = $('#'+config.parentId);
+    }
+    
+    $parent.append(''+
+        '<div id="'+id+'" class="tabWithLayout">'+
+            '<div class="ui-layout-center"><ul class="entitiesList"></ul></div>'+
+            '<div class="entitiesOptions ui-layout-south tabButtons">'+
+                '<div id="'+id+'_sortBy"><span>Sort By</span> '+
+                '<input type="radio" id="'+id+'_sequence" name="sortBy" checked="checked" /><label for="'+id+'_sequence">Sequence</label>'+
+                '<input type="radio" id="'+id+'_category" name="sortBy" /><label for="'+id+'_category">Category</label></div>'+
+                '<div><input type="checkbox" id="'+id+'_metaKeys" /><label for="'+id+'_metaKeys">Show Metadata</label></div>'+
+            '</div>'+
+        '</div>');
     $(document.body).append(''+
         '<div id="entitiesMenu" class="contextMenu" style="display: none;"><ul>'+
         '<li id="editEntity"><ins style="background:url('+w.cwrcRootUrl+'img/tag_blue_edit.png) center center no-repeat;" />Edit Entity</li>'+
@@ -30,16 +42,18 @@ return function(config) {
         '</ul></div>'
     );
     
-    $('#sequence').button().click(function() {
+    var $parentContainer = $('#'+id);
+    
+    $('#'+id+'_sequence').button().click(function() {
         w.entitiesList.update('sequence');
         w.entitiesManager.highlightEntity(w.entitiesManager.getCurrentEntity());
     });
-    $('#category').button().click(function() {
+    $('#'+id+'_category').button().click(function() {
         w.entitiesList.update('category');
         w.entitiesManager.highlightEntity(w.entitiesManager.getCurrentEntity());
     });
-    $('#sortBy').buttonset();
-    $('#metaKeys').button().click(function() {
+    $('#'+id+'_sortBy').buttonset();
+    $('#'+id+'_metaKeys').button().click(function() {
         showMetaKeys = !showMetaKeys;
         w.entitiesList.update();
         w.entitiesManager.highlightEntity(w.entitiesManager.getCurrentEntity());
@@ -50,7 +64,11 @@ return function(config) {
      */
     var pm = {};
     
-    pm.layout = $('#entities').layout({
+    pm.getId = function() {
+        return id;
+    };
+    
+    pm.layout = $parentContainer.layout({
         defaults: {
             resizable: false,
             slidable: false,
@@ -84,10 +102,10 @@ return function(config) {
         pm.remove(entityId);
     });
     w.event('entityFocused').subscribe(function(entityId) {
-        $('#entities > ul > li[name="'+entityId+'"]').addClass('selected').find('div[class="info"]').show();
+        $parentContainer.find('ul.entitiesList > li[name="'+entityId+'"]').addClass('selected').find('div[class="info"]').show();
     });
     w.event('entityUnfocused').subscribe(function(entityId) {
-        $('#entities > ul > li').each(function(index, el) {
+        $parentContainer.find('ul.entitiesList > li').each(function(index, el) {
             $(this).removeClass('selected').css('background-color', '').find('div[class="info"]').hide();
         });
     });
@@ -100,14 +118,14 @@ return function(config) {
      */
     pm.update = function(sort) {
         if (sort == null) {
-            if ($('#sequence').prop('checked')) {
+            if ($('#'+id+'_sequence').prop('checked')) {
                 sort = 'sequence';
             } else {
                 sort = 'category';
             }
         }
         
-        $('#entities > ul').empty(); // remove previous nodes and event handlers
+        $parentContainer.find('ul.entitiesList').empty(); // remove previous nodes and event handlers
         
         var id, entry, i;
         var entitiesString = '';
@@ -165,8 +183,8 @@ return function(config) {
             });
         }
         
-        $('#entities > ul').html(entitiesString);
-        $('#entities > ul > li').hover(function() {
+        $parentContainer.find('ul.entitiesList').html(entitiesString);
+        $parentContainer.find('ul.entitiesList').children('li').hover(function() {
             if (!$(this).hasClass('selected')) {
                 $(this).addClass('over');
             }
@@ -214,7 +232,7 @@ return function(config) {
         });
         
         if (w.entitiesManager.getCurrentEntity()) {
-            $('#entities > ul > li[name="'+w.entitiesManager.getCurrentEntity()+'"]').addClass('selected').find('div[class="info"]').show();
+            $parentContainer.find('ul.entitiesList').children('li[name="'+w.entitiesManager.getCurrentEntity()+'"]').addClass('selected').find('div[class="info"]').show();
         }
     };
     
@@ -240,7 +258,7 @@ return function(config) {
     };
     
     pm.remove = function(id) {
-        $('#entities li[name="'+id+'"]').remove();
+        $parentContainer.find('li[name="'+id+'"]').remove();
     };
     
     // add to writer

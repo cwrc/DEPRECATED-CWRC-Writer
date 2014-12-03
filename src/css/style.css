@@ -34,7 +34,7 @@ html, body {
     margin-right: 5px;
 }
 
-#cwrc_loadingMask {
+.cwrc_loadingMask {
 	width: 100%;
 	height: 100%;
 	background-color: #DDD;
@@ -42,7 +42,7 @@ html, body {
 	z-index: 1000;
 }
 
-#cwrc_loadingMask div {
+.cwrc_loadingMask div {
 	background-image: url(../img/loading_large.gif);
     background-repeat: no-repeat;
     background-position: left center;
@@ -55,12 +55,12 @@ html, body {
 	left: 50%;
 	transform: translate(-50%, -50%);}
 
-#cwrc_wrapper {
+.cwrc_wrapper {
     height: 100%;
     width: 100%;
 }
 
-#cwrc_header {
+.cwrc_wrapper .cwrc_header {
     padding: 0 10px;
     color: #eee;
     background-color: #455372;
@@ -71,14 +71,14 @@ html, body {
     background-position: left center;
 }
 
-#cwrc_header h1 {
+.cwrc_wrapper .cwrc_header h1 {
     float: left;
     cursor: pointer;
     margin-top: 10px;
     margin-left: 55px;
 }
 
-#headerButtons > div {
+.headerButtons > div {
     float: right;
     cursor: pointer;
     margin-left: 20px;
@@ -109,17 +109,14 @@ html, body {
     background-image: url('../img/arrow_right.gif');
 }
 
-#westTabsContent .tabWithLayout {
-    height: 100%;
-    padding: 0 !important;
-}
 
-#westTabsContent .tabButtons {
+
+.westTabsContent .tabButtons {
     border-top: 1px solid #BBBBBB;
     padding: 5px;
 }
 
-#entitiesOptions > div {
+.entitiesOptions > div {
     padding-bottom: 5px;
 }
 
@@ -148,7 +145,7 @@ html, body {
 }
 
 .cwrc .tabs .ui-tabs-panel {
-    padding: 5px 0 0 0 !important;
+    /*padding: 5px 0 0 0 !important;*/
     overflow: auto;
 }
 

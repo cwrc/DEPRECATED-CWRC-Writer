@@ -11,7 +11,6 @@
         <script type="text/javascript" src="js/layout.js"></script>
 
         <link type="text/css" rel="stylesheet" href="css/style.css" />
-        <link type="text/css" rel="stylesheet" href="css/islandora_style.css" />
         
         <link type="text/css" rel="stylesheet" href="smoothness/jquery-ui-1.10.4.custom.css" />
         <link type="text/css" rel="stylesheet" href="css/layout-default-latest.css" />
@@ -54,15 +53,12 @@
                     config.id = 'editor';
                     config.delegator = Delegator;
                     writer = new Writer(config);
-                    writer.init('editor');
-                    writer.event('writerInitialized').subscribe(function(writer) {
-                        // load modules then do the setup
-                        require(['modules/entitiesList','modules/relations','modules/selection',
-                                 'modules/structureTree','modules/validation'
-                        ], function(EntitiesList, Relations, Selection, StructureTree, Validation) {
-                            setupLayoutAndModules(writer, EntitiesList, Relations, Selection, StructureTree, Validation);
-                            writer.fileManager.loadInitialDocument(window.location.hash);
-                        });
+                    // load modules then do the setup
+                    require(['modules/entitiesList','modules/relations','modules/selection',
+                             'modules/structureTree','modules/validation'
+                    ], function(EntitiesList, Relations, Selection, StructureTree, Validation) {
+                        setupLayoutAndModules($('body'), writer, EntitiesList, Relations, Selection, StructureTree, Validation);
+                        writer.fileManager.loadInitialDocument(window.location.hash);
                     });
                 }
                 
@@ -92,44 +88,5 @@
         </script>
     </head>
 <body>
-<div id="cwrc_loadingMask"><div>Loading CWRC-Writer</div></div>
-<div id="cwrc_wrapper">
-    <div id="cwrc_header" class="cwrc ui-layout-north">
-        <h1>CWRC-Writer v0.8</h1>
-        <div id="headerButtons">
-        </div>
-    </div>
-    <div class="cwrc ui-layout-west">
-        <div id="westTabs" class="tabs">
-            <ul>
-                <li><a href="#entities">Entities</a></li>
-                <li><a href="#structure">Markup</a></li>
-                <li><a href="#relations">Relations</a></li>
-                <!-- li id="annotation_tab"><a href="#image-annotations">Image Annotations</a></li -->
-            </ul>
-            <div id="westTabsContent" class="ui-layout-content">
-                <!-- div id="image-annotations">
-                    <div id="comment_annos_block"></div>
-                </div -->
-            </div>
-        </div>
-    </div>
-    <div id="cwrc_main" class="ui-layout-center">
-        <div class="ui-layout-center">
-            <form method="post" action="">
-                <textarea id="editor" name="editor" class="tinymce"></textarea>
-            </form>
-        </div>
-        <div class="cwrc ui-layout-south">
-            <div id="southTabs" class="tabs">
-                <ul>
-                    <li><a href="#validation">Validation</a></li>
-                    <li><a href="#selection">Selection</a></li>
-                </ul>
-                <div id="southTabsContent" class="ui-layout-content"></div>
-            </div>
-        </div>
-    </div>
-</div>
 </body>
 </html>
