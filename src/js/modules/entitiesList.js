@@ -25,7 +25,7 @@ return function(config) {
     }
     
     $parent.append(''+
-        '<div id="'+id+'" class="tabWithLayout">'+
+        '<div id="'+id+'">'+
             '<div class="ui-layout-center"><ul class="entitiesList"></ul></div>'+
             '<div class="entitiesOptions ui-layout-south tabButtons">'+
                 '<div id="'+id+'_sortBy"><span>Sort By</span> '+

@@ -1,4 +1,4 @@
-function setupLayoutAndModules($parentContainer, w, EntitiesList, Relations, Selection, StructureTree, Validation) {
+function setupLayoutAndModules(w, EntitiesList, Relations, Selection, StructureTree, Validation) {
     var $ = require('jquery');
     
     var editorId = w.getUniqueId('editor_');
@@ -8,8 +8,6 @@ function setupLayoutAndModules($parentContainer, w, EntitiesList, Relations, Sel
 '<div class="cwrc_wrapper">'+
     '<div class="cwrc cwrc_header ui-layout-north">'+
         '<h1>CWRC-Writer v0.8</h1>'+
-        '<div class="headerButtons">'+
-        '</div>'+
     '</div>'+
     '<div class="cwrc ui-layout-west">'+
         '<div class="westTabs tabs">'+
@@ -28,8 +26,6 @@ function setupLayoutAndModules($parentContainer, w, EntitiesList, Relations, Sel
         '<div class="cwrc ui-layout-south">'+
             '<div class="southTabs tabs">'+
                 '<ul>'+
-                    '<li><a href="#validation">Validation</a></li>'+
-                    '<li><a href="#selection">Selection</a></li>'+
                 '</ul>'+
                 '<div class="southTabsContent ui-layout-content"></div>'+
             '</div>'+
@@ -37,21 +33,39 @@ function setupLayoutAndModules($parentContainer, w, EntitiesList, Relations, Sel
     '</div>'+
 '</div>';
     
+    var $parentContainer = $('#'+w.getId());
+    
     $parentContainer.html(html);
     
     w.init(editorId);
     
-    var $westTabs = $parentContainer.find('.westTabs > ul');
+    
+    var $westTabs = $parentContainer.find('.westTabs');
     var $westTabsContent = $parentContainer.find('.westTabsContent');
     
-//    var structTree = new StructureTree({writer: w, parentId: 'westTabsContent'});
+    var structTree = new StructureTree({writer: w, parentElement: $westTabsContent});
+    var structId = structTree.getId();
+    $westTabs.children('ul').append('<li><a href="#'+structId+'">Markup</a>');
+    
     var entList = new EntitiesList({writer: w, parentElement: $westTabsContent});
     var entId = entList.getId();
-    $westTabs.append('<li><a href="#'+entId+'">Entities</a>');
+    $westTabs.children('ul').append('<li><a href="#'+entId+'">Entities</a>');
     
-//    var relations = new Relations({writer: w, parentId: 'westTabsContent'});
-//    var validation = new Validation({writer: w, parentId: 'southTabsContent'});
-//    var selection = new Selection({writer: w, parentId: 'southTabsContent'});
+    var relations = new Relations({writer: w, parentElement: $westTabsContent});
+    var relId = relations.getId();
+    $westTabs.children('ul').append('<li><a href="#'+relId+'">Relations</a>');
+    
+    var $southTabs = $parentContainer.find('.southTabs');
+    var $southTabsContent = $parentContainer.find('.southTabsContent');
+    
+    var validation = new Validation({writer: w, parentElement: $southTabsContent});
+    var valId = validation.getId();
+    $southTabs.children('ul').append('<li><a href="#'+valId+'">Validation</a>');
+    
+    var selection = new Selection({writer: w, parentElement: $southTabsContent});
+    var selId = selection.getId();
+    $southTabs.children('ul').append('<li><a href="#'+selId+'">Selection</a>');
+    
     
     w.layout = $('.cwrc_wrapper', $parentContainer).layout({
         defaults: {
@@ -156,6 +170,11 @@ function setupLayoutAndModules($parentContainer, w, EntitiesList, Relations, Sel
     };
     w.event('loadingDocument').subscribe(onLoad);
     w.event('documentLoaded').subscribe(onLoadDone);
+    
+    w.event('validationInitiated').subscribe(function() {
+        w.layout.center.children.layout1.open('south');
+        $southTabs.tabs('option', 'active', 0);
+    });
     
     setTimeout(function() {
         w.layout.options.onresizeall_end = function() {

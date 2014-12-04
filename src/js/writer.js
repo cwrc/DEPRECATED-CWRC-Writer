@@ -21,6 +21,15 @@ return function(config) {
      */
     var w = {};
     
+    // the container ID
+    var containerId = config.id;
+    if (containerId === undefined) {
+        alert('Error: you must specify an ID in the CWRCWriter config!');
+    }
+    w.getId = function() {
+        return containerId;
+    };
+    
     w.initialConfig = config;
     
     w.layout = null; // jquery ui layout object

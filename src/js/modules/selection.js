@@ -5,13 +5,24 @@ define(['jquery','jquery.snippet'], function($, snippet) {
  * @param {Object} config
  * @param {Writer} config.writer
  * @param {String} config.parentId
+ * @param {jQuery} config.parentElement
  */
 return function(config) {
     
     var w = config.writer;
     
-    $('#'+config.parentId).append('<div id="selection" style="margin-left: 10px;"></div>');
-    $(document.body).append('<div id="selectionContents" style="display: none;"></div>');
+    var id = w.getUniqueId('selection_');
+    var selContentsId = w.getUniqueId('selectionContents_');
+    
+    var $parent;
+    if (config.parentElement !== undefined) {
+        $parent = config.parentElement;
+    } else if (config.parentId !== undefined) {
+        $parent = $('#'+config.parentId);
+    }
+    
+    $parent.append('<div id="'+id+'" style="margin-left: 10px;"></div>');
+    $(document.body).append('<div id="'+selContentsId+'" style="display: none;"></div>');
     
     w.event('nodeChanged').subscribe(function() {
         updateSelection(w.editor);
@@ -22,22 +33,26 @@ return function(config) {
      */
     var selection = {};
     
+    selection.getId = function() {
+        return id;
+    };
+    
     function updateSelection(ed) {
         var range = ed.selection.getRng(true);
         var contents = range.cloneContents();
-        $('#selectionContents').html(contents);
-        var xmlString = w.converter.buildXMLString($('#selectionContents'));
-        var escapedContents = w.utilities.escapeHTMLString(xmlString);   //$('#selectionContents')[0].innerHTML
+        $('#'+selContentsId).html(contents);
+        var xmlString = w.converter.buildXMLString($('#'+selContentsId));
+        var escapedContents = w.utilities.escapeHTMLString(xmlString);
         if (escapedContents.length < 100000 && escapedContents != '\uFEFF') {
-            $('#selection').html('<pre>'+escapedContents+'</pre>');
-            $('#selection > pre').snippet('html', {
+            $('#'+id).html('<pre>'+escapedContents+'</pre>');
+            $('#'+id+' > pre').snippet('html', {
                 style: 'typical',
                 transparent: true,
                 showNum: false,
                 menu: false
             });
         } else {
-            $('#selection').html('<pre>The selection is too large to display.</pre>');
+            $('#'+id).html('<pre>The selection is too large to display.</pre>');
         }
     }
     

@@ -84,21 +84,15 @@ html, body {
     margin-left: 20px;
 }
 
-#helpLink {
+.helpLink {
     background: url("../img/help.png") no-repeat scroll 0 7px transparent;
     padding-left: 20px;
 }
 
-#helpLink h2 {
+.helpLink h2 {
     display: inline-block;
     margin-left: 2px;
     vertical-align: top;
-}
-
-#helpDialog iframe {
-    border: none;
-    width: 100%;
-    height: 100%;
 }
 
 .arrowLeft {
@@ -154,10 +148,6 @@ html, body {
     width: 16px;
     height: 16px;
     display: inline-block;
-}
-
-#structureTreeActions {
-    overflow: hidden;
 }
 
 .entitiesList, .relationsList, .validationList {
@@ -371,15 +361,15 @@ html, body {
     color: #333333 !important;
 }
 
-#validation button {
+.cwrcValidation button {
     margin: 2px 0 2px 5px;
 }
 
-#validation .message_more {
+.cwrcValidation .message_more {
     color: #999999;
 }
 
-#validation .message_more:hover {
+.cwrcValidation .message_more:hover {
     text-decoration: underline;
 }
 
@@ -390,10 +380,6 @@ html, body {
 #currentPath a:hover {
     text-decoration: underline;
     cursor: pointer;
-}
-
-#tree {
-    border: none !important;
 }
 
 #search_query {
@@ -498,6 +484,10 @@ html, body {
     padding: 5px;
     margin: 0;
     list-style: none;
+}
+
+.jstree-cwrc {
+    border: none !important;
 }
 
 .unselectable {

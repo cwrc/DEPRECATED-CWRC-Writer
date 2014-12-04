@@ -5,28 +5,41 @@ define(['jquery', 'jquery-ui'], function($, jqueryUi) {
  * @param {Object} config
  * @param {Writer} config.writer
  * @param {String} config.parentId
+ * @param {jQuery} config.parentElement
  */
 return function(config) {
     
     var w = config.writer;
     
-    $('#'+config.parentId).append('<div id="relations" class="tabWithLayout" style="height: 100% !important;">'+
-            '<div id="relation_alter" class="ui-layout-center"><ul class="relationsList"></ul></div>'+
+    var id = w.getUniqueId('relations_');
+    
+    var $parent;
+    if (config.parentElement !== undefined) {
+        $parent = config.parentElement;
+    } else if (config.parentId !== undefined) {
+        $parent = $('#'+config.parentId);
+    }
+    
+    $parent.append(''+
+        '<div id="'+id+'">'+
+            '<div class="ui-layout-center"><ul class="relationsList"></ul></div>'+
             '<div class="ui-layout-south tabButtons">'+
             '<button>Add Relation</button><button>Remove Relation</button>'+
             '</div>'+
         '</div>');
     $(document.body).append(''+
-        '<div id="relationsMenu" class="contextMenu" style="display: none;"><ul>'+
-        '<li id="removeRelation"><ins style="background:url(img/cross.png) center center no-repeat;" />Remove Relation</li>'+
+        '<div id="'+id+'_relationsMenu" class="contextMenu" style="display: none;"><ul>'+
+        '<li id="'+id+'_removeRelation"><ins style="background:url(img/cross.png) center center no-repeat;" />Remove Relation</li>'+
         '</ul></div>'
     );
     
-    $('#relations div.ui-layout-south button:eq(0)').button().click(function() {
+    var $relations = $('#'+id);
+    
+    $('div.ui-layout-south button:eq(0)', $relations).button().click(function() {
         w.dialogManager.show('triple');
     });
-    $('#relations div.ui-layout-south button:eq(1)').button().click(function() {
-        var selected = $('#relations ul li.selected');
+    $('div.ui-layout-south button:eq(1)', $relations).button().click(function() {
+        var selected = $('ul li.selected', $relations);
         if (selected.length == 1) {
             var i = selected.data('index');
             w.triples.splice(i, 1);
@@ -54,7 +67,11 @@ return function(config) {
         currentlySelectedNode: null
     };
     
-    pm.layout = $('#relations').layout({
+    pm.getId = function() {
+        return id;
+    };
+    
+    pm.layout = $relations.layout({
         defaults: {
             resizable: false,
             slidable: false,
@@ -70,7 +87,7 @@ return function(config) {
      * Update the list of relations.
      */
     pm.update = function() {
-        $('#relations ul').empty();
+        $('ul', $relations).empty();
         
         var relationsString = '';
         
@@ -79,20 +96,21 @@ return function(config) {
             relationsString += '<li>'+triple.subject.text+' '+triple.predicate.text+' '+triple.object.text+'</li>';
         }
         
-        $('#relations ul').html(relationsString);
+        $('ul', $relations).html(relationsString);
         
-        $('#relations ul li').each(function(index, el) {
+        var menuBindings = {};
+        menuBindings[id+'_removeRelation'] = function(r) {
+            var i = $(r).data('index');
+            w.triples.splice(i, 1);
+            pm.update();
+        };
+        
+        $('ul li', $relations).each(function(index, el) {
             $(this).data('index', index);
         }).click(function() {
             $(this).addClass('selected').siblings().removeClass('selected');
-        }).contextMenu('relationsMenu', {
-            bindings: {
-                'removeRelation': function(r) {
-                    var i = $(r).data('index');
-                    w.triples.splice(i, 1);
-                    pm.update();
-                }
-            },
+        }).contextMenu(id+'_relationsMenu', {
+            bindings: menuBindings,
             shadow: false,
             menuStyle: {
                 backgroundColor: '#FFFFFF',

@@ -5,17 +5,26 @@ define(['jquery', 'jquery-ui'], function($, jqueryUi) {
  * @param {Object} config
  * @param {Writer} config.writer
  * @param {String} config.parentId
+ * @param {jQuery} config.parentElement
  */
 return function(config) {
     
     var w = config.writer;
     
-    var id = 'validation';
+    var id = w.getUniqueId('validation_');
     
-    $('#'+config.parentId).append('<div id="'+id+'">'+
-            '<div id="'+id+'_buttons"><button>Validate</button><button>Clear</button></div>'+
-            '<ul class="validationList"></ul>'+
-        '</div>');
+    var $parent;
+    if (config.parentElement !== undefined) {
+        $parent = config.parentElement;
+    } else if (config.parentId !== undefined) {
+        $parent = $('#'+config.parentId);
+    }
+    
+    $parent.append(''+
+    '<div id="'+id+'" class="cwrcValidation">'+
+        '<div id="'+id+'_buttons"><button>Validate</button><button>Clear</button></div>'+
+        '<ul class="validationList"></ul>'+
+    '</div>');
     
     w.event('documentLoaded').subscribe(function() {
         validation.clearResult();
@@ -28,7 +37,6 @@ return function(config) {
         '<li class="ui-state-default">'+
             '<span class="loading"></span> Validating...'+
         '</li>');
-        showValidation();
     });
     
     w.event('documentValidated').subscribe(function(valid, resultDoc, docString) {
@@ -36,15 +44,14 @@ return function(config) {
         validation.showValidationResult(resultDoc, docString);
     });
     
-    function showValidation() {
-        w.layout.center.children.layout1.open('south');
-        $('#southTabs').tabs('option', 'active', 0);
-    }
-    
     /**
      * @lends Validation.prototype
      */
     var validation = {};
+    
+    validation.getId = function() {
+        return id;
+    };
     
     /**
      * Processes a validation response from the server.

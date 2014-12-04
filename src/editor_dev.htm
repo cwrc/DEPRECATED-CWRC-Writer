@@ -50,14 +50,14 @@
                 writer = null;
                 
                 function doInit(config) {
-                    config.id = 'editor';
+                    config.id = 'cwrcWriter';
                     config.delegator = Delegator;
                     writer = new Writer(config);
                     // load modules then do the setup
                     require(['modules/entitiesList','modules/relations','modules/selection',
                              'modules/structureTree','modules/validation'
                     ], function(EntitiesList, Relations, Selection, StructureTree, Validation) {
-                        setupLayoutAndModules($('body'), writer, EntitiesList, Relations, Selection, StructureTree, Validation);
+                        setupLayoutAndModules(writer, EntitiesList, Relations, Selection, StructureTree, Validation);
                         writer.fileManager.loadInitialDocument(window.location.hash);
                     });
                 }
@@ -87,6 +87,6 @@
             };
         </script>
     </head>
-<body>
+<body id="cwrcWriter">
 </body>
 </html>

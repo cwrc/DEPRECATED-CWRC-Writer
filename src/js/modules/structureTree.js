@@ -59,11 +59,21 @@ $(document).on('context_hide.vakata', function(e) {
  * @param {Object} config
  * @param {Writer} config.writer
  * @param {String} config.parentId
+ * @param {jQuery} config.parentElement
  */
 return function(config) {
     var w = config.writer;
     
-    var id = 'tree';
+    var id = w.getUniqueId('structureTree_');
+    var treeId = w.getUniqueId('jstree_');
+    var treeRootId = w.getUniqueId('cwrcTreeRoot_');
+    
+    var $parent;
+    if (config.parentElement !== undefined) {
+        $parent = config.parentElement;
+    } else if (config.parentId !== undefined) {
+        $parent = $('#'+config.parentId);
+    }
     
     /**
      * @lends StructureTree.prototype
@@ -176,26 +186,30 @@ return function(config) {
         tree.update();
     });
     
+    tree.getId = function() {
+        return id;
+    };
+    
     /**
      * Updates the tree to reflect the document structure.
      */
     tree.update = function() {
-        var treeRef = $.jstree.reference('#'+id);
+        var treeRef = $.jstree.reference('#'+treeId);
         // store open nodes to re-open after updating
         var openNodes = [];
-        $('#cwrc_tree_root', $tree).find('li.jstree-open').each(function () {
+        $('#'+treeRootId, $tree).find('li.jstree-open').each(function () {
             var id = $(this).attr('name');
             openNodes.push(id);
         });
-        treeRef.delete_node('#cwrc_tree_root');
+        treeRef.delete_node('#'+treeRootId);
         var rootNode = $('[_tag="'+w.root+'"]', w.editor.getBody());
         var rootData = _processNode(rootNode, 0);
         if (rootData != null) {
-            rootData.li_attr.id = 'cwrc_tree_root';
+            rootData.li_attr.id = treeRootId;
             _doUpdate(rootNode.children(), rootData, 0);
             treeRef.create_node(null, rootData);
 //            treeRef._themeroller();
-            _onNodeLoad($('#cwrc_tree_root', $tree).first());
+            _onNodeLoad($('#'+treeRootId, $tree).first());
             
             $.each(openNodes, function (i, val) {
                 treeRef.open_node($('li[name='+val+']', $tree), false, true); 
@@ -283,7 +297,7 @@ return function(config) {
      */
     function selectNode(node, selectionType) {
         _removeCustomClasses();
-        var activeNode = $('a[class*=ui-state-active]', '#'+id);
+        var activeNode = $('a[class*=ui-state-active]', '#'+treeId);
         activeNode.removeClass('jstree-clicked ui-state-active');
         
         var aChildren = node.children('a');
@@ -552,7 +566,7 @@ return function(config) {
     }
     
     function _removeCustomClasses() {
-        var nodes = $('a[class*=Selected]', '#'+id);
+        var nodes = $('a[class*=Selected]', '#'+treeId);
         nodes.removeClass('nodeSelected contentsSelected');
     }
     
@@ -607,25 +621,11 @@ return function(config) {
         return inserts;
     }
     
-    $('#'+config.parentId).append('<div id="structure" class="tabWithLayout">'+
-        '<div id="'+id+'" class="ui-layout-center"></div>'+
+    $parent.append('<div id="'+id+'">'+
+        '<div id="'+treeId+'"></div>'+
     '</div>');
     
-    $tree = $('#'+id);
-    
-    $tree.on('loaded.jstree', function(event, data) {
-        tree.layout = $('#structure').layout({
-            defaults: {
-                resizable: false,
-                slidable: false,
-                closable: false
-            },
-            south: {
-                size: 'auto',
-                spacing_open: 0
-            }
-        });
-    });
+    $tree = $('#'+treeId);
     
 //    $.vakata.dnd.settings.helper_left = 15;
 //    $.vakata.dnd.settings.helper_top = 20;
@@ -644,7 +644,7 @@ return function(config) {
             },
             data: {
                 text: 'Tags',
-                li_attr: {id: 'cwrc_tree_root'},
+                li_attr: {id: treeRootId},
                 state: {opened: true}
             }
         },
@@ -653,7 +653,7 @@ return function(config) {
             show_at_node: false,
             items: function(node) {
                 _hidePopup();
-                if (node.li_attr.id === 'cwrc_tree_root') return {};
+                if (node.li_attr.id === treeRootId) return {};
                 
                 var parentNode = $tree.jstree('get_node', node.parents[0]);
                 
