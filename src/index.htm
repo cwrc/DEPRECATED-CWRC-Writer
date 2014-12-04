@@ -44,7 +44,7 @@
 			#buttonsParent button .ui-button-text {
 				font-size: 14px !important;
 			}
-			#orlandoParent {
+			.columnSubParent {
 				clear: both;
 				float: left;
 				margin-top: 10px;
@@ -85,17 +85,19 @@
 				<div class="column" style="width: 640px;">
 					<button data-url="load">Load an Existing Document</button>
 				</div>
-				<div class="column">
-					<button data-url="templates/letter">Create a Letter</button>
-					<button data-url="templates/poem">Create a Poem</button>
-					<button data-url="templates/prose">Create Prose</button>
-					<!-- button data-url="template_event">Create an Event</button -->
+				<div class="columnSubParent">
+					<div class="column">
+						<button data-url="templates/letter">Create a Letter</button>
+						<button data-url="templates/poem">Create a Poem</button>
+						<button data-url="templates/prose">Create Prose</button>
+						<!-- button data-url="template_event">Create an Event</button -->
+					</div>
+					<div class="column">
+						<button data-url="templates/sample_letter">See a Sample Letter</button>
+						<button data-url="templates/sample_poem">See a Sample Poem</button>
+					</div>
 				</div>
-				<div class="column">
-					<button data-url="templates/sample_letter">See a Sample Letter</button>
-					<button data-url="templates/sample_poem">See a Sample Poem</button>
-				</div>
-				<div id="orlandoParent">
+				<div class="columnSubParent">
 					<div class="column">
 						<button data-url="templates/biography">Create an Orlando Biography</button>
 						<button data-url="templates/writing">Create Orlando Writing</button>
@@ -104,6 +106,12 @@
 						<button data-url="templates/sample_biography">See a Sample Orlando Biography</button>
 						<button data-url="templates/sample_writing">See Sample Orlando Writing</button>
 					</div>
+				</div>
+				<div class="columnSubParent">
+				    <div class="column">
+				        <button data-url="templates/ceww_new_entry_template">Create a CEWW Author Entry</button>
+				    </div>
+				    <div class="column"></div>
 				</div>
 				<div style="clear: both;"></div>
 			</div>

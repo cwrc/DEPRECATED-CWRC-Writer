@@ -496,32 +496,40 @@ return function(writer) {
         var rootName = doc.firstChild.nodeName;
         var schemaId;
         // TODO need a better way of tying this to the schemas config
+        
         // grab the schema from xml-model
-        if (rootName == 'xml-model') {
-            var xmlModelData = doc.firstChild.data;
-            var schemaUrl = xmlModelData.match(/href="([^"]*)"/)[1];
-            var urlParts = schemaUrl.match(/^(.*):\/\/([a-z\-.]+)(?=:[0-9]+)?\/(.*)/);
-            var fileName = urlParts[3];
-            if (fileName.indexOf('events') != -1) {
-                schemaId = 'events';
-            } else if (fileName.toLowerCase().indexOf('biography') != -1) {
-                schemaId = 'biography';
-            } else if (fileName.toLowerCase().indexOf('writing') != -1) {
-                schemaId = 'writing';
-            } else if (fileName.toLowerCase().indexOf('tei') != -1) {
-                schemaId = 'tei';
-            } else if (fileName.toLowerCase().indexOf('entry') != -1) {
-                schemaId = 'cwrcEntry';
-            } else {
-                schemaId = 'customSchema';
-                w.schemaManager.schemas.customSchema = {
-                    name: 'Custom Schema',
-                    url: schemaUrl
-                };
+        for (var i = 0; i < doc.childNodes.length; i++) {
+            var node = doc.childNodes[i];
+            if (node.nodeName === 'xml-model') {
+                var xmlModelData = node.data;
+                var schemaUrl = xmlModelData.match(/href="([^"]*)"/)[1];
+                var urlParts = schemaUrl.match(/^(.*):\/\/([a-z\-.]+)(?=:[0-9]+)?\/(.*)/);
+                var fileName = urlParts[3];
+                if (fileName.indexOf('events') != -1) {
+                    schemaId = 'events';
+                } else if (fileName.toLowerCase().indexOf('biography') != -1) {
+                    schemaId = 'biography';
+                } else if (fileName.toLowerCase().indexOf('writing') != -1) {
+                    schemaId = 'writing';
+                } else if (fileName.toLowerCase().indexOf('tei') != -1) {
+                    schemaId = 'tei';
+                } else if (fileName.toLowerCase().indexOf('entry') != -1) {
+                    schemaId = 'cwrcEntry';
+                } else {
+                    schemaId = 'customSchema';
+                    w.schemaManager.schemas.customSchema = {
+                        name: 'Custom Schema',
+                        url: schemaUrl
+                    };
+                }
+                break;
             }
-        // determine the schema based on the root element
-        } else {
-            rootName = rootName.toLowerCase();
+        }
+        
+        if (schemaId === undefined) {
+            // determine the schema based on the root element
+            var root = doc.firstElementChild;
+            var rootName = root.nodeName.toLowerCase();
             if (rootName === 'tei') {
                 schemaId = 'tei';
             } else if (rootName === 'events') {
@@ -534,6 +542,7 @@ return function(writer) {
                 schemaId = 'cwrcEntry';
             }
         }
+        
         if (schemaId === undefined) {
             w.dialogManager.show('message', {
                 title: 'Error',
