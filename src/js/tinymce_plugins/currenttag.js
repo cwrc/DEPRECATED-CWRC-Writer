@@ -21,8 +21,9 @@
                             return parents[i];
                     }
                 }
-                
-                $('#currentPath').empty();
+                var w = ed.writer;
+                var $pathContainer = $('#'+w.getId()+' .cwrcCurrentPath');
+                $pathContainer.empty();
                 var de = 0;
                 getParent(function(n) {
                     if (n.getAttribute('data-mce-bogus'))
@@ -40,7 +41,7 @@
                     }
                     if (tag != null) {
                         var pi = t.editor.dom.create('a', {name: id, 'href' : "javascript:;", role: 'button', onmousedown : "return false;", 'class' : 'mcePath_' + (de++)}, tag);
-                        var p = $('#currentPath')[0];
+                        var p = $pathContainer[0];
                         if (p.hasChildNodes()) {
                             p.insertBefore(t.editor.dom.create('span', {'aria-hidden': 'true'}, '\u00a0\u00bb '), p.firstChild);
                             p.insertBefore(pi, p.firstChild);
@@ -50,7 +51,7 @@
                     }
                 });
                 
-                $('#currentPath a').click(function() {
+                $('a', $pathContainer).click(function() {
                     var id = $(this).attr('name');
                     if (id) {
                         t.editor.writer.selectStructureTag(id, false);
@@ -81,7 +82,8 @@
         
         createControl: function(n, cm) {
             if (n == 'currenttag') {
-                var c = new tinymce.ui.Label('currentPath');
+                var id = tinymce.DOM.uniqueId('currentPath_');
+                var c = new tinymce.ui.Label(id);
                 return cm.add(c);
             }
     
@@ -98,7 +100,7 @@
 tinymce.create('tinymce.ui.Label:tinymce.ui.Control', {
     Label : function(id, s) {
         this.parent(id, s);
-        this.classPrefix = 'mceLabel';
+        this.classPrefix = 'cwrcCurrentPath';
     },
 
     renderHTML : function() {

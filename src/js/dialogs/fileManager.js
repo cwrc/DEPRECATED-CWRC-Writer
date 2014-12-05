@@ -7,29 +7,31 @@ return function(writer) {
     
     var docNames = [];
     
+    var id = w.getUniqueId('files_');
+    
     $(document.body).append(''+
-    '<div id="loaderDialog">'+
-        '<div id="files">'+
-        '<div data-type="document" class="column" style="left: 10px;">'+
-        '<h2>Documents</h2><ul class="searchResults"></ul>'+
-        '</div>'+
-        '<div data-type="template" class="column" style="right: 10px;">'+
-        '<h2>Templates</h2><ul class="searchResults"></ul>'+
-        '</div>'+
+    '<div id="'+id+'loaderDialog">'+
+        '<div id="'+id+'files" class="cwrcFiles">'+
+            '<div data-type="document" class="column" style="left: 10px;">'+
+                '<h2>Documents</h2><ul class="searchResults"></ul>'+
+            '</div>'+
+            '<div data-type="template" class="column" style="right: 10px;">'+
+                '<h2>Templates</h2><ul class="searchResults"></ul>'+
+            '</div>'+
         '</div>'+
     '</div>'+
-    '<div id="saverDialog">'+
+    '<div id="'+id+'saverDialog">'+
         '<label for="filename">Name</label>'+
         '<input type="text" name="filename"/>'+
         '<p>Please enter letters only.</p>'+
     '</div>'+
-    '<div id="unsavedDialog">'+
+    '<div id="'+id+'unsavedDialog">'+
         '<p>You have unsaved changes.  Would you like to save?</p>'+
     '</div>');
     
-    var $files = $('#files');
+    var $files = $('#'+id+'files');
     
-    var loader = $('#loaderDialog');
+    var loader = $('#'+id+'loaderDialog');
     loader.dialog({
         title: 'Load Document',
         modal: true,
@@ -38,7 +40,6 @@ return function(writer) {
         autoOpen: false,
         buttons: [{
             text: 'Load',
-            id: 'cwrc_loaderDialog_loadButton',
             click : function() {
                 var selected = $files.find('ul li.selected');
                 var name = selected.data('uri');
@@ -47,19 +48,18 @@ return function(writer) {
                     _doLoad(name, docType);
                     loader.dialog('close');
                 } else {
-                    $('#files ul').css({borderColor: 'red'});
+                    $('#'+id+'files ul').css({borderColor: 'red'});
                 }
             }
         },{
             text: 'Cancel',
-            id: 'cwrc_loaderDialog_cancelButton',
             click: function() {
                 loader.dialog('close');
             }
         }]
     });
     
-    var saver = $('#saverDialog');
+    var saver = $('#'+id+'saverDialog');
     saver.dialog({
         title: 'Save Document As',
         modal: true,
@@ -107,7 +107,7 @@ return function(writer) {
         }
     });
     
-    var unsaved = $('#unsavedDialog');
+    var unsaved = $('#'+id+'unsavedDialog');
     unsaved.dialog({
         title: 'Unsaved Changes',
         modal: true,

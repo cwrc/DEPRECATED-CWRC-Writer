@@ -373,27 +373,23 @@ html, body {
     text-decoration: underline;
 }
 
-#currentPath {
+.cwrcCurrentPath {
     font-size: 11px;
 }
 
-#currentPath a:hover {
+.cwrcCurrentPath a:hover {
     text-decoration: underline;
     cursor: pointer;
 }
 
-#search_query {
-    width: 200px;
-}
-
-#files .column {
+.cwrcFiles .column {
     position: absolute;
     width: 48%;
     top: 5px;
     bottom: 5px;
 }
 
-#files .searchResults {
+.cwrcFiles .searchResults {
     position: absolute;
     top: 20px;
     width: 95%;
@@ -402,36 +398,8 @@ html, body {
     border: 1px solid #fff;
 }
 
-#entitiesConverter {
-    display: none;
-}
-
-#searchDialog input[type='text'] {
-    border: 1px solid #ccc;
-}
-
 .ui-accordion-icons > div {
     margin-bottom: 0px !important;
-}
-
-#lookupServices .ui-accordion-content, #keyword_choice .ui-accordion-content {
-    padding: 5px 10px;
-}
-
-#lookup_alternate input[type='radio'] {
-    float: left;
-    margin-top: 10px;
-    margin-left: 0px;
-}
-
-#lookup_alternate input[type='text'] {
-    width: 225px;
-}
-
-#lookup_alternate ins, .attributeWidget ins {
-    display: inline-block !important;
-    vertical-align: bottom;
-    margin-left: -5px;
 }
 
 .searchResultsParent {

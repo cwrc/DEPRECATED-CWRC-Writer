@@ -10,8 +10,9 @@ define(['jquery','tinymce'], function($, tinymce) {
 return function(writer) {
     var w = writer;
     
+    var entConverterId = w.getUniqueId('entConverter_');
     $(document.body).append(''+
-        '<div id="entitiesConverter"></div>' // used by _htmlEntitiesToUnicode
+        '<div id="'+entConverterId+'"></div>' // used by _htmlEntitiesToUnicode
     );
     
     /**
@@ -379,8 +380,9 @@ return function(writer) {
             if (el.nodeType == Node.TEXT_NODE) {
                 var nodeValue = el.nodeValue;
                 if (el.nodeValue.match(/&.+?;/gim)) {
-                    $('#entitiesConverter')[0].innerHTML = el.nodeValue;
-                    nodeValue = $('#entitiesConverter')[0].innerText || $('#entitiesConverter')[0].firstChild.nodeValue;
+                    var container = $('#'+entConverterId)[0]; 
+                    container.innerHTML = el.nodeValue;
+                    nodeValue = container.innerText || container.firstChild.nodeValue;
                 }
                 // the following characters must be escaped
                 el.nodeValue = nodeValue.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

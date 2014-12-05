@@ -421,28 +421,6 @@ A:hover
   background-repeat: no-repeat;
 }
 
-#entitiesConverter
-{
-  display: none;
-}
-
-#lookup_alternate input[type='radio']
-{
-  float: left;
-  margin-top: 10px;
-  margin-left: 0px;
-}
-
-#lookup_alternate input[type='text']
-{
-  width: 225px;
-}
-
-#lookup_alternate ins
-{
-  display: inline-block;
-}
-
 .entitiesList .entityTitle
 {
   vertical-align: 7px;
