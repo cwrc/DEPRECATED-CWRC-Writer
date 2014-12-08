@@ -180,28 +180,34 @@ return function(writer, config) {
         if (doModeChange) {
             var message;
             var existingOverlaps = w.utilities.doEntitiesOverlap();
-            // overlap currently allowed and we're switching to a non-overlap mode
+            // switching to xml mode from an xmlrdf mode
+            if (editorMode === 'xml') {
+                message = 'If you select the XML only mode, no RDF will be created when tagging entities.<br/>Furthermore, the existing RDF annotations will be discarded.<br/><br/>Do you wish to continue?';
+            }
+            // switching from no-overlap to overlap
+            if (w.allowOverlap === false && editorMode === 'xmlrdfoverlap') {
+                message = 'The editor mode will be switched to XML and RDF (Overlapping Entities) and only RDF will be created for entities that overlap existing XML structures.<br/><br/>Do you wish to continue?'
+            }
+            // switching from overlap to no-overlap
             if (w.allowOverlap && editorMode !== 'xmlrdfoverlap') {
-                if (editorMode === 'xml') {
-                    message = 'If you select the XML only mode, no RDF will be created when tagging entities.<br/>Furthermore, the existing RDF annotations will be discarded.<br/><br/>Do you wish to continue?';
-                } else if (existingOverlaps) {
+                if (existingOverlaps) {
                     message = 'You have overlapping entities and are attemping to switch to a mode which prohibits them.<br/>The overlapping entities will be discarded if you continue.<br/><br/>Do you wish to continue?';
                 }
-                if (message !== undefined) {
-                    w.dialogManager.confirm({
-                        title: 'Warning',
-                        msg: message,
-                        callback: function(confirmed) {
-                            if (confirmed) {
+            }
+            if (message !== undefined) {
+                w.dialogManager.confirm({
+                    title: 'Warning',
+                    msg: message,
+                    callback: function(confirmed) {
+                        if (confirmed) {
+                            if (editorMode !== 'xmlrdfoverlap') {
                                 w.utilities.removeOverlappingEntities();
                                 w.utilities.convertBoundaryEntitiesToTags();
-                                doApplySettings(editorMode);
                             }
+                            doApplySettings(editorMode);
                         }
-                    });
-                } else {
-                    doApplySettings(editorMode);
-                }
+                    }
+                });
             } else {
                 doApplySettings(editorMode);
             }
