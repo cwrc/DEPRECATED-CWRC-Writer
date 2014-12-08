@@ -26,3 +26,9 @@ function cwrcWriterInit(Writer, Delegator) {
 ```
 
 In this example we are loading additional modules from https://github.com/cwrc/CWRC-Writer/tree/master/src/js/modules and then performing a custom layout function (which can be found here: https://github.com/cwrc/CWRC-Writer/blob/master/src/js/layout.js)
+
+
+About This Branch
+=================
+
+This branch was created to try and make multiple instances of CWRC-Writer runnable on the same page. Work was done to replace all hardcoded IDs with generated ones (see `writer.getUniqueId()`). Some hardcoded IDs still exist and need replacing. Additionally, the layout of the tabbed panel has been broken by the changes and needs fixing.
