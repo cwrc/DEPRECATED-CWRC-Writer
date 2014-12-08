@@ -5,7 +5,8 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 		<title>CWRC-Writer</title>
 		
-		<script type="text/javascript" data-main="js/config.js" src="js/lib/require/require.js"></script>
+		<script type="text/javascript" src="js/config.js"></script>
+        <script type="text/javascript" src="js/lib/require/require.js"></script>
 
 		<link type="text/css" rel="stylesheet" href="css/style.css" />
 		<link type="text/css" rel="stylesheet" href="css/islandora_style.css" />
@@ -20,6 +21,28 @@
 		<link type="text/css" rel="stylesheet" href="js/cwrcDialogs/css/cD.css" />
 
 		<script type="text/javascript">
+			require.config({baseUrl: 'js'});
+	        
+	        // and the 'jquery-private' module, in the
+	        // jquery-private.js file:
+	        define('jquery-private', ['jquery'], function ($) {
+	            return $.noConflict(true);
+	        });
+	
+	        require(['jquery', 'knockout'], function($, knockout) {
+	            window.ko = knockout; // requirejs shim isn't working for knockout
+	            
+	            require(['writer',
+	                     'delegator',
+	                     'jquery.layout',
+	                     'jquery.tablayout'
+	            ], function(Writer, Delegator) {
+	                $(function() {
+	                    cwrcWriterInit.call(window, $, Writer, Delegator);
+	                });
+	            });
+	        });
+	        
 			function cwrcWriterInit($, Writer, Delegator) {
 				cwrc_params = {};
 				
@@ -31,11 +54,11 @@
 				}
 				
 				function doInit(config) {
-					config.id = 'editor';
 					config.delegator = Delegator;
 					config.mode = 'xml';
 					config.buttons1 = 'schematags,editTag,removeTag,|,addperson,addplace,adddate,addorg,addtitle,addcorrection,addlink';
 					writer = new Writer(config);
+					writer.init('editor');
 					writer.event('writerInitialized').subscribe(doResize);
 					$(window).on('resize', doResize);
 					
