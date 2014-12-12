@@ -20,7 +20,6 @@
             var t = this, showMenu, hideMenu, contextmenuNeverUseNative, realCtrlKey;
             t.url = url;
             t.editor = ed;
-            t.curPos = {};
             t.showContextMenu = false; // whether to trigger the context menu (needed on mac)
 
             contextmenuNeverUseNative = ed.settings.contextmenu_never_use_native;
@@ -64,9 +63,6 @@
                 
                 var x = e.clientX || e.pageX;
                 var y = e.clientY || e.pageY;
-                
-                var editorPos = ed.$(ed.contentAreaContainer).offset();
-                t.curPos = ed.contextMenuPos = {x: x + editorPos.left, y: y + editorPos.top};
 
                 ed.currentBookmark = ed.selection.getBookmark(1);
                 
@@ -261,7 +257,7 @@
                 title: 'Copy Entity',
                 icon_src: url+'tag_blue_copy.png',
                 onclick : function() {
-                    ed.execCommand('copyEntity', null, t.curPos);
+                    ed.execCommand('copyEntity', null);
                 }
             }).setDisabled(col);
             col = ed.entityCopy == null;
@@ -269,7 +265,7 @@
                 title: 'Paste Entity',
                 icon_src: url+'tag_blue_paste.png',
                 onclick : function() {
-                    ed.execCommand('pasteEntity', null, t.curPos);
+                    ed.execCommand('pasteEntity', null);
                 }
             }).setDisabled(col);
 

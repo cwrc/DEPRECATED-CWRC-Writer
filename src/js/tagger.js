@@ -401,7 +401,7 @@ return function(writer) {
         
         // add attributes to tag
         var disallowedAttributes = ['id', 'class', 'style'];
-        var tag = w.editor.$('[name='+id+'][_tag]');
+        var tag = $('[name='+id+'][_tag]', w.editor.getBody());
         if (tag.length === 1) {
             for (var key in info.attributes) {
                 if (disallowedAttributes.indexOf(key) === -1) {

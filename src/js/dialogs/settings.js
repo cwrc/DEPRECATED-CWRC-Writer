@@ -233,12 +233,12 @@ return function(writer, config) {
             settings.fontFamily = $('select[name="fonttype"]', $settingsDialog).val();
             
             if (settings.showEntityBrackets != $('#showentitybrackets').prop('checked')) {
-                w.editor.$('body').toggleClass('showEntityBrackets');
+                $('body', w.editor.getDoc()).toggleClass('showEntityBrackets');
             }
             settings.showEntityBrackets = $('#showentitybrackets').prop('checked');
             
             if (settings.showStructBrackets != $('#showstructbrackets').prop('checked')) {
-                w.editor.$('body').toggleClass('showStructBrackets');
+                $('body', w.editor.getDoc()).toggleClass('showStructBrackets');
             }
             settings.showStructBrackets = $('#showstructbrackets').prop('checked');
             
