@@ -137,9 +137,8 @@ return function(writer, config) {
                     var tag = $(el).attr('name');
                     if (tag != null && elements.indexOf(tag) == -1) {
                         elements.push(tag);
-                        var tagName = w.utilities.getTagForEditor(tag);
-                        schemaTags += '.showStructBrackets '+tagName+'[_tag='+tag+']:before { color: #aaa; font-weight: normal; font-style: normal; font-family: monospace; content: "<'+tag+'>"; }';
-                        schemaTags += '.showStructBrackets '+tagName+'[_tag='+tag+']:after { color: #aaa; font-weight: normal; font-style: normal; font-family: monospace; content: "</'+tag+'>"; }';
+                        schemaTags += '.showStructBrackets *[_tag='+tag+']:before { color: #aaa; font-weight: normal; font-style: normal; font-family: monospace; content: "<'+tag+'>"; }';
+                        schemaTags += '.showStructBrackets *[_tag='+tag+']:after { color: #aaa; font-weight: normal; font-style: normal; font-family: monospace; content: "</'+tag+'>"; }';
                     }
                 });
                 elements.sort();
