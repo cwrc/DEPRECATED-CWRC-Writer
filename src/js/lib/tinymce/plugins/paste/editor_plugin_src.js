@@ -272,19 +272,7 @@
 							// So this logic will replace double enter with paragraphs and single enter with br so it kind of looks the same
 							h = '<p>' + dom.encode(textContent).replace(/\r?\n\r?\n/g, '</p><p>').replace(/\r?\n/g, '<br />') + '</p>';
 						}
-						
-						// CHANGED use our custom element if available
-						if (ed.copiedElement) {
-							var id = 'id="'+ed.copiedElement.getAttribute('id')+'"';
-							// see if the copiedElement id is in the content to be pasted
-							// if so, replace it with the copiedElement
-							if (h.search(id) != -1) {
-								h = ed.copiedElement.outerHTML;
-							} else {
-								ed.copiedElement = null;
-							}
-						}
-						
+
 						// Remove the nodes
 						each(dom.select('div.mcePaste'), function(n) {
 							dom.remove(n);
@@ -303,7 +291,7 @@
 				}
 			}
 
-			// Check if we should use the new auto process method			
+			// Check if we should use the new auto process method
 			if (getParam(ed, "paste_auto_cleanup_on_paste")) {
 				// Is it's Opera or older FF use key handler
 				if (tinymce.isOpera || /Firefox\/2/.test(navigator.userAgent)) {
@@ -366,7 +354,7 @@
 						h = h.replace(v[0], v[1]);
 				});
 			}
-			
+
 			if (ed.settings.paste_enable_default_filters == false) {
 				return;
 			}
@@ -425,7 +413,9 @@
 				// If JavaScript had a RegExp look-behind, we could have integrated this with the last process() array and got rid of the loop. But alas, it does not, so we cannot.
 				do {
 					len = h.length;
-					h = h.replace(/(<[a-z][^>]*\s)(?:id|name|language|type|on\w+|\w+:\w+)=(?:"[^"]*"|\w+)\s?/gi, "$1");
+					// Don't remove the type attribute for lists so that non-default list types display correctly.
+					h = h.replace(/(<?!(ol|ul)[^>]*\s)(?:id|name|language|type|on\w+|\w+:\w+)=(?:"[^"]*"|\w+)\s?/gi, "$1");
+					h = h.replace(/(<(ol|ul)[^>]*\s)(?:id|name|language|on\w+|\w+:\w+)=(?:"[^"]*"|\w+)\s?/gi, "$1");
 				} while (len != h.length);
 
 				// Remove all spans if no styles is to be retained
@@ -601,7 +591,7 @@
 			if (ed.settings.paste_enable_default_filters == false) {
 				return;
 			}
-			
+
 			if (o.wordContent) {
 				// Remove named anchors or TOC links
 				each(dom.select('a', o.node), function(a) {
@@ -729,7 +719,7 @@
 					if (type == 'ul')
 						html = p.innerHTML.replace(/__MCE_ITEM__/g, '').replace(/^[\u2022\u00b7\u00a7\u00d8o\u25CF]\s*(&nbsp;|\u00a0)+\s*/, '');
 					else
-						html = p.innerHTML.replace(/__MCE_ITEM__/g, '').replace(/^\s*\w+\.(&nbsp;|\u00a0)+\s*/, '');
+						html = p.innerHTML.replace(/__MCE_ITEM__/g, '').replace(/^\s*[\w|'<'|'>']+\.(&nbsp;|\u00a0)+\s*/, '');;
 
 					// Create li and add paragraph data into the new li
 					li = listElm.appendChild(dom.create('li', 0, html));
