@@ -4,11 +4,11 @@ define([
     'cwrcDialogs',
     'dialogs/addSchema','dialogs/fileManager','dialogs/header','dialogs/message','dialogs/triple',
     'dialogs/cwrcPerson','dialogs/cwrcOrg','dialogs/cwrcPlace','dialogs/cwrcTitle','dialogs/cwrcCitation',
-    'dialogs/schemaTags'
+    'dialogs/schemaTags','dialogs/help'
 ], function($, jqueryui, cD,
         AddSchema, FileManager, Header, Message, Triple,
         CwrcPerson, CwrcOrg, CwrcPlace, CwrcTitle, CwrcCitation,
-        SchemaTags
+        SchemaTags, Help
 ) {
 
 // add event listeners to all of our jquery ui dialogs
@@ -49,6 +49,7 @@ return function(writer) {
     
     var dialogs = {
         message: new Message(w),
+        help: new Help(w),
         triple: new Triple(w),
         header: new Header(w),
         filemanager: new FileManager(w),

@@ -265,6 +265,36 @@ return function(writer) {
         });
     };
     
+    function _getDocumentationBranch() {
+        var octo = new Octokit({token: '15286e8222a7bc13504996e8b451d82be1cba397'});
+        var templateRepo = octo.getRepo('cwrc', 'CWRC-Writer-Documentation');
+        return templateRepo.getBranch('master');
+    }
+    
+    /**
+     * Get a specific documentation file
+     * @param {String} fileName The documentation file name.
+     * @param {Delegator~getDocumentationCallback} callback
+     */
+    del.getDocumentation = function(fileName, callback) {
+        var branch = _getDocumentationBranch();
+        branch.contents('out/xhtml/'+fileName).then(function(contents) {
+            var doc = $.parseXML(contents);
+            callback.call(w, doc);
+        }, function() {
+            w.dialogManager.show('message', {
+                title: 'Error',
+                type: 'error',
+                msg: 'There was an error fetching the documentation for: '+fileName
+            });
+        });
+    };
+    
+    /**
+     * @callback Delegator~getTemplatesCallback
+     * @param {Document} The XML doc
+     */
+    
     function _getTemplateBranch() {
         var octo = new Octokit({token: '15286e8222a7bc13504996e8b451d82be1cba397'});
         var templateRepo = octo.getRepo('cwrc', 'CWRC-Writer-Templates');

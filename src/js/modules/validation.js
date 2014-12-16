@@ -13,7 +13,7 @@ return function(config) {
     var id = 'validation';
     
     $('#'+config.parentId).append('<div id="'+id+'">'+
-            '<div id="'+id+'_buttons"><button>Validate</button><button>Clear</button></div>'+
+            '<div id="'+id+'_buttons"><button>Validate</button><button>Clear</button><button>Help</button></div>'+
             '<ul class="validationList"></ul>'+
         '</div>');
     
@@ -192,6 +192,12 @@ return function(config) {
     });
     $('#'+id+'_buttons button:eq(1)').button().click(function() {
         validation.clearResult();
+    });
+    $('#'+id+'_buttons button:eq(2)').button({icons: {primary: 'ui-icon-help'}}).click(function() {
+        w.dialogManager.show('help', {
+            id: 'validation',
+            title: 'Validation Help'
+        });
     });
     
     // add to writer

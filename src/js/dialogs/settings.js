@@ -72,9 +72,6 @@ return function(writer, config) {
         '</select>'+
         '<br/><button>Add Schema</button>'+
     '</div>'+
-    '</div>'+
-    '<div id="helpDialog">'+
-        '<p>For help with CWRC-Writer click <a href="http://cwrc.ca/CWRC-Writer_Documentation/" target="_blank">here</a>.</p>'+
     '</div>');
     
     $settingsDialog = $('#settingsDialog');
@@ -103,7 +100,11 @@ return function(writer, config) {
     });
     
     $('#helpLink').click(function() {
-        $('#helpDialog').dialog('open');
+        w.dialogManager.show('message', {
+            title: 'CWRC-Writer Help',
+            msg: '<p>For help with CWRC-Writer click <a href="http://cwrc.ca/CWRC-Writer_Documentation/" target="_blank">here</a>.</p>',
+            modal: false
+        });
     });
     
     $settingsDialog.dialog({
@@ -116,6 +117,16 @@ return function(writer, config) {
         width: 350,
         autoOpen: false,
         buttons: [{
+            text: 'Help',
+            icons: {primary: 'ui-icon-help'},
+            'class': 'left',
+            click: function() {
+                w.dialogManager.show('help', {
+                    id: 'settings',
+                    title: 'Settings Help'
+                });
+            }
+        },{
             text: 'Revert to Defaults',
             'class': 'left',
             click: function() {
@@ -133,21 +144,6 @@ return function(writer, config) {
                 applySettings();
             }
         }]
-    });
-    
-    $('#helpDialog').dialog({
-        title: 'Help',
-        modal: true,
-        resizable: true,
-        closeOnEscape: true,
-        height: 150,
-        width: 250,
-        autoOpen: false,
-        buttons: {
-            'Close': function() {
-                $('#helpDialog').dialog('close');
-            }
-        }
     });
     
     function buildSchema() {
