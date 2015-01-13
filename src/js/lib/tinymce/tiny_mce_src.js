@@ -9696,14 +9696,15 @@ window.tinymce.dom.Sizzle = Sizzle;
 			if (type) {
 				rng = t.getRng();
 
-				if (rng.setStart) {
-					rng = {
-						startContainer: rng.startContainer,
-						startOffset: rng.startOffset,
-						endContainer: rng.endContainer,
-						endOffset: rng.endOffset
-					};
-				}
+				// FIXME hack to get commonAncestorContainer back
+//				if (rng.setStart) {
+//					rng = {
+//						startContainer: rng.startContainer,
+//						startOffset: rng.startOffset,
+//						endContainer: rng.endContainer,
+//						endOffset: rng.endOffset
+//					};
+//				}
 
 				return {rng : rng};
 			}
