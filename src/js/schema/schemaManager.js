@@ -78,9 +78,10 @@ return function(writer, config) {
      * @fires Writer#schemaLoaded
      * @param {String} schemaId The ID of the schema to load (from the config)
      * @param {Boolean} startText Whether to include the default starting text
+     * @param {Boolean} loadCss Whether to load the associated CSS
      * @param {Function} callback Callback for when the load is complete
      */
-    sm.loadSchema = function(schemaId, startText, callback) {
+    sm.loadSchema = function(schemaId, startText, loadCss, callback) {
         var baseUrl = ''; //w.project == null ? '' : w.baseUrl; // handling difference between local and server urls
         sm.schemaId = schemaId;
         var schemaUrl = sm.schemas[sm.schemaId].url;
@@ -121,10 +122,9 @@ return function(writer, config) {
             function processSchema() {
                 // remove old schema elements
                 $('#schemaTags', w.editor.dom.doc).remove();
-                $('#schemaRules', w.editor.dom.doc).remove();
                 
                 var cssUrl = sm.schemas[sm.schemaId].cssUrl;
-                if (cssUrl) {
+                if (cssUrl && loadCss === true) {
                     sm.loadSchemaCSS(cssUrl);
                 }
                 
@@ -229,8 +229,10 @@ return function(writer, config) {
      * @param {String} url The URL for the CSS
      */
     sm.loadSchemaCSS = function(url) {
-        w.editor.dom.loadCSS(url);
-        if (url.match('converted') != null) {
+        $('#schemaRules', w.editor.dom.doc).remove();
+        $('head', w.editor.dom.doc).append('<link id="schemaRules" rel="stylesheet" href="'+url+'"/>');
+        
+        if (url.match('converted.css') != null) {
             // already converted so exit
             return;
         }
@@ -250,8 +252,6 @@ return function(writer, config) {
             }
             if (stylesheet) {
                 try {
-                    $('#schemaRules', w.editor.dom.doc).remove();
-                    
                     var rules = stylesheet.cssRules;
                     var newRules = '';
                     // adapt the rules to our format, should only modify element names in selectors
@@ -266,6 +266,7 @@ return function(writer, config) {
                         var newCss = css.replace(selector, newSelector);
                         newRules += newCss+'\n';
                     }
+                    $('#schemaRules', w.editor.dom.doc).remove();
                     $('head', w.editor.dom.doc).append('<style id="schemaRules" type="text/css" />');
                     $('#schemaRules', w.editor.dom.doc).text(newRules);
                     stylesheet.disabled = true;

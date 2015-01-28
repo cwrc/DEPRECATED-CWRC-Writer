@@ -495,9 +495,12 @@ return function(writer) {
     converter.processDocument = function(doc) {
         var rootName = doc.firstChild.nodeName;
         var schemaId;
+        var cssFilename;
+        var loadSchemaCss = true; // whether to load schema css
+        
         // TODO need a better way of tying this to the schemas config
         
-        // grab the schema from xml-model
+        // grab the schema (and css) from xml-model
         for (var i = 0; i < doc.childNodes.length; i++) {
             var node = doc.childNodes[i];
             if (node.nodeName === 'xml-model') {
@@ -522,8 +525,20 @@ return function(writer) {
                         url: schemaUrl
                     };
                 }
-                break;
+            } else if (node.nodeName === 'xml-stylesheet') {
+                var xmlStylesheetData = node.data;
+                var cssUrl = xmlStylesheetData.match(/href="([^"]*)"/)[1];
+                cssFilename = cssUrl.match(/(\w+)(.css)$/);
+                if (cssFilename != null) {
+                    cssFilename = 'css/'+cssFilename[1]+'_converted.css';
+                }
+                
             }
+        }
+        
+        if (cssFilename != null) {
+            loadSchemaCss = false;
+            w.schemaManager.loadSchemaCSS(cssFilename);
         }
         
         if (schemaId === undefined) {
@@ -551,7 +566,7 @@ return function(writer) {
             });
         } else {
             if (schemaId !== w.schemaManager.schemaId) {
-                w.schemaManager.loadSchema(schemaId, false, function() {
+                w.schemaManager.loadSchema(schemaId, false, loadSchemaCss, function() {
                     doProcessing(doc);
                 });
             } else {
