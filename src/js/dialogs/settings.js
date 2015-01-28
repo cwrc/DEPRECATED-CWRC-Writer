@@ -180,9 +180,13 @@ return function(writer, config) {
             if (editorMode === 'xml') {
                 message = 'If you select the XML only mode, no RDF will be created when tagging entities.<br/>Furthermore, the existing RDF annotations will be discarded.<br/><br/>Do you wish to continue?';
             }
+            // switching from xml mode to no-overlap
+            if (editorMode === 'xmlrdf' && w.mode === w.XML) {
+                message = 'XML tags and RDF/Semantic Web annotations equivalent to the XML tags will be created, consistent with the hierarchy of the XML schema, so annotations will not be allowed to overlap.<br/><br/>Do you wish to continue?';
+            }
             // switching from no-overlap to overlap
             if (w.allowOverlap === false && editorMode === 'xmlrdfoverlap') {
-                message = 'The editor mode will be switched to XML and RDF (Overlapping Entities) and only RDF will be created for entities that overlap existing XML structures.<br/><br/>Do you wish to continue?'
+                message = 'The editor mode will be switched to XML and RDF (Overlapping Entities) and only RDF will be created for entities that overlap existing XML structures.<br/><br/>Do you wish to continue?';
             }
             // switching from overlap to no-overlap
             if (w.allowOverlap && editorMode !== 'xmlrdfoverlap') {
