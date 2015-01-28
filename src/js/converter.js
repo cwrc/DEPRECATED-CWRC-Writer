@@ -207,7 +207,7 @@ return function(writer) {
         
         // xml mode
         var uri = w.baseUrl+'editor/documents/'+w.currentDocId;
-        rdfString += '<rdf:Description rdf:about="'+uri+'">\n\t<cw:mode>'+w.mode+'</cw:mode>\n</rdf:Description>';
+        rdfString += '<rdf:Description rdf:about="'+uri+'">\n\t<cw:mode>'+w.mode+'</cw:mode>\n\t<cw:allowOverlap>'+w.allowOverlap+'</cw:allowOverlap>\n</rdf:Description>';
         
         var body = w.editor.getBody();
         w.entitiesManager.eachEntity(function(id, entity) {
@@ -593,6 +593,10 @@ return function(writer) {
             } else {
                 w.mode = w.XMLRDF;
             }
+            
+            var allowOverlap = rdfs.find('cw\\:allowOverlap, allowOverlap').first().text();
+            w.allowOverlap = allowOverlap === 'true';
+            
             processRdf(rdfs);
             rdfs.remove();
         } else {
