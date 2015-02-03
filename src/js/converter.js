@@ -585,6 +585,7 @@ return function(writer) {
         
         var rdfs = $(doc).find('rdf\\:RDF, RDF');
         
+        var overlapSetFromHeader = false;
         // process RDF and/or entities
         if (rdfs.length) {
             var mode = parseInt(rdfs.find('cw\\:mode, mode').first().text());
@@ -596,6 +597,7 @@ return function(writer) {
             
             var allowOverlap = rdfs.find('cw\\:allowOverlap, allowOverlap').first().text();
             w.allowOverlap = allowOverlap === 'true';
+            overlapSetFromHeader = true;
             
             processRdf(rdfs);
             rdfs.remove();
@@ -613,11 +615,13 @@ return function(writer) {
             w.editor.setContent(editorString, {format: 'raw'}); // format is raw to prevent html parser and serializer from messing up whitespace
             
             insertEntities();
-            var isOverlapping = w.utilities.doEntitiesOverlap();
-            if (isOverlapping) {
-                w.allowOverlap = true;
-            } else {
-                w.allowOverlap = false;
+            if (!overlapSetFromHeader) {
+                var isOverlapping = w.utilities.doEntitiesOverlap();
+                if (isOverlapping) {
+                    w.allowOverlap = true;
+                } else {
+                    w.allowOverlap = false;
+                }
             }
             
             w.event('documentLoaded').publish();
