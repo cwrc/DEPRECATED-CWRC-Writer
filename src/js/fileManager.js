@@ -140,6 +140,19 @@ return function(writer) {
         w.converter.processDocument(docXml);
     };
     
+    /**
+     * Loads a template through the delegator
+     * @fires Writer#loadingDocument
+     * @param {String} filename The name of the template file
+     */
+    fm.loadTemplate = function(filename) {
+        w.currentDocId = null;
+        w.event('loadingDocument').publish();
+        w.delegator.loadTemplate(filename, function(xml) {
+            w.converter.processDocument(xml);
+        });
+    };
+    
     fm.editSource = function() {
         w.dialogManager.confirm({
             title: 'Edit Source',
@@ -165,10 +178,7 @@ return function(writer) {
             w.dialogManager.filemanager.showLoader();
         } else if (start.match(/^templates\//) !== null) {
             start += '.xml';
-            w.event('loadingDocument').publish();
-            w.delegator.loadTemplate(start, function(xml) {
-                w.converter.processDocument(xml);
-            });
+            fm.loadTemplate(start);
         } else if (start !== '') {
             fm.loadDocument(start);
         }
