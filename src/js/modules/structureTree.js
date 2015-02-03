@@ -234,7 +234,7 @@ return function(config) {
             var id = node.id;
             if (id && !ignoreSelect) {
                 ignoreSelect = true;
-                if (id == 'entityHighlight') {
+                if (id === 'entityHighlight') {
                     id = $(node).find('[_entity]').first().attr('name');
                 }
                 var treeNode = $('[name="'+id+'"]', $tree);
@@ -248,11 +248,28 @@ return function(config) {
                 //if (result === false || result.attr('id') == 'tree') {
                     ignoreSelect = false;
                 //}
+
+                _scrollIntoView(treeNode);
             }
         } else {
             _onNodeDeselect();
         }
     };
+    
+    function _scrollIntoView($node) {
+        var o = $node.offset().top - $tree.offset().top;
+        var t = o + $tree.scrollTop();
+        var b = t + $node.outerHeight();
+        var ch = $tree.innerHeight();
+        var ct = parseInt($tree.scrollTop(), 10);
+        var cb = ct + ch;
+        
+        if ($node.outerHeight() > ch || t < ct) {
+            $tree.scrollTop(t);
+        } else if (b > cb) {
+            $tree.scrollTop(b - ch);
+        }
+    }
     
     /**
      * Selects a node in the tree based on a node in the editor
