@@ -5,8 +5,8 @@ return function(writer) {
     
     var docsMappings;
     
-    $.ajax({url: 'js/docsMappings.js', dataType: 'json'}).then(function(mappings) {
-        docsMappings = mappings;
+    require(['text!docsMappings.js'], function(mappings) {
+       docsMappings = $.parseJSON(mappings); 
     });
     
     $(document.body).append(''+
