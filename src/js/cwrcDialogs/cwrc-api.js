@@ -3,6 +3,7 @@
  *
  * Requires jQuery
  */
+// NOT USED - CWRC annotiation JavaScript API calls
 function CwrcAnnotion(url, jq){
         if (!jq) {
                 jq = $;
@@ -97,6 +98,7 @@ function CwrcAnnotion(url, jq){
         }
 }
 
+// CWRC Entity JavaScript API calls
 function CwrcEntity(type, url, jq) {
         if (!jq) {
                 jq = $;
@@ -259,11 +261,13 @@ function CwrcApi(url, jq) {
                 });
         }
 
+        // NOT USED - 2015-02-18
         // Public functions
         /**
          * Initialize the data using a set of existing cookies.
          * var name The cookie to obtaine the information from
          */
+        // NOT USED - 2015-02-18
         this.initializeWithCookieData = function(data) {
                 var result = result;
 
@@ -288,6 +292,7 @@ function CwrcApi(url, jq) {
                 return result;
         }
 
+        // NOT USED - 2015-02-18
         this.initializeWithLogin = function(username, password) {
                 var result = result;
 
@@ -313,6 +318,7 @@ function CwrcApi(url, jq) {
                 return result;
         }
 
+        // NOT USED - 2015-02-18
         this.logout = function() {
                 var result = result;
 

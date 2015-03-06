@@ -62,6 +62,9 @@ return function(writer) {
         schemaTags: new SchemaTags(w)
     };
     
+    // set URL for CWRC-Dialogs
+    cD.setRepositoryBaseObjectURL('http://cwrc-dev-01.srv.ualberta.ca/islandora/object/');
+    
     // log in for CWRC-Dialogs
 //    cD.initializeWithCookieData(null);
 //    cD.initializeWithLogin('CWRC-WriterTestUser', 'quirkyCWRCwriter');
