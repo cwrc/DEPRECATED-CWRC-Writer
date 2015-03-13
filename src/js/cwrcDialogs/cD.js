@@ -2223,6 +2223,7 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
                     var page = parseInt($(event.currentTarget).attr("data"));
 
                     if (page <= that.maxPage() && page >= 0) {
+                        search.isDataSelected(false);
                         specs.paginate(page, that);
                     }
                 },
@@ -2953,7 +2954,7 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
 
         search.clear = function () {
             search.selectedData = null;
-            search.isDataSelected(false);
+//            search.isDataSelected(false); // setting to false here breaks modal dismiss
             for (var key in search.linkedDataSources) {
                 var lds = search.linkedDataSources[key];
                 lds.results.removeAll();
