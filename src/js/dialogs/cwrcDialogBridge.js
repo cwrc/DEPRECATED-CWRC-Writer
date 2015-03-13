@@ -102,9 +102,11 @@ return function(writer, config) {
                     },
                     buttons: [{
                         label : 'Create New '+label,
+                        isEdit : false,
                         action : doCreate
                     },{
                         label : 'Edit '+label,
+                        isEdit : true,
                         action : doEdit
                     }]
                 });

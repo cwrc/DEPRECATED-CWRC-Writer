@@ -2745,6 +2745,7 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
 
         search.selectedLinkedDataSource = "cwrc";
         search.queryString = ko.observable("");
+        search.isDataSelected = ko.observable(false);
 
         // templates
 
@@ -2869,10 +2870,10 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
                 '               <div class="modal-footer">' +
                 '                   <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>' +
                 '                   <!-- ko foreach: buttons -->' +
-                '                   <button type="button" class="btn btn-default" data-dismiss="modal" data-bind="text:label, click: $root.runCustomAction"></button>' +
+                '                   <button type="button" class="btn btn-default" data-dismiss="modal" data-bind="enable: (isEdit && $root.isDataSelected) || !isEdit, text:label, click: $root.runCustomAction"></button>' +
                 '                   <!-- /ko -->' +
                 // '                    <button type="button" class="btn btn-default" data-bind="click: createEntity">Add New</button>' +
-                '                   <button type="button" class="btn btn-primary" data-dismiss="modal" data-bind="click: returnSelected">Select</button>' +
+                '                   <button type="button" class="btn btn-primary" data-dismiss="modal" data-bind="enable: isDataSelected, click: returnSelected">Select</button>' +
                 '               </div>' +
                 '           </div>' +
                 '       </div>' +
@@ -2952,6 +2953,7 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
 
         search.clear = function () {
             search.selectedData = null;
+            search.isDataSelected(false);
             for (var key in search.linkedDataSources) {
                 var lds = search.linkedDataSources[key];
                 lds.results.removeAll();
@@ -3212,6 +3214,7 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
             }
 
             search.selectedData = result;
+            search.isDataSelected(true);
         };
 
         search.selectLinkedDataSource = function (data, event) {
@@ -3221,6 +3224,7 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
 
         search.performSearch = function (queryString) {
             search.selectedData = null;
+            search.isDataSelected(false);
 
             for (var key in search.linkedDataSources) {
                 var lds = search.linkedDataSources[key];
