@@ -35,6 +35,12 @@ return function(id, writer) {
     dialog.$el.on('beforeSave', function(e, dialog) {
         var sicText = dialog.currentData.customValues.sicText;
         var corrText = dialog.currentData.customValues.corrText;
+        
+        // copy customValues to attributes so they display in entitiesList
+        // we don't want to store them as just attributes because technically they aren't attributes of this tag
+        dialog.currentData.attributes.sicText = sicText;
+        dialog.currentData.attributes.corrText = corrText;
+        
         if (dialog.mode === DialogForm.EDIT) {
             // TODO
 //            if (sicText == undefined) {
