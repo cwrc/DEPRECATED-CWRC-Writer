@@ -663,7 +663,11 @@ return function(writer) {
             });
         }
     }
-    
+
+    // Needs to be public, to be able to process documents after the schema
+    // changes.
+    converter.doProcessing = doProcessing;
+
     function processRdf(rdfs) {
         var doc = rdfs.parents().last()[0].parentNode;
         
