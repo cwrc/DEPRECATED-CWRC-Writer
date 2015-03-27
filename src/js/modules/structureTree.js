@@ -257,17 +257,19 @@ return function(config) {
     };
     
     function _scrollIntoView($node) {
-        var o = $node.offset().top - $tree.offset().top;
-        var t = o + $tree.scrollTop();
-        var b = t + $node.outerHeight();
-        var ch = $tree.innerHeight();
-        var ct = parseInt($tree.scrollTop(), 10);
-        var cb = ct + ch;
-        
-        if ($node.outerHeight() > ch || t < ct) {
-            $tree.scrollTop(t);
-        } else if (b > cb) {
-            $tree.scrollTop(b - ch);
+        if ($node.length === 1) {
+            var o = $node.offset().top - $tree.offset().top;
+            var t = o + $tree.scrollTop();
+            var b = t + $node.outerHeight();
+            var ch = $tree.innerHeight();
+            var ct = parseInt($tree.scrollTop(), 10);
+            var cb = ct + ch;
+            
+            if ($node.outerHeight() > ch || t < ct) {
+                $tree.scrollTop(t);
+            } else if (b > cb) {
+                $tree.scrollTop(b - ch);
+            }
         }
     }
     
