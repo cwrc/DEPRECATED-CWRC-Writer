@@ -189,6 +189,10 @@ return function(config) {
         });
         treeRef.delete_node('#cwrc_tree_root');
         var rootNode = $('[_tag="'+w.root+'"]', w.editor.getBody());
+        if (rootNode.length === 0) {
+            // fallback if schema/root has changed
+            rootNode = $('[_tag]', w.editor.getBody()).first();
+        }
         var rootData = _processNode(rootNode, 0);
         if (rootData != null) {
             rootData.li_attr.id = 'cwrc_tree_root';

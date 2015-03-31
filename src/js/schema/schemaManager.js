@@ -290,6 +290,11 @@ return function(writer, config) {
         }
     };
     
+    w.event('schemaChanged').subscribe(function(schemaId) {
+        w.schemaManager.schemaId = schemaId;
+        w.schemaManager.loadSchema(schemaId, false, true, function() {});
+    });
+    
     return sm;
 };
 

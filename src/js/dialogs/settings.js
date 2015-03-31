@@ -242,9 +242,9 @@ return function(writer, config) {
             }
             settings.showStructBrackets = $('#showstructbrackets').prop('checked');
             
-            // TODO add handling for schemaChanged
-            w.schemaManager.schemaId = $('select[name="schema"]', $settingsDialog).val();
-            w.event('schemaChanged').publish(w.schemaManager.schemaId);
+            var schemaId = $('select[name="schema"]', $settingsDialog).val();
+            
+            w.event('schemaChanged').publish(schemaId);
             
             var styles = {
                 fontSize: settings.fontSize,
