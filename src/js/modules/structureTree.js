@@ -38,7 +38,8 @@ $.vakata.context._show_submenu = function (o) {
                         $(el).hide();
                     }
                 });
-                //$.vakata.context.updateHeight($(this).parent().parent());
+                // call in order to re-position filter 
+                $.vakata.context._show_submenu(o);
             }
         });
     }
@@ -51,6 +52,14 @@ $.vakata.context._show_submenu = function (o) {
 $(document).on('context_hide.vakata', function(e) {
     var filterParent = $('.filterParent', e.element);
     filterParent.hide();
+});
+
+// resize submenus to fit document height
+$(document).on('context_show.vakata', function(e, data) {
+    var menuBottom = data.element.outerHeight() + data.element.position().top;
+    var maxHeight = Math.min(500, menuBottom - 50);
+    var submenus = data.element.find('.submenu ul');
+    submenus.css('max-height', maxHeight+'px');
 });
 
 /**
@@ -799,6 +808,7 @@ return function(config) {
             }
         }
     });
+    
     $tree.on('select_node.jstree', _onNodeSelect);
     $tree.on('deselect_node.jstree', _onNodeDeselect);
     $tree.on('copy_node.jstree', function(e, data) {
