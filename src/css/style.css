@@ -3,6 +3,13 @@ html, body {
     width: 100%;
     margin: 0;
     padding: 0;
+    color: #333;
+    overflow: hidden;
+}
+
+#cwrc_wrapper {
+    margin: 0;
+    padding: 0;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: 10px;
     color: #333;
