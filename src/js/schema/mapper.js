@@ -152,12 +152,12 @@ Mapper.prototype = {
 
     /**
      * Loads the mappings for the specified schema.
-     * @param schemaId {String} The schema ID.
+     * @param schemaMappingId {String} The schema mapping ID.
      * @returns {Deferred} Deferred object that resolves when the mappings are loaded.
      */
-    loadMappings: function(schemaId) {
+    loadMappings: function(schemaMappingId) {
         var dfd = $.Deferred();
-        require(['schema/'+schemaId+'/mappings'], $.proxy(function(mappings) {
+        require(['schema/' + schemaMappingId + '/mappings'], $.proxy(function(mappings) {
             this.mappings = mappings;
             dfd.resolve();
         }, this));

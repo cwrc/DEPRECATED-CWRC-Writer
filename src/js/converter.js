@@ -506,6 +506,18 @@ return function(writer) {
             if (node.nodeName === 'xml-model') {
                 var xmlModelData = node.data;
                 var schemaUrl = xmlModelData.match(/href="([^"]*)"/)[1];
+                // Search the known schemas, if the url matches it must be the same one.
+                $.each(w.schemaManager.schemas, function(id, schema) {
+                    var aliases = schema.aliases || [];
+                    if (schemaUrl == schema.url || $.inArray(schemaUrl, aliases) !== -1) {
+                        schemaId = id;
+                        return false;
+                    }
+                });
+                // Only continue guessing if we didn't already have an exact match.
+                if (schemaId !== undefined) {
+                    break;
+                }
                 var urlParts = schemaUrl.match(/^(.*):\/\/([a-z\-.]+)(?=:[0-9]+)?\/(.*)/);
                 var fileName = urlParts[3];
                 if (fileName.indexOf('events') != -1) {

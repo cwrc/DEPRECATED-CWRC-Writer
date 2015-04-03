@@ -49,7 +49,10 @@ return function(id, writer) {
         }
 
         function postSetup() {
-            if (w.schemaManager.schemaId == 'tei') {
+            var schemaId = w.schemaManager.schemaId;
+            var schema = w.schemaManager.schemas[schemaId];
+            var schemaMappingsId = schema.schemaMappingsId;
+            if (schemaMappingsId == 'tei') {
                 iframe.contentWindow.tinymce.DOM.counter = tinymce.DOM.counter + 1;
 
                 cwrcWriter.event('documentLoaded').subscribe(function() {

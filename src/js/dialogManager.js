@@ -102,7 +102,7 @@ return function(writer) {
                 } else {
                     for (var i = 0; i < arguments.length; i++) {
                         var name = dialogNames[i];
-                        var id = schemaId+'_'+name+'Form';
+                        var id = schemaMappingsId+'_'+name+'Form';
                         parent[name] = new arguments[i](id, w);
                     }
                 }
