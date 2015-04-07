@@ -46,7 +46,7 @@ $.extend($.ui.tooltip.prototype.options, {
  */
 return function(writer) {
     var w = writer;
-    
+
     var dialogs = {
         message: new Message(w),
         help: new Help(w),
@@ -61,14 +61,14 @@ return function(writer) {
         place: new CwrcPlace(w),
         schemaTags: new SchemaTags(w)
     };
-    
+
     // set URL for CWRC-Dialogs
     cD.setRepositoryBaseObjectURL('http://cwrc-dev-01.srv.ualberta.ca/islandora/object/');
-    
+
     // log in for CWRC-Dialogs
 //    cD.initializeWithCookieData(null);
 //    cD.initializeWithLogin('CWRC-WriterTestUser', 'quirkyCWRCwriter');
-    
+
     if (w.initialConfig.cwrcDialogs !== undefined) {
         var conf = w.initialConfig.cwrcDialogs;
         if (conf.cwrcApiUrl) cD.setCwrcApi(conf.cwrcApiUrl);
@@ -81,14 +81,14 @@ return function(writer) {
             if (conf.schemas.organization) cD.setOrganizationSchema(conf.schemas.organization);
         }
     }
-    
+
     var schemaDialogs = {};
     var dialogNames = ['citation', 'correction', 'date', 'keyword', 'link', 'note', 'org', 'person', 'place', 'title'];
-    
+
     var loadSchemaDialogs = function() {
         var schemaId = w.schemaManager.schemaId;
         var schemaMappingsId = w.schemaManager.getCurrentSchema().schemaMappingsId;
-        
+
         // TODO destroy previously loaded dialogs
         if (schemaDialogs[schemaMappingsId] == null) {
             var parent = schemaDialogs[schemaMappingsId] = {};
@@ -102,16 +102,16 @@ return function(writer) {
                 } else {
                     for (var i = 0; i < arguments.length; i++) {
                         var name = dialogNames[i];
-                        var id = schemaId+'_'+name+'Form';
+                        var id = schemaMappingsId+'_'+name+'Form';
                         parent[name] = new arguments[i](id, w);
                     }
                 }
             });
         }
     };
-    
+
     w.event('schemaLoaded').subscribe(loadSchemaDialogs);
-    
+
     /**
      * @lends DialogManager.prototype
      */
@@ -133,9 +133,9 @@ return function(writer) {
             dialogs.message.confirm(config);
         }
     };
-    
+
     $.extend(pm, dialogs);
-    
+
     return pm;
 };
 
