@@ -16,6 +16,11 @@ html, body {
     overflow: hidden;
 }
 
+.cwrc {
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: 10px;
+}
+
 .cwrc h1 {
     font-size: 14px;
 }
