@@ -71,7 +71,7 @@ place: {
         
         var precision = entity.getCustomValue('precision');
         if (format === 'xml') {
-            var precisionXml = $.parseXML('<cw:hasPrecision xmlns:cw="http://cwrc.ca/ns/cw#" rdf:resource="http://cwrc.ca/ns/cw#'+precision+'"/>');
+            var precisionXml = $.parseXML('<cw:hasPrecision xmlns:cw="http://cwrc.ca/ns/cw#" rdf:resource="http://cwrc.ca/ns/cw#'+precision+'" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>');
             var body = $('[rdf\\:about="'+entity.getUris().annotationId+'"]', anno);
             body.append(precisionXml.firstChild);
         } else {
