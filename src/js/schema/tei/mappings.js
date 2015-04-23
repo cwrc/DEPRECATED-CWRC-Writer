@@ -77,6 +77,8 @@ place: {
         } else {
             anno.hasPrecision = 'cw:'+precision;
         }
+        
+        return anno;
     }
 },
 
