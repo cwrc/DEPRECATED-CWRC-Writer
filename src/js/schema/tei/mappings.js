@@ -67,7 +67,16 @@ place: {
         }, 'tei');
     },
     annotation: function(entity, format) {
-        return AnnotationsManager.commonAnnotation(entity, 'geo:SpatialThing', null, format);
+        var anno = AnnotationsManager.commonAnnotation(entity, 'geo:SpatialThing', null, format);
+        
+        var precision = entity.getCustomValue('precision');
+        if (format === 'xml') {
+            var precisionXml = $.parseXML('<cw:hasPrecision xmlns:cw="http://cwrc.ca/ns/cw#" rdf:resource="http://cwrc.ca/ns/cw#'+precision+'"/>');
+            var body = $('[rdf\\:about="'+entity.getUris().annotationId+'"]', anno);
+            body.append(precisionXml.firstChild);
+        } else {
+            anno.hasPrecision = 'cw:'+precision;
+        }
     }
 },
 
