@@ -372,7 +372,7 @@ return function(writer) {
             } else {
                 w.dialogManager.confirm({
                     title: 'Warning',
-                    msg: 'You are attempting to create overlapping entities or to create an entity across sibling XML tags, which is not allowed in this editor mode.<br/><br/>If you wish to continue, the editor mode will be switched to XML and RDF (Overlapping Entities) and only RDF will be created for the entity you intend to add.<br/><br/>Do you wish to continue?',
+                    msg: 'You are attempting to create overlapping entities or to create an entity across sibling XML tags, which is not allowed in this editor mode.<br/><br/>If you wish to continue, the editor mode will be switched to <b>XML and RDF (Overlapping Entities)</b> and only RDF will be created for the entity you intend to add.<br/><br/>Do you wish to continue?',
                     callback: function(confirmed) {
                         if (confirmed) {
                             w.allowOverlap = true;
