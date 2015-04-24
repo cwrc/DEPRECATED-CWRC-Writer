@@ -182,7 +182,7 @@ citation: {
     },
     reverseMapping: function(xml) {
         return Mapper.getDefaultReverseMapping(xml, {
-            cwrcInfo: {id: 'cwrc:BIBCIT/@ref'},
+            cwrcInfo: {id: 'cwrc:BIBCIT/@REF'},
             customValues: {content: '.'}
         }, 'cwrc');
     },

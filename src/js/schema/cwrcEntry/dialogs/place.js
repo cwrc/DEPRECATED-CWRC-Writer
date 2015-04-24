@@ -9,7 +9,7 @@ return function(id, writer) {
     
     var html = ''+
     '<div id="'+id+'Dialog" class="annotationDialog">'+
-        '<input type="hidden" id="'+id+'_ref" data-type="hidden" data-mapping="ref"/>'+
+        '<input type="hidden" id="'+id+'_ref" data-type="hidden" data-mapping="REF"/>'+
     '</div>';
     
     var dialog = new DialogForm({

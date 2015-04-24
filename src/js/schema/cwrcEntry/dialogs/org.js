@@ -13,7 +13,7 @@ return function(id, writer) {
             '<label for="'+id+'_input">Standard name</label>'+
             '<input type="text" id="'+id+'_input" data-type="textbox" data-mapping="STANDARD" />'+
         '</div>'+
-        '<input type="hidden" id="'+id+'_ref" data-type="hidden" data-mapping="ref"/>'+
+        '<input type="hidden" id="'+id+'_ref" data-type="hidden" data-mapping="REF"/>'+
     '</div>';
     
     var dialog = new DialogForm({

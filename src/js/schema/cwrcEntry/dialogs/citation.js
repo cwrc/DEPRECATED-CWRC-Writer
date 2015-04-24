@@ -8,7 +8,7 @@ return function(id, writer) {
         '<div>'+
             '<p>Citation</p><textarea data-type="textbox" data-mapping="custom.content"></textarea>'+
         '</div>'+
-        '<input type="hidden" id="'+id+'_ref" data-type="hidden" data-mapping="ref"/>'+
+        '<input type="hidden" id="'+id+'_ref" data-type="hidden" data-mapping="REF"/>'+
     '</div>';
     
     var dialog = new DialogForm({
