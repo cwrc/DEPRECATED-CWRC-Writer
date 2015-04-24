@@ -151,6 +151,7 @@ note: {
     }
 },
 
+// TODO fix citation
 citation: {
     parentTag: 'BIBCITS',
     textTag: 'BIBCIT',
@@ -181,7 +182,8 @@ citation: {
     },
     reverseMapping: function(xml) {
         return Mapper.getDefaultReverseMapping(xml, {
-            customValues: {content: './text()'}
+            cwrcInfo: {id: 'cwrc:BIBCIT/@ref'},
+            customValues: {content: '.'}
         }, 'cwrc');
     },
     annotation: function(entity, format) {
