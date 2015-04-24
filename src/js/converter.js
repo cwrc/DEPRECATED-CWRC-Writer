@@ -838,6 +838,8 @@ return function(writer) {
                     // get type specific info
                     // TODO move all this to annotationsManager?
                     var typeInfo = {};
+                    var propObj = {};
+                    
                     switch (type) {
                         case 'date':
                             var dateString = body.find('xsd\\:date, date').text();
@@ -848,6 +850,13 @@ return function(writer) {
                                 typeInfo.startDate = dateParts[0];
                                 typeInfo.endDate = dateParts[1];
                             }
+                            break;
+                        case 'place':
+                            var precisionString = rdf.find('cw\\:hasPrecision, hasPrecision').attr('rdf:resource');
+                            if (precisionString && precisionString != '') {
+                                precisionString = precisionString.split('#')[1];
+                            }
+                            propObj.precision = precisionString;
                             break;
                         case 'title':
                             var levelString = body.find('cw\\:pubType, pubType').text();
@@ -868,8 +877,6 @@ return function(writer) {
                             typeInfo.url = hasBodyUri;
                             break;
                     }
-
-                    var propObj = {};
 
                     // certainty
                     var certainty = rdf.find('cw\\:hasCertainty, hasCertainty').attr('rdf:resource');
