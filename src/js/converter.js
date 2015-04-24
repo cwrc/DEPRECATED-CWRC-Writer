@@ -1340,13 +1340,15 @@ return function(writer) {
         var textNode = null;
         function getTextNode(parent) {
             parent.contents().each(function(index, element) {
-                if (this.nodeType == Node.TEXT_NODE && this.data != ' ') {
+                if (this.nodeType === Node.TEXT_NODE && this.data != ' ') {
                     currentOffset += this.length;
                     if (currentOffset >= offset) {
                         currentOffset = offset - (currentOffset - this.length);
                         textNode = this;
                         return false;
                     }
+                } else if (this.nodeType === Node.ELEMENT_NODE && this.getAttribute('_entity') === 'true' && this.getAttribute('_tag') === null) {
+                    getTextNode($(this));
                 }
             });
         }
