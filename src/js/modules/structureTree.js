@@ -596,8 +596,7 @@ return function(config) {
         $('#tree_popup').hide();
     }
     
-    function _getSubmenu(tags, info) {
-        var tagInfo = info;
+    function _getSubmenu(tags, tagId) {
         var inserts = {};
         var inserted = false;
         var i, tag, key;
@@ -622,8 +621,8 @@ return function(config) {
                     } else {
                         var actionType = parentText.match(/\w+$/)[0].toLowerCase();
                         w.editor.currentBookmark = w.editor.selection.getBookmark(1);
-                        w.editor.currentBookmark.tagId = tagInfo.id;
-                        var parentTag = $('#'+tagInfo.id, w.editor.getBody());
+                        w.editor.currentBookmark.tagId = tagId;
+                        var parentTag = $('#'+tagId, w.editor.getBody());
                         w.dialogManager.schemaTags.addSchemaTag({key: obj.item.key, action: actionType, parentTag: parentTag});
                     }
                 }
@@ -689,122 +688,129 @@ return function(config) {
                 
                 var parentNode = $tree.jstree('get_node', node.parents[0]);
                 
-                if (w.entitiesManager.getEntity(node.li_attr.name) !== undefined) {
-                    // entity tag
-                    w.entitiesManager.highlightEntity(node.li_attr.name); // highlight the entity, otherwise editing will not function
-                    return {
-                        'editEntity': {
-                            label: 'Edit Entity',
-                            icon: w.cwrcRootUrl+'img/tag_blue_edit.png',
-                            action: function(obj) {
-                                var id = obj.reference.parent('li').attr('name');
-                                w.tagger.editTag(id);
-                            }
-                        },
-                        'copyEntity': {
-                            label: 'Copy Entity',
-                            icon: w.cwrcRootUrl+'img/tag_blue_copy.png',
-                            action: function(obj) {
-                                var id = obj.reference.parent('li').attr('name');
-                                w.tagger.copyEntity(id);
-                            }
+                var menuConfig = {};
+                
+                var tagId = node.li_attr.name;
+                
+                if (w.entitiesManager.getEntity(tagId) !== undefined) {
+                    // entity specific actions
+                    w.entitiesManager.highlightEntity(tagId); // highlight the entity, otherwise editing will not function
+                    
+                    menuConfig.editEntity = {
+                        label: 'Edit Entity',
+                        icon: w.cwrcRootUrl+'img/tag_blue_edit.png',
+                        action: function(obj) {
+                            var id = obj.reference.parent('li').attr('name');
+                            w.tagger.editTag(id);
                         }
                     };
-                } else {
-                    // structure tag
-                    var info = w.structs[node.li_attr.name];
-                    if (info._tag == w.root || info._tag == w.header) return {};
-                    
-                    var tag = $('#'+info.id, w.editor.getBody())[0];
-                    var path = w.utilities.getElementXPath(tag);
-                    var validKeys = w.utilities.getChildrenForTag({tag: info._tag, path: path, type: 'element', returnType: 'array'});
-                    
-//                  var parentKeys = w.utilities.getParentsForTag({tag: info._tag, returnType: 'array'});
-                    
-                    var siblingKeys = {};
-                    var parentInfo = w.structs[parentNode.li_attr.name];
-                    if (parentInfo) {
-                        tag = $('#'+parentInfo.id, w.editor.getBody())[0];
-                        path = w.utilities.getElementXPath(tag);
-                        siblingKeys = w.utilities.getChildrenForTag({tag: parentInfo._tag, path: path, type: 'element', returnType: 'array'});
-                    }
-                    
-                    var submenu = _getSubmenu(validKeys, info);
-//                  var parentSubmenu = _getSubmenu(parentKeys, info);
-                    var siblingSubmenu = _getSubmenu(siblingKeys, info);
-                    var items = {
-                        'before': {
-                            label: 'Insert Tag Before',
-                            icon: w.cwrcRootUrl+'img/tag_blue_add.png',
-                            actionType: 'before',
-                            _class: 'submenu',
-                            submenu: siblingSubmenu
+                    menuConfig.copyEntity = {
+                        label: 'Copy Entity',
+                        icon: w.cwrcRootUrl+'img/tag_blue_copy.png',
+                        action: function(obj) {
+                            var id = obj.reference.parent('li').attr('name');
+                            w.tagger.copyEntity(id);
                         },
-                        'after': {
-                            label: 'Insert Tag After',
-                            icon: w.cwrcRootUrl+'img/tag_blue_add.png',
-                            actionType: 'after',
-                            _class: 'submenu',
-                            submenu: siblingSubmenu
-                        },
-    //                    'around': {
-    //                        label: 'Insert Tag Around',
-    //                        icon: w.cwrcRootUrl+'img/tag_blue_add.png',
-    //                        _class: 'submenu',
-    //                        submenu: parentSubmenu
-    //                    },
-                        'inside': {
-                            label: 'Insert Tag Inside',
-                            icon: w.cwrcRootUrl+'img/tag_blue_add.png',
-                            actionType: 'inside',
-                            _class: 'submenu',
-                            separator_after: true,
-                            submenu: submenu
-                        },
-                        'change': {
-                            label: 'Change Tag',
-                            icon: w.cwrcRootUrl+'img/tag_blue_edit.png',
-                            actionType: 'change',
-                            _class: 'submenu',
-                            submenu: siblingSubmenu
-                        },
-                        'edit': {
-                            label: 'Edit Tag',
-                            icon: w.cwrcRootUrl+'img/tag_blue_edit.png',
-                            separator_after: true,
-                            action: function(obj) {
-                                var id = obj.reference.parent('li').attr('name');
-                                w.tagger.editTag(id);
-                            }
-                        },
-                        'delete': {
-                            label: 'Remove Tag Only',
-                            icon: w.cwrcRootUrl+'img/tag_blue_delete.png',
-                            action: function(obj) {
-                                var id = obj.reference.parent('li').attr('name');
-                                w.tagger.removeStructureTag(id, false);
-                            }
-                        },
-                        'delete_content': {
-                            label: 'Remove Content Only',
-                            icon: w.cwrcRootUrl+'img/tag_blue_delete.png',
-                            action: function(obj) {
-                                var id = obj.reference.parent('li').attr('name');
-                                w.tagger.removeStructureTagContents(id);
-                            }
-                        },
-                        'delete_all': {
-                            label: 'Remove Tag and All Content',
-                            icon: w.cwrcRootUrl+'img/tag_blue_delete.png',
-                            action: function(obj) {
-                                var id = obj.reference.parent('li').attr('name');
-                                w.tagger.removeStructureTag(id, true);
-                            }
-                        }
+                        separator_after: true
                     };
-    
-                    return items;
                 }
+                
+                // general tag actions;
+                var tag = $('#'+tagId, w.editor.getBody())[0];
+                if (tag === undefined) return {};                
+                var tagName = tag.getAttribute('_tag');
+                if (tagName == w.root || tagName == w.header) return {};
+                
+                var path = w.utilities.getElementXPath(tag);
+                var validKeys = w.utilities.getChildrenForTag({tag: tagName, path: path, type: 'element', returnType: 'array'});
+                
+//              var parentKeys = w.utilities.getParentsForTag({tag: info._tag, returnType: 'array'});
+                
+                var siblingKeys = {};
+                var parentInfo = w.structs[parentNode.li_attr.name];
+                if (parentInfo) {
+                    tag = $('#'+parentInfo.id, w.editor.getBody())[0];
+                    path = w.utilities.getElementXPath(tag);
+                    siblingKeys = w.utilities.getChildrenForTag({tag: parentInfo._tag, path: path, type: 'element', returnType: 'array'});
+                }
+                
+                var submenu = _getSubmenu(validKeys, tagId);
+//              var parentSubmenu = _getSubmenu(parentKeys, tagId);
+                var siblingSubmenu = _getSubmenu(siblingKeys, tagId);
+                var items = {
+                    'before': {
+                        label: 'Insert Tag Before',
+                        icon: w.cwrcRootUrl+'img/tag_blue_add.png',
+                        actionType: 'before',
+                        _class: 'submenu',
+                        submenu: siblingSubmenu
+                    },
+                    'after': {
+                        label: 'Insert Tag After',
+                        icon: w.cwrcRootUrl+'img/tag_blue_add.png',
+                        actionType: 'after',
+                        _class: 'submenu',
+                        submenu: siblingSubmenu
+                    },
+//                    'around': {
+//                        label: 'Insert Tag Around',
+//                        icon: w.cwrcRootUrl+'img/tag_blue_add.png',
+//                        _class: 'submenu',
+//                        submenu: parentSubmenu
+//                    },
+                    'inside': {
+                        label: 'Insert Tag Inside',
+                        icon: w.cwrcRootUrl+'img/tag_blue_add.png',
+                        actionType: 'inside',
+                        _class: 'submenu',
+                        separator_after: true,
+                        submenu: submenu
+                    },
+                    'change': {
+                        label: 'Change Tag',
+                        icon: w.cwrcRootUrl+'img/tag_blue_edit.png',
+                        actionType: 'change',
+                        _class: 'submenu',
+                        submenu: siblingSubmenu
+                    },
+                    'edit': {
+                        label: 'Edit Tag',
+                        icon: w.cwrcRootUrl+'img/tag_blue_edit.png',
+                        separator_after: true,
+                        action: function(obj) {
+                            var id = obj.reference.parent('li').attr('name');
+                            w.tagger.editTag(id);
+                        }
+                    },
+                    'delete': {
+                        label: 'Remove Tag Only',
+                        icon: w.cwrcRootUrl+'img/tag_blue_delete.png',
+                        action: function(obj) {
+                            var id = obj.reference.parent('li').attr('name');
+                            w.tagger.removeStructureTag(id, false);
+                        }
+                    },
+                    'delete_content': {
+                        label: 'Remove Content Only',
+                        icon: w.cwrcRootUrl+'img/tag_blue_delete.png',
+                        action: function(obj) {
+                            var id = obj.reference.parent('li').attr('name');
+                            w.tagger.removeStructureTagContents(id);
+                        }
+                    },
+                    'delete_all': {
+                        label: 'Remove Tag and All Content',
+                        icon: w.cwrcRootUrl+'img/tag_blue_delete.png',
+                        action: function(obj) {
+                            var id = obj.reference.parent('li').attr('name');
+                            w.tagger.removeStructureTag(id, true);
+                        }
+                    }
+                };
+                
+                $.extend(menuConfig, items);
+
+                return menuConfig;
             }
         }
     });
