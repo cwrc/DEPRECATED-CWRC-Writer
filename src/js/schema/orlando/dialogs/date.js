@@ -173,46 +173,32 @@ return function(id, writer) {
         if (type === 'DATERANGE') {
             var startString = $startDate.val();
             var endString = $endDate.val();
-            var padStart = '';
-            var padEnd = '';
+            var startMoment = moment(startString);
+            var endMoment = moment(endString);
             
-            if (startString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+            if (startMoment.isValid()) {
                 dialog.currentData.attributes.FROM = startString;
-            } else if (startString.match(/^\d{4}-\d{2}$/)) {
-                dialog.currentData.attributes.FROM = startString;
-                padStart = '-01';
-            } else if (startString.match(/^\d{4}$/)) {
-                dialog.currentData.attributes.FROM = startString;
-                padStart = '-01-01';
             } else {
                 $startDate.css({borderBottom: '1px solid red'});
                 error = true;
             }
             
-            if (endString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+            if (endMoment.isValid()) {
                 dialog.currentData.attributes.TO = endString;
-            } else if (endString.match(/^\d{4}-\d{2}$/)) {
-                dialog.currentData.attributes.TO = endString;
-                padEnd = '-01';
-            } else if (endString.match(/^\d{4}$/)) {
-                dialog.currentData.attributes.TO = endString;
-                padEnd = '-01-01';
             } else {
                 $endDate.css({borderBottom: '1px solid red'});
                 error = true;
             }
             
-            var start = $.datepicker.parseDate('yy-mm-dd', startString+padStart);
-            var end = $.datepicker.parseDate('yy-mm-dd', endString+padEnd);
-            
-            if (start > end) {
+            if (startMoment.isAfter(endMoment)) {
                 $startDate.css({borderBottom: '1px solid red'});
                 $endDate.css({borderBottom: '1px solid red'});
                 error = true;
             }
         } else {
             var dateString = $dateInput.val();
-            if (dateString.match(/^\d{4}-\d{2}-\d{2}$/) || dateString.match(/^\d{4}-\d{2}$/) || dateString.match(/^\d{4}$/)) {
+            var dateMoment = moment(dateString);
+            if (dateMoment.isValid()) {
                 dialog.currentData.attributes.VALUE = dateString;
             } else {
                 $dateInput.css({borderBottom: '1px solid red'});
