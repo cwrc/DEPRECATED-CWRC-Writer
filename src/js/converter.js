@@ -511,6 +511,7 @@ return function(writer) {
                     var aliases = schema.aliases || [];
                     if (schemaUrl == schema.url || $.inArray(schemaUrl, aliases) !== -1) {
                         schemaId = id;
+                        cssFilename = null;
                         return false;
                     }
                 });
