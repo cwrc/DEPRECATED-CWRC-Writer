@@ -20,19 +20,19 @@
         },
         "events": {
             "name": "Events Schema",
-            "url": "http://cwrc.ca/schemas/orlando_events.rng",
+            "url": "http://cwrc.ca/schemas/orlando_event_v2.rng",
             "cssUrl": "css/orlando_converted.css",
             "schemaMappingsId": "orlando"
         },
         "biography": {
             "name": "Biography Schema",
-            "url": "http://cwrc.ca/schemas/orlando_biography.rng",
+            "url": "http://cwrc.ca/schemas/orlando_biography_v2.rng",
             "cssUrl": "css/orlando_converted.css",
             "schemaMappingsId": "orlando"
         },
         "writing": {
             "name": "Writing Schema",
-            "url": "http://cwrc.ca/schemas/orlando_writing.rng",
+            "url": "http://cwrc.ca/schemas/orlando_writing_v2.rng",
             "cssUrl": "css/orlando_converted.css",
             "schemaMappingsId": "orlando"
         },
