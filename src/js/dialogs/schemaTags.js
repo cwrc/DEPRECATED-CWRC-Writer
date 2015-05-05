@@ -1,4 +1,7 @@
-define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+define([
+    'jquery',
+    'jquery-ui',
+], function($, jqueryUi) {
     
 return function(writer) {
     var w = writer;
@@ -76,30 +79,42 @@ return function(writer) {
         
         var atts = w.utilities.getChildrenForTag({tag: tagName, path: tagPath, type: 'attribute', returnType: 'array'});
         
+        // sort by required, then by name
+        atts.sort(function(a,b) {
+           if (a.required && !b.required) {
+               return -1;
+           } else if (!a.required && b.required) {
+               return 1;
+           } else {
+               if (a.name > b.name) {
+                   return 1;
+               } else if (a.name < b.name) {
+                   return -1;
+               }
+           }
+           return 0;
+        });
+        
         // build atts
         var level1Atts = '';
         var highLevelAtts = '';
         var attributeSelector = '';
         var att, currAttString;
-        var isLevel1 = false;
+        var isRequired = false;
         for (var i = 0; i < atts.length; i++) {
             att = atts[i];
             currAttString = '';
-            if (att.level == 0 || att.required) {
-                isLevel1 = true; // required attributes should be displayed by default
-            } else {
-                isLevel1 = false;
-            }
+            isRequired = att.required;
             
-            if (att.name.toLowerCase() != 'id' && att.name.toLowerCase() != 'xml:id') {
+            if (att.name.toLowerCase() !== 'id' && att.name !== w.idName) {
                 var display = 'block';
-                var requiredClass = att.required ? ' required' : '';
-                if (isLevel1 || (mode === EDIT && structsEntry[att.name])) {
+                var requiredClass = isRequired ? ' required' : '';
+                if (mode === EDIT && structsEntry[att.name]) {
                     display = 'block';
                     attributeSelector += '<li id="select_'+att.name+'" class="selected'+requiredClass+'">'+att.name+'</li>';
                 } else {
                     display = 'none';
-                    attributeSelector += '<li id="select_'+att.name+'">'+att.name+'</li>';
+                    attributeSelector += '<li id="select_'+att.name+'" class="'+requiredClass+'">'+att.name+'</li>';
                 }
                 currAttString += '<div id="form_'+att.name+'" style="display:'+display+';"><label>'+att.name+'</label>';
                 if (att.documentation != '') {
@@ -130,10 +145,10 @@ return function(writer) {
                 } else {
                     currAttString += '<input type="text" name="'+att.name+'" value="'+att.defaultValue+'"/>';
                 }
-                if (att.required) currAttString += ' <span class="required">*</span>';
+                if (isRequired) currAttString += ' <span class="required">*</span>';
                 currAttString += '</div>';
                 
-                if (isLevel1) {
+                if (isRequired) {
                     level1Atts += currAttString;
                 } else {
                     highLevelAtts += currAttString;
@@ -146,8 +161,6 @@ return function(writer) {
         $('.highLevelAtts', schemaDialog).html(highLevelAtts);
         
         $('.attributeSelector li', schemaDialog).click(function() {
-            if ($(this).hasClass('required')) return;
-            
             var name = $(this).attr('id').split('select_')[1].replace(/:/g, '\\:');
             var div = $('#form_'+name);
             $(this).toggleClass('selected');
