@@ -5,6 +5,12 @@ function AttributeWidget(config) {
     this.parentId = config.parentId;
     this.dialogForm = config.dialogForm;
     
+    this.showSchemaHelp = config.showSchemaHelp === true ? true : false;
+    var schemaHelpEl = '';
+    if (this.showSchemaHelp) {
+        schemaHelpEl = '<div class="schemaHelp"></div>';
+    }
+    
     this.mode = AttributeWidget.ADD;
     
     this.isDirty = false;
@@ -19,7 +25,7 @@ function AttributeWidget(config) {
     '<div class="attsContainer">'+
         '<div class="level1Atts"></div>'+
         '<div class="highLevelAtts"></div>'+
-//        '<div class="schemaHelp"></div>'+
+        schemaHelpEl+
     '</div>');
     
     // add listeners for other form elements
@@ -54,41 +60,55 @@ AttributeWidget.disallowedAttributes = ['annotationid', 'offsetid'];
 AttributeWidget.prototype = {
     constructor: AttributeWidget,
     
-    buildWidget: function(atts, previousVals) {
+    buildWidget: function(atts, previousVals, tag) {
         previousVals = previousVals || {};
         
         $('.attributeSelector ul, .level1Atts, .highLevelAtts, .schemaHelp', this.$parent).empty();
         isDirty = false;
         
-//        var helpText = this.w.editor.execCommand('getDocumentationForTag', key);
-//        if (helpText != '') {
-//            $('.schemaHelp', this.$parent).html('<h3>'+key+' Documentation</h3><p>'+helpText+'</p>');
-//        }
+        if (this.showSchemaHelp && tag !== undefined) {
+            var helpText = this.w.editor.execCommand('getDocumentationForTag', tag);
+            if (helpText != '') {
+                $('.schemaHelp', this.$parent).html('<h3>'+tag+' Documentation</h3><p>'+helpText+'</p>');
+            }
+        }
+        
+        // sort by required, then by name
+        atts.sort(function(a,b) {
+           if (a.required && !b.required) {
+               return -1;
+           } else if (!a.required && b.required) {
+               return 1;
+           } else {
+               if (a.name > b.name) {
+                   return 1;
+               } else if (a.name < b.name) {
+                   return -1;
+               }
+           }
+           return 0;
+        });
         
         // build atts
         var level1Atts = '';
         var highLevelAtts = '';
         var attributeSelector = '';
         var att, currAttString;
-        var isLevel1 = false;
+        var isRequired = false;
         for (var i = 0; i < atts.length; i++) {
             att = atts[i];
             currAttString = '';
-            if (att.level == 0 || att.required) {
-                isLevel1 = true; // required attributes should be displayed by default
-            } else {
-                isLevel1 = false;
-            }
+            isRequired = att.required;
             
             if (AttributeWidget.disallowedAttributes.indexOf(att.name.toLowerCase()) === -1) {
                 var display = 'block';
-                var requiredClass = att.required ? ' required' : '';
-                if (isLevel1 || (this.mode == AttributeWidget.EDIT && previousVals[att.name])) {
+                var requiredClass = isRequired ? ' required' : '';
+                if (this.mode == AttributeWidget.EDIT && previousVals[att.name]) {
                     display = 'block';
                     attributeSelector += '<li data-name="'+att.name+'" class="selected'+requiredClass+'">'+att.name+'</li>';
                 } else {
                     display = 'none';
-                    attributeSelector += '<li data-name="'+att.name+'">'+att.name+'</li>';
+                    attributeSelector += '<li data-name="'+att.name+'" class="'+requiredClass+'">'+att.name+'</li>';
                 }
                 currAttString += '<div data-name="form_'+att.name+'" style="display:'+display+';"><label>'+att.name+'</label>';
                 if (att.documentation != '') {
@@ -114,10 +134,10 @@ AttributeWidget.prototype = {
                 } else {
                     currAttString += '<input type="text" name="'+att.name+'" value="'+att.defaultValue+'"/>';
                 }
-                if (att.required) currAttString += ' <span class="required">*</span>';
+                if (isRequired) currAttString += ' <span class="required">*</span>';
                 currAttString += '</div>';
                 
-                if (isLevel1) {
+                if (isRequired) {
                     level1Atts += currAttString;
                 } else {
                     highLevelAtts += currAttString;
@@ -130,8 +150,6 @@ AttributeWidget.prototype = {
         $('.highLevelAtts', this.$parent).html(highLevelAtts);
         
         $('.attributeSelector li', this.$parent).click(function() {
-            if ($(this).hasClass('required')) return;
-            
             var name = $(this).data('name').replace(/:/g, '\\:');
             var div = $('[data-name="form_'+name+'"]', this.$parent);
             $(this).toggleClass('selected');
