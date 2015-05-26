@@ -1778,7 +1778,18 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
         var populateCWRC = function (opts) {
             // cwrc
 
-            var workingXML = $.parseXML(opts.data);
+            var workingXML = null;
+            if (typeof(opts.data)=='string')
+            {
+                // if string parse into JQuery DOM
+                workingXML = $.parseXML(opts.data);
+            }
+            else 
+            {
+                // else assume AJAX load has completed parse
+                // on a 'text/xml' mime type
+                workingXML = opts.data;
+            }
             var path = [];
 
             visitChildrenPopulate(workingXML.childNodes, path);
@@ -2230,7 +2241,12 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
                 maxPage : ko.observable(0),
                 showPaginate : ko.observable(specs.paginate != null),
                 paginateNumber : function (index) {
+                    // pagination window 
+                    // 5 pages in the window before sliding to 6,7...
                     if (that.page() < 3) {
+                        return index;
+                    } else if (that.page() >= 3 && that.page() <= 4) {
+                        // prevent negative page numbers
                         return index;
                     } else if (that.page() >= (that.maxPage() - 3)) {
                         return index + that.maxPage() - 5;
@@ -2263,13 +2279,23 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
                         //$("#CWRCDataMessage").text("Results: " + search.linkedDataSources.cwrc.results().length );
 
                         // Calculate the range displayed in the message
-                        var bottom = 1 + (perPage * page);
+                        var totalResults = result["response"]["numFound"];
+                        var bottom = (totalResults == 0) ? 0 : 1 + (perPage * page);
                         var top = (page + 1) * perPage;
-                        top = result["response"]["numFound"] < top ? result["response"]["numFound"] : top;
+                        top = totalResults < top ? totalResults : top;
 
-                        $("#CWRCDataMessage").text("Results: " + bottom + " - " + top);
 
-                        search.linkedDataSources.cwrc.maxPage(Math.floor(result["response"]["numFound"] / perPage))
+                        if ( top==0 && bottom==0 )
+                        {
+                          $("#CWRCDataMessage").text("Results: " + totalResults );
+                        }
+                        else
+                        {
+                          $("#CWRCDataMessage").text("Results: " + bottom + " - " + top + " of " + totalResults);
+                        }
+
+
+                        search.linkedDataSources.cwrc.maxPage(Math.floor(totalResults / perPage))
                     },
                     error : function (result) {
                         console.log(result);
@@ -2278,12 +2304,12 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
 
         }
 
-        search.processGeoNameData = function (id) {
-            return xmlToString(search.linkedDataSources.geonames.response[id]);
+        search.processGeoNameData = function (id, index) {
+            return xmlToString(search.linkedDataSources.geonames.response[index]);
         }
 
-        search.processGoogleGeocodeData = function (id) {
-            return xmlToString(search.linkedDataSources.googlegeocode.response[id]);
+        search.processGoogleGeocodeData = function (id, index) {
+            return xmlToString(search.linkedDataSources.googlegeocode.response[index]);
         }
 
         search.processViafData = function (id) {
@@ -2306,7 +2332,8 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
 
         search.processVIAFSearch = function (queryString, page) {
             // Calculate Page Information
-            var perPage = 100;
+            // 2015-05-21 - VIAF only returns max 10 results
+            var perPage = 10;
             var bottom = 1 + (page * perPage);
             search.linkedDataSources.viaf.page(page);
 
@@ -2337,20 +2364,28 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
                     // dataType : 'json',
                     dataType : "xml",
                     processData : false,
-                    data : "query=" + viafPrefix + quotedQueryString + "&maximumRecords=" + perPage + "&startRecord=" + bottom + "&httpAccept=text/xml",
+                    data : "query=" + viafPrefix + quotedQueryString + "&sortKeys=holdingscount&maximumRecords=" + perPage + "&startRecord=" + bottom + "&httpAccept=text/xml",
                     success : function (response) {
                         $('searchRetrieveResponse record', response).each(function (index, spec) {
                             search.linkedDataSources.viaf.results.push(search.getResultFromVIAF(spec, index));
                         });
                         $(".linkedDataMessage").removeClass("fa fa-spin fa-refresh");
-                        $("#VIAFDataMessage").text("Results: " + search.linkedDataSources.viaf.results().length);
+                        //$("#VIAFDataMessage").text("Results: " + search.linkedDataSources.viaf.results().length);
 
                         // Calculate the range displayed in the message
                         var totalResults = parseInt($('searchRetrieveResponse numberOfRecords', response).text());
                         var top = (page + 1) * perPage;
                         top = totalResults < top ? totalResults : top;
+                        bottom = ( top == 0 ) ? 0 : bottom;
 
-                        $("#VIAFDataMessage").text("Results: " + bottom + " - " + top);
+                        if ( top==0 && bottom==0 )
+                        {
+                          $("#VIAFDataMessage").text("Results: " + totalResults );
+                        }
+                        else
+                        {
+                          $("#VIAFDataMessage").text("Results: " + bottom + " - " + top + " of " + totalResults);
+                        }
 
                         search.linkedDataSources.viaf.maxPage(Math.floor(totalResults / perPage));
                     },
@@ -2373,7 +2408,7 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
                     // dataType : 'json',
                     dataType : "xml",
                     processData : false,
-                    data : "query=" + quotedQueryString,
+                    data : "query=" + quotedQueryString + "&max_results=100",
                     success : function (response) {
                         search.linkedDataSources.geonames.response = [];
                         $('geonames geoname', response).each(function (index, spec) {
@@ -2427,14 +2462,17 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
 
         search.scrapeResult = function () {
             if (search.selectedData) {
-                search.selectedData.data = search.processData(search.selectedData.id);
+                search.selectedData.data = search.processData(search.selectedData.id, search.selectedData.index);
             }
         }
 
         search.htmlifyCWRCPerson = function () {
 
             var data = search.selectedData;
-            var workingXML = $.parseXML(data.data);
+            // if string parse into JQuery DOM
+            // else assume AJAX load has completed parse
+            // on a 'text/xml' mime type
+            var workingXML = (typeof(data.data)=='string') ? $.parseXML(data.data) : data.data;
 
             // nationality
             // var nationalitySelector = "";
@@ -2489,7 +2527,7 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
             data.gender = $(workingXML).find(genderSelector).first().text();
 
             // url
-            data.url = repositoryBaseObjectURL + data.object_url;
+            data.url = data.object_url;
 
             return search.completeHtmlifyPerson(data);
 
@@ -2498,10 +2536,13 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
         search.htmlifyCWRCOrganization = function () {
 
             var data = search.selectedData;
-            var workingXML = $.parseXML(data.data);
+            // if string parse into JQuery DOM
+            // else assume AJAX load has completed parse
+            // on a 'text/xml' mime type
+            var workingXML = (typeof(data.data)=='string') ? $.parseXML(data.data) : data.data;
 
             // url
-            data.url = repositoryBaseObjectURL + data.object_url;
+            data.url = data.object_url;
 
             return search.completeHtmlifyOrganization(data);
         }
@@ -2532,9 +2573,13 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
         }
 
         search.htmlifyCWRCTitle = function () {
-
             var data = search.selectedData;
-            var workingXML = $.parseXML(data.data);
+            // if string parse into JQuery DOM
+            // else assume AJAX load has completed parse
+            // on a 'text/xml' mime type
+            var workingXML = (typeof(data.data)=='string') ? $.parseXML(data.data) : data.data;
+
+
             // author,
             data.authors = []; //"Author";
             var authorSelector = "mods > name"; //
@@ -2552,7 +2597,7 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
             data.date = $(workingXML).find(dateSelector).first().text();
 
             //URL
-            data.url = repositoryBaseObjectURL + data.object_url;
+            data.url = data.object_url;
 
             return search.completeHtmlifyTitle(data);
         }
@@ -2583,7 +2628,10 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
 
         search.htmlifyCWRCPlace = function () {
             var data = search.selectedData;
-            var workingXML = $.parseXML(data.data);
+            // if string parse into JQuery DOM
+            // else assume AJAX load has completed parse
+            // on a 'text/xml' mime type
+            var workingXML = (typeof(data.data)=='string') ? $.parseXML(data.data) : data.data;
 
             // First administrative division, country (displayed in line, separated by commas - if possible),
             var firstSelector = "entity > place > description > firstAdministrativeDivision";
@@ -2600,7 +2648,7 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
             var longSelector = "entity > place > description > longitude";
             data.long = $(workingXML).find(longSelector).first().text();
 
-            data.url = repositoryBaseObjectURL + data.object_url;
+            data.url = data.object_url;
 
             return search.completeHtmlifyPlace(data);
         }
@@ -2774,9 +2822,9 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
                 // '                                        <option>4</option>' +
                 // '                                        <option>5</option>' +
                 // '                                    </select>' +
-                '                                   <ul class="pagination  pagination-sm nomargin" data-bind="with: $root.linkedDataSources[\'' + key + '\']">' +
+                '                                   <ul class="pagination  pagination-sm nomargin" data-bind="with: $root.linkedDataSources[\'' + key + '\'], css: {hidden: $root.linkedDataSources[\'' + key + '\'].maxPage()==0}">' +
                 '                                       <li data-bind="{css: {disabled: page() <= 0}}"><a href="#" data-bind="{attr: {data: page() - 1}, click: paginate}">&laquo;</a></li>' +
-                '                                       <li data-bind="{css: {active: page() == paginateNumber(0), disabled: paginateNumber(0) > maxPage()}}"><a href="#" data-bind="{attr: {data: paginateNumber(0)}, text: paginateNumber(0) + 1, click: paginate}" data="0">1</a></li>' +
+                '                                       <li data-bind="{css: {active: page() == paginateNumber(0) && maxPage()!=0, disabled: paginateNumber(0) > maxPage() || maxPage()==0}}"><a href="#" data-bind="{attr: {data: paginateNumber(0)}, text: paginateNumber(0) + 1, click: paginate}" data="0">1</a></li>' +
                 '                                       <li data-bind="{css: {active: page() == paginateNumber(1), disabled: paginateNumber(1) > maxPage()}}"><a href="#" data-bind="{attr: {data: paginateNumber(1)}, text: paginateNumber(1) + 1, click: paginate}" data="1">2</a></li>' +
                 '                                       <li data-bind="{css: {active: page() == paginateNumber(2), disabled: paginateNumber(2) > maxPage()}}"><a href="#" data-bind="{attr: {data: paginateNumber(2)}, text: paginateNumber(2) + 1, click: paginate}" data="2">3</a></li>' +
                 '                                       <li data-bind="{css: {active: page() == paginateNumber(3), disabled: paginateNumber(3) > maxPage()}}"><a href="#" data-bind="{attr: {data: paginateNumber(3)}, text: paginateNumber(3) + 1, click: paginate}" data="3">4</a></li>' +
@@ -2954,7 +3002,7 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
 
         search.clear = function () {
             search.selectedData = null;
-//            search.isDataSelected(false); // setting to false here breaks modal dismiss
+//          search.isDataSelected(false); // setting to false here breaks modal dismiss
             for (var key in search.linkedDataSources) {
                 var lds = search.linkedDataSources[key];
                 lds.results.removeAll();
@@ -2990,6 +3038,7 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
                 id : "",
                 // processed for result
                 data : "",
+                uri : "",
                 // scrape : function() {return "";}, // defined for each linked data source
                 // helper
                 selected : ko.observable(false)
@@ -3046,8 +3095,10 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
         search.getResultFromGeoName = function (specs, index) {
             // specs has data and source
             var that = search.result();
-            that.id = index;
+            that.index = index;
+            that.id = $(specs).find("geonameid").text();
             that.name = $(specs).find("name").text() + ", " + $(specs).find("countryName").text();
+            that.object_url = 'http://www.geonames.org/'+that.id;
 
             that.htmlify = function () {
                 return search.htmlifyGeoNamePlace($(specs).find("name").text(),
@@ -3062,12 +3113,14 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
 
         search.getResultFromGoogleGeocode = function (specs, index) {
             var that = search.result();
-            that.id = index;
+            that.index = index;
+            that.id = $(specs).find("place_id").text();;
             that.name = $(specs).find("formatted_address").text();
+            that.object_url = "https://www.google.ca/maps/place/" + encodeURI($(specs).find("formatted_address").text());
 
             that.htmlify = function () {
                 var location = $(specs).find("geometry").find("location");
-                var url = "https://www.google.ca/maps/place/" + encodeURI($(specs).find("formatted_address").text());
+                var url = that.object_url; 
 
                 return search.htmlifyGoogleGeocodePlace($(location).find("lat").text(),
                     $(location).find("lng").text(),
@@ -3082,7 +3135,8 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
             var that = search.result();
             that.name = specs["object_label"];
             that.id = specs["PID"];
-            that.object_url = specs["object_url"];
+            //that.object_url = specs["object_url"];
+            that.object_url = repositoryBaseObjectURL + that.id;
 
             switch (dialogType) {
             case "person":
@@ -3129,15 +3183,28 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
 
             }
 
-            var nameSelector = search.viafSelectorHelper("recordData >  ns" + i + "\\:VIAFCluster >  ns" + i + "\\:mainHeadings > ns" + i + "\\:mainHeadingEl > ns" + i + "\\:datafield > ns" + i + "\\:subfield[code='" + codeSelector + "']"); //code attribute a
+            // locate VIAF ID from the result
             var idSelector = search.viafSelectorHelper("recordData ns" + i + "\\:VIAFCluster ns" + i + "\\:viafID");
+            // search MARC21 for a label to use
+            var nameSelectorMARC21 = search.viafSelectorHelper("recordData >  ns" + i + "\\:VIAFCluster >  ns" + i + "\\:mainHeadings > ns" + i + "\\:mainHeadingEl > ns" + i + "\\:datafield[dtype='MARC21'] > ns" + i + "\\:subfield[code='" + codeSelector + "']"); //code attribute a
+            // search UNIMARC for a label to use
+            var nameSelectorUNIMARC = search.viafSelectorHelper("recordData >  ns" + i + "\\:VIAFCluster >  ns" + i + "\\:mainHeadings > ns" + i + "\\:mainHeadingEl > ns" + i + "\\:datafield > ns" + i + "\\:subfield[code='" + codeSelector + "']"); //code attribute a
 
-            that.name = $(specs).find(nameSelector).first().text(); //$(specs).find(nameSelector).text();
             that.id = $(specs).find(idSelector).first().text();
+            that.name = $(specs).find(nameSelectorMARC21).first().text(); 
+            if (that.name == "")
+            {
+                that.name = $(specs).find(nameSelectorUNIMARC).first().text(); 
+            }
+            if (that.name == "")
+            {
+                that.name = "[Title not found]";
+            }
 
             // Extra
             var urlSelector = search.viafSelectorHelper("recordData >  ns" + i + "\\:VIAFCluster >  ns" + i + "\\:Document");
             that.url = $(specs).find(urlSelector).first().attr("about");
+            that.object_url = that.url;
 
             switch (dialogType) {
             case "person":
@@ -3257,6 +3324,7 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
                 result.name = search.selectedData.name;
                 result.repository = search.selectedLinkedDataSource;
                 result.data = search.selectedData.data;
+                result.uri = search.selectedData.object_url;
             }
             return result;
         }
@@ -3345,7 +3413,9 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
              : opts.error;
 
             if (opts.query) {
-                $("#searchEntityInput").val(opts.query);
+                //update: $("#searchEntityInput").val(opts.query);
+                search.queryString(opts.query);
+                // do search 
                 search.performSearch(opts.query);
             }
         }
@@ -3405,5 +3475,5 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
         initialize();
 
     })();
-return cD;
+    return cD;
 });

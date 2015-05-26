@@ -139,8 +139,19 @@ function CwrcEntity(type, url, jq) {
                         url : url + type + "/" + pid,
                         type : 'GET',
                         async : false,
-                        success : function(data) {
-                                result = data;
+                        success : function(data, status, xhr) {
+                                var ct = xhr.getResponseHeader("content-type") || "";
+                                if (ct.indexOf('json') > -1)
+                                {
+                                  // assume XML wrapped in JSON
+                                  // and the following version of the API
+                                  // https://github.com/cwrc/cwrc_entities/commit/b49473832adad70a2e848c86fb5bc312e8616cea 
+                                  result = jq.parseXML(data);
+                                }
+                                else
+                                {
+                                  result = data;
+                                }
                         },
                         error : function(error) {
                                 result = error;

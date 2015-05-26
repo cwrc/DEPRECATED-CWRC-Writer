@@ -76,16 +76,10 @@ return function(writer, config) {
                                 };
                             }
                         }
-                        
-                        if (result.repository === 'viaf') {
-                            result.id = 'http://viaf.org/viaf/'+result.id;
-                        } else if (result.repository === 'geonames') {
-                            var xmlData = w.utilities.stringToXML(result.data);
-                            var id = $('geonameid', xmlData).text();
-                            result.id = 'http://www.geonames.org/'+id;
-                        } else {
-                            result.id = 'http://cwrc-dev-01.srv.ualberta.ca/islandora/object/'+result.id;
-                        }
+
+                        // set id to the uri
+                        // assume proper uri passed by the dialogs
+                        result.id = result.uri 
                         
                         if ($.isArray(result.name)) {
                             result.name = result.name[0];
