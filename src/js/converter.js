@@ -293,21 +293,52 @@ return function(writer) {
         var range = {};
 
         function getOffsetFromParentForEntity(id, parent, isEnd) {
-            var currentOffset = 0;
             var offset = 0;
+
+            // Recursive function counts the number of characters in the offset,
+            // recurses down overlapping entities and counts their characters as well.
+            // Since entity tags are created when a document is loaded we must count
+            // the characters inside of them. We can ignore _tag elements though in the
+            // count as they will be present when the document is loaded.
             function getOffset(parent) {
+                // To allow this function to exit recursion it must be able to return false.
+                var ret = true;
                 parent.contents().each(function(index, element) {
-                    var el = $(this);
-                    if (this.nodeType == Node.TEXT_NODE && this.data != ' ') {
-                        currentOffset += this.length;
-                    } else if (el.attr('name') == id) {
+                    var el = $(this), start, end, finished;
+                    if (el.attr('name') === id) {
+                        // Some tags are not the start or the end, they are used for
+                        // highlighting the entity.
+                        start = el.hasClass('start');
+                        end = el.hasClass('end');
+                        finished = (start && !isEnd) || (end && isEnd);
+                        // Always count the content length if looking for the end.
                         if (isEnd) {
-                            currentOffset += el.text().length;
+                            offset += el.text().length;
                         }
-                        offset = currentOffset;
-                        return false;
+                        if (finished) {
+                            ret = false;
+                            return ret;
+                        }
+                    }
+                    // Not sure why the &nbsp; text nodes would not be counted but as long
+                    // as we are consistent in both the saving and loading it should be
+                    // fine.
+                    else if (this.nodeType === Node.TEXT_NODE && this.data !== ' ') {
+                        // Count all the text!
+                        offset += this.length;
+                    }
+                    // An Tag or an Entity that is not the one we're looking for.
+                    else {
+                        // We must use all intermediate node's text to ensure an accurate
+                        // text count. As the order in which entities are wrapped in spans
+                        // when the document is loaded will not be guarantee to be in an
+                        // order in which replicates the state the document was in at the
+                        // time it was saved.
+                        ret = getOffset(el);
+                        return ret;
                     }
                 });
+                return ret;
             }
 
             getOffset(parent);
@@ -1339,19 +1370,35 @@ return function(writer) {
     function _getTextNodeFromParentAndOffset(parent, offset) {
         var currentOffset = 0;
         var textNode = null;
+
         function getTextNode(parent) {
+            var ret = true;
             parent.contents().each(function(index, element) {
-                if (this.nodeType === Node.TEXT_NODE && this.data != ' ') {
+                var el = $(this);
+                // Not sure why the &nbsp; text nodes would not be counted but as long
+                // as we are consistent in both the saving and loading it should be
+                // fine.
+                if (this.nodeType === Node.TEXT_NODE && this.data !== ' ') {
+                    // Count all the text!
                     currentOffset += this.length;
                     if (currentOffset >= offset) {
                         currentOffset = offset - (currentOffset - this.length);
                         textNode = this;
-                        return false;
+                        ret = false;
+                        return ret;
                     }
-                } else if (this.nodeType === Node.ELEMENT_NODE && this.getAttribute('_entity') === 'true' && this.getAttribute('_tag') === null) {
-                    getTextNode($(this));
+                }
+                // An Tag or an Entity that is not the one we're looking for.
+                else {
+                    // We must use all intermediate node's text to ensure an accurate text
+                    // count. As the order in which entities are wrapped in spans when the
+                    // document is loaded will not be guarantee to be in an order in which
+                    // replicates the state the document was in at the time it was saved.
+                    ret = getTextNode(el);
+                    return ret;
                 }
             });
+            return ret;
         }
 
         getTextNode(parent);
