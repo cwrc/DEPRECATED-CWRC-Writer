@@ -1415,6 +1415,10 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
                         } else {
                             response = cwrcApi[dialogType].newEntity(xml);
                         }
+                        response.uri = repositoryBaseObjectURL + response.pid;
+                        // response needs to include: 
+                        //  = pid{from API} and 
+                        //  = URI
                         var result = {
                             response : response,
                             data : xml

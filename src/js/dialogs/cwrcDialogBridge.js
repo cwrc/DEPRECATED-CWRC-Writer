@@ -21,7 +21,7 @@ return function(writer, config) {
                 if (result.response !== undefined && result.response.pid !== undefined) {
                     w.dialogManager.show('schema/'+localDialog, {
                         cwrcInfo: {
-                            id: 'http://cwrc-dev-01.srv.ualberta.ca/islandora/object/'+result.response.pid
+                            id: result.response.uri
                         }
                     });
                 } else {

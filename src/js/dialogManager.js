@@ -63,7 +63,8 @@ return function(writer) {
     };
 
     // set URL for CWRC-Dialogs
-    cD.setRepositoryBaseObjectURL('http://cwrc-dev-01.srv.ualberta.ca/islandora/object/');
+    // ToDo - 2015-05-29 - set with a config file
+    cD.setRepositoryBaseObjectURL('http://commons.cwrc.ca/');
 
     // log in for CWRC-Dialogs
 //    cD.initializeWithCookieData(null);
