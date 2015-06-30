@@ -29,7 +29,7 @@ var require = {
         'attributeWidget': 'dialogs/attributeWidget',
         
         // cwrcDialogs
-        'knockout': ['http://cdnjs.cloudflare.com/ajax/libs/knockout/2.3.0/knockout-min','lib/knockout/knockout-2.3.0'],
+        'knockout': ['http://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min','lib/knockout/knockout-3.3.0'],
         'bootstrap': ['lib/bootstrap/bootstrap.min'],
         'bootstrap-datepicker': 'lib/bootstrap/bootstrap-datepicker',
         'cwrc-api': 'cwrcDialogs/cwrc-api',
