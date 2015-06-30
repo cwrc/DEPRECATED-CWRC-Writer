@@ -77,6 +77,23 @@ textarea{
   margin: 0px 0px 0px 0px !important;
   padding: 0px 0px 0px 0px !important;;
 }
+
+#CWRCPaginator > ul.hidden
+{ 
+  display: none;
+}
+
+#VIAFPaginator > ul > li.disabled 
+, #CWRCPaginator > ul > li.disabled {
+  display: none;
+}
+
+#VIAFPaginator > ul > li.disabled:nth-child(1) 
+, #CWRCPaginator > ul > li.disabled:nth-child(1) {
+  visibility: hidden;
+  display: initial !important;
+}
+
 /*
 
 
