@@ -2946,7 +2946,7 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
 
                     $(element).siblings(':button').first().bsDatepicker(options);
 
-                    ko.utils.registerEventHandler($(element).siblings(':button').first(), "changeDate", function (event) {
+                    ko.utils.registerEventHandler($(element).siblings(':button').first()[0], "changeDate", function (event) {
                         var value = valueAccessor();
                         if (ko.isObservable(value)) {
                             var dateVal = ko.toJSON(event.date).substr(1, 10);
