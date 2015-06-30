@@ -3109,7 +3109,7 @@ tbody.bootstrap-scope .collapse.in {
 .bootstrap-scope .dropdown-toggle:focus {
   outline: 0;
 }
-.bootstrap-scope .dropdown-menu {
+.bootstrap-scope.dropdown-menu {
   position: absolute;
   top: 100%;
   left: 0;
@@ -3130,17 +3130,17 @@ tbody.bootstrap-scope .collapse.in {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   background-clip: padding-box;
 }
-.bootstrap-scope .dropdown-menu.pull-right {
+.bootstrap-scope.dropdown-menu.pull-right {
   right: 0;
   left: auto;
 }
-.bootstrap-scope .dropdown-menu .divider {
+.bootstrap-scope.dropdown-menu .divider {
   height: 1px;
   margin: 9px 0;
   overflow: hidden;
   background-color: #e5e5e5;
 }
-.bootstrap-scope .dropdown-menu > li > a {
+.bootstrap-scope.dropdown-menu > li > a {
   display: block;
   padding: 3px 20px;
   clear: both;
@@ -3149,27 +3149,27 @@ tbody.bootstrap-scope .collapse.in {
   color: #333333;
   white-space: nowrap;
 }
-.bootstrap-scope .dropdown-menu > li > a:hover,
-.bootstrap-scope .dropdown-menu > li > a:focus {
+.bootstrap-scope.dropdown-menu > li > a:hover,
+.bootstrap-scope.dropdown-menu > li > a:focus {
   text-decoration: none;
   color: #262626;
   background-color: #f5f5f5;
 }
-.bootstrap-scope .dropdown-menu > .active > a,
-.bootstrap-scope .dropdown-menu > .active > a:hover,
-.bootstrap-scope .dropdown-menu > .active > a:focus {
+.bootstrap-scope.dropdown-menu > .active > a,
+.bootstrap-scope.dropdown-menu > .active > a:hover,
+.bootstrap-scope.dropdown-menu > .active > a:focus {
   color: #ffffff;
   text-decoration: none;
   outline: 0;
   background-color: #428bca;
 }
-.bootstrap-scope .dropdown-menu > .disabled > a,
-.bootstrap-scope .dropdown-menu > .disabled > a:hover,
-.bootstrap-scope .dropdown-menu > .disabled > a:focus {
+.bootstrap-scope.dropdown-menu > .disabled > a,
+.bootstrap-scope.dropdown-menu > .disabled > a:hover,
+.bootstrap-scope.dropdown-menu > .disabled > a:focus {
   color: #777777;
 }
-.bootstrap-scope .dropdown-menu > .disabled > a:hover,
-.bootstrap-scope .dropdown-menu > .disabled > a:focus {
+.bootstrap-scope.dropdown-menu > .disabled > a:hover,
+.bootstrap-scope.dropdown-menu > .disabled > a:focus {
   text-decoration: none;
   background-color: transparent;
   background-image: none;

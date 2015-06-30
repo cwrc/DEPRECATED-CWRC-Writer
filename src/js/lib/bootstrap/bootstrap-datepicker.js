@@ -451,7 +451,7 @@ define('bootstrap-datepicker',['jquery', 'bootstrap'], function(jQuery) {
 						'</thead>',
 		contTemplate: '<tbody><tr><td colspan="7"></td></tr></tbody>'
 	};
-	DPGlobal.template = '<div class="bootstrap-scope"><div class="datepicker dropdown-menu">'+
+	DPGlobal.template = '<div class="bootstrap-scope datepicker dropdown-menu">'+
 							'<div class="datepicker-days">'+
 								'<table class=" table-condensed">'+
 									DPGlobal.headTemplate+
@@ -470,7 +470,7 @@ define('bootstrap-datepicker',['jquery', 'bootstrap'], function(jQuery) {
 									DPGlobal.contTemplate+
 								'</table>'+
 							'</div>'+
-						'</div></div>';
+						'</div>';
 
 	/* DATEPICKER NO CONFLICT
 	* =================== */
