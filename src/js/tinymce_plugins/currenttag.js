@@ -22,40 +22,42 @@
                     }
                 }
                 
-                $('#currentPath').empty();
-                var de = 0;
-                getParent(function(n) {
-                    if (n.getAttribute('data-mce-bogus'))
-                        return;
-                    // Ignore non element and hidden elements
-                    if (n.nodeType != 1 || n.nodeName === 'BR' || (t.editor.dom.hasClass(n, 'mceItemHidden') || t.editor.dom.hasClass(n, 'mceItemRemoved')))
-                        return;
-                    
-                    var tag = n.getAttribute('_tag');
-                    var id = n.getAttribute('id');
-                    if (id === 'entityHighlight') {
-                        var w = t.editor.writer;
-                        id = t.entitiesManager.getCurrentEntity();
-                        tag = w.entitiesManager.getEntity(id).getTag();
-                    }
-                    if (tag != null) {
-                        var pi = t.editor.dom.create('a', {name: id, 'href' : "javascript:;", role: 'button', onmousedown : "return false;", 'class' : 'mcePath_' + (de++)}, tag);
-                        var p = $('#currentPath')[0];
-                        if (p.hasChildNodes()) {
-                            p.insertBefore(t.editor.dom.create('span', {'aria-hidden': 'true'}, '\u00a0\u00bb '), p.firstChild);
-                            p.insertBefore(pi, p.firstChild);
-                        } else {
-                            p.appendChild(pi);
+                if (t.isRendered) {
+                    $('#currentPath').empty();
+                    var de = 0;
+                    getParent(function(n) {
+                        if (n.getAttribute('data-mce-bogus'))
+                            return;
+                        // Ignore non element and hidden elements
+                        if (n.nodeType != 1 || n.nodeName === 'BR' || (t.editor.dom.hasClass(n, 'mceItemHidden') || t.editor.dom.hasClass(n, 'mceItemRemoved')))
+                            return;
+                        
+                        var tag = n.getAttribute('_tag');
+                        var id = n.getAttribute('id');
+                        if (id === 'entityHighlight') {
+                            var w = t.editor.writer;
+                            id = t.entitiesManager.getCurrentEntity();
+                            tag = w.entitiesManager.getEntity(id).getTag();
                         }
-                    }
-                });
-                
-                $('#currentPath a').click(function() {
-                    var id = $(this).attr('name');
-                    if (id) {
-                        t.editor.writer.selectStructureTag(id, false);
-                    }
-                });
+                        if (tag != null) {
+                            var pi = t.editor.dom.create('a', {name: id, 'href' : "javascript:;", role: 'button', onmousedown : "return false;", 'class' : 'mcePath_' + (de++)}, tag);
+                            var p = $('#currentPath')[0];
+                            if (p.hasChildNodes()) {
+                                p.insertBefore(t.editor.dom.create('span', {'aria-hidden': 'true'}, '\u00a0\u00bb '), p.firstChild);
+                                p.insertBefore(pi, p.firstChild);
+                            } else {
+                                p.appendChild(pi);
+                            }
+                        }
+                    });
+                    
+                    $('#currentPath a').click(function() {
+                        var id = $(this).attr('name');
+                        if (id) {
+                            t.editor.writer.selectStructureTag(id, false);
+                        }
+                    });
+                }
             });
             
             ed.addCommand('closeCurrentTag', function() {
@@ -82,6 +84,7 @@
         createControl: function(n, cm) {
             if (n == 'currenttag') {
                 var c = new tinymce.ui.Label('currentPath');
+                this.isRendered = true;
                 return cm.add(c);
             }
     
