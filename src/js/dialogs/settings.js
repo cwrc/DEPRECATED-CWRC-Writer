@@ -58,6 +58,7 @@ return function(writer, config) {
         '<label for="showstructbrackets">Show Tags</label>'+
         '<input type="checkbox" id="showstructbrackets" />'+
     '</div>'+
+    '<div id="settingsDialogAdvanced">'+
     '<div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #aaa;">'+
     '<label>Editor Mode</label>'+
         '<select name="editormode">'+
@@ -71,6 +72,7 @@ return function(writer, config) {
         '<select name="schema">'+
         '</select>'+
         '<br/><button>Add Schema</button>'+
+    '</div>'+
     '</div>'+
     '</div>');
     
@@ -243,8 +245,9 @@ return function(writer, config) {
             settings.showStructBrackets = $('#showstructbrackets').prop('checked');
             
             var schemaId = $('select[name="schema"]', $settingsDialog).val();
-            
-            w.event('schemaChanged').publish(schemaId);
+            if (schemaId !== w.schemaManager.schemaId) {
+                w.event('schemaChanged').publish(schemaId);
+            }
             
             var styles = {
                 fontSize: settings.fontSize,
@@ -271,6 +274,10 @@ return function(writer, config) {
     return {
         getSettings: function() {
             return settings;
+        },
+        hideAdvanced: function() {
+            $('#settingsDialogAdvanced').hide();
+            $settingsDialog.dialog('option', 'height', 200);
         }
     };
 };
