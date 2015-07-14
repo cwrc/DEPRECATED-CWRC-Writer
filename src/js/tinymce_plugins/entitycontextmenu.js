@@ -18,12 +18,19 @@
          */
         init : function(ed, url) {
             var t = this, showMenu, hideMenu, contextmenuNeverUseNative, realCtrlKey;
+            
+            // disable menu
+            t.disabled = false;
+            
+            // only show entity tags
+            t.entityTagsOnly = false;
+            
             t.url = url;
             t.editor = ed;
             t.showContextMenu = false; // whether to trigger the context menu (needed on mac)
 
             contextmenuNeverUseNative = ed.settings.contextmenu_never_use_native;
-
+            
             /**
              * This event gets fired when the context menu is shown.
              *
@@ -42,6 +49,8 @@
                 if ((realCtrlKey !== 0 ? realCtrlKey : e.ctrlKey) && !contextmenuNeverUseNative)
                     return;
 
+                if (t.disabled) return;
+                
                 Event.cancel(e);
                 
                 if (tinymce.isMac) {
@@ -209,65 +218,67 @@
                 }
             }).setDisabled(col);
             
-            m.addSeparator();
-            var tagMenu = m.addMenu({
-                id: 'structTagsContextMenu',
-                title: 'Structural Tags',
-                icon_src: url+'tag.png',
-                menuType: 'filterMenu'
-            });
-            tagMenu.beforeShowMenu.add(function(m) {
-                m.element.addClass('defaultSkin');
-                m.element.addClass('mceDropDown');
-            });
-            ed.execCommand('createSchemaTagsControl', {menu: tagMenu, disabled: col});
-            m.addSeparator();
-            
-            col = (ed.writer.entitiesManager.getCurrentEntity() == null && ed.currentStruct == null);
-            
-            var changeTagMenu = m.addMenu({
-                id: 'changeTagContextMenu',
-                title: 'Change Tag',
-                icon_src: url+'tag_blue_edit.png',
-                menuType: 'filterMenu'
-            });
-            changeTagMenu.beforeShowMenu.add(function(m) {
-                m.element.addClass('defaultSkin');
-                m.element.addClass('mceDropDown');
-            });
-            ed.execCommand('createSchemaTagsControl', {menu: changeTagMenu, disabled: col, mode: 'change'});
-            
-            m.add({
-                title: 'Edit Tag',
-                icon_src: url+'tag_blue_edit.png',
-                onclick : function() {
-                    ed.execCommand('editTag', null);
-                }
-            }).setDisabled(col);
-            m.add({
-                title: 'Remove Tag',
-                icon_src: url+'tag_blue_delete.png',
-                onclick : function() {
-                    ed.execCommand('removeTag');
-                }
-            }).setDisabled(col);
-            m.addSeparator();
-            col = ed.writer.entitiesManager.getCurrentEntity() == null;
-            m.add({
-                title: 'Copy Entity',
-                icon_src: url+'tag_blue_copy.png',
-                onclick : function() {
-                    ed.execCommand('copyEntity', null);
-                }
-            }).setDisabled(col);
-            col = ed.entityCopy == null;
-            m.add({
-                title: 'Paste Entity',
-                icon_src: url+'tag_blue_paste.png',
-                onclick : function() {
-                    ed.execCommand('pasteEntity', null);
-                }
-            }).setDisabled(col);
+            if (t.entityTagsOnly === false) {
+                m.addSeparator();
+                var tagMenu = m.addMenu({
+                    id: 'structTagsContextMenu',
+                    title: 'Structural Tags',
+                    icon_src: url+'tag.png',
+                    menuType: 'filterMenu'
+                });
+                tagMenu.beforeShowMenu.add(function(m) {
+                    m.element.addClass('defaultSkin');
+                    m.element.addClass('mceDropDown');
+                });
+                ed.execCommand('createSchemaTagsControl', {menu: tagMenu, disabled: col});
+                m.addSeparator();
+                
+                col = (ed.writer.entitiesManager.getCurrentEntity() == null && ed.currentStruct == null);
+                
+                var changeTagMenu = m.addMenu({
+                    id: 'changeTagContextMenu',
+                    title: 'Change Tag',
+                    icon_src: url+'tag_blue_edit.png',
+                    menuType: 'filterMenu'
+                });
+                changeTagMenu.beforeShowMenu.add(function(m) {
+                    m.element.addClass('defaultSkin');
+                    m.element.addClass('mceDropDown');
+                });
+                ed.execCommand('createSchemaTagsControl', {menu: changeTagMenu, disabled: col, mode: 'change'});
+                
+                m.add({
+                    title: 'Edit Tag',
+                    icon_src: url+'tag_blue_edit.png',
+                    onclick : function() {
+                        ed.execCommand('editTag', null);
+                    }
+                }).setDisabled(col);
+                m.add({
+                    title: 'Remove Tag',
+                    icon_src: url+'tag_blue_delete.png',
+                    onclick : function() {
+                        ed.execCommand('removeTag');
+                    }
+                }).setDisabled(col);
+                m.addSeparator();
+                col = ed.writer.entitiesManager.getCurrentEntity() == null;
+                m.add({
+                    title: 'Copy Entity',
+                    icon_src: url+'tag_blue_copy.png',
+                    onclick : function() {
+                        ed.execCommand('copyEntity', null);
+                    }
+                }).setDisabled(col);
+                col = ed.entityCopy == null;
+                m.add({
+                    title: 'Paste Entity',
+                    icon_src: url+'tag_blue_paste.png',
+                    onclick : function() {
+                        ed.execCommand('pasteEntity', null);
+                    }
+                }).setDisabled(col);
+            }
 
             t.onContextMenu.dispatch(t, m, el, col);
 
