@@ -43,7 +43,11 @@ function setupLayoutAndModules(w, EntitiesList, Relations, Selection, StructureT
         },
         center: {
             onresize: function(region, pane, state, options) {
-                var uiHeight = $('#'+w.editor.id+'_tbl td.mceToolbar').outerHeight() + 2;
+                var uiHeight = 2;
+                var toolbar = $('#'+w.editor.id+'_tbl .mceToolbar').first();
+                if (toolbar.is(':visible')) {
+                    uiHeight += toolbar.outerHeight();
+                }
                 $('#'+w.editor.id+'_ifr').height(state.layoutHeight - uiHeight);
             }
         },

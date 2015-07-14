@@ -59,11 +59,13 @@ return function(config) {
     w.RDF = 2; // RDF only (not currently used)
     
     // editor mode
-    w.mode = config.mode;
-    if (w.mode !== undefined && w.mode === 'xml') {
-        w.mode = w.XML;
-    } else {
-        w.mode = w.XMLRDF;
+    w.mode = w.XMLRDF;
+    if (config.mode !== undefined) {
+        if (config.mode === 'xml') {
+            w.mode = w.XML;
+        } else if (config.mode === 'rdf') {
+            w.mode = w.RDF;
+        }
     }
     
     // can entities overlap?
@@ -185,6 +187,20 @@ return function(config) {
         }
         return doc;
     };
+    
+    w.showToolbar = function() {
+        $('.mceToolbar', w.editor.getContainer()).first().show();
+        if (w.layout) {
+            w.layout.resizeAll();
+        }
+    }
+    
+    w.hideToolbar = function() {
+        $('.mceToolbar', w.editor.getContainer()).first().hide();
+        if (w.layout) {
+            w.layout.resizeAll();
+        }
+    }
     
     w._fireNodeChange = function(nodeEl) {
         // fire the onNodeChange event
@@ -557,7 +573,6 @@ return function(config) {
             mode: 'exact',
             elements: textareaId,
             theme: 'advanced',
-            readonly: config.readonly,
             content_css: w.cwrcRootUrl+'css/editor.css',
             
             width: '100%',
@@ -624,6 +639,13 @@ return function(config) {
                 ed.contextMenuPos = null; // the position of the context menu (used to position related dialog box)
                 ed.copiedElement = {selectionType: null, element: null}; // the element that was copied (when first selected through the structure tree)
                 ed.lastKeyPress = null; // the last key the user pressed
+                
+                if (config.readonly === true) {
+                    ed.onPreInit.add(function(ed) {
+                        var body = ed.getBody();
+                        body.setAttribute('contenteditable', false)
+                    });
+                }
                 
                 ed.onInit.add(function(ed) {
                     // modify isBlock method to check _tag attributes
