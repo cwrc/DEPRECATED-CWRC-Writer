@@ -8,7 +8,7 @@
         <script type="text/javascript" src="js/config.js"></script>
         <script type="text/javascript" src="js/lib/require/require.js"></script>
         
-        <script type="text/javascript" src="js/layout_readonly.js"></script>
+        <script type="text/javascript" src="js/layout_reader.js"></script>
 
         <link type="text/css" rel="stylesheet" href="css/style.css" />
         <link type="text/css" rel="stylesheet" href="css/islandora_style.css" />
@@ -52,17 +52,22 @@
                 
                 function doInit(config) {
                     config.delegator = Delegator;
-                    config.readonly = 1;
-                    config.buttons1 = '';
+                    config.mode = 'rdf';
+                    config.readonly = true;
+                    config.buttons1 = 'addperson,addplace,adddate,addorg,addcitation,addnote,addtitle,addcorrection,addkeyword,addlink,|,addtriple,|,savebutton,loadbutton';
                     config.buttons2 = '';
                     writer = new Writer(config);
                     writer.init('editor');
                     writer.event('writerInitialized').subscribe(function(writer) {
-                        setupLayoutAndModules(writer);
-                        writer.fileManager.loadInitialDocument(window.location.hash);
-                        
-                        $('#headerLink').hide();
-                        writer.settings.hideAdvanced();
+                        // load modules then do the setup
+                        require(['modules/entitiesList','modules/relations'
+                        ], function(EntitiesList, Relations) {
+                            setupLayoutAndModules(writer, EntitiesList, Relations);
+                            writer.fileManager.loadInitialDocument(window.location.hash);
+                            
+                            $('#headerLink').hide();
+                            writer.settings.hideAdvanced();
+                        });
                     });
                 }
                 
@@ -92,11 +97,25 @@
         </script>
     </head>
 <body>
-<div id="cwrc_loadingMask"><div>Loading CWRC-Writer</div></div>
+<div id="cwrc_loadingMask"><div>Loading CWRC-Reader</div></div>
 <div id="cwrc_wrapper">
     <div id="cwrc_header" class="cwrc ui-layout-north">
         <h1>CWRC-Reader v0.8</h1>
         <div id="headerButtons">
+        </div>
+    </div>
+    <div class="cwrc ui-layout-west">
+        <div id="westTabs" class="tabs">
+            <ul>
+                <li><a href="#entities">Entities</a></li>
+                <li><a href="#relations">Relations</a></li>
+                <!-- li id="annotation_tab"><a href="#image-annotations">Image Annotations</a></li -->
+            </ul>
+            <div id="westTabsContent" class="ui-layout-content">
+                <!-- div id="image-annotations">
+                    <div id="comment_annos_block"></div>
+                </div -->
+            </div>
         </div>
     </div>
     <div id="cwrc_main" class="ui-layout-center">

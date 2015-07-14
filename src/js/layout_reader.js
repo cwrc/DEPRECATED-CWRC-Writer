@@ -1,24 +1,33 @@
-function setupLayoutAndModules(w) {
+function setupLayoutAndModules(w, EntitiesList, Relations) {
     var $ = require('jquery');
+    
+    var mode = 'reader';
     
     w.layout = $('#cwrc_wrapper').layout({
         defaults: {
             maskIframesOnResize: true,
             resizable: true,
-            slidable: false
+            slidable: false,
+            fxName: 'none'
         },
-    //            east: {
-    //                onresize: function() {
-    //                    // TODO: Move this out of the editor somehow.
-    //                    // Accessing 'writer.layout.east.onresize does no
-    //                    // work.
-    //                    resizeCanvas();
-    //                },
-    //            },
         north: {
             size: 35,
             minSize: 35,
             maxSize: 60
+        },
+        south: {
+            size: 34,
+            spacing_open: 0,
+            spacing_closed: 0
+        },
+        west: {
+            size: 'auto',
+            minSize: 325,
+            onresize: function(region, pane, state, options) {
+                var tabsHeight = $('#westTabs > ul').outerHeight();
+                $('#westTabsContent').height(state.layoutHeight - tabsHeight);
+    //                    $.layout.callbacks.resizeTabLayout(region, pane);
+            }
         }
     });
     w.layout.panes.center.layout({
@@ -29,7 +38,11 @@ function setupLayoutAndModules(w) {
         },
         center: {
             onresize: function(region, pane, state, options) {
-                var uiHeight = $('#'+w.editor.id+'_tbl td.mceToolbar').outerHeight() + 2;
+                var uiHeight = 2;
+                var toolbar = $('#'+w.editor.id+'_tbl .mceToolbar').first();
+                if (toolbar.is(':visible')) {
+                    uiHeight += toolbar.outerHeight();
+                }
                 $('#'+w.editor.id+'_ifr').height(state.layoutHeight - uiHeight);
             }
         },
@@ -56,6 +69,58 @@ function setupLayoutAndModules(w) {
     $('#cwrc_header h1').click(function() {
         window.location = 'http://www.cwrc.ca';
     });
+    
+    new EntitiesList({writer: w, parentId: 'westTabsContent'});
+    new Relations({writer: w, parentId: 'westTabsContent'});
+    
+    $('#westTabs').tabs({
+        active: 0,
+        activate: function(event, ui) {
+            $.layout.callbacks.resizeTabLayout(event, ui);
+        },
+        create: function(event, ui) {
+            $('#westTabs').parent().find('.ui-corner-all').removeClass('ui-corner-all');
+        }
+    });
+    
+    
+    // Mode switching functionality
+    
+    var activateReader = function() {
+        w.layout.hide('west');
+        w.hideToolbar();
+        
+        w.editor.plugins.entitycontextmenu.disabled = true;
+        
+        mode = 'reader';
+    }
+    
+    var activateAnnotator = function() {
+        w.layout.show('west');
+        w.showToolbar();
+        
+        w.editor.plugins.entitycontextmenu.disabled = false;
+        w.editor.plugins.entitycontextmenu.entityTagsOnly = true;
+        
+        mode = 'annotator';
+    }
+    
+    $('#headerButtons').append(''+
+    '<div id="annotateLink"><h2>Annotate</h2></div>');
+    $('#annotateLink').click(function() {
+        if (mode === 'reader') {
+            // TODO check credentials
+            activateAnnotator();
+            $('h2', this).text('Read');
+        } else {
+            activateReader();
+            $('h2', this).text('Annotate');
+        }
+    });
+    
+    activateReader();
+    
+    
     
     var isLoading = false;
     var doneLayout = false;
