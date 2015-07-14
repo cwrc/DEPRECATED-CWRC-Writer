@@ -20,7 +20,7 @@ return function(config) {
             '<div id="sortBy"><span>Sort By</span> '+
             '<input type="radio" id="sequence" name="sortBy" checked="checked" /><label for="sequence">Sequence</label>'+
             '<input type="radio" id="category" name="sortBy" /><label for="category">Category</label></div>'+
-            '<div><input type="checkbox" id="metaKeys" /><label for="metaKeys">Show Metadata</label></div>'+
+            '<!--<div><input type="checkbox" id="metaKeys" /><label for="metaKeys">Show Metadata</label></div>-->'+
             '</div></div>');
     $(document.body).append(''+
         '<div id="entitiesMenu" class="contextMenu" style="display: none;"><ul>'+
@@ -39,11 +39,11 @@ return function(config) {
         w.entitiesManager.highlightEntity(w.entitiesManager.getCurrentEntity());
     });
     $('#sortBy').buttonset();
-    $('#metaKeys').button().click(function() {
-        showMetaKeys = !showMetaKeys;
-        w.entitiesList.update();
-        w.entitiesManager.highlightEntity(w.entitiesManager.getCurrentEntity());
-    });
+//    $('#metaKeys').button().click(function() {
+//        showMetaKeys = !showMetaKeys;
+//        w.entitiesList.update();
+//        w.entitiesManager.highlightEntity(w.entitiesManager.getCurrentEntity());
+//    });
     
     /**
      * @lends EntitiesList.prototype
