@@ -72,13 +72,19 @@ return function(writer) {
             });
         });
 
-        // rdf
+        // RDF
+        
         var rdfString = '';
-        if (w.mode === w.XMLRDF && includeRDF) {
+        if (w.mode === w.RDF || (w.mode === w.XMLRDF && includeRDF)) {
             var rdfmode = 'xml';
             rdfString = buildAnnotations(rdfmode);
         }
-
+        if (w.mode === w.RDF) {
+            return rdfString;
+        }
+        
+        // XML
+        
         var root = body.children('[_tag='+w.root+']');
         // make sure the root has the right namespaces for validation purposes
         var struct = w.structs[root.attr('id')];

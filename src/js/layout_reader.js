@@ -129,6 +129,11 @@ function setupLayoutAndModules(w, EntitiesList, Relations) {
     };
     var onLoadDone = function() {
         isLoading = false;
+        
+        // force mode
+        w.mode = w.RDF;
+        w.allowOverlap = true;
+        
         if (doneLayout) {
             $('#cwrc_loadingMask').fadeOut();
             w.event('documentLoaded').unsubscribe(onLoadDone);

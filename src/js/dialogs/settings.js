@@ -65,6 +65,7 @@ return function(writer, config) {
             '<option value="xml">XML only (no overlap)</option>'+
             '<option value="xmlrdf">XML and RDF (no overlap)</option>'+
             '<option value="xmlrdfoverlap">XML and RDF (overlapping entities)</option>'+
+            '<option value="rdf">RDF only</option>'+
         '</select>'+
     '</div>'+
     '<div style="margin-top: 10px;">'+
@@ -173,6 +174,10 @@ return function(writer, config) {
             if (w.mode !== w.XMLRDF || w.allowOverlap === false) {
                 doModeChange = true;
             }
+        } else if (editorMode === 'rdf') {
+            if (w.mode !== w.RDF || w.allowOverlap === false) {
+                doModeChange = true;
+            }
         }
         
         if (doModeChange) {
@@ -196,6 +201,8 @@ return function(writer, config) {
                     message = 'You have overlapping entities and are attemping to switch to a mode which prohibits them.<br/>The overlapping entities will be discarded if you continue.<br/><br/>Do you wish to continue?';
                 }
             }
+            // TODO rdf message
+            
             if (message !== undefined) {
                 w.dialogManager.confirm({
                     title: 'Warning',
@@ -227,6 +234,9 @@ return function(writer, config) {
                     w.allowOverlap = false;
                 } else if (editorMode === 'xmlrdfoverlap') {
                     w.mode = w.XMLRDF;
+                    w.allowOverlap = true;
+                } else if (editorMode === 'rdf') {
+                    w.mode = w.RDF;
                     w.allowOverlap = true;
                 }
             }
