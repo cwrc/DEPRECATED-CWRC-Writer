@@ -1,5 +1,7 @@
 /* This CSS gets applied to the tinymce editor */
 
+@import url(http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext);
+
 body {
     font-family: 'Book Antiqua', serif;
     font-size: 11pt;

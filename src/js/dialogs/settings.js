@@ -40,14 +40,15 @@ return function(writer, config) {
     '<div style="margin-top: 10px;">'+
         '<label>Font Type</label>'+
         '<select name="fonttype">'+
-            '<option value="Arial" style="font-family: Arial; font-size: 12px;">Arial</option>'+
-            '<option value="Book Antiqua" style="font-family: Book Antiqua; font-size: 12px;">Book Antiqua</option>'+
-            '<option value="Georgia" style="font-family: Georgia; font-size: 12px;">Georgia</option>'+
-            '<option value="Helvetica" style="font-family: Helvetica; font-size: 12px;">Helvetica</option>'+
-            '<option value="Palatino" style="font-family: Palatino; font-size: 12px;">Palatino</option>'+
-            '<option value="Tahoma" style="font-family: Tahoma; font-size: 12px;">Tahoma</option>'+
-            '<option value="Times New Roman" style="font-family: Times New Roman; font-size: 12px;">Times New Roman</option>'+
-            '<option value="Verdana" style="font-family: Verdana; font-size: 12px;">Verdana</option>'+
+            '<option value="Arial" style="font-family: Arial; font-size: 14px;">Arial</option>'+
+            '<option value="Book Antiqua" style="font-family: Book Antiqua; font-size: 14px;">Book Antiqua</option>'+
+            '<option value="Georgia" style="font-family: Georgia; font-size: 14px;">Georgia</option>'+
+            '<option value="Helvetica" style="font-family: Helvetica; font-size: 14px;">Helvetica</option>'+
+            '<option value="Palatino" style="font-family: Palatino; font-size: 14px;">Palatino</option>'+
+            '<option value="Tahoma" style="font-family: Tahoma; font-size: 14px;">Tahoma</option>'+
+            '<option value="Times New Roman" style="font-family: Times New Roman; font-size: 14px;">Times New Roman</option>'+
+            '<option value="Verdana" style="font-family: Verdana; font-size: 14px;">Verdana</option>'+
+            '<option value="Lato" style="font-family: Lato; font-size: 14px;">Lato</option>'+
         '</select>'+
     '</div>'+
     '<div style="margin-top: 10px;">'+
