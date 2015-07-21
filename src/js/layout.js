@@ -87,7 +87,7 @@ function setupLayoutAndModules(w, EntitiesList, Relations, Selection, StructureT
             $.layout.callbacks.resizeTabLayout(event, ui);
         },
         create: function(event, ui) {
-            $('#westTabs').parent().find('.ui-corner-all').removeClass('ui-corner-all');
+            $('#westTabs').parent().find('.ui-corner-all:not(button)').removeClass('ui-corner-all');
         }
     });
     $('#southTabs').tabs({
@@ -96,7 +96,7 @@ function setupLayoutAndModules(w, EntitiesList, Relations, Selection, StructureT
             $.layout.callbacks.resizeTabLayout(event, ui);
         },
         create: function(event, ui) {
-            $('#southTabs').parent().find('.ui-corner-all').removeClass('ui-corner-all');
+            $('#southTabs').parent().find('.ui-corner-all:not(button)').removeClass('ui-corner-all');
         }
     });
     
