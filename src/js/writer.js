@@ -59,6 +59,9 @@ return function(config) {
         w.isReadOnly = config.readonly;
     }
     
+    // is the editor in annotate (entities) only mode
+    w.isAnnotator = false;
+    
     // possible editor modes
     w.XMLRDF = 0; // XML + RDF
     w.XML = 1; // XML only
@@ -551,15 +554,15 @@ return function(config) {
             _hideContextMenus(e);
         });
         
-        if (w.isReadOnly != true && window.location.hostname != 'localhost') {
-            window.addEventListener('beforeunload', function(e) {
+        window.addEventListener('beforeunload', function(e) {
+            if ((w.isReadOnly === false || w.isAnnotator === true) && window.location.hostname != 'localhost') {
                 if (tinymce.get(textareaId).isDirty()) {
                     var msg = 'You have unsaved changes.';
                     (e || window.event).returnValue = msg;
                     return msg;
                 }
-            });
-        }
+            }
+        });
 
         $(window).unload(function(e) {
             try {
