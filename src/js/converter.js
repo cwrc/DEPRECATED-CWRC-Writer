@@ -652,7 +652,7 @@ return function(writer) {
             processRdf(rdfs);
             rdfs.remove();
         } else {
-            w.mode = w.XML;
+            w.mode = w.XMLRDF;
             w.allowOverlap = false;
             processEntities($(w.root+', '+w.root.toLowerCase(), doc));
         }
