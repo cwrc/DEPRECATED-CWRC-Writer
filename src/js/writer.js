@@ -53,6 +53,12 @@ return function(config) {
     // id attribute name, based on schema
     w.idName = '';
     
+    // is the editor in readonly mode
+    w.isReadOnly = false;
+    if (config.readonly !== undefined && typeof config.readonly === 'boolean') {
+        w.isReadOnly = config.readonly;
+    }
+    
     // possible editor modes
     w.XMLRDF = 0; // XML + RDF
     w.XML = 1; // XML only
@@ -545,9 +551,9 @@ return function(config) {
             _hideContextMenus(e);
         });
         
-        if (window.location.hostname != 'localhost') {
+        if (w.isReadOnly != true && window.location.hostname != 'localhost') {
             window.addEventListener('beforeunload', function(e) {
-                if (tinymce.get('editor').isDirty()) {
+                if (tinymce.get(textareaId).isDirty()) {
                     var msg = 'You have unsaved changes.';
                     (e || window.event).returnValue = msg;
                     return msg;
@@ -640,7 +646,7 @@ return function(config) {
                 ed.copiedElement = {selectionType: null, element: null}; // the element that was copied (when first selected through the structure tree)
                 ed.lastKeyPress = null; // the last key the user pressed
                 
-                if (config.readonly === true) {
+                if (w.isReadOnly === true) {
                     ed.onPreInit.add(function(ed) {
                         var body = ed.getBody();
                         body.setAttribute('contenteditable', false)
