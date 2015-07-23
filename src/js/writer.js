@@ -220,31 +220,31 @@ return function(config) {
 
             w.editor.parents.push(n);
         });
-        w.editor.onNodeChange.dispatch(w.editor, w.editor.controlManager, nodeEl, false, w.editor);
+//        w.editor.onNodeChange.dispatch(w.editor, w.editor.controlManager, nodeEl, false, w.editor);
     };
     
-    function _onMouseUpHandler(ed, evt) {
+    function _onMouseUpHandler(evt) {
         _hideContextMenus(evt);
-        _doHighlightCheck(ed, evt);
+        _doHighlightCheck(w.editor, evt);
     };
     
-    function _onKeyDownHandler(ed, evt) {
-        ed.lastKeyPress = evt.which; // store the last key press
+    function _onKeyDownHandler(evt) {
+        w.editor.lastKeyPress = evt.which; // store the last key press
         // TODO move to keyup
         // redo/undo listener
         if ((evt.which == 89 || evt.which == 90) && evt.ctrlKey) {
-            w.event('contentChanged').publish(ed);
+            w.event('contentChanged').publish(w.editor);
         }
         
         w.event('writerKeydown').publish(evt);
     };
     
-    function _onKeyUpHandler(ed, evt) {
+    function _onKeyUpHandler(evt) {
         // nav keys and backspace check
         if (evt.which >= 33 || evt.which <= 40 || evt.which == 8) {
-            _doHighlightCheck(ed, evt);
+            _doHighlightCheck(w.editor, evt);
         }
-        
+
         // update current entity
         if (w.entitiesManager.getCurrentEntity() !== null) {
             var content = '';
@@ -253,7 +253,7 @@ return function(config) {
                 // shouldn't actually be here since you can't get "inside" these entities
                 content = $($.parseXML(entity.getCustomValues().content)).text();
             } else {
-                content = $('.entityHighlight', ed.getBody()).text();
+                content = $('.entityHighlight', w.editor.getBody()).text();
             }
             entity.setContent(content);
         }
@@ -261,14 +261,14 @@ return function(config) {
         if (w.emptyTagId) {
             // alphanumeric keys
             if (evt.which >= 48 || evt.which <= 90) {
-                var range = ed.selection.getRng(true);
+                var range = w.editor.selection.getRng(true);
                 range.setStart(range.commonAncestorContainer, range.startOffset-1);
                 range.setEnd(range.commonAncestorContainer, range.startOffset+1);
                 w.insertBoundaryTags(w.emptyTagId, w.entitiesManager.getEntity(w.emptyTagId).getType(), range);
                 
                 // TODO get working in IE
-                var tags = $('[name='+w.emptyTagId+']', ed.getBody());
-                range = ed.selection.getRng(true);
+                var tags = $('[name='+w.emptyTagId+']', w.editor.getBody());
+                range = w.editor.selection.getRng(true);
                 range.setStartAfter(tags[0]);
                 range.setEndBefore(tags[1]);
                 range.collapse(false);
@@ -280,9 +280,9 @@ return function(config) {
             w.emptyTagId = null;
         }
         
-        if (ed.currentNode) {
+        if (w.editor.currentNode) {
             // check if the node still exists in the document
-            if (ed.currentNode.parentNode === null) {
+            if (w.editor.currentNode.parentNode === null) {
                 var rng = w.editor.selection.getRng(true);
                 var parent = rng.commonAncestorContainer.parentNode;
                 // trying to type inside a bogus node?
@@ -303,7 +303,7 @@ return function(config) {
                     if (newCurrentNode != null) {
                         rng.selectNodeContents(newCurrentNode);
                         rng.collapse(collapseToStart);
-                        ed.selection.setRng(rng);
+                        w.editor.selection.setRng(rng);
                         
                         window.setTimeout(function(){
                             w._fireNodeChange(newCurrentNode);
@@ -313,7 +313,7 @@ return function(config) {
             }
             
             // check if text is allowed in this node
-            if (ed.currentNode.getAttribute('_textallowed') == 'false') {
+            if (w.editor.currentNode.getAttribute('_textallowed') == 'false') {
                 if (evt.ctrlKey || evt.which == 17) {
                     // don't show message if we got here through undo/redo
                     var node = $('[_textallowed="true"]', w.editor.getBody()).first();
@@ -324,12 +324,12 @@ return function(config) {
                 } else {
                     w.dialogManager.show('message', {
                         title: 'No Text Allowed',
-                        msg: 'Text is not allowed in the current tag: '+ed.currentNode.getAttribute('_tag')+'.',
+                        msg: 'Text is not allowed in the current tag: '+w.editor.currentNode.getAttribute('_tag')+'.',
                         type: 'error'
                     });
                     
                     // remove all text
-                    $(ed.currentNode).contents().filter(function() {
+                    $(w.editor.currentNode).contents().filter(function() {
                         return this.nodeType == 3;
                     }).remove();
                 }
@@ -337,7 +337,7 @@ return function(config) {
             
             // replace br's inserted on shift+enter
             if (evt.shiftKey && evt.which == 13) {
-                var node = ed.currentNode;
+                var node = w.editor.currentNode;
                 if ($(node).attr('_tag') == 'lb') node = node.parentNode;
                 var tagName = w.utilities.getTagForEditor('lb');
                 $(node).find('br').replaceWith('<'+tagName+' _tag="lb"></'+tagName+'>');
@@ -349,7 +349,7 @@ return function(config) {
         if (evt.which == 8 || evt.which == 46) {
             var doUpdate = w.tagger.findNewAndDeletedTags();
             if (doUpdate) {
-                w.event('contentChanged').publish(ed);
+                w.event('contentChanged').publish(w.editor);
             }
         }
         
@@ -357,7 +357,7 @@ return function(config) {
         if (evt.which == 13) {
             // find the element inserted by tinymce
             var idCounter = tinymce.DOM.counter-1;
-            var newTag = $('#struct_'+idCounter, ed.getBody());
+            var newTag = $('#struct_'+idCounter, w.editor.getBody());
             if (newTag.text() == '') {
                 newTag.text('\uFEFF'); // insert zero-width non-breaking space so empty tag takes up space
             }
@@ -369,87 +369,87 @@ return function(config) {
         w.event('writerKeyup').publish(evt);
     };
     
-    function _onChangeHandler(ed, event) {
-        if (ed.isDirty()) {
-            $('br', ed.getBody()).remove();
+    function _onChangeHandler(event) {
+        if (w.editor.isDirty()) {
+            $('br', w.editor.getBody()).remove();
             
             var doUpdate = w.tagger.findNewAndDeletedTags();
             if (doUpdate) {
                 // TODO seemingly never getting fired
-                w.event('contentChanged').publish(ed);
+                w.event('contentChanged').publish(w.editor);
             }
         }
     };
     
-    function _onNodeChangeHandler(ed, cm, e) {
-        if (e != null) {
-            if (e.nodeType != 1) {
-                ed.currentNode = w.utilities.getRootTag()[0];
-            } else {
-                if (e.getAttribute('_tag') == null && e.classList.contains('entityHighlight') == false) {
-                    if (e.getAttribute('data-mce-bogus') != null) {
-                        // artifact from selectStructureTag
-                        var sibling;
-                        var rng = ed.selection.getRng(true);
-                        if (rng.collapsed) {
-                            // the user's trying to type in a bogus tag
-                            // find the closest valid tag and correct the cursor location
-                            var backwardDirection = true;
-                            if (ed.lastKeyPress == 36 || ed.lastKeyPress == 37 || ed.lastKeyPress == 38) {
-                                sibling = $(e).prevAll('[_tag]')[0];
-                                backwardDirection = false;
-                            } else {
-                                sibling = $(e).nextAll('[_tag]')[0];
-                                if (sibling == null) {
-                                    sibling = $(e).parent().nextAll('[_tag]')[0];
-                                }
-                            }
-                            if (sibling != null) {
-                                rng.selectNodeContents(sibling);
-                                rng.collapse(backwardDirection);
-                                ed.selection.setRng(rng);
-                            }
+    function _onNodeChangeHandler(e) {
+        var el = e.element;
+        if (el.nodeType != 1) {
+            w.editor.currentNode = w.utilities.getRootTag()[0];
+        } else {
+            if (el.getAttribute('_tag') == null && el.classList.contains('entityHighlight') == false) {
+                if (el.getAttribute('data-mce-bogus') != null) {
+                    // artifact from selectStructureTag
+                    var sibling;
+                    var rng = w.editor.selection.getRng(true);
+                    if (rng.collapsed) {
+                        // the user's trying to type in a bogus tag
+                        // find the closest valid tag and correct the cursor location
+                        var backwardDirection = true;
+                        if (w.editor.lastKeyPress == 36 || w.editor.lastKeyPress == 37 || w.editor.lastKeyPress == 38) {
+                            sibling = $(el).prevAll('[_tag]')[0];
+                            backwardDirection = false;
                         } else {
-                            // the structure is selected
-                            sibling = $(e).next('[_tag]')[0];
+                            sibling = $(el).nextAll('[_tag]')[0];
+                            if (sibling == null) {
+                                sibling = $(el).parent().nextAll('[_tag]')[0];
+                            }
                         }
                         if (sibling != null) {
-                            e = sibling;
-                        } else {
-                            e = e.parentNode;
+                            rng.selectNodeContents(sibling);
+                            rng.collapse(backwardDirection);
+                            w.editor.selection.setRng(rng);
                         }
                     } else {
-                        e = e.parentNode;
+                        // the structure is selected
+                        sibling = $(el).next('[_tag]')[0];
                     }
-                    
-                    // use setTimeout to add to the end of the onNodeChange stack
-                    window.setTimeout(function(){
-                        w._fireNodeChange(e);
-                    }, 0);
+                    if (sibling != null) {
+                        el = sibling;
+                    } else {
+                        el = el.parentNode;
+                    }
                 } else {
-                    ed.currentNode = e;
+                    el = el.parentNode;
                 }
-            }
-            
-            w.event('nodeChanged').publish(ed.currentNode);
-            
-            if (w.emptyTagId) {
-                w.entitiesManager.removeEntity(w.emptyTagId);
-                w.emptyTagId = null;
+                
+                // use setTimeout to add to the end of the onNodeChange stack
+                window.setTimeout(function(){
+                    w._fireNodeChange(el);
+                }, 0);
+            } else {
+                w.editor.currentNode = el;
             }
         }
+        
+        w.event('nodeChanged').publish(w.editor.currentNode);
+        
+        if (w.emptyTagId) {
+            w.entitiesManager.removeEntity(w.emptyTagId);
+            w.emptyTagId = null;
+        }
+        
     };
     
-    function _onCopyHandler(ed, event) {
-        if (ed.copiedElement.element != null) {
-            $(ed.copiedElement.element).remove();
-            ed.copiedElement.element = null;
+    function _onCopyHandler(event) {
+        if (w.editor.copiedElement.element != null) {
+            $(w.editor.copiedElement.element).remove();
+            w.editor.copiedElement.element = null;
         }
         
         w.event('contentCopied').publish();
     };
     
-    function _onPasteHandler(ed, event) {
+    function _onPasteHandler(event) {
         window.setTimeout(function() {
             w.event('contentPasted').publish();
         }, 0);
@@ -468,8 +468,8 @@ return function(config) {
         }
     };
     
-    function _doHighlightCheck(ed, evt) {
-        var range = ed.selection.getRng(true);
+    function _doHighlightCheck(evt) {
+        var range = w.editor.selection.getRng(true);
         
         var entityClick = false;
         
@@ -489,7 +489,7 @@ return function(config) {
                 range.setEnd(nextNode, 0);
             }
             w.editor.selection.setRng(range);
-            range = ed.selection.getRng(true);
+            range = w.editor.selection.getRng(true);
         }
         
         var entity = $(range.startContainer).parents('[_entity]')[0];
@@ -507,7 +507,7 @@ return function(config) {
             }
         } else {
             w.entitiesManager.highlightEntity();
-            var parentNode = $(ed.selection.getNode());
+            var parentNode = $(w.editor.selection.getNode());
             if (parentNode.attr('_tag')) {
                 var id = parentNode.attr('id');
                 w.editor.currentStruct = id;
@@ -517,7 +517,7 @@ return function(config) {
         
         if (id === w.entitiesManager.getCurrentEntity()) return;
         
-        w.entitiesManager.highlightEntity(id, ed.selection.getBookmark());
+        w.entitiesManager.highlightEntity(id, w.editor.selection.getBookmark());
     };
     
     
@@ -576,12 +576,9 @@ return function(config) {
         /**
          * Init tinymce
          */
-//                $('#editor').tinymce({
-//                    script_url : 'js/tinymce/jscripts/tiny_mce/tiny_mce.js',
         tinymce.init({
-            mode: 'exact',
-            elements: textareaId,
-            theme: 'advanced',
+            selector: '#'+textareaId,
+            theme: 'modern',
             content_css: w.cwrcRootUrl+'css/editor.css',
             
             width: '100%',
@@ -626,14 +623,18 @@ return function(config) {
             
             valid_elements: '*[*]', // allow everything
             
-            plugins: '-treepaste,-entitycontextmenu,-schematags,-currenttag,-viewsource',
-            theme_advanced_buttons1: config.buttons1 == undefined ? 'schematags,|,addperson,addplace,adddate,addorg,addcitation,addnote,addtitle,addcorrection,addkeyword,addlink,|,editTag,removeTag,|,addtriple,|,viewsource,editsource,|,validate,savebutton,loadbutton' : config.buttons1,
-            theme_advanced_buttons2: config.buttons2 == undefined ? 'currenttag' : config.buttons2,
-            theme_advanced_buttons3: config.buttons3 == undefined ? '' : config.buttons3,
-            theme_advanced_toolbar_location: 'top',
-            theme_advanced_toolbar_align: 'left',
-            theme_advanced_path: false,
-            theme_advanced_statusbar_location: 'none',
+            external_plugins: {
+                cwrc_contextmenu: w.cwrcRootUrl+'js/tinymce_plugins/cwrc_contextmenu.js',
+//                schematags: w.cwrcRootUrl+'js/tinymce_plugins/schematags4.js',
+//                currenttag: w.cwrcRootUrl+'js/tinymce_plugins/currenttag.js',
+                viewsource: w.cwrcRootUrl+'js/tinymce_plugins/viewsource.js'
+            },
+            toolbar1: config.buttons1 == undefined ? 'schematags,|,addperson,addplace,adddate,addorg,addcitation,addnote,addtitle,addcorrection,addkeyword,addlink,|,editTag,removeTag,|,addtriple,|,viewsource,editsource,|,validate,savebutton,loadbutton' : config.buttons1,
+            toolbar2: config.buttons2 == undefined ? 'currenttag' : config.buttons2,
+            toolbar3: config.buttons3 == undefined ? '' : config.buttons3,
+            menubar: false,
+            elementpath: false,
+            statusbar: 'none',
             
             setup: function(ed) {
                 // link the writer and editor
@@ -650,13 +651,13 @@ return function(config) {
                 ed.lastKeyPress = null; // the last key the user pressed
                 
                 if (w.isReadOnly === true) {
-                    ed.onPreInit.add(function(ed) {
+                    ed.on('PreInit', function(e) {
                         var body = ed.getBody();
                         body.setAttribute('contenteditable', false)
                     });
                 }
                 
-                ed.onInit.add(function(ed) {
+                ed.on('init', function(args) {
                     // modify isBlock method to check _tag attributes
                     ed.dom.isBlock = function(node) {
                         var type = node.nodeType;
@@ -699,30 +700,19 @@ return function(config) {
                     ed.pasteAsPlainText = false;
                     
                     // highlight tracking
-                    ed.onMouseUp.addToTop(_onMouseUpHandler);
-                    
-                    ed.onKeyDown.add(_onKeyDownHandler);
-                    ed.onKeyUp.add(_onKeyUpHandler);
+                    body.on('mouseup', _onMouseUpHandler).on('keydown',_onKeyDownHandler).on('keyup',_onKeyUpHandler);
                     
                     w.event('writerInitialized').publish(w);
                 });
-                ed.onChange.add(_onChangeHandler);
-                ed.onNodeChange.add(_onNodeChangeHandler);
-                ed.onCopy.add(_onCopyHandler);
-                ed.onPaste.add(_onPasteHandler);
+                ed.on('change',_onChangeHandler);
+                ed.on('NodeChange',_onNodeChangeHandler);
+//                ed.onCopy.add(_onCopyHandler);
+//                ed.onPaste.add(_onPasteHandler);
                 
                 // add schema file and method
                 ed.addCommand('getSchema', function(){
                     return w.schemaManager.schema;
                 });
-                
-                // add custom plugins and buttons
-                var plugins = ['treepaste','schematags','currenttag','entitycontextmenu','viewsource','scrolling_dropmenu'];
-                
-                for (var i = 0; i < plugins.length; i++) {
-                    var name = plugins[i];
-                    tinymce.PluginManager.load(name, w.cwrcRootUrl+'js/tinymce_plugins/'+name+'.js');
-                }
                 
                 ed.addButton('addperson', {title: 'Tag Person', image: w.cwrcRootUrl+'img/user.png', 'class': 'entityButton person',
                     onclick : function() {
