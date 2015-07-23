@@ -14,7 +14,7 @@ var require = {
         'jquery.snippet': 'lib/snippet/jquery.snippet.min',
         'jquery.xpath': 'lib/jquery/jquery.xpath',
         
-        'tinymce': 'lib/tinymce/tiny_mce_src',
+        'tinymce': 'lib/tinymce4/tinymce',
         'tinymce-copyevent': 'lib/tinymce/copy_event',
         
         'objtree': 'lib/objtree/ObjTree',
