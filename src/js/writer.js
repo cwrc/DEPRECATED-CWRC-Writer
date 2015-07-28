@@ -581,7 +581,7 @@ return function(config) {
             theme: 'modern',
             content_css: w.cwrcRootUrl+'css/editor.css',
             
-            width: '100%',
+//            width: '100%',
             
             contextmenu_never_use_native: true,
             
@@ -625,16 +625,16 @@ return function(config) {
             
             external_plugins: {
                 cwrc_contextmenu: w.cwrcRootUrl+'js/tinymce_plugins/cwrc_contextmenu.js',
-//                schematags: w.cwrcRootUrl+'js/tinymce_plugins/schematags4.js',
-//                currenttag: w.cwrcRootUrl+'js/tinymce_plugins/currenttag.js',
+                schematags: w.cwrcRootUrl+'js/tinymce_plugins/schematags4.js',
+                cwrcpath: w.cwrcRootUrl+'js/tinymce_plugins/currenttag4.js',
                 viewsource: w.cwrcRootUrl+'js/tinymce_plugins/viewsource.js'
             },
             toolbar1: config.buttons1 == undefined ? 'schematags,|,addperson,addplace,adddate,addorg,addcitation,addnote,addtitle,addcorrection,addkeyword,addlink,|,editTag,removeTag,|,addtriple,|,viewsource,editsource,|,validate,savebutton,loadbutton' : config.buttons1,
-            toolbar2: config.buttons2 == undefined ? 'currenttag' : config.buttons2,
+            toolbar2: config.buttons2 == undefined ? 'cwrcpath' : config.buttons2,
             toolbar3: config.buttons3 == undefined ? '' : config.buttons3,
             menubar: false,
             elementpath: false,
-            statusbar: 'none',
+            statusbar: false,
             
             setup: function(ed) {
                 // link the writer and editor
