@@ -1,4 +1,4 @@
-function setupLayoutAndModules(w, EntitiesList, Relations) {
+function setupLayoutAndModules(w, EntitiesList, StructureTree, Relations) {
     var $ = require('jquery');
     
     var mode = 'reader';
@@ -12,13 +12,10 @@ function setupLayoutAndModules(w, EntitiesList, Relations) {
         },
         north: {
             size: 35,
-            minSize: 35,
-            maxSize: 60
-        },
-        south: {
-            size: 34,
             spacing_open: 0,
-            spacing_closed: 0
+            minSize: 35,
+            maxSize: 60,
+            closable: false
         },
         west: {
             size: 'auto',
@@ -38,12 +35,12 @@ function setupLayoutAndModules(w, EntitiesList, Relations) {
         },
         center: {
             onresize: function(region, pane, state, options) {
-                var uiHeight = 2;
-                var toolbar = $('#'+w.editor.id+'_tbl .mceToolbar').first();
+                var uiHeight = 4;
+                var toolbar = $('.mce-toolbar-grp',writer.editor.getContainer());
                 if (toolbar.is(':visible')) {
                     uiHeight += toolbar.outerHeight();
                 }
-                $('#'+w.editor.id+'_ifr').height(state.layoutHeight - uiHeight);
+                $('iframe',writer.editor.getContainer()).height(state.layoutHeight - uiHeight);
             }
         },
         south: {
@@ -70,6 +67,7 @@ function setupLayoutAndModules(w, EntitiesList, Relations) {
         window.location = 'http://www.cwrc.ca';
     });
     
+    new StructureTree({writer: w, parentId: 'westTabsContent'});
     new EntitiesList({writer: w, parentId: 'westTabsContent'});
     new Relations({writer: w, parentId: 'westTabsContent'});
     
@@ -87,7 +85,8 @@ function setupLayoutAndModules(w, EntitiesList, Relations) {
     // Mode switching functionality
     
     var activateReader = function() {
-        w.layout.hide('west');
+        w.isAnnotator = false;
+        w.layout.close('west');
         w.hideToolbar();
         
         w.editor.plugins.entitycontextmenu.disabled = true;
@@ -96,7 +95,8 @@ function setupLayoutAndModules(w, EntitiesList, Relations) {
     }
     
     var activateAnnotator = function() {
-        w.layout.show('west');
+        w.isAnnotator = true;
+        w.layout.open('west');
         w.showToolbar();
         
         w.editor.plugins.entitycontextmenu.disabled = false;

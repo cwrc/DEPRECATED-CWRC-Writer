@@ -7,23 +7,12 @@ function setupLayoutAndModules(w, EntitiesList, Relations, Selection, StructureT
             resizable: true,
             slidable: false
         },
-    //            east: {
-    //                onresize: function() {
-    //                    // TODO: Move this out of the editor somehow.
-    //                    // Accessing 'writer.layout.east.onresize does no
-    //                    // work.
-    //                    resizeCanvas();
-    //                },
-    //            },
         north: {
             size: 35,
-            minSize: 35,
-            maxSize: 60
-        },
-        south: {
-            size: 34,
             spacing_open: 0,
-            spacing_closed: 0
+            minSize: 35,
+            maxSize: 60,
+            closable: false
         },
         west: {
             size: 'auto',
@@ -43,12 +32,12 @@ function setupLayoutAndModules(w, EntitiesList, Relations, Selection, StructureT
         },
         center: {
             onresize: function(region, pane, state, options) {
-                var uiHeight = 2;
-                var toolbar = $('#'+w.editor.id+'_tbl .mceToolbar').first();
+                var uiHeight = 4;
+                var toolbar = $('.mce-toolbar-grp',writer.editor.getContainer());
                 if (toolbar.is(':visible')) {
                     uiHeight += toolbar.outerHeight();
                 }
-                $('#'+w.editor.id+'_ifr').height(state.layoutHeight - uiHeight);
+                $('iframe',writer.editor.getContainer()).height(state.layoutHeight - uiHeight);
             }
         },
         south: {
