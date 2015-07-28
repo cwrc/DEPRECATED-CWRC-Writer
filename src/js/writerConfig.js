@@ -2,6 +2,7 @@
     "cwrcRootUrl": "",
     "cwrcDialogs": {
         "cwrcApiUrl": "http://apps.testing.cwrc.ca/islandora/cwrc_entities/v1/",
+        "repositoryBaseObjectUrl": "http://commons.cwrc.ca/",
         "geonameUrl": "http://apps.testing.cwrc.ca/cwrc-mtp/geonames/",
         "viafUrl": "http://apps.testing.cwrc.ca/services/viaf/",
         "googleGeocodeUrl": "http://maps.googleapis.com/maps/api/geocode/xml",

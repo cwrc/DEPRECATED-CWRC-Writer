@@ -62,17 +62,10 @@ return function(writer) {
         schemaTags: new SchemaTags(w)
     };
 
-    // set URL for CWRC-Dialogs
-    // ToDo - 2015-05-29 - set with a config file
-    cD.setRepositoryBaseObjectURL('http://commons.cwrc.ca/');
-
-    // log in for CWRC-Dialogs
-//    cD.initializeWithCookieData(null);
-//    cD.initializeWithLogin('CWRC-WriterTestUser', 'quirkyCWRCwriter');
-
     if (w.initialConfig.cwrcDialogs !== undefined) {
         var conf = w.initialConfig.cwrcDialogs;
         if (conf.cwrcApiUrl) cD.setCwrcApi(conf.cwrcApiUrl);
+        if (conf.repositoryBaseObjectUrl) cD.setRepositoryBaseObjectURL(conf.repositoryBaseObjectUrl);
         if (conf.geonameUrl) cD.setGeonameUrl(conf.geonameUrl);
         if (conf.viafUrl) cD.setViafUrl(conf.viafUrl);
         if (conf.googleGeocodeUrl) cD.setGoogleGeocodeUrl(conf.googleGeocodeUrl);
