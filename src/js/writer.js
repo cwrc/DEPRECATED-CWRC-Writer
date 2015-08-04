@@ -213,14 +213,14 @@ return function(config) {
     
     w._fireNodeChange = function(nodeEl) {
         // fire the onNodeChange event
-        w.editor.parents = [];
+        var parents = [];
         w.editor.dom.getParent(nodeEl, function(n) {
             if (n.nodeName == 'BODY')
                 return true;
 
-            w.editor.parents.push(n);
+            parents.push(n);
         });
-//        w.editor.onNodeChange.dispatch(w.editor, w.editor.controlManager, nodeEl, false, w.editor);
+        w.editor.fire('NodeChange', {element: nodeEl, parents: parents});
     };
     
     function _onMouseUpHandler(evt) {
