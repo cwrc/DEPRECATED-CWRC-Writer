@@ -715,57 +715,57 @@ return function(config) {
                     return w.schemaManager.schema;
                 });
                 
-                ed.addButton('addperson', {title: 'Tag Person', image: w.cwrcRootUrl+'img/user.png', 'class': 'entityButton person',
+                ed.addButton('addperson', {title: 'Tag Person', image: w.cwrcRootUrl+'img/user.png',
                     onclick : function() {
                         ed.execCommand('addEntity', 'person');
                     }
                 });
-                ed.addButton('addplace', {title: 'Tag Place', image: w.cwrcRootUrl+'img/world.png', 'class': 'entityButton place',
+                ed.addButton('addplace', {title: 'Tag Place', image: w.cwrcRootUrl+'img/world.png',
                     onclick : function() {
                         ed.execCommand('addEntity', 'place');
                     }
                 });
-                ed.addButton('adddate', {title: 'Tag Date', image: w.cwrcRootUrl+'img/calendar.png', 'class': 'entityButton date',
+                ed.addButton('adddate', {title: 'Tag Date', image: w.cwrcRootUrl+'img/calendar.png',
                     onclick : function() {
                         ed.execCommand('addEntity', 'date');
                     }
                 });
-                ed.addButton('addevent', {title: 'Tag Event', image: w.cwrcRootUrl+'img/cake.png', 'class': 'entityButton event',
+                ed.addButton('addevent', {title: 'Tag Event', image: w.cwrcRootUrl+'img/cake.png',
                     onclick : function() {
                         ed.execCommand('addEntity', 'event');
                     }
                 });
-                ed.addButton('addorg', {title: 'Tag Organization', image: w.cwrcRootUrl+'img/group.png', 'class': 'entityButton org',
+                ed.addButton('addorg', {title: 'Tag Organization', image: w.cwrcRootUrl+'img/group.png',
                     onclick : function() {
                         ed.execCommand('addEntity', 'org');
                     }
                 });
-                ed.addButton('addcitation', {title: 'Tag Citation', image: w.cwrcRootUrl+'img/vcard.png', 'class': 'entityButton citation',
+                ed.addButton('addcitation', {title: 'Tag Citation', image: w.cwrcRootUrl+'img/vcard.png',
                     onclick : function() {
                         ed.execCommand('addEntity', 'citation');
                     }
                 });
-                ed.addButton('addnote', {title: 'Tag Note', image: w.cwrcRootUrl+'img/note.png', 'class': 'entityButton note',
+                ed.addButton('addnote', {title: 'Tag Note', image: w.cwrcRootUrl+'img/note.png',
                     onclick : function() {
                         ed.execCommand('addEntity', 'note');
                     }
                 });
-                ed.addButton('addcorrection', {title: 'Tag Correction', image: w.cwrcRootUrl+'img/error.png', 'class': 'entityButton correction',
+                ed.addButton('addcorrection', {title: 'Tag Correction', image: w.cwrcRootUrl+'img/error.png',
                     onclick : function() {
                         ed.execCommand('addEntity', 'correction');
                     }
                 });
-                ed.addButton('addkeyword', {title: 'Tag Keyword', image: w.cwrcRootUrl+'img/page_key.png', 'class': 'entityButton keyword',
+                ed.addButton('addkeyword', {title: 'Tag Keyword', image: w.cwrcRootUrl+'img/key.png',
                     onclick : function() {
                         ed.execCommand('addEntity', 'keyword');
                     }
                 });
-                ed.addButton('addlink', {title: 'Tag Link', image: w.cwrcRootUrl+'img/link.png', 'class': 'entityButton link',
+                ed.addButton('addlink', {title: 'Tag Link', image: w.cwrcRootUrl+'img/link.png',
                     onclick : function() {
                         ed.execCommand('addEntity', 'link');
                     }
                 });
-                ed.addButton('addtitle', {title: 'Tag Text/Title', image: w.cwrcRootUrl+'img/book.png', 'class': 'entityButton textTitle',
+                ed.addButton('addtitle', {title: 'Tag Text/Title', image: w.cwrcRootUrl+'img/book.png',
                     onclick : function() {
                         ed.execCommand('addEntity', 'title');
                     }
