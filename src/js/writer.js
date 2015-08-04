@@ -770,17 +770,17 @@ return function(config) {
                         ed.execCommand('addEntity', 'title');
                     }
                 });
-                ed.addButton('editTag', {title: 'Edit Tag', image: w.cwrcRootUrl+'img/tag_blue_edit.png', 'class': 'entityButton',
+                ed.addButton('editTag', {title: 'Edit Tag', image: w.cwrcRootUrl+'img/tag_blue_edit.png',
                     onclick : function() {
                         ed.execCommand('editTag');
                     }
                 });
-                ed.addButton('removeTag', {title: 'Remove Tag', image: w.cwrcRootUrl+'img/tag_blue_delete.png', 'class': 'entityButton',
+                ed.addButton('removeTag', {title: 'Remove Tag', image: w.cwrcRootUrl+'img/tag_blue_delete.png',
                     onclick : function() {
                         ed.execCommand('removeTag');
                     }
                 });
-                ed.addButton('newbutton', {title: 'New', image: w.cwrcRootUrl+'img/page_white_text.png', 'class': 'entityButton',
+                ed.addButton('newbutton', {title: 'New', image: w.cwrcRootUrl+'img/page_white_text.png',
                     onclick: function() {
                         w.fileManager.newDocument();
                     }
@@ -795,22 +795,22 @@ return function(config) {
                         w.dialogManager.filemanager.showSaver();
                     }
                 });
-                ed.addButton('loadbutton', {title: 'Load', image: w.cwrcRootUrl+'img/folder_page.png', 'class': 'entityButton',
+                ed.addButton('loadbutton', {title: 'Load', image: w.cwrcRootUrl+'img/folder_page.png',
                     onclick: function() {
                         w.dialogManager.filemanager.showLoader();
                     }
                 });
-                ed.addButton('editsource', {title: 'Edit Source', image: w.cwrcRootUrl+'img/editsource.gif', 'class': 'wideButton',
+                ed.addButton('editsource', {title: 'Edit Source', image: w.cwrcRootUrl+'img/page_white_edit.png',
                     onclick: function() {
                         w.fileManager.editSource();
                     }
                 });
-                ed.addButton('validate', {title: 'Validate', image: w.cwrcRootUrl+'img/validate.png', 'class': 'entityButton',
+                ed.addButton('validate', {title: 'Validate', image: w.cwrcRootUrl+'img/validate.png',
                     onclick: function() {
                         w.delegator.validate();
                     }
                 });
-                ed.addButton('addtriple', {title: 'Add Relation', image: w.cwrcRootUrl+'img/chart_org.png', 'class': 'entityButton',
+                ed.addButton('addtriple', {title: 'Add Relation', image: w.cwrcRootUrl+'img/chart_org.png',
                     onclick: function() {
                         $('#westTabs').tabs('option', 'active', 2);
                         w.dialogManager.show('triple');
@@ -821,7 +821,7 @@ return function(config) {
 //                        ed.addButton('toggleeditor', {
 //                            title: 'Show Advanced Mode',
 //                            image: 'img/html.png',
-//                            'class': 'entityButton',
+//                           
 //                            cmd: 'toggle_editor'
 //                        });
             }

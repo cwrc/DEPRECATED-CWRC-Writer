@@ -46,7 +46,8 @@
         });
         
         editor.addButton('viewsource', {
-            text: 'View Source',
+            title: 'View Source',
+            image: editor.writer.cwrcRootUrl+'img/page_white_code.png',
             onclick: function() {
                 editor.execCommand('removeHighlights');
                 editor.execCommand('viewSource');
