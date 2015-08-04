@@ -581,8 +581,6 @@ return function(config) {
             theme: 'modern',
             content_css: w.cwrcRootUrl+'css/editor.css',
             
-//            width: '100%',
-            
             contextmenu_never_use_native: true,
             
             doctype: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
@@ -591,8 +589,7 @@ return function(config) {
             forced_root_block: w.utilities.getBlockTag(),
             keep_styles: false, // false, otherwise tinymce interprets our spans as style elements
             
-            paste_auto_cleanup_on_paste: true, // true, otherwise paste_postprocess isn't called
-            paste_postprocess: function(pl, o) {
+            paste_postprocess: function(plugin, ev) {
                 function stripTags(index, node) {
                     if (node.hasAttribute('_tag') || node.hasAttribute('_entity') ||
                         node.nodeName.toLowerCase() == 'p' && node.nodeName.toLowerCase() == 'br') {
@@ -617,12 +614,13 @@ return function(config) {
                     }
                 }
                 
-                $(o.node).children().each(stripTags);
-                $(o.node).children().each(replaceTags);
+                $(ev.node).children().each(stripTags);
+                $(ev.node).children().each(replaceTags);
             },
             
             valid_elements: '*[*]', // allow everything
             
+            plugins: 'paste',
             external_plugins: {
                 cwrc_contextmenu: w.cwrcRootUrl+'js/tinymce_plugins/cwrc_contextmenu.js',
                 schematags: w.cwrcRootUrl+'js/tinymce_plugins/schematags4.js',
@@ -660,13 +658,16 @@ return function(config) {
                 ed.on('init', function(args) {
                     // modify isBlock method to check _tag attributes
                     ed.dom.isBlock = function(node) {
+                        if (!node) {
+                            return false;
+                        }
+                        
                         var type = node.nodeType;
 
                         // If it's a node then check the type and use the nodeName
                         if (type) {
                             if (type === 1) {
                                 var tag = node.getAttribute('_tag') || node.nodeName;
-//                                        return true;
                                 return !!(ed.schema.getBlockElements()[tag]);
                             }
                         }
