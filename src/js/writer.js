@@ -588,7 +588,7 @@ return function(config) {
             doctype: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
             element_format: 'xhtml',
             
-            forced_root_block: w.utilities.BLOCK_TAG,
+            forced_root_block: w.utilities.getBlockTag(),
             keep_styles: false, // false, otherwise tinymce interprets our spans as style elements
             
             paste_auto_cleanup_on_paste: true, // true, otherwise paste_postprocess isn't called

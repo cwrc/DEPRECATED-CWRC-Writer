@@ -17,6 +17,14 @@ return function(writer) {
      */
     var u = {};
     
+    u.getBlockTag = function() {
+        return BLOCK_TAG;
+    }
+    
+    u.getInlineTag = function() {
+        return INLINE_TAG;
+    }
+    
     u.xmlToString = function(xmlData) {
         var xmlString = '';
         try {
