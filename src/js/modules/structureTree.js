@@ -88,6 +88,8 @@ return function(config) {
     // 2 uses, 1) we want to highlight a node in the tree without selecting it's counterpart in the editor
     // 2) a tree node has been clicked and we want to avoid re-running the selectNode function triggered by the editor's onNodeChange handler
     var ignoreSelect = false;
+    // track when the user clicked a node (used in combination with ignoreSelect)
+    var treeNodeClickTimestamp = new Date().getTime();
     
     var $tree; // tree reference
     
@@ -245,7 +247,9 @@ return function(config) {
     tree.highlightNode = function(node) {
         if (node) {
             var id = node.id;
-            if (id && !ignoreSelect) {
+            var timestamp = new Date().getTime();
+            var timeDiff = timestamp - treeNodeClickTimestamp; // tinymce sends out multiple nodeChange events per click so ignore them
+            if (id && !ignoreSelect && timeDiff > 250) {
                 ignoreSelect = true;
                 if (id === 'entityHighlight') {
                     id = $(node).find('[_entity]').first().attr('name');
@@ -509,6 +513,7 @@ return function(config) {
     
     function _onNodeSelect(event, data) {
         if (!ignoreSelect) {
+            treeNodeClickTimestamp = new Date().getTime();
             var id = data.node.li_attr.name;
             var $target = $(data.event.currentTarget);
             var selectContents = $target.hasClass('contentsSelected');
