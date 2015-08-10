@@ -89,7 +89,7 @@ function setupLayoutAndModules(w, EntitiesList, StructureTree, Relations) {
         w.layout.close('west');
         w.hideToolbar();
         
-        w.editor.plugins.entitycontextmenu.disabled = true;
+        w.editor.plugins.cwrc_contextmenu.disabled = true;
         
         mode = 'reader';
     }
@@ -99,8 +99,8 @@ function setupLayoutAndModules(w, EntitiesList, StructureTree, Relations) {
         w.layout.open('west');
         w.showToolbar();
         
-        w.editor.plugins.entitycontextmenu.disabled = false;
-        w.editor.plugins.entitycontextmenu.entityTagsOnly = true;
+        w.editor.plugins.cwrc_contextmenu.disabled = false;
+        w.editor.plugins.cwrc_contextmenu.entityTagsOnly = true;
         
         mode = 'annotator';
     }

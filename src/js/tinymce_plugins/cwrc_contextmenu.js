@@ -1,6 +1,11 @@
 tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
     var menu, items, contextmenuNeverUseNative = editor.settings.contextmenu_never_use_native;
     
+    editor.plugins.cwrc_contextmenu = {
+            disabled: false,
+            entityTagsOnly: false
+    };
+    
     editor.on('contextmenu', function(e) {
 
         // Block TinyMCE menu on ctrlKey
@@ -9,6 +14,10 @@ tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
         }
 
         e.preventDefault();
+        
+        if (editor.plugins.cwrc_contextmenu.disabled === true) {
+            return;
+        }
 
         // render menu
         if (!menu) {
@@ -78,6 +87,11 @@ tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
         // enable/disable items based on current editor state
         menu.items().each(function(item) {
             item.disabled(false);
+            if (item.settings.category != 'tagEntity' && editor.plugins.cwrc_contextmenu.entityTagsOnly === true) {
+                item.hide();
+            } else {
+                item.show();
+            }
             if (item.settings.category == 'modifyTag' && editor.writer.entitiesManager.getCurrentEntity() == null && editor.currentStruct == null) {
                 item.disabled(true);
             }
