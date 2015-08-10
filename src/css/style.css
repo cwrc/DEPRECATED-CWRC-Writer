@@ -907,6 +907,13 @@ html, body {
 .mce-cwrc.mce-btn {
 	border: none;
 	background: rgba(0, 0, 0, 0);
+	margin-bottom: 1px;
+	padding-left: 8px !important;
+}
+
+.mce-cwrc.mce-btn button i {
+	margin-right: 4px;
+	padding: 0px;
 }
 
 .mce-cwrc.mce-btn.mce-active, .mce-cwrc.mce-btn:hover {

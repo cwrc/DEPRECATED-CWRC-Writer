@@ -22,7 +22,7 @@ tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
                 popoverAlign: ['tr-tl', 'br-bl'],
                 panel: filterPanel,
                 classes: 'cwrc',
-                icon: '',
+                icon: 'cwrc',
                 image: editor.writer.cwrcRootUrl+'img/tag.png',
                 onPostRender: function(e) {
                     e.control.on('mouseover', function(e2) {
@@ -43,7 +43,7 @@ tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
                 popoverAlign: ['tr-tl', 'br-bl'],
                 panel: filterPanel,
                 classes: 'cwrc',
-                icon: '',
+                icon: 'cwrc',
                 image: editor.writer.cwrcRootUrl+'img/tag_blue_edit.png',
                 onPostRender: function(e) {
                     e.control.on('mouseover', function(e2) {

@@ -1,6 +1,7 @@
 (function(tinymce) {
 // make sure snippet is available
 var $ = require('jquery');
+var watermark = require('jquery.watermark');
     
 tinymce.PluginManager.add('schematags', function(editor) {
     
@@ -241,9 +242,9 @@ tinymce.PluginManager.add('schematags', function(editor) {
             onshow: function(e) {
                 if (e.control.type != 'menuitem') {
                     editor.currentBookmark = editor.selection.getBookmark(1);
-                    var textbox = e.control.items()[1];
+                    var textbox = e.control.items()[0];
                     textbox.value('');
-                    var menu = e.control.items()[2];//.items()[0];
+                    var menu = e.control.items()[1];
                     if (menu.type === 'cwrcmenu') {
                         filterMenu(menu);
                         menu.show();
@@ -252,20 +253,19 @@ tinymce.PluginManager.add('schematags', function(editor) {
                 }
             },
             onPostRender: function(e) {
-                var menu = e.control.items()[2];//.items()[0];
+                var textbox = e.control.items()[0];
+                $(textbox.getEl()).watermark('Filter');
+                var menu = e.control.items()[1];
                 var items = [];
                 editor.execCommand('getTagsMenu', items);
                 menu.append(items);
                 menu.reflow();
             },
             items : [{
-                type: 'label',
-                text: 'Filter'
-            },{
                 type: 'textbox',
                 onkeyup: function(e) {
                     var query = e.control.value();
-                    var menu = e.control.parent().items()[2];//.items()[0];
+                    var menu = e.control.parent().items()[1];
                     menu.items().each(function(item) {
                         if (query == '') {
                             item.disabled(item.settings.initialFilterState);
