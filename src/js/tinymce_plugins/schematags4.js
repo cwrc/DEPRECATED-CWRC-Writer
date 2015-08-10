@@ -128,16 +128,6 @@ tinymce.PluginManager.add('schematags', function(editor) {
      * @param menuItems {Array} The array to fill with tags.
      */
     function getTagsMenu(menuItems) {
-//        menuItems.push({
-//            type: 'textbox',
-//            onclick: function(e) {
-//                e.target.focus();
-//            },
-//            onkeyup: function(e) {
-//                var query = e.target.value;
-//            }
-//        });
-        
         var imageUrl = editor.writer.cwrcRootUrl+'img/';
         var schema = editor.writer.schemaManager.schema;
         for (var i = 0; i < schema.elements.length; i++) {
@@ -162,14 +152,6 @@ tinymce.PluginManager.add('schematags', function(editor) {
             image: imageUrl+'cross.png',
             onclick : function() {}
         });
-        
-        
-//        for (var key in menu.items) {
-//            var item = menu.items[key];
-//            item.destroy();
-//            $('#'+item.id).remove();
-//            delete menu.items[key];
-//        }
     }
     editor.addCommand('getTagsMenu', getTagsMenu);
     
@@ -233,6 +215,19 @@ tinymce.PluginManager.add('schematags', function(editor) {
             menu.items()[len-1].visible(true);
 //            menu.items['no_tags_'+m.id].disabled(false);
         }
+        
+        menu.parent().reflow();
+    }
+    
+    function resizeMenuParent(menu) {
+        var parent = menu.parent();
+        var height = 0;
+        parent.items().each(function(e) {
+            height += $(e.getEl()).height();
+        });
+        height = Math.min(height, 400);
+        parent.layoutRect({h: height, minH: height});
+        parent.repaint();
     }
     
     function getFilterMenu(configObj) {
@@ -248,6 +243,8 @@ tinymce.PluginManager.add('schematags', function(editor) {
                     if (menu.type === 'cwrcmenu') {
                         filterMenu(menu);
                         menu.show();
+                        resizeMenuParent(menu);
+                        menu.getEl().scrollTop = 0;
                     }
                     
                 }
@@ -278,6 +275,7 @@ tinymce.PluginManager.add('schematags', function(editor) {
                             item.visible(false);
                         }
                     });
+                    resizeMenuParent(menu);
                 }
             },{
                 type: 'cwrcmenu',
