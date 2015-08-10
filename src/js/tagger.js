@@ -343,11 +343,11 @@ return function(writer) {
      */
     function _doCustomTaggerUndo() {
         // TODO update for 4
-        w.editor.undoManager.add();
-        w.editor.undoManager.onAdd.addToTop(function() {
-            this.data.splice(this.data.length-1, 1); // remove last undo level
-            this.onAdd.listeners.splice(0, 1); // remove this listener
-        }, w.editor.undoManager);
+//        w.editor.undoManager.add();
+//        w.editor.undoManager.onAdd.addToTop(function() {
+//            this.data.splice(this.data.length-1, 1); // remove last undo level
+//            this.onAdd.listeners.splice(0, 1); // remove this listener
+//        }, w.editor.undoManager);
     }
     
     /**
