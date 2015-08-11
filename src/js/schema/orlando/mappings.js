@@ -14,7 +14,9 @@ person: {
         return Mapper.getDefaultMapping(entity);
     },
     reverseMapping: function(xml) {
-        return Mapper.getDefaultReverseMapping(xml);
+        return Mapper.getDefaultReverseMapping(xml, {
+            cwrcInfo: {id: '@REF'}
+        });
     },
     annotation: function(entity, format) {
         return AnnotationsManager.commonAnnotation(entity, 'foaf:Person', null, format);
