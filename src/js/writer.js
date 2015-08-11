@@ -198,14 +198,14 @@ return function(config) {
     };
     
     w.showToolbar = function() {
-        $('.mceToolbar', w.editor.getContainer()).first().show();
+        $('.mce-toolbar-grp', w.editor.getContainer()).first().show();
         if (w.layout) {
             w.layout.resizeAll();
         }
     }
     
     w.hideToolbar = function() {
-        $('.mceToolbar', w.editor.getContainer()).first().hide();
+        $('.mce-toolbar-grp', w.editor.getContainer()).first().hide();
         if (w.layout) {
             w.layout.resizeAll();
         }
