@@ -29,7 +29,9 @@ org: {
         return Mapper.getDefaultMapping(entity);
     },
     reverseMapping: function(xml) {
-        return Mapper.getDefaultReverseMapping(xml);
+        return Mapper.getDefaultReverseMapping(xml, {
+            cwrcInfo: {id: '@REF'}
+        });
     },
     annotation: function(entity, format) {
         return AnnotationsManager.commonAnnotation(entity, 'foaf:Organization', null, format);
@@ -55,6 +57,7 @@ place: {
     },
     reverseMapping: function(xml) {
         return Mapper.getDefaultReverseMapping(xml, {
+            cwrcInfo: {id: '@REF'},
             customValues: {tag: 'fn:node-name(child::*)'}
         });
     },
@@ -69,7 +72,9 @@ title: {
         return Mapper.getDefaultMapping(entity);
     },
     reverseMapping: function(xml) {
-        return Mapper.getDefaultReverseMapping(xml);
+        return Mapper.getDefaultReverseMapping(xml, {
+            cwrcInfo: {id: '@REF'}
+        });
     },
     annotation: function(entity, format) {
         var anno = AnnotationsManager.commonAnnotation(entity, ['dcterms:BibliographicResource', 'dcterms:title'], null, format);

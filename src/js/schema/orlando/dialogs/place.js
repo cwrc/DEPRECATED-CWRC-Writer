@@ -18,6 +18,7 @@ return function(id, writer) {
             '<input type="radio" id="'+id+'_region" name="'+id+'_type_place" value="REGION" /><label for="'+id+'_region">Region</label>'+
             '<input type="radio" id="'+id+'_settlement" name="'+id+'_type_place" value="SETTLEMENT" /><label for="'+id+'_settlement">Settlement</label>'+
         '</div>'+
+        '<input type="hidden" id="'+id+'_ref" data-type="hidden" data-mapping="REF"/>'+
     '</div>';
     
     var dialog = new DialogForm({
@@ -28,6 +29,13 @@ return function(id, writer) {
         height: 150,
         width: 450,
         html: html
+    });
+    
+    dialog.$el.on('beforeShow', function(e, config, dialog) {
+        var cwrcInfo = dialog.currentData.cwrcInfo;
+        if (cwrcInfo !== undefined) {
+            $('#'+id+'_ref').val(cwrcInfo.id);
+        }
     });
     
     return {
