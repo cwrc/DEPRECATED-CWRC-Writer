@@ -60,9 +60,9 @@
                     writer.init('editor');
                     writer.event('writerInitialized').subscribe(function(writer) {
                         // load modules then do the setup
-                        require(['modules/entitiesList','modules/relations'
-                        ], function(EntitiesList, Relations) {
-                            setupLayoutAndModules(writer, EntitiesList, Relations);
+                        require(['modules/entitiesList','modules/structureTree','modules/relations'
+                        ], function(EntitiesList, StructureTree, Relations) {
+                            setupLayoutAndModules(writer, EntitiesList, StructureTree, Relations);
                             writer.fileManager.loadInitialDocument(window.location.hash);
                             
                             $('#headerLink').hide();
@@ -108,6 +108,7 @@
         <div id="westTabs" class="tabs">
             <ul>
                 <li><a href="#entities">Entities</a></li>
+                <li><a href="#structure">Markup</a></li>
                 <li><a href="#relations">Relations</a></li>
                 <!-- li id="annotation_tab"><a href="#image-annotations">Image Annotations</a></li -->
             </ul>
