@@ -42,17 +42,19 @@ place: {
     parentTag: 'PLACE',
     textTag: ['ADDRESS', 'AREA', 'GEOG', 'PLACENAME', 'REGION', 'SETTLEMENT'],
     mapping: function(entity) {
+        var xml = Mapper.getTagAndDefaultAttributes(entity);
+        
+        var tag = entity.getCustomValue('tag');
         var range = entity.getRange();
         var id = range.annotationId;
-        var offsetId = range.offsetId;
-        var tag = entity.getCustomValue('tag');
         
-        var xml = '<PLACE';
-        if (id) xml += ' annotationId="'+id+'"';
-        if (offsetId) xml += ' offsetId="'+offsetId+'"';
         xml += '><'+tag;
         if (id) xml += ' annotationId="'+id+'"';
-        xml += '>'+Mapper.TEXT_SELECTION+'</'+tag+'></PLACE>';
+        xml += '>'+Mapper.TEXT_SELECTION+'</'+tag+'>';
+        
+        tag = entity.getTag();
+        xml += '</'+tag+'>';
+        
         return xml;
     },
     reverseMapping: function(xml) {
