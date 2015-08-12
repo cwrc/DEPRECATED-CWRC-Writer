@@ -49,8 +49,12 @@
 				writer = null;
 				
 				function doResize() {
-					var uiHeight = $('#'+writer.editor.id+'_tbl tr.mceFirst').outerHeight() + 2;
-					$('#'+writer.editor.id+'_ifr').height($(window).height() - uiHeight);
+				    var uiHeight = 4;
+                    var toolbar = $('.mce-toolbar-grp',writer.editor.getContainer());
+                    if (toolbar.is(':visible')) {
+                        uiHeight += toolbar.outerHeight();
+                    }
+                    $('iframe',writer.editor.getContainer()).height($(window).height() - uiHeight);
 				}
 				
 				function doInit(config) {
