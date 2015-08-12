@@ -82,7 +82,8 @@ return function(config) {
         currentlySelectedEntity: null, // id of the currently selected entity (as opposed to node, ie. struct tag)
         selectionType: null, // is the node or the just the contents of the node selected?
         NODE_SELECTED: 0,
-        CONTENTS_SELECTED: 1
+        CONTENTS_SELECTED: 1,
+        tagFilter: ['head','heading'] // array of tag names to filter tree by
     };
     
     // 2 uses, 1) we want to highlight a node in the tree without selecting it's counterpart in the editor
@@ -364,7 +365,7 @@ return function(config) {
         var nodeData = null;
         
         // entity tag
-        if (node.attr('_entity') && (node.attr('_tag') || node.attr('_note'))) {
+        if (w.isReadOnly === false && node.attr('_entity') && (node.attr('_tag') || node.attr('_note'))) {
             var id = node.attr('name');
             var entity = w.entitiesManager.getEntity(id);
             var type = node.attr('_type');
@@ -425,54 +426,66 @@ return function(config) {
             var id = node.attr('id');
             var tag = node.attr('_tag');
 
-//            var isLeaf = node.find('[_tag]').length > 0 ? 'open' : null;
-//            if (tag == w.header) isLeaf = false;
-            
-            // TODO move this out of here
-            // new struct check
-            if (id == '' || id == null) {
-                id = w.getUniqueId('struct_');
-                if (w.schemaManager.schema.elements.indexOf(tag) != -1) {
-                    node.attr('id', id).attr('_tag', tag);
-                    w.structs[id] = {
-                        id: id,
-                        _tag: tag
-                    };
-                }                    
-            // duplicate struct check
-            } else {
-                var match = $('[id='+id+']', w.editor.getBody());
-                if (match.length > 1) {
-                    match.each(function(index, el) {
-                        if (index > 0) {
-                            var newStruct = $(el);
-                            var newId = w.getUniqueId('struct_');
-                            newStruct.attr('id', newId);
-                            w.structs[newId] = {};
-                            for (var key in w.structs[id]) {
-                                w.structs[newId][key] = w.structs[id][key];
+            if (w.isReadOnly === false || (w.isReadOnly && (tag === w.root || tree.tagFilter.indexOf(tag.toLowerCase()) != -1))) {
+                
+                
+    //            var isLeaf = node.find('[_tag]').length > 0 ? 'open' : null;
+    //            if (tag == w.header) isLeaf = false;
+                
+                // TODO move this out of here
+                // new struct check
+                if (id == '' || id == null) {
+                    id = w.getUniqueId('struct_');
+                    if (w.schemaManager.schema.elements.indexOf(tag) != -1) {
+                        node.attr('id', id).attr('_tag', tag);
+                        w.structs[id] = {
+                            id: id,
+                            _tag: tag
+                        };
+                    }                    
+                // duplicate struct check
+                } else {
+                    var match = $('[id='+id+']', w.editor.getBody());
+                    if (match.length > 1) {
+                        match.each(function(index, el) {
+                            if (index > 0) {
+                                var newStruct = $(el);
+                                var newId = w.getUniqueId('struct_');
+                                newStruct.attr('id', newId);
+                                w.structs[newId] = {};
+                                for (var key in w.structs[id]) {
+                                    w.structs[newId][key] = w.structs[id][key];
+                                }
+                                w.structs[newId].id = newId;
                             }
-                            w.structs[newId].id = newId;
+                        });
+                    }
+                }
+                
+                var info = w.structs[id];
+                if (info == undefined) {
+                    // redo/undo re-added a struct check
+                    info = w.deletedStructs[id];
+                    if (info != undefined) {
+                        w.structs[id] = info;
+                        delete w.deletedStructs[id];
+                    }
+                }
+                if (info) {
+                    var text = info._tag;
+                    if (w.isReadOnly) {
+                        if (tag === w.root) {
+                            text = w.currentDocId || w.root;
+                        } else {
+                            text = w.utilities.getTitleFromContent(node.text());
                         }
-                    });
+                    }
+                    nodeData = {
+                        text: text,
+                        li_attr: {name: id},
+                        state: {opened: level < 3}
+                    };
                 }
-            }
-            
-            var info = w.structs[id];
-            if (info == undefined) {
-                // redo/undo re-added a struct check
-                info = w.deletedStructs[id];
-                if (info != undefined) {
-                    w.structs[id] = info;
-                    delete w.deletedStructs[id];
-                }
-            }
-            if (info) {
-                nodeData = {
-                    text: info._tag,
-                    li_attr: {name: id},
-                    state: {opened: level < 3}
-                };
             }
         }
         
