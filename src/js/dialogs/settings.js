@@ -98,7 +98,9 @@ return function(writer, config) {
             } else {
                 $('select[name="editormode"] > option[value="xmlrdf"]', $settingsDialog).attr('selected', true);
             }
-        }        
+        } else if (w.mode === w.RDF) {
+            $('select[name="editormode"] > option[value="rdf"]', $settingsDialog).attr('selected', true);
+        }
         $('select[name="schema"] > option[value="'+w.schemaManager.schemaId+'"]', $settingsDialog).attr('selected', true);
         $settingsDialog.dialog('open');
     });
