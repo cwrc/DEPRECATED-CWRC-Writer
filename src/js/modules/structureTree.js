@@ -425,7 +425,7 @@ return function(config) {
         } else if (node.attr('_tag')) {
             var id = node.attr('id');
             var tag = node.attr('_tag');
-
+            
             if (w.isReadOnly === false || (w.isReadOnly && (tag === w.root || tree.tagFilter.indexOf(tag.toLowerCase()) != -1))) {
                 
                 
@@ -495,23 +495,30 @@ return function(config) {
     /**
      * Recursively work through all elements in the editor and create the data for the tree.
      */
-    function _doUpdate(children, nodeParent, level) {
+    function _doUpdate(children, nodeParent, level, lastEntry) {
         children.each(function(index, el) {
             var node = $(this);
             var newNodeParent = nodeParent;
             
             var nodeData = _processNode(node, level);
             if (nodeData) {
-                if (nodeParent.children == null) {
-                    nodeParent.children = [];
+                if (w.isReadOnly && lastEntry != null) {
+                    if (lastEntry.children == null) {
+                        lastEntry.children = [];
+                    }
+                    lastEntry.children.push(nodeData);
+                } else {
+                    if (nodeParent.children == null) {
+                        nodeParent.children = [];
+                    }
+                    nodeParent.children.push(nodeData);
+                    newNodeParent = nodeParent.children[nodeParent.children.length-1];
                 }
-                nodeParent.children.push(nodeData);
-                
-                newNodeParent = nodeParent.children[nodeParent.children.length-1];
+                lastEntry = nodeData;
             }
             
             if (node.attr('_tag') != w.header) {
-                _doUpdate(node.children(), newNodeParent, level+1);
+                _doUpdate(node.children(), newNodeParent, level+1, lastEntry);
             }
         });
     }
