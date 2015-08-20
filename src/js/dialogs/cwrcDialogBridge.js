@@ -50,33 +50,48 @@ return function(writer, config) {
     return {
         show: function(config) {
             if (config.entry) {
-                w.dialogManager.show('schema/'+localDialog, {
-                    entry: config.entry
+                // EDIT
+                var query = config.entry.getContent();
+                cD.popSearch[cwrcType]({
+                    query: query,
+                    success: function(result) {
+                        // set id to the uri
+                        // assume proper uri passed by the dialogs
+                        result.id = result.uri 
+                        if ($.isArray(result.name)) {
+                            result.name = result.name[0];
+                        }                        
+                        delete result.data;
+                        
+                        config.entry.setLookupInfo(result);
+                        
+                        w.dialogManager.show('schema/'+localDialog, {
+                            entry: config.entry
+                        });
+                    },
+                    error: function(errorThrown) {
+                    },
+                    buttons: [{
+                        label : 'Edit '+label,
+                        isEdit : true,
+                        action : doEdit
+                    },{
+                        label : 'Skip '+label+' Lookup',
+                        isEdit : false,
+                        action : function() {
+                            w.dialogManager.show('schema/'+localDialog, {
+                                entry: config.entry
+                            });
+                        }
+                    }]
                 });
             } else {
+                // ADD
                 var query = w.editor.currentBookmark.rng.toString();
                 
                 cD.popSearch[cwrcType]({
                     query: query,
                     success: function(result) {
-                        if (result.id == null) {
-                            var id = w.utilities.createGuid();
-                            if (cwrcType === 'place') {
-                                result = {
-                                    id: id,
-                                    data: '<geoname><name>Hamilton</name><asciiName>Hamilton</asciiName><lat>44.0501200</lat><lng>-78.2328200</lng><countryCode>CA</countryCode><countryName>Canada</countryName><fcl>A</fcl><fcode>ADM2</fcode><geonameid>'+w.utilities.createGuid()+'</geonameid><granularity>Province/State</granularity></geoname>',
-                                    name: 'Test '+label,
-                                    repository: 'geonames'
-                                };
-                            } else {
-                                result = {
-                                    id: id,
-                                    name: ['Test '+label],
-                                    repository: 'cwrc'
-                                };
-                            }
-                        }
-
                         // set id to the uri
                         // assume proper uri passed by the dialogs
                         result.id = result.uri 
