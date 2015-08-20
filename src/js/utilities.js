@@ -446,6 +446,11 @@ return function(writer) {
         return w.editor.schema.getBlockElements()[tagName] != null;
     };
     
+    u.isTagEntity = function(tagName) {
+        var type = w.schemaManager.mapper.getEntityTypeForTag(tagName);
+        return type != null;
+    };
+    
     u.getTagForEditor = function(tagName) {
         return u.isTagBlockLevel(tagName) ? BLOCK_TAG : INLINE_TAG;
     };

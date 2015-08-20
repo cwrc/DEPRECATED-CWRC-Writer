@@ -85,6 +85,14 @@ tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
         }
         
         // enable/disable items based on current editor state
+        var currentTag = editor.writer.tagger.getCurrentTag();
+        var isTagEntity = false;
+        if (currentTag.struct != null) {
+            var tagName = currentTag.struct.attr('_tag');
+            if (tagName) {
+                isTagEntity = editor.writer.utilities.isTagEntity(tagName);
+            }
+        }
         menu.items().each(function(item) {
             item.disabled(false);
             if (item.settings.category != 'tagEntity' && editor.plugins.cwrc_contextmenu.entityTagsOnly === true) {
@@ -92,10 +100,13 @@ tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
             } else {
                 item.show();
             }
-            if (item.settings.category == 'modifyTag' && editor.writer.entitiesManager.getCurrentEntity() == null && editor.currentStruct == null) {
+            if (item.settings.category == 'modifyTag' && currentTag.entity == null && currentTag.struct == null) {
                 item.disabled(true);
             }
-            if (item.settings.category == 'copyEntity' && editor.writer.entitiesManager.getCurrentEntity() == null) {
+            if (item.settings.category == 'convertEntity' && isTagEntity === false) {
+                item.disabled(true);
+            }
+            if (item.settings.category == 'copyEntity' && currentTag.entity == null) {
                 item.disabled(true);
             }
             if (item.settings.category == 'pasteEntity' && editor.entityCopy == null) {
@@ -206,6 +217,14 @@ tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
         }
     },{
         text: '|'
+    },{
+        text: 'Convert to Entity',
+        image: editor.writer.cwrcRootUrl+'img/tag_blue_edit.png',
+        category: 'convertEntity',
+        onclick : function() {
+            var currentTag = editor.writer.tagger.getCurrentTag();
+            editor.writer.tagger.convertTagToEntity(currentTag.struct);
+        }
     },{
         text: 'Copy Entity',
         image: editor.writer.cwrcRootUrl+'img/tag_blue_copy.png',

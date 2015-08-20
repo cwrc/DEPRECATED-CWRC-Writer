@@ -317,6 +317,26 @@ return function(writer) {
         } 
     };
     
+    tagger.convertTagToEntity = function($tag) {
+        if ($tag != null) {
+            var id = $tag.attr('id');
+            var type = w.schemaManager.mapper.getEntityTypeForTag($tag.attr('_tag'));
+            var xmlString = w.converter.buildXMLString($tag);
+            var xmlEl = w.utilities.stringToXML(xmlString).firstChild;
+            var info = w.schemaManager.mapper.getReverseMapping(xmlEl, type);
+            
+            var ref = $tag.attr('ref'); // matches ref or REF
+            
+            w.selectStructureTag(id, true);
+            w.editor.currentBookmark = w.editor.selection.getBookmark(1);
+            var newId = tagger.finalizeEntity(type, info);
+            tagger.removeStructureTag(id, false);
+            if (ref == null) {
+                tagger.editTag(newId);
+            }
+        }
+    };
+    
     /**
      * A general removal function for entities and structure tags
      * @param {String} id The id of the tag to remove
@@ -447,6 +467,7 @@ return function(writer) {
      * @protected
      * @param {String} type Then entity type
      * @param {Object} info The entity info
+     * @returns {String} id The new entity ID
      */
     tagger.finalizeEntity = function(type, info) {
         w.editor.selection.moveToBookmark(w.editor.currentBookmark);
@@ -500,6 +521,8 @@ return function(writer) {
                     userId: userUri
                 });
             });
+            
+            return id;
         }
         w.editor.currentBookmark = null;
         w.editor.focus();
