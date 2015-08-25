@@ -64,6 +64,7 @@ return function(writer) {
      * @returns {String}
      */
     u.getTitleFromContent = function(content) {
+        content = content.trim();
         if (content.length <= 34) return content;
         var title = content.substring(0, 34) + '&#8230;';
         return title;
