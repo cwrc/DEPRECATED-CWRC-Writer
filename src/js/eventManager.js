@@ -89,6 +89,7 @@ return function(writer) {
     /**
      * A document was loaded into the editor
      * @event Writer#documentLoaded
+     * @param {Element} body The editor body element
      */
     w.event('documentLoaded');
     /**

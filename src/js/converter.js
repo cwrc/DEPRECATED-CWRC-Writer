@@ -674,7 +674,7 @@ return function(writer) {
                 }
             }
 
-            w.event('documentLoaded').publish();
+            w.event('documentLoaded').publish(w.editor.getBody());
 
             // try putting the cursor in the body
             window.setTimeout(function() {

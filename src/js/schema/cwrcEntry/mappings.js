@@ -37,6 +37,11 @@ listeners: {
         if ($tag.attr('_tag') === 'GRAPHIC') {
             handleGraphics($tag);
         }
+    },
+    documentLoaded: function(body) {
+        $(body).find('*[_tag="GRAPHIC"]').each(function(index, el) {
+            handleGraphics($(el));
+        });
     }
 },
 
