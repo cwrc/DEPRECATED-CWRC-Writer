@@ -1,10 +1,44 @@
 define(['jquery', 'mapper', 'annotationsManager'], function($, Mapper, AnnotationsManager) {
 
+function handleGraphics($tag) {
+    var url = $tag.attr('url');
+    if (url !== undefined) {
+        $tag.css('backgroundImage','url('+url+')');
+        $tag.css('display','inline-block');
+        var $img = $('<img />');
+        $img.hide();
+        $img.on('load', function() {
+            var height = $(this).height();
+            var width = $(this).width();
+            $tag.width(width);
+            $tag.height(height);
+            $img.remove();
+        });
+        $('body').append($img);
+        $img.attr('src', url);
+    }
+}
+
 return {
 
 id: 'ID',
 header: 'CWRCHEADER',
 blockElements: [],
+
+listeners: {
+    tagAdded: function(tag) {
+        var $tag = $(tag);
+        if ($tag.attr('_tag') === 'GRAPHIC') {
+            handleGraphics($tag);
+        }
+    },
+    tagEdited: function(tag) {
+        var $tag = $(tag);
+        if ($tag.attr('_tag') === 'GRAPHIC') {
+            handleGraphics($tag);
+        }
+    }
+},
 
 entities: {
     

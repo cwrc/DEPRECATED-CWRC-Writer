@@ -2,11 +2,45 @@ define(['jquery', 'mapper', 'annotationsManager'], function($, Mapper, Annotatio
 
 // TODO add resp for note type entities
     
+function handleGraphics($tag) {
+    var url = $tag.attr('url');
+    if (url !== undefined) {
+        $tag.css('backgroundImage','url('+url+')');
+        $tag.css('display','inline-block');
+        var $img = $('<img />');
+        $img.hide();
+        $img.on('load', function() {
+            var height = $(this).height();
+            var width = $(this).width();
+            $tag.width(width);
+            $tag.height(height);
+            $img.remove();
+        });
+        $('body').append($img);
+        $img.attr('src', url);
+    }
+}
+
 return {
 
 id: 'xml:id',
 header: 'teiHeader',
 blockElements: ['argument', 'back', 'bibl', 'biblFull', 'biblScope', 'body', 'byline', 'category', 'change', 'cit', 'classCode', 'elementSpec', 'macroSpec', 'classSpec', 'closer', 'creation', 'date', 'distributor', 'div', 'div1', 'div2', 'div3', 'div4', 'div5', 'div6', 'div7', 'docAuthor', 'edition', 'editionStmt', 'editor', 'eg', 'epigraph', 'extent', 'figure', 'front', 'funder', 'group', 'head', 'dateline', 'idno', 'item', 'keywords', 'l', 'label', 'langUsage', 'lb', 'lg', 'list', 'listBibl', 'note', 'noteStmt', 'opener', 'p', 'principal', 'publicationStmt', 'publisher', 'pubPlace', 'q', 'rendition', 'resp', 'respStmt', 'salute', 'samplingDecl', 'seriesStmt', 'signed', 'sp', 'sponsor', 'tagUsage', 'taxonomy', 'textClass', 'titlePage', 'titlePart', 'trailer', 'TEI', 'teiHeader', 'text', 'authority', 'availability', 'fileDesc', 'sourceDesc', 'revisionDesc', 'catDesc', 'encodingDesc', 'profileDesc', 'projectDesc', 'docDate', 'docEdition', 'docImprint', 'docTitle'],
+
+listeners: {
+    tagAdded: function(tag) {
+        var $tag = $(tag);
+        if ($tag.attr('_tag') === 'graphic') {
+            handleGraphics($tag);
+        }
+    },
+    tagEdited: function(tag) {
+        var $tag = $(tag);
+        if ($tag.attr('_tag') === 'graphic') {
+            handleGraphics($tag);
+        }
+    }
+},
 
 entities: {
     

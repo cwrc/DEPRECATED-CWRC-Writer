@@ -726,7 +726,8 @@ return function(writer) {
             tempNode.replaceWith(content);
         }
         
-        w.event('tagAdded').publish(id);
+        var newTag = $('#'+id, w.editor.getBody());
+        w.event('tagAdded').publish(newTag[0]);
         
         if (selection == '\uFEFF') {
             w.selectStructureTag(id, true);
@@ -784,7 +785,7 @@ return function(writer) {
         
         w.structs[id] = attributes;
         
-        w.event('tagEdited').publish(id);
+        w.event('tagEdited').publish(tag[0]);
     };
     
     /**

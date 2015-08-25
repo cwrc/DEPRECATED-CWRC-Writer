@@ -9,6 +9,11 @@ header: '',
 // additional block level elements that should be added to TinyMCE
 blockElements: [],
 
+listeners: {
+    // listeners to CWRC-Writer events can go here and will subscribe upon mappings load
+    // e.g. tagAdded: function() {}
+},
+
 entities: {
     
 person: {

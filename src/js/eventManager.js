@@ -203,7 +203,7 @@ return function(writer) {
     /**
      * A structure tag was added
      * @event Writer#tagAdded
-     * @param {String} id The tag ID
+     * @param {Element} tag The tag
      */
     w.event('tagAdded');
     /**
@@ -215,7 +215,7 @@ return function(writer) {
     /**
      * A structure tag was removed
      * @event Writer#tagRemoved
-     * @param {String} id The tag ID
+     * @param {Element} tag The tag
      */
     w.event('tagRemoved');
     /**

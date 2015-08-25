@@ -175,10 +175,10 @@ return function(config) {
     w.event('entityPasted').subscribe(function(entityId) {
         tree.update();
     });
-    w.event('tagAdded').subscribe(function(tagId) {
+    w.event('tagAdded').subscribe(function(tag) {
         tree.update();
     });
-    w.event('tagEdited').subscribe(function(tagId) {
+    w.event('tagEdited').subscribe(function(tag) {
         tree.update();
     });
     w.event('tagRemoved').subscribe(function(tagId) {

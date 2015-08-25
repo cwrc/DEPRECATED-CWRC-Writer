@@ -93,9 +93,8 @@ return function(writer, config) {
                 dataType: 'xml'
             }),
             sm.mapper.loadMappings(schemaMappingsId)
-        ).then(function(resp) {
-            var data = resp[0];
-            var status = resp[1];
+        ).then(function(resp1, resp2) {
+            var data = resp1[0];
             
             sm.schemaXML = data;
             // get root element
@@ -216,6 +215,13 @@ return function(writer, config) {
                 });
             } else {
                 processSchema();
+            }
+            
+            // process mappings
+            if (sm.mapper.mappings.listeners !== undefined) {
+                for (var event in sm.mapper.mappings.listeners) {
+                    w.event(event).subscribe(sm.mapper.mappings.listeners[event]);
+                }
             }
         }, function(resp) {
             var status = resp[1];
