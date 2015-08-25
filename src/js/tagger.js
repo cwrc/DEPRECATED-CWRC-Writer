@@ -536,6 +536,7 @@ return function(writer) {
      */
     tagger.editEntity = function(id, info) {
         updateEntityInfo(w.entitiesManager.getEntity(id), info);
+        w.editor.isNotDirty = false;
         w.event('entityEdited').publish(id);
     };
     
@@ -594,6 +595,7 @@ return function(writer) {
             rng = sel.getRng(true);
             tagger.insertBoundaryTags(newEntity.getId(), newEntity.getType(), rng);
             
+            w.editor.isNotDirty = false;
             w.event('entityPasted').publish(newEntity.getId());
         }
     };
@@ -784,7 +786,6 @@ return function(writer) {
         }
         
         w.structs[id] = attributes;
-        
         w.event('tagEdited').publish(tag[0]);
     };
     

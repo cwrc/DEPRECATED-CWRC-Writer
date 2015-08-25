@@ -53,6 +53,7 @@ EntitiesManager.prototype = {
         
         this.entities[entity.id] = entity;
         
+        this.w.editor.isNotDirty = false;
         this.w.event('entityAdded').publish(entity.id);
         
         return entity;
@@ -68,6 +69,7 @@ EntitiesManager.prototype = {
     removeEntity: function(id) {
         if (this.entities[id] !== undefined) {
             delete this.entities[id];
+            this.w.editor.isNotDirty = false;
             this.w.event('entityRemoved').publish(id);
         }
     },
