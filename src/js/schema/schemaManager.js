@@ -82,6 +82,13 @@ return function(writer, config) {
      * @param {Function} callback Callback for when the load is complete
      */
     sm.loadSchema = function(schemaId, startText, loadCss, callback) {
+        // remove previous mappings listeners
+        if (sm.mapper.mappings.listeners !== undefined) {
+            for (var event in sm.mapper.mappings.listeners) {
+                w.event(event).unsubscribe(sm.mapper.mappings.listeners[event]);
+            }
+        }
+        
         var baseUrl = ''; //w.project == null ? '' : w.baseUrl; // handling difference between local and server urls
         sm.schemaId = schemaId;
         var schemaUrl = sm.schemas[sm.schemaId].url;
