@@ -94,6 +94,13 @@ return function(writer, config) {
             }),
             sm.mapper.loadMappings(schemaMappingsId)
         ).then(function(resp1, resp2) {
+            // process mappings
+            if (sm.mapper.mappings.listeners !== undefined) {
+                for (var event in sm.mapper.mappings.listeners) {
+                    w.event(event).subscribe(sm.mapper.mappings.listeners[event]);
+                }
+            }
+            
             var data = resp1[0];
             
             sm.schemaXML = data;
@@ -159,13 +166,6 @@ return function(writer, config) {
                 
                 sm.schemaJSON = w.utilities.xmlToJSON($('grammar', sm.schemaXML)[0]);
                 
-                // update the schema for schematags.js
-                // TODO migrate to 4
-//              var stb = w.editor.controlManager.controls.editor_schemaTagsButton;
-//              if (stb.menu) {
-//                  stb.parentControl.buildMenu(stb.menu, null, {disabled: false, mode: 'add'});
-//              }
-                
                 w.event('schemaLoaded').publish();
                 
                 if (callback) callback();
@@ -215,13 +215,6 @@ return function(writer, config) {
                 });
             } else {
                 processSchema();
-            }
-            
-            // process mappings
-            if (sm.mapper.mappings.listeners !== undefined) {
-                for (var event in sm.mapper.mappings.listeners) {
-                    w.event(event).subscribe(sm.mapper.mappings.listeners[event]);
-                }
             }
         }, function(resp) {
             var status = resp[1];

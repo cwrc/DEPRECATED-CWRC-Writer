@@ -257,8 +257,22 @@ tinymce.PluginManager.add('schematags', function(editor) {
                 editor.execCommand('getTagsMenu', items);
                 menu.append(items);
                 menu.reflow();
+                
+                editor.writer.event('schemaLoaded').subscribe(function() {
+                    var oldItems = menu.items().toArray();
+                    for (var i = 0; i < oldItems.length; i++) {
+                        var item = oldItems[i];
+                        if (item !== undefined) {
+                            item.remove();
+                        }
+                    }
+                    var items = [];
+                    editor.execCommand('getTagsMenu', items);
+                    menu.append(items);
+                    menu.reflow();
+                });
             },
-            items : [{
+            items: [{
                 type: 'textbox',
                 onkeyup: function(e) {
                     var query = e.control.value();
