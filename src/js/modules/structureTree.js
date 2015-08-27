@@ -693,8 +693,13 @@ return function(config) {
 //    $.vakata.dnd.settings.helper_left = 15;
 //    $.vakata.dnd.settings.helper_top = 20;
     
+    var plugins = ['wholerow','contextmenu'];
+    if (w.isReadOnly !== true) {
+        plugins.push('dnd');
+    }
+    
     $tree.jstree({
-        plugins: ['wholerow','dnd','contextmenu'],
+        plugins: plugins,
         core: {
             check_callback: true, // enable tree modifications
             animation: false,
@@ -716,6 +721,7 @@ return function(config) {
             show_at_node: false,
             items: function(node) {
                 _hidePopup();
+                if (w.isReadOnly) return {};
                 if (node.li_attr.id === 'cwrc_tree_root') return {};
                 
                 var parentNode = $tree.jstree('get_node', node.parents[0]);
@@ -745,27 +751,17 @@ return function(config) {
                         },
                         separator_after: true
                     };
-                } else {
-                    var currentTag = w.tagger.getCurrentTag();
-                    var isTagEntity = false;
-                    if (currentTag.struct != null) {
-                        var tagName = currentTag.struct.attr('_tag');
-                        if (tagName) {
-                            isTagEntity = w.utilities.isTagEntity(tagName);
-                        }
-                    }
-                    if (isTagEntity) {
-                        menuConfig.convertEntity = {
-                            label: 'Convert to Entity',
-                            icon: w.cwrcRootUrl+'img/tag_blue_edit.png',
-                            action: function(obj) {
-                                var id = obj.reference.parent('li').attr('name');
-                                var tag = $('#'+id, w.editor.getBody());
-                                w.tagger.convertTagToEntity(tag);
-                            },
-                            separator_after: true
-                        };
-                    }
+                } else if (w.utilities.isTagEntity(node.text)) {
+                    menuConfig.convertEntity = {
+                        label: 'Convert to Entity',
+                        icon: w.cwrcRootUrl+'img/tag_blue_edit.png',
+                        action: function(obj) {
+                            var id = obj.reference.parent('li').attr('name');
+                            var tag = $('#'+id, w.editor.getBody());
+                            w.tagger.convertTagToEntity(tag);
+                        },
+                        separator_after: true
+                    };
                 }
                 
                 // general tag actions;
