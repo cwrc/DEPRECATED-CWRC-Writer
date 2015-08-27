@@ -208,7 +208,7 @@ return function(config) {
         var rootData = _processNode(rootNode, 0);
         if (rootData != null) {
             rootData.li_attr.id = 'cwrc_tree_root';
-            _doUpdate(rootNode.children(), rootData, 0);
+            _doUpdate(rootNode.children(), rootData, 0, rootData);
             treeRef.create_node(null, rootData);
 //            treeRef._themeroller();
             _onNodeLoad($('#cwrc_tree_root', $tree).first());
@@ -426,7 +426,7 @@ return function(config) {
             var id = node.attr('id');
             var tag = node.attr('_tag');
             
-            if (w.isReadOnly === false || (w.isReadOnly && (tag === w.root || tree.tagFilter.indexOf(tag.toLowerCase()) != -1))) {
+            if (w.isReadOnly === false || (w.isReadOnly && (tag === w.root || tree.tagFilter.indexOf(tag.toLowerCase()) !== -1))) {
                 
                 
     //            var isLeaf = node.find('[_tag]').length > 0 ? 'open' : null;
@@ -488,6 +488,9 @@ return function(config) {
                 }
             }
         }
+        if (nodeData !== null) {
+            nodeData.level = level;
+        }
         
         return nodeData;
     }
@@ -503,9 +506,13 @@ return function(config) {
             var nodeData = _processNode(node, level);
             if (nodeData) {
                 if (w.isReadOnly && lastEntry != null) {
+                    while (lastEntry.level >= nodeData.level) {
+                        lastEntry = lastEntry.parent;
+                    }
                     if (lastEntry.children == null) {
                         lastEntry.children = [];
                     }
+                    nodeData.parent = lastEntry;
                     lastEntry.children.push(nodeData);
                 } else {
                     if (nodeParent.children == null) {
