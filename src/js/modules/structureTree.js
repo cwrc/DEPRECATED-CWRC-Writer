@@ -745,6 +745,27 @@ return function(config) {
                         },
                         separator_after: true
                     };
+                } else {
+                    var currentTag = w.tagger.getCurrentTag();
+                    var isTagEntity = false;
+                    if (currentTag.struct != null) {
+                        var tagName = currentTag.struct.attr('_tag');
+                        if (tagName) {
+                            isTagEntity = w.utilities.isTagEntity(tagName);
+                        }
+                    }
+                    if (isTagEntity) {
+                        menuConfig.convertEntity = {
+                            label: 'Convert to Entity',
+                            icon: w.cwrcRootUrl+'img/tag_blue_edit.png',
+                            action: function(obj) {
+                                var id = obj.reference.parent('li').attr('name');
+                                var tag = $('#'+id, w.editor.getBody());
+                                w.tagger.convertTagToEntity(tag);
+                            },
+                            separator_after: true
+                        };
+                    }
                 }
                 
                 // general tag actions;
@@ -808,7 +829,6 @@ return function(config) {
                     'edit': {
                         label: 'Edit Tag',
                         icon: w.cwrcRootUrl+'img/tag_blue_edit.png',
-                        separator_after: true,
                         action: function(obj) {
                             var id = obj.reference.parent('li').attr('name');
                             w.tagger.editTag(id);
@@ -817,6 +837,7 @@ return function(config) {
                     'delete': {
                         label: 'Remove Tag Only',
                         icon: w.cwrcRootUrl+'img/tag_blue_delete.png',
+                        separator_before: true,
                         action: function(obj) {
                             var id = obj.reference.parent('li').attr('name');
                             w.tagger.removeStructureTag(id, false);
