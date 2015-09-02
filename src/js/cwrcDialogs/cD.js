@@ -159,6 +159,8 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
 
         entity.viewModel().modsFields = ko.observable({
                 modsTypes : [{
+                        name : ''
+                    }, {
                         name : 'Audio'
                     }, {
                         name : 'Book (part)'
@@ -178,13 +180,15 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
                         name : 'Web resource'
                     },
                 ],
-                modsType : ko.observable("Audio"),
+                modsType : ko.observable(""),
                 title : ko.observable(),
                 author : ko.observableArray([
                     ]),
                 date : ko.observable(),
                 project : ko.observable(),
+                sameAs : ko.observable(),
                 validation : {
+                    modsType : ko.observable(true),
                     title : ko.observable(true),
                     date : ko.observable(true)
                 },
@@ -433,6 +437,8 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
                 '                   <div class="interfaceFieldsContainer"> ' +
                 '                       <select data-bind="options: modsTypes, optionsText: \'name\', optionsValue: \'name\', value: modsType">' +
                 '                       </select>' +
+                '                       <div class="label label-info" data-bind="if:validation.modsType">Required value</div>' +
+                '                       <div class="label label-danger" data-bind="ifnot:validation.modsType">Required value</div>' +
                 '                   </div>' +
                 '               </div>' +
                 //Title
@@ -492,6 +498,17 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
                 '                   </div>' +
                 '                   <div class="interfaceFieldsContainer"> ' +
                 '                       <input data-bind="value: project">' +
+                '                       <!--<div class="label label-info" data-bind="text:nodeMessage, attr:{class: nodeMessageClass}">Required value</div>-->' +
+                '                   </div>' +
+                '               </div>' +
+
+                //SameAS
+                '               <div class="quantifier">' +
+                '                   <div>' +
+                '                       <span>SameAS</span>' +
+                '                   </div>' +
+                '                   <div class="interfaceFieldsContainer"> ' +
+                '                       <input data-bind="value: sameAs">' +
                 '                       <!--<div class="label label-info" data-bind="text:nodeMessage, attr:{class: nodeMessageClass}">Required value</div>-->' +
                 '                   </div>' +
                 '               </div>' +
@@ -570,6 +587,7 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
                 modsFields.title(data.title);
                 modsFields.date(data.date ? data.date : "");
                 modsFields.project(data.project ? data.project : "");
+                modsFields.sameAs(data.sameAs);
                 modsFields.author([])
 
                 if (data.author && data.author != null && data.author.length > 0) {
@@ -581,7 +599,7 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
                     modsFields.addNewAuthor();
                 }
             } else {
-                modsFields.modsType("Audio");
+                modsFields.modsType("");
                 if (opts.startValue && opts.startValue.trim() !== "") {
                     modsFields.title(opts.startValue);
                 } else {
@@ -590,11 +608,13 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
                 modsFields.author([]);
                 modsFields.date("");
                 modsFields.project("");
+                modsFields.sameAs("");
 
                 modsFields.addNewAuthor();
             }
 
             modsFields.validation.title(true);
+            modsFields.validation.modsType(true);
             modsFields.validation.date(true);
         }
 
@@ -1197,6 +1217,13 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
                 modsFields.validation.title(true);
             }
 
+            if (modsFields.modsType().trim().length < 1) {
+                modsFields.validation.modsType(false);
+                entity.viewModel().validated(false);
+            } else {
+                modsFields.validation.modsType(true);
+            }
+
             var testDate = modsFields.date().trim();
             var rx = /^\d{1,4}(-(0[1-9]|1[012])(-(0[1-9]|[12][0-9]|3[01]))?)?$/; //Tests that the date can be eirther YYYY, YYYY-MM, or YYYY-MM-DD
             if (testDate.length > 0 && !rx.test(testDate)) {
@@ -1246,6 +1273,15 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
             genre.setAttribute("type", "formatType");
             genre.appendChild(entity.selfWorking.createTextNode(modsFields.modsType()));
             mods.append(genre);
+
+            // Create sameAs element
+            var sameAsXML = entity.selfWorking.createElement("identifier");
+            sameAsXML.setAttribute("type", "uri");
+            sameAsXML.appendChild(entity.selfWorking.createTextNode(modsFields.sameAs()));
+            mods.append(sameAsXML);
+
+
+
 
             // create origin info or related item info
             if (modsFields.date().trim().length > 0) {
@@ -1415,10 +1451,8 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
                         } else {
                             response = cwrcApi[dialogType].newEntity(xml);
                         }
+                        // response includes: pid{from API} and URI
                         response.uri = repositoryBaseObjectURL + response.pid;
-                        // response needs to include: 
-                        //  = pid{from API} and 
-                        //  = URI
                         var result = {
                             response : response,
                             data : xml
@@ -2921,7 +2955,7 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
                 '                   <!--  End of content-->' +
                 '               </div>' +
                 '               <div class="modal-footer">' +
-                '                   <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>' +
+                '                   <button type="button" class="btn btn-danger" data-dismiss="modal" data-bind="click: cancel">Cancel</button>' +
                 '                   <!-- ko foreach: buttons -->' +
                 '                   <button type="button" class="btn btn-default" data-dismiss="modal" data-bind="enable: (isEdit && $root.isDataSelected) || !isEdit, text:label, click: $root.runCustomAction"></button>' +
                 '                   <!-- /ko -->' +
@@ -2943,8 +2977,8 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
                         viewMode : 2,
                         autoclose : true
                     }
-
-                    var datepicker = $(element).siblings(':button').first().bsDatepicker(options);
+					
+					var datepicker = $(element).siblings(':button').first().bsDatepicker(options);
 
                     datepicker.on("changeDate", function (event) {
                         var value = valueAccessor();
@@ -2998,6 +3032,10 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
 
             $("#cwrcSearchDialog").on('show.bs.modal', function (e) {
                 $('.modal-body-area').css('max-height', $(window).height() * 0.7);
+            });
+            
+            $('button.close','#cwrcSearchDialog').on('click', function(e) {
+                search.cancel();
             });
 
         }
@@ -3345,6 +3383,12 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
             search.clear();
         };
 
+		search.cancel = function () {
+		    if (search.cancelled) {
+		        search.cancelled();
+		    }
+        }
+		
         search.initiateInfo = function () {
             $("#search-modal").popover({
                 title : function () {
@@ -3409,12 +3453,9 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
             }
 
             // alert(search.buttons[0].label)
-            search.success = typeof opts.success === undefined ? function () {}
-
-             : opts.success;
-            search.error = typeof opts.error === undefined ? function () {}
-
-             : opts.error;
+            search.success = typeof opts.success === undefined ? function () {} : opts.success;
+            search.error = typeof opts.error === undefined ? function () {} : opts.error;
+            search.cancelled = typeof opts.cancelled === undefined ? function () {} : opts.cancelled;
 
             if (opts.query) {
                 //update: $("#searchEntityInput").val(opts.query);
@@ -3479,5 +3520,6 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
         initialize();
 
     })();
+    
     return cD;
 });

@@ -69,6 +69,12 @@ return function(writer, config) {
                             entry: config.entry
                         });
                     },
+                    cancelled: function() {
+                        if (config.convertedEntity === true) {
+                            $('#'+config.entry.id, w.editor.getBody()).removeAttr('_entity _type class');
+                            w.entitiesManager.removeEntity(config.entry.id);
+                        }
+                    },
                     error: function(errorThrown) {
                     },
                     buttons: [{

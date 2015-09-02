@@ -332,7 +332,10 @@ return function(writer) {
             var newId = tagger.finalizeEntity(type, info);
             tagger.removeStructureTag(id, false);
             if (ref == null) {
-                tagger.editTag(newId);
+                var tag = w.entitiesManager.getEntity(newId);
+                w.editor.currentBookmark = w.editor.selection.getBookmark(1);
+                var type = tag.getType();
+                w.dialogManager.show(type, {type: type, entry: tag, convertedEntity: true});
             }
         }
     };
