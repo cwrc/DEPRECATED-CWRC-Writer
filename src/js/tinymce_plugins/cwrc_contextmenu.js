@@ -86,6 +86,20 @@ tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
         
         // enable/disable items based on current editor state
         var currentTag = editor.writer.tagger.getCurrentTag();
+        
+        if (tinymce.isMac) {
+            // fix for when user right clicks on a tag that doesn't already have focus
+            if (currentTag.struct != null) {
+                if (currentTag.struct[0] != e.target) {
+                    currentTag.struct = $(e.target);
+                }
+            } else if (currentTag.entity != null) {
+                if (currentTag.entity[0] != e.target) {
+                    currentTag.entity = $(e.target);
+                }
+            }
+        }
+        
         var isTagEntity = false;
         if (currentTag.struct != null) {
             var tagName = currentTag.struct.attr('_tag');
