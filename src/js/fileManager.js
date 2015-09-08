@@ -181,6 +181,8 @@ return function(writer) {
             fm.loadTemplate(start);
         } else if (start !== '') {
             fm.loadDocument(start);
+        } else if (w.initialConfig.defaultDocument) {
+            fm.loadInitialDocument('#'+w.initialConfig.defaultDocument);
         }
     };
     

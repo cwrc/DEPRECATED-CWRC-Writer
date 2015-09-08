@@ -43,5 +43,6 @@
             "cssUrl": "css/cwrc_converted.css",
             "schemaMappingsId": "cwrcEntry"
         }
-    }
+    },
+    "defaultDocument": "templates/blank_TEI_document"
 }
