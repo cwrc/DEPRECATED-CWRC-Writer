@@ -230,6 +230,10 @@ return function(config) {
     
     function _onKeyDownHandler(evt) {
         w.editor.lastKeyPress = evt.which; // store the last key press
+        if (w.isReadOnly) {
+            evt.preventDefault();
+            return;
+        }
         // TODO move to keyup
         // redo/undo listener
         if ((evt.which == 89 || evt.which == 90) && evt.ctrlKey) {
