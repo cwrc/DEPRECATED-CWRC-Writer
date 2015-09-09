@@ -1,3 +1,5 @@
+![Picture](http://www.cwrc.ca/wp-content/uploads/2010/12/CWRC_Dec-2-10_smaller.png)
+
 CWRC-Writer
 ===========
 
