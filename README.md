@@ -32,7 +32,9 @@ CWRCWriter is a wysiwyg text editor for in-browser XML editing and stand-off RDF
   * documentation service, to provide help for various functions
 
 The services are configured through a 'delegator' class to which the CWRCWriter makes predefined calls without any knowledge of the underlying implementation, allowing easier substitution of your own document store, etc.  If you have existing server-side services, you'll create a delegator to call out to your services.  You may alternatively create a delegator that implements some or all services in-browser.
-Most of the work in setting up CWRCWriter for your project will be implementing a delegator, and the corresponding services if you don't already have them.
+Most of the work in setting up CWRCWriter for your project will be implementing a delegator, and the corresponding services if you don't already have them.  
+
+![Picture](docs/images/Typical_Setup.png)
 
 **[Back to top](#table-of-contents)**
 
