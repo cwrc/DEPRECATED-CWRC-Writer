@@ -89,7 +89,7 @@ See https://github.com/cwrc/CWRC-Writer/blob/development/src/js/layout.js for an
 
 The bulk of the work in setting up the CWRCWriter is in the delegator.  
 
-Point to UML diagram and the architecture sketch here.
+![Picture](docs/images/Delegator_UML.png)
 
 **[Back to top](#table-of-contents)**
 
