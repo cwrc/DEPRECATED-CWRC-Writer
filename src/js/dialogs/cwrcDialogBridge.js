@@ -71,8 +71,14 @@ return function(writer, config) {
                     },
                     cancelled: function() {
                         if (config.convertedEntity === true) {
-                            $('#'+config.entry.id, w.editor.getBody()).removeAttr('_entity _type class');
+                            var $tag = $('#'+config.entry.id, w.editor.getBody());
+                            $tag.removeAttr('_entity _type class name');
                             w.entitiesManager.removeEntity(config.entry.id);
+                            var attributes = {};
+                            $.each($($tag[0].attributes), function(index, att) {
+                                attributes[att.name] = att.value;
+                            });
+                            w.tagger.editStructureTag($tag, attributes);
                         }
                     },
                     error: function(errorThrown) {
