@@ -9,7 +9,7 @@ The Canadian Writing Research Collaboratory (CWRC) is developing an in-browser t
 ## Table of Contents
 
 1. [Overview](#overview)
-1. [Initialization](#initialization)
+1. [Setup](#setup)
 1. [Configuration](#overview)
 1. [Usage](#usage)
 1. [Customization](#customization)
