@@ -135,26 +135,28 @@ return function(config) {
                 }
             } else {
                 $('[data-mce-bogus]', node.parent()).remove();
-                
-                if (tinymce.isWebKit) {
-                    // if no nextElementSibling then only the contents will be copied in webkit
-                    if (nodeEl.nextElementSibling == null) {
-                        // sibling needs to be visible otherwise it doesn't count
-                        node.after('<span data-mce-bogus="1" style="display: inline;">\uFEFF</span>');
-                    }
-                    node.before('<span data-mce-bogus="1" style="display: inline;">\uFEFF</span>').after('<span data-mce-bogus="1" style="display: inline;">\uFEFF</span>');
-                    rng.setStart(nodeEl.previousSibling.firstChild, 0);
-                    rng.setEnd(nodeEl.nextSibling.firstChild, 0);
-                } else {
+                // no longer seems necessary
+//                if (tinymce.isWebKit) {
+//                    // if no nextElementSibling then only the contents will be copied in webkit
+//                    if (nodeEl.nextElementSibling == null) {
+//                        // sibling needs to be visible otherwise it doesn't count
+//                        node.after('<span data-mce-bogus="1" style="display: inline;">\uFEFF</span>');
+//                    }
+//                    node.before('<span data-mce-bogus="1" style="display: inline;">\uFEFF</span>').after('<span data-mce-bogus="1" style="display: inline;">\uFEFF</span>');
+//                    rng.setStart(nodeEl.previousSibling.firstChild, 0);
+//                    rng.setEnd(nodeEl.nextSibling.firstChild, 0);
+//                } else {
                     rng.selectNode(nodeEl);
-                }
+//                }
             }
+            
             w.editor.selection.setRng(rng);
             
             // scroll node into view
             $(w.editor.getDoc()).scrollTop(node.position().top - $(w.editor.getContentAreaContainer()).height()*0.25);
             
-            w._fireNodeChange(nodeEl);
+            // using setRng triggers nodeChange event so no need to call it manually
+//            w._fireNodeChange(nodeEl);
             
             // need focus to happen after timeout, otherwise it doesn't always work (in FF)
             window.setTimeout(function() {
@@ -391,6 +393,7 @@ return function(config) {
             w.editor.currentNode = w.utilities.getRootTag()[0];
         } else {
             if (el.getAttribute('_tag') == null && el.classList.contains('entityHighlight') == false) {
+                // TODO review is this is still necessary
                 if (el.getAttribute('data-mce-bogus') != null) {
                     // artifact from selectStructureTag
                     var sibling;
@@ -422,6 +425,8 @@ return function(config) {
                     } else {
                         el = el.parentNode;
                     }
+                } else if (el == w.editor.getBody()) {
+                    return;
                 } else {
                     el = el.parentNode;
                 }
