@@ -14,7 +14,9 @@ return function(config) {
     $(document.body).append('<div id="selectionContents" style="display: none;"></div>');
     
     w.event('nodeChanged').subscribe(function() {
-        updateSelection(w.editor);
+        if ($('#selection').is(':visible')) {
+            updateSelection(w.editor);
+        }
     });
     
     /**
