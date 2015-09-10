@@ -43,7 +43,7 @@ Most of the work in setting up CWRCWriter for your project will be implementing 
 
 ### RequireJS
 
-CWRC-Writer uses RequireJS to load its files. The dependencies setup occurs in https://github.com/cwrc/CWRC-Writer/blob/development/src/js/config.js. See https://github.com/cwrc/CWRC-Writer/blob/development/src/editor_dev.htm for a working example.
+CWRC-Writer uses RequireJS to load its files. The dependencies are defined in https://github.com/cwrc/CWRC-Writer/blob/development/src/js/config.js. See https://github.com/cwrc/CWRC-Writer/blob/development/src/editor_dev.htm for a working example.
 
 #### Set RequireJS baseUrl
 
@@ -92,24 +92,20 @@ The bulk of the work in setting up the CWRCWriter is in the delegator.  The foll
 
 ![Picture](docs/images/Delegator_UML.png)
 
-#### getUriForEntity(searchString) 
-  
-  The lookup call to find an entity identifier in the entity database.  An entity can be a person, place, event.
-
-  ##### Returns: 
-
-#### getUriForAnnotation()
-#### getUriForDocument()
-#### getUriForTarget()
-#### getUriForSelector()
-#### getUriForUser()
-#### validate()
-#### getDocumentation()
-#### getTemplates()
-#### loadTemplates()
-#### loadDocument()
-#### saveDocument()
-#### getHelp()
+* `getUriForEntity(searchString)`: The lookup call to find an entity identifier (URI) in the entity database.  An entity can be a person, place, event.
+  * Returns: A URI for the selected entity.
+* `getUriForAnnotation()`
+* `getUriForDocument()`
+* `getUriForTarget()`
+* `getUriForSelector()`
+* `getUriForUser()`
+* `validate()`
+* `getDocumentation()`
+* `getTemplates()`
+* `loadTemplates()`
+* `loadDocument()`
+* `saveDocument()`
+* `getHelp()`
 
 **[Back to top](#table-of-contents)**
 
