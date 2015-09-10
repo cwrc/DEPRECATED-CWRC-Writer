@@ -3,7 +3,7 @@
 CWRC-Writer
 ===========
 
-The Canadian Writing Research Collaboratory (CWRC) is developing an in-browser text markup editor (CWRC-Writer) for use by collaborative scholarly editing projects.
+The Canadian Writing Research Collaboratory (CWRC) is developing an in-browser text markup editor (CWRC-Writer) for use by collaborative scholarly editing projects.  [Project Site](http://www.cwrc.ca/projects/infrastructure-projects/technical-projects/cwrc-writer/)
 
 
 ## Table of Contents
@@ -15,12 +15,13 @@ The Canadian Writing Research Collaboratory (CWRC) is developing an in-browser t
 1. [Customization](#customization)
 1. [Demo](#demo)
 1. [Contributing](#contributing)
+1. [FAQ](#faq)
 1. [License](#license)
 
 
 ## Overview
 
-CWRCWriter is a wysiwyg text editor for in-browser XML editing and stand-off RDF annotation.  The editor is a JQuery customization of the [TinyMCE](http://www.tinymce.com) editor.  CWRCWriter requires several (not provided) supporting services: 
+CWRCWriter is a wysiwyg text editor for in-browser XML editing and stand-off RDF annotation.  The editor is a [JQuery](https://jquery.com) customization of the [TinyMCE](http://www.tinymce.com) editor.  CWRCWriter requires several (not provided) supporting services: 
 
   * document store, to list/retrieve/save/delete/update XML documents
   * annotation store, to list/retrieve/save/delete/update RDF annotations
@@ -87,9 +88,28 @@ See https://github.com/cwrc/CWRC-Writer/blob/development/src/js/layout.js for an
 
 ### Delegate to your services
 
-The bulk of the work in setting up the CWRCWriter is in the delegator.  
+The bulk of the work in setting up the CWRCWriter is in the delegator.  The following UML diagram shows how the default CWRCWriter delegates for the CWRC project.  The methods that must be implemented for a new project are those in the 'delegator' class.
 
 ![Picture](docs/images/Delegator_UML.png)
+
+#### getUriForEntity(searchString) 
+  
+  The lookup call to find an entity identifier in the entity database.  An entity can be a person, place, event.
+
+  ##### Returns: 
+
+#### getUriForAnnotation()
+#### getUriForDocument()
+#### getUriForTarget()
+#### getUriForSelector()
+#### getUriForUser()
+#### validate()
+#### getDocumentation()
+#### getTemplates()
+#### loadTemplates()
+#### loadDocument()
+#### saveDocument()
+#### getHelp()
 
 **[Back to top](#table-of-contents)**
 
@@ -148,6 +168,18 @@ The CWRCWriter menus and layout can be customized.
 ## Contributing
 
 Please contact us, or open an issue.
+
+**[Back to top](#table-of-contents)**
+
+## FAQ
+
+### How do I add a schema?
+
+### How do I add or remove a menu item?
+
+### How do I change the layout of the editor?
+
+
 
 **[Back to top](#table-of-contents)**
 
