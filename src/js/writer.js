@@ -213,6 +213,42 @@ return function(config) {
         }
     }
     
+
+    w.getButtonByName = function(name) {
+        var buttons = w.editor.buttons,
+            toolbarObj = w.editor.theme.panel.find('toolbar *');
+
+        if (buttons[name] === undefined)
+            return false;
+
+        var settings = buttons[name], result = false, length = 0;
+
+        tinymce.each(settings, function(v, k) {
+            length++;
+        });
+
+        tinymce.each(toolbarObj, function(v, k) {
+            if (v.type != 'button' || v.settings === undefined)
+                return;
+
+            var i = 0;
+
+            tinymce.each(v.settings, function(v, k) {
+                if (settings[k] == v)
+                    i++;
+            });
+
+            if (i != length)
+                return;
+
+            result = v;
+
+            return false;
+        });
+
+        return result;
+    }
+    
     w._fireNodeChange = function(nodeEl) {
         // fire the onNodeChange event
         var parents = [];
