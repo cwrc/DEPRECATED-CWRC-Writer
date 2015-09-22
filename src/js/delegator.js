@@ -293,6 +293,32 @@ return function(writer) {
         });
     };
     
+    del.saveAndExit = function(callback) {
+        var theUrl = '';
+        var docText = w.converter.getDocumentContent(true);
+        $.ajax({
+            url : theUrl,
+            type: 'PUT',
+            dataType: 'json',
+            data: docText,
+            success: function(data, status, xhr) {
+                if (callback) {
+                    callback.call(w, true);
+                }
+            },
+            error: function() {
+                w.dialogManager.show('message', {
+                    title: 'Error',
+                    msg: 'An error occurred and the document was not saved.',
+                    type: 'error'
+                });
+                if (callback) {
+                    callback.call(w, false);
+                }
+            }
+        });
+    };
+    
     /**
      * @callback Delegator~saveDocumentCallback
      * @param {Boolean} savedSuccessfully

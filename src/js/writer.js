@@ -840,6 +840,11 @@ return function(config) {
                         w.dialogManager.filemanager.showSaver();
                     }
                 });
+                ed.addButton('saveexitbutton', {title: 'Save and Exit', image: w.cwrcRootUrl+'img/save_exit.png',
+                    onclick: function() {
+                        w.delegator.saveAndExit();
+                    }
+                });
                 ed.addButton('loadbutton', {title: 'Load', image: w.cwrcRootUrl+'img/folder_page.png',
                     onclick: function() {
                         w.dialogManager.filemanager.showLoader();
