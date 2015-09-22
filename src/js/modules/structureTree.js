@@ -492,6 +492,14 @@ return function(config) {
         }
         if (nodeData !== null) {
             nodeData.level = level;
+            // FIXME we really shouldn't have this hardcoded here
+            // manually set the level for CWRC schema to have proper sorting in readOnly mode
+            if (w.schemaManager.schemaId === 'cwrcEntry') {
+                var subtype = node.attr('subtype');
+                if (subtype !== undefined) {
+                    nodeData.level = parseInt(subtype);
+                }
+            }
         }
         
         return nodeData;
