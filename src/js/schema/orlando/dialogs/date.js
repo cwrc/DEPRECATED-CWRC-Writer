@@ -6,6 +6,8 @@ define(['jquery',
     
 return function(id, writer) {
     var w = writer;
+    var today = new Date();
+    var upperLimit = today.getFullYear() + 10;
     
     var html = ''+
     '<div id="'+id+'Dialog" class="annotationDialog">'+
@@ -65,7 +67,7 @@ return function(id, writer) {
         changeYear: true,
         yearRange: '-210:+10',
         minDate: new Date(1800, 0, 1),
-        maxDate: new Date(2020, 11, 31),
+        maxDate: new Date(upperLimit, 11, 31),
         showOn: 'button',
         buttonText: 'Date Picker',
         buttonImage: w.cwrcRootUrl+'img/calendar.png',
@@ -91,7 +93,7 @@ return function(id, writer) {
         changeYear: true,
         yearRange: '-210:+10',
         minDate: new Date(1800, 0, 1),
-        maxDate: new Date(2020, 11, 31),
+        maxDate: new Date(upperLimit, 11, 31),
         showOn: 'button',
         buttonText: 'Date Picker',
         buttonImage:  w.cwrcRootUrl+'img/calendar.png',
@@ -119,6 +121,8 @@ return function(id, writer) {
     };
     
     dialog.$el.on('beforeShow', function(e, config) {
+        dateRange.datepicker('option', 'minDate', new Date(1800, 0, 1));
+        dateRange.datepicker('option', 'maxDate', new Date(upperLimit, 11, 31));
         if (dialog.mode === DialogForm.ADD) {
             var dateValue = '';
             
