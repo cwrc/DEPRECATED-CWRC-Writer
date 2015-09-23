@@ -97,10 +97,24 @@ place: {
         return xml;
     },
     reverseMapping: function(xml) {
-        return Mapper.getDefaultReverseMapping(xml, {
-            cwrcInfo: {id: '@REF'},
-            customValues: {tag: 'fn:node-name(child::*)'}
+        var mapping = Mapper.getDefaultReverseMapping(xml, {
+            cwrcInfo: {id: '@REF'}
         });
+        var typesPriority = ['ADDRESS','PLACENAME','SETTLEMENT','REGION','GEOG','AREA'];
+        var placeTypes = $(xml).find(typesPriority.join(','));
+        var type = '', placeType;
+        prioritize:
+        for (var i = 0; i < typesPriority.length; i++) {
+            type = typesPriority[i];
+            for (var j = 0; j < placeTypes.length; j++) {
+                placeType = placeTypes[j];
+                if (placeType.nodeName === type) {
+                    break prioritize;
+                }
+            }
+        }
+        mapping.customValues = {tag: type};
+        return mapping;
     },
     annotation: function(entity, format) {
         return AnnotationsManager.commonAnnotation(entity, 'geo:SpatialThing', null, format);
