@@ -533,6 +533,7 @@ return function(writer) {
         var rootName = doc.firstChild.nodeName;
         var schemaId;
         var cssFilename;
+        var cssUrl;
         var loadSchemaCss = true; // whether to load schema css
 
         // TODO need a better way of tying this to the schemas config
@@ -577,7 +578,7 @@ return function(writer) {
                 }
             } else if (node.nodeName === 'xml-stylesheet') {
                 var xmlStylesheetData = node.data;
-                var cssUrl = xmlStylesheetData.match(/href="([^"]*)"/)[1];
+                cssUrl = xmlStylesheetData.match(/href="([^"]*)"/)[1];
                 cssFilename = cssUrl.match(/(\w+)(.css)$/);
                 if (cssFilename != null) {
                     cssFilename = 'css/'+cssFilename[1]+'_converted.css';
@@ -586,9 +587,9 @@ return function(writer) {
             }
         }
 
-        if (cssFilename != null) {
+        if (cssUrl !== undefined) {
             loadSchemaCss = false;
-            w.schemaManager.loadSchemaCSS(cssFilename);
+            w.schemaManager.loadSchemaCSS(cssUrl);
         }
 
         if (schemaId === undefined) {
