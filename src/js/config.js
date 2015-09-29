@@ -22,6 +22,13 @@ var require = {
         
         'octokit': 'lib/octokit/octokit',
         
+        'css.parser': 'lib/reworkcss/parser/parser',
+        'css.stringify': 'lib/reworkcss/stringify/stringify',
+        'css.compiler': 'lib/reworkcss/stringify/compiler',
+        'css.compress': 'lib/reworkcss/stringify/compress',
+        'css.identity': 'lib/reworkcss/stringify/identity',
+        'inherits': 'lib/reworkcss/stringify/inherits',
+        
         'schemaManager': 'schema/schemaManager',
         'mapper': 'schema/mapper',
         
@@ -52,7 +59,7 @@ var require = {
             }
         },
         'tinymce-copyevent': ['tinymce'],
-
+        
         'bootstrap': ['jquery', 'jquery-ui'],
         'bootstrap-datepicker': ['bootstrap'],
         'cwrcDialogs': {
