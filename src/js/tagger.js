@@ -92,86 +92,49 @@ return function(writer) {
     };
     
     /**
-     * Get the entity boundary tag that corresponds to the passed tag.
+     * Get the entity boundary tag (and potential inbetween tags) that corresponds to the passed tag.
      * @param {element} tag
+     * @returns {jQuery}
      */
-    tagger.getCorrespondingEntityTag = function(tag) {
+    tagger.getCorrespondingEntityTags = function(tag) {
         tag = $(tag);
-        var corrTag;
-        if (tag.hasClass('start')) {
-            corrTag = tagger.findEntityBoundary('end', tag[0].nextSibling);
-        } else {
-            corrTag = tagger.findEntityBoundary('start', tag[0].previousSibling);
+        if (tag.hasClass('start') && tag.hasClass('end')) {
+            return tag;
         }
-        return corrTag;
-    };
-    
-    /**
-     * Searches for an entity boundary containing the current node.
-     * @param {string} boundaryType Either 'start' or 'end'.
-     * @param {element} currentNode The node that is currently being examined.
-     */
-    tagger.findEntityBoundary = function(boundaryType, currentNode) {
+        var boundaryType;
+        if (tag.hasClass('start')) {
+            boundaryType = 'end';
+        } else {
+            boundaryType = 'start';
+        }
         
-        /**
-         * @param entIds An array of entity ids that are encountered.  Used to prevent false positives.
-         * @param levels An array to track the levels of node depth in order to prevent endless recursion.
-         * @param structIds An object to track the node ids that we've already encountered.
-         */
-        function doFind(boundaryType, currentNode, entIds, levels, structIds) {
-            if (currentNode.id) {
-                if (structIds[currentNode.id]) {
-                    return null;
+        var currentNode = tag[0];
+        var nodeId = currentNode.getAttribute('name');
+        var walker = currentNode.ownerDocument.createTreeWalker(currentNode.ownerDocument, NodeFilter.SHOW_ELEMENT, {
+            acceptNode: function(node) {
+                if (node.getAttribute('name') === nodeId) {
+                    return NodeFilter.FILTER_ACCEPT;
                 } else {
-                    structIds[currentNode.id] = true;
+                    return NodeFilter.FILTER_SKIP;
                 }
             }
-            
-            if (w.editor.dom.hasClass(currentNode, 'entity')) {
-                var nodeId = currentNode.getAttribute('name');
-                if (w.editor.dom.hasClass(currentNode, boundaryType)) {
-                    if (entIds.indexOf(nodeId) == -1) {
-                        return currentNode;
-                    } else if (entIds[0] == nodeId) {
-                        entIds.shift();
-                    }
-                } else {
-                    entIds.push(nodeId);
-                }
-            }
-            
-            if (boundaryType == 'start' && currentNode.lastChild) {
-                levels.push(currentNode);
-                return doFind(boundaryType, currentNode.lastChild, entIds, levels, structIds);
-            } else if (boundaryType == 'end' && currentNode.firstChild) {
-                levels.push(currentNode);
-                return doFind(boundaryType, currentNode.firstChild, entIds, levels, structIds);
-            }
-            
-            if (boundaryType == 'start' && currentNode.previousSibling) {
-                return doFind(boundaryType, currentNode.previousSibling, entIds, levels, structIds);
-            } else if (boundaryType == 'end' && currentNode.nextSibling) {
-                return doFind(boundaryType, currentNode.nextSibling, entIds, levels, structIds);
-            }
-            
-            if (currentNode.parentNode) {
-                if (currentNode.parentNode == levels[levels.length-1]) {
-                    levels.pop();
-                    if (boundaryType == 'start' && currentNode.parentNode.previousSibling) {
-                        return doFind(boundaryType, currentNode.parentNode.previousSibling, entIds, levels, structIds);
-                    } else if (boundaryType == 'end' && currentNode.parentNode.nextSibling) {
-                        return doFind(boundaryType, currentNode.parentNode.nextSibling, entIds, levels, structIds);
-                    } else return null;
-                } else {
-                    return doFind(boundaryType, currentNode.parentNode, entIds, levels, structIds);
-                }
-            }
-            
-            return null;
-        };
+        }, false);
+        walker.currentNode = currentNode;
         
-        var match = doFind(boundaryType, currentNode, [], [currentNode.parentNode], {});
-        return match;
+        var nodes = [];
+        while(walker.currentNode.getAttribute('name') === nodeId) {
+            if (boundaryType === 'start') {
+                walker.previousNode();
+            } else {
+                walker.nextNode();
+            }
+            nodes.push(walker.currentNode);
+            if ($(walker.currentNode).hasClass(boundaryType)) {
+                break;
+            }
+        }
+        
+        return $(nodes);
     };
     
     /**
@@ -220,9 +183,15 @@ return function(writer) {
                         w.entitiesManager.setEntity(newId, newEntity);
                         
                         var newTagStart = $(el);
-                        var newTagEnd = $(tagger.getCorrespondingEntityTag(newTagStart));
+                        var newTags = tagger.getCorrespondingEntityTags(newTagStart);
+                        
                         newTagStart.attr('name', newId);
-                        newTagEnd.attr('name', newId);
+                        if (newTagStart.attr('id') !== undefined) {
+                            newTagStart.attr('id', newId);
+                        }
+                        newTags.each(function(index, tag) {
+                            $(tag).attr('name', newId);
+                        });
                     }
                 });
             }

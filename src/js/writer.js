@@ -1,10 +1,9 @@
 define([
     'jquery',
     'tinymce',
-    'tinymce-copyevent',
     'eventManager','schemaManager','dialogManager','entitiesManager','utilities',
     'tagger','converter','fileManager','annotationsManager','dialogs/settings'
-], function($, tinymce, tinymceCopyEvent,
+], function($, tinymce,
         EventManager, SchemaManager, DialogManager, EntitiesManager, Utilities, Tagger,
         Converter, FileManager, AnnotationsManager, SettingsDialog
 ) {
@@ -428,6 +427,9 @@ return function(config) {
         if (el.nodeType != 1) {
             w.editor.currentNode = w.utilities.getRootTag()[0];
         } else {
+            if (el.getAttribute('id') == 'mcepastebin') {
+                return;
+            }
             if (el.getAttribute('_tag') == null && el.classList.contains('entityHighlight') == false) {
                 // TODO review is this is still necessary
                 if (el.getAttribute('data-mce-bogus') != null) {
@@ -492,12 +494,6 @@ return function(config) {
         }
         
         w.event('contentCopied').publish();
-    };
-    
-    function _onPasteHandler(event) {
-        window.setTimeout(function() {
-            w.event('contentPasted').publish();
-        }, 0);
     };
     
     function _hideContextMenus(evt) {
@@ -661,6 +657,11 @@ return function(config) {
                 
                 $(ev.node).children().each(stripTags);
                 $(ev.node).children().each(replaceTags);
+                
+                window.setTimeout(function() {
+                    // need to fire contentPasted here, after the content is actually within the document
+                    w.event('contentPasted').publish();
+                }, 0);
             },
             
             valid_elements: '*[*]', // allow everything
@@ -741,10 +742,6 @@ return function(config) {
                     ed.addCommand('getParentsForTag', w.utilities.getParentsForTag);
                     ed.addCommand('getDocumentationForTag', w.delegator.getHelp);
                     
-                    // used in conjunction with the paste plugin
-                    // needs to be false in order for paste postprocessing to function properly
-                    ed.pasteAsPlainText = false;
-                    
                     // highlight tracking
                     body.on('mouseup', _onMouseUpHandler).on('keydown',_onKeyDownHandler).on('keyup',_onKeyUpHandler);
                     
@@ -752,8 +749,7 @@ return function(config) {
                 });
                 ed.on('change',_onChangeHandler);
                 ed.on('NodeChange',_onNodeChangeHandler);
-//                ed.onCopy.add(_onCopyHandler);
-//                ed.onPaste.add(_onPasteHandler);
+                ed.on('copy', _onCopyHandler);
                 
                 // add schema file and method
                 ed.addCommand('getSchema', function(){
