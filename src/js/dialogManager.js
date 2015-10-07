@@ -4,11 +4,11 @@ define([
     'cwrcDialogs',
     'dialogs/addSchema','dialogs/fileManager','dialogs/header','dialogs/message','dialogs/triple',
     'dialogs/cwrcPerson','dialogs/cwrcOrg','dialogs/cwrcPlace','dialogs/cwrcTitle','dialogs/cwrcCitation',
-    'dialogs/schemaTags','dialogs/help'
+    'dialogs/schemaTags','dialogs/help','dialogs/copyPaste'
 ], function($, jqueryui, cD,
         AddSchema, FileManager, Header, Message, Triple,
         CwrcPerson, CwrcOrg, CwrcPlace, CwrcTitle, CwrcCitation,
-        SchemaTags, Help
+        SchemaTags, Help, CopyPaste
 ) {
 
 function handleResize(dialogEl) {
@@ -65,6 +65,7 @@ return function(writer) {
     var dialogs = {
         message: new Message(w),
         help: new Help(w),
+        copyPaste: new CopyPaste(w),
         triple: new Triple(w),
         header: new Header(w),
         filemanager: new FileManager(w),
