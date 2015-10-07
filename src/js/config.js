@@ -15,7 +15,6 @@ var require = {
         'jquery.xpath': 'lib/jquery/jquery.xpath',
         
         'tinymce': 'lib/tinymce4/tinymce',
-        'tinymce-copyevent': 'lib/tinymce/copy_event',
         
         'objtree': 'lib/objtree/ObjTree',
         'moment': 'lib/moment/moment.min',
@@ -58,7 +57,6 @@ var require = {
                 return this.tinymce;
             }
         },
-        'tinymce-copyevent': ['tinymce'],
         
         'bootstrap': ['jquery', 'jquery-ui'],
         'bootstrap-datepicker': ['bootstrap'],
