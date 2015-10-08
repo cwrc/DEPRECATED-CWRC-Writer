@@ -731,6 +731,8 @@ return function(config) {
                     ed.addCommand('isSelectionValid', w.utilities.isSelectionValid);
                     ed.addCommand('addEntity', w.tagger.addEntity);
                     ed.addCommand('editTag', w.tagger.editTag);
+                    ed.addCommand('copyTag', w.tagger.copyTag);
+                    ed.addCommand('pasteTag', w.tagger.pasteTag);
                     ed.addCommand('changeTag', w.tagger.changeTag);
                     ed.addCommand('removeTag', w.tagger.removeTag);
                     ed.addCommand('copyEntity', w.tagger.copyEntity);

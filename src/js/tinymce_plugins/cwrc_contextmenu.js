@@ -117,6 +117,9 @@ tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
             if (item.settings.category == 'modifyTag' && currentTag.entity == null && currentTag.struct == null) {
                 item.disabled(true);
             }
+            if (item.settings.category == 'pasteTag' && editor.copiedElement.element == null) {
+                item.disabled(true);
+            }
             if (item.settings.category == 'convertEntity' && isTagEntity === false) {
                 item.disabled(true);
             }
@@ -228,6 +231,20 @@ tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
         category: 'modifyTag',
         onclick : function() {
             editor.execCommand('removeTag');
+        }
+    },{
+        text: 'Copy Tag & Contents',
+        image: editor.writer.cwrcRootUrl+'img/tag_blue_copy.png',
+        category: 'modifyTag',
+        onclick : function() {
+            editor.execCommand('copyTag');
+        }
+    },{
+        text: 'Paste Tag',
+        image: editor.writer.cwrcRootUrl+'img/tag_blue_paste.png',
+        category: 'pasteTag',
+        onclick : function() {
+            editor.execCommand('pasteTag');
         }
     },{
         text: '|'

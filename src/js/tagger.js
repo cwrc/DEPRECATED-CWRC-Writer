@@ -329,6 +329,44 @@ return function(writer) {
         }
     };
     
+    /**
+     * @param {String} id The id of the tag to copy
+     */
+    tagger.copyTag = function(id) {
+        var tag;
+        if (id != null) {
+            tag = $('#'+id, w.editor.getBody())[0];
+        } else if (w.editor.currentNode != null) {
+            tag = w.editor.currentNode;
+        }
+        if (tag != undefined) {
+            var clone = $(tag).clone();
+            w.editor.copiedElement.element = clone.wrapAll('<div />').parent()[0];
+            w.editor.copiedElement.selectionType = 0; // tag & contents copied
+        }
+    };
+    
+    /**
+     * Pastes a previously copied tag
+     * @fires Writer#contentChanged
+     */
+    tagger.pasteTag = function() {
+        var tag = w.editor.copiedElement.element;
+        if (tag != null) {
+            w.editor.selection.moveToBookmark(w.editor.currentBookmark);
+            var sel = w.editor.selection;
+            sel.collapse();
+            var rng = sel.getRng(true);
+            rng.insertNode(tag);
+            
+            tagger.findDuplicateTags();
+            
+            w.editor.isNotDirty = false;
+            w.event('contentChanged').publish(); // don't use contentPasted since we don't want to trigger copyPaste dialog
+        }
+        
+        w.editor.copiedElement = {selectionType: null, element: null};
+    }
     
     /**
      * Add our own undo level, then erase the next one that gets added by tinymce
