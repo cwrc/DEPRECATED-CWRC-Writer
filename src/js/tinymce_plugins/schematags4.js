@@ -236,7 +236,6 @@ tinymce.PluginManager.add('schematags', function(editor) {
             classes: 'cwrc',
             onshow: function(e) {
                 if (e.control.type != 'menuitem') {
-                    editor.currentBookmark = editor.selection.getBookmark(1);
                     var textbox = e.control.items()[0];
                     textbox.value('');
                     var menu = e.control.items()[1];

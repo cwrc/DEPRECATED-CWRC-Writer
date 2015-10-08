@@ -478,6 +478,8 @@ return function(config) {
             }
         }
         
+        w.editor.currentBookmark = w.editor.selection.getBookmark(1);
+        
         w.event('nodeChanged').publish(w.editor.currentNode);
         
         if (w.emptyTagId) {
