@@ -840,6 +840,14 @@ return function(config) {
                             w.tagger.editTag(id);
                         }
                     },
+                    'copy': {
+                        label: 'Copy Tag & Contents',
+                        icon: w.cwrcRootUrl+'img/tag_blue_copy.png',
+                        action: function(obj) {
+                            var id = obj.reference.parent('li').attr('name');
+                            w.tagger.copyTag(id);
+                        }
+                    },
                     'delete': {
                         label: 'Remove Tag Only',
                         icon: w.cwrcRootUrl+'img/tag_blue_delete.png',
