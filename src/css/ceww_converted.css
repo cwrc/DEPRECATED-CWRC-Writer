@@ -1,0 +1,191 @@
+*{
+    color:black;
+    font-family:sans-serif;
+    background-color:#FFFAF0
+}
+
+*[_tag="RESEARCHNOTE"] {
+    background-color:#FBEFEF;
+    color:#663366;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:smaller;
+    display:block;
+    margin:0%;
+    padding:0%
+}
+
+
+#comment{
+    display:none
+
+}
+
+*[_tag="CWRCHEADER"],
+*[_tag="FILEDESC"],
+*[_tag="DOCTITLE"],
+*[_tag="DOCAUTHOR"]
+{
+    display:list-item
+}
+
+*[_tag="FILEDESC"]{
+    content:url(http://cwrc.ca/templates/images/CWRC_logo.png);
+    background-color:#B8B891;
+    color:#555;
+    font-weight:normal;
+}
+*[_tag="DOCTITLE"]{
+    font-variant:small-caps;
+    font-size:x-large;
+    font-weight:bold;
+}
+*[_tag="DOCAUTHOR"]{
+    font-weight:bold
+}
+*[_tag="PUBLICATIONSTMT"],
+*[_tag="SOURCEDESC"],
+*[_tag="REVISIONDESC"],
+*[_tag="RESPONSIBILITY"]{
+    display:none
+}
+
+*[_tag="ENTRY"]{
+    display:block;
+    margin-left:3%
+}
+
+*[_tag="P"]{padding-bottom:1%}
+
+*[_tag="HEADING"][SUBTYPE = "1"]{
+    color:black;
+    font-size:xx-large;
+    font-weight:bold
+}
+
+*[_tag="BIRTH"]:before{
+    content:"Birth: ";
+    font-weight:bold
+}
+
+*[_tag="BIRTH"],
+*[_tag="DEATH"],
+*[_tag="PERSONNAME"]{
+    display:block
+}
+
+*[_tag="PERSONNAME"] *[_tag="DATASTRUCT"] *[_tag="DATAITEM"]{display:block}
+
+*[_tag="BIRTHNAME"] *[_tag="GIVEN"]{padding-right:1em}
+
+*[_tag="DEATH"]:before{
+    content:"Death: ";
+    font-weight:bold
+}
+
+*[_tag="HEADING"][SUBTYPE = "5"]{
+    display:inline;
+    font-weight:bold
+}
+
+*[_tag="HEADING"][SUBTYPE = "2"]{
+    display:block;
+    font-size:x-large;
+    font-weight:bold;
+    padding-top:1em;
+    padding-bottom:1em
+}
+
+*[_tag="FRONT"] *[_tag="P"]{
+    display:block;
+    font-style:italic;
+}
+*[_tag="AUTHORSUMMARY"] *[_tag="P"]{display:block}
+
+*[_tag="FRONT"] *[_tag="P"] + *[_tag="P"]{
+    display:block;
+    text-align:right;
+    padding-right:2em;
+    font-style:normal
+}
+
+*[_tag="HEADING"][SUBTYPE = "3"]{
+    display:block;
+    font-size:large;
+    font-weight:bold;
+    padding-top:0.5em;
+    padding-bottom:0.5em
+}
+
+*[_tag="HEADING"][SUBTYPE = "2"] + *[_tag="HEADING"][SUBTYPE = "3"]{padding-top:0em}
+
+*[_tag="HEADING"][SUBTYPE = "4"]{
+    font-weight:bold;
+    display:block;
+    font-size:medium;
+}
+
+*[_tag="LISTBIBCIT"] *[_tag="BIBCIT"]{
+    display:block;
+    padding-left:2%;
+    padding-bottom:0.5em
+}
+
+*[_tag="TITLE"][LEVEL = "MONOGRAPHIC"]{font-style:italic}
+*[_tag="TITLE"][LEVEL = "ANALYTIC"]:before{content:"&quot;"}
+*[_tag="TITLE"][LEVEL = "ANALYTIC"]:after{content:"&quot;"}
+
+*[_tag="FAMILYMEMBER"]{
+    display:block
+}
+
+*[_tag="FAMILYMEMBER"] *[_tag="P"]{
+    display:block
+}
+
+*[_tag="FAMILYMEMBER"][RELATION = "FATHER"] *[_tag="HEADING"]:before{
+    content:"Father: ";
+    font-weight:bold
+}
+
+*[_tag="FAMILYMEMBER"][RELATION = "MOTHER"] *[_tag="HEADING"]:before{
+    content:"Mother: ";
+    font-weight:bold
+}
+
+*[_tag="FAMILYMEMBER"][RELATION = "FATHER"],
+*[_tag="FAMILYMEMBER"][RELATION = "MOTHER"]{padding-bottom:1em}
+
+*[_tag="FAMILYMEMBER"][RELATION = "FATHER"] *[_tag="CHRONSTRUCT"] *[_tag="DATERANGE"],
+*[_tag="FAMILYMEMBER"][RELATION = "MOTHER"] *[_tag="CHRONSTRUCT"] *[_tag="DATERANGE"]{
+    display:block;
+    font-weight:bold;
+    font-size:medium;
+    color:green
+}
+
+*[_tag="FAMILYMEMBER"][RELATION = "FATHER"] *[_tag="CHRONSTRUCT"] *[_tag="CHRONPROSE"],
+*[_tag="FAMILYMEMBER"][RELATION = "MOTHER"] *[_tag="CHRONSTRUCT"] *[_tag="CHRONPROSE"]{
+    display:block;
+}
+
+*[_tag="EDUCATION"] *[_tag="CHRONSTRUCT"],
+*[_tag="RECEPTION"] *[_tag="CHRONSTRUCT"],
+*[_tag="OCCUPATION"] *[_tag="CHRONSTRUCT"],
+*[_tag="RESIDENCEANDMOBILITY"] *[_tag="CHRONSTRUCT"]{
+    display:block
+}
+
+*[_tag="EDUCATION"] *[_tag="CHRONSTRUCT"] *[_tag="DATERANGE"]{
+    display:inline-block;
+    padding-right:5em
+}
+
+*[_tag="EDUCATION"] *[_tag="CHRONSTRUCT"] *[_tag="CHRONSPROSE"]{
+    display:inline-block
+}
+*[_tag="AUTHORSUMMARY"]:nth-of-type(1){display:block; padding:1em; padding-left:15%; padding-right:15%;text-align:center}
+
+
+
+
+

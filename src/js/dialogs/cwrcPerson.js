@@ -1,83 +1,22 @@
-define(['jquery', 'jquery-ui', 'cwrcDialogs'], function($, jqueryUi, cwrcDialogs) {
-
-// a bridge between the CWRC-Writer and the cwrcDialogs
+define(['jquery', 'jquery-ui', 'dialogs/cwrcDialogBridge', 'cwrcDialogs'], function($, jqueryUi, cwrcDialogBridge, cD) {
 return function(writer) {
-	var w = writer;
-	
-	cD.setPersonSchema('js/cwrcDialogs/schemas/entities.rng');
-	
-	function createNewPerson(data) {
-		cD.popCreatePerson({
-			success: function(result) {
-				if (result.data == null) {
-					var error = result.error || 'There was an error creating the entry.';
-					w.dialogManager.show('message', {
-						title: 'Error',
-						msg: error,
-						type: 'error'
-					});
-				} else {
-					result = {
-						id: 'http://cwrc-dev-01.srv.ualberta.ca/islandora/object/'+result.response.pid
-					};
-					w.dialogManager.show('tagPerson', {
-						cwrcInfo: result
-					});
-				}
-			},
-			error: function(errorThrown) {
-			},
-		});
-	}
-	
-	return {
-		show: function(config) {
-			if (config.entry) {
-				w.dialogManager.show('tagPerson', {
-					entry: config.entry
-				});
-			} else {
-				var query = w.editor.currentBookmark.rng.toString();
-				$('#searchEntityInput').val(query);
-				
-				cD.popSearchPerson({
-					success: function(result) {
-						if (result.id == null) {
-							result = {
-								id: w.utilities.createGuid(),
-								name: ['Test Name'],
-								repository: 'cwrc'
-							};
-						}
-						
-						if (result.repository === 'viaf') {
-							result.id = 'http://viaf.org/viaf/'+result.id;
-						} else {
-							result.id = 'http://cwrc-dev-01.srv.ualberta.ca/islandora/object/'+result.id;
-						}
-						
-						if ($.isArray(result.name)) {
-							result.name = result.name[0];
-						}
-						
-						delete result.data;
-						
-						w.dialogManager.show('tagPerson', {
-							cwrcInfo: result
-						});
-					},
-					error: function(errorThrown) {
-					},
-					buttons: [{
-						label : "Create New Person",
-						action : createNewPerson
-					}]
-				});
-			}
-		},
-		hide: function() {
-		}
-	};
-};
+    var w = writer;
 
+    var schema = null;
+    if (w.initialConfig.cwrcDialogs != null && w.initialConfig.cwrcDialogs.schemas != null) {
+        schema = w.initialConfig.cwrcDialogs.schemas.person;
+    }
+    if (schema == null) {
+        schema = 'js/cwrcDialogs/schemas/entities.rng';
+    }
+    cD.setPersonSchema(schema);
+
+    var bridge = new cwrcDialogBridge(w, {
+        label: 'Person',
+        localDialog: 'person',
+        cwrcType: 'person'
+    });
+
+    return bridge;
+};
 });

@@ -5,32 +5,64 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 		<title>CWRC-Writer</title>
 		
-		<script type="text/javascript" data-main="js/config.js" src="js/lib/require/require.js"></script>
+		<script type="text/javascript" src="js/config.js"></script>
+        <script type="text/javascript" src="js/lib/require/require.js"></script>
 
 		<link type="text/css" rel="stylesheet" href="css/style.css" />
 		<link type="text/css" rel="stylesheet" href="css/islandora_style.css" />
 		
-		<link type="text/css" rel="stylesheet" href="smoothness/jquery-ui-1.10.4.custom.css" />
+		<link type="text/css" rel="stylesheet" href="css/cwrcstyle/jquery-ui.css" />
 		<link type="text/css" rel="stylesheet" href="css/layout-default-latest.css" />
 		<link type="text/css" rel="stylesheet" href="js/lib/snippet/jquery.snippet.css" />
 		
 		<link type="text/css" rel="stylesheet" href="js/lib/bootstrap/bootstrap.css" />
 		<link type="text/css" rel="stylesheet" href="js/cwrcDialogs/css/datepicker.css" />
+		<link type="text/css" rel="stylesheet" href="js/lib/fonts/font-awesome/css/font-awesome.min.css" />
 		<link type="text/css" rel="stylesheet" href="js/cwrcDialogs/css/cD.css" />
 
 		<script type="text/javascript">
-			function cwrcWriterInit(Writer, Delegator) {
+			require.config({baseUrl: 'js'});
+	        
+	        // and the 'jquery-private' module, in the
+	        // jquery-private.js file:
+	        define('jquery-private', ['jquery'], function ($) {
+	            return $.noConflict(true);
+	        });
+	
+	        require(['jquery', 'knockout'], function($, knockout) {
+	            window.ko = knockout; // requirejs shim isn't working for knockout
+	            
+	            require(['writer',
+	                     'delegator',
+	                     'jquery.layout',
+	                     'jquery.tablayout'
+	            ], function(Writer, Delegator) {
+	                $(function() {
+	                    cwrcWriterInit.call(window, $, Writer, Delegator);
+	                });
+	            });
+	        });
+	        
+			function cwrcWriterInit($, Writer, Delegator) {
 				cwrc_params = {};
 				
 				writer = null;
 				
 				function doResize() {
-					var uiHeight = $('#'+writer.editor.id+'_tbl tr.mceFirst').outerHeight() + 2;
-					$('#'+writer.editor.id+'_ifr').height($(window).height() - uiHeight);
+				    var uiHeight = 4;
+                    var toolbar = $('.mce-toolbar-grp',writer.editor.getContainer());
+                    if (toolbar.is(':visible')) {
+                        uiHeight += toolbar.outerHeight();
+                    }
+                    $('iframe',writer.editor.getContainer()).height($(window).height() - uiHeight);
 				}
 				
-				function doInit() {
+				function doInit(config) {
+					config.delegator = Delegator;
+					config.mode = 'xml';
+					config.buttons1 = 'schematags,editTag,removeTag,|,addperson,addplace,adddate,addorg,addtitle,addcorrection,addlink';
 					writer = new Writer(config);
+					writer.init('editor');
 					writer.event('writerInitialized').subscribe(doResize);
 					$(window).on('resize', doResize);
 					
@@ -80,73 +112,28 @@
 					}, 250);
 				}
 				
-				var baseUrl = window.location.protocol+'//'+window.location.host;
-				var config = {
-					id: 'editor',
-					mode: 'xml',
-					delegator: Delegator,
-					cwrcRootUrl: baseUrl+'/editor/dev/',
-					buttons1: 'schematags,editTag,removeTag,|,addperson,addplace,adddate,addorg,addtitle,addcorrection,addlink',
-					schemas: {
-						tei: {
-							name: 'CWRC Basic TEI Schema',
-							url: 'http://cwrc.ca/schemas/cwrc_tei_lite.rng',
-							cssUrl: baseUrl+'/editor/dev/css/tei_converted.css'
-						},
-						events: {
-							name: 'Events Schema',
-							url: 'http://cwrc.ca/schemas/orlando_events.rng',
-							cssUrl: baseUrl+'/editor/dev/css/orlando_converted.css'
-						},
-						biography: {
-							name: 'Biography Schema',
-							url: 'http://cwrc.ca/schemas/orlando_biography.rng',
-							cssUrl: baseUrl+'/editor/dev/css/orlando_converted.css'
-						},
-						writing: {
-							name: 'Writing Schema',
-							url: 'http://cwrc.ca/schemas/orlando_writing.rng',
-							cssUrl: baseUrl+'/editor/dev/css/orlando_converted.css'
+				(function() {
+					var configXHR = $.ajax({url: 'js/writerConfig.js', dataType: 'json'});
+					var projectXHR = $.ajax({url: 'http://apps.testing.cwrc.ca/editor/documents/info/projectname'});
+					$.when(
+						configXHR,
+						projectXHR
+					).then(function(config, project) {
+						config = config[0];
+						project = project[0];
+						config.project = project;
+						config.cwrcRootUrl = window.location.protocol+'//'+window.location.host+window.location.pathname.replace(window.location.pathname.split('/').pop(),'');
+						doInit(config);
+					},function(xhr) {
+						if (configXHR.state() === 'resolved') {
+							var config = $.parseJSON(configXHR.responseText);
+							config.cwrcRootUrl = window.location.protocol+'//'+window.location.host+window.location.pathname.replace(window.location.pathname.split('/').pop(),'');
+							doInit(config);
+						} else {
+							alert('Error loading writerConfig.js');
 						}
-					}
-				};
-				
-				$.ajax({
-					url: 'http://apps.testing.cwrc.ca/editor/documents/info/projectname',
-					timeout: 3000,
-					success: function(data, status, xhr) {
-						config.project = data;
-						
-						doInit();
-					},
-					error: function() {
-						config.cwrcRootUrl = baseUrl+'/cwrc/src/';
-						config.schemas = {
-							tei: {
-								name: 'CWRC Basic TEI Schema',
-								url: 'http://cwrc.ca/schemas/cwrc_tei_lite.rng',
-								cssUrl: baseUrl+'/cwrc/src/css/tei_converted.css'
-							},
-							events: {
-								name: 'Events Schema',
-								url: 'http://cwrc.ca/schemas/orlando_events.rng',
-								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
-							},
-							biography: {
-								name: 'Biography Schema',
-								url: 'http://cwrc.ca/schemas/orlando_biography.rng',
-								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
-							},
-							writing: {
-								name: 'Writing Schema',
-								url: 'http://cwrc.ca/schemas/orlando_writing.rng',
-								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
-							}
-						};
-						
-						doInit();
-					}
-				});
+					});
+				}());
 			}
 		</script>
 	</head>

@@ -1,0 +1,283 @@
+*[_tag="EVENTS"] {
+    font-family : "Times New Roman", Times, serif;
+}
+*[_tag="ORLANDOHEADER"] {
+    display : block;
+    font-family : Verdana, Geneva, sans-serif;
+    font-size : small;
+}
+*[_tag="FILEDESC"] {
+    content : url(http://cwrc.ca/templates/images/CWRC_logo.png);
+    background-color : #BBB;
+    color : #555;
+    font-weight : bold;
+}
+*[_tag="DOCTITLE"] {
+    font-variant : small-caps;
+    font-size : x-large;
+    font-weight : normal;
+}
+*[_tag="ENTRY"],
+*[_tag="FILEDESC"],
+*[_tag="DOCAUTHOR"],
+*[_tag="DOCEDITOR"],
+*[_tag="DOCEXTENT"],
+*[_tag="PUBLICATIONSTMT"],
+*[_tag="TITLESTMT"],
+*[_tag="PUBPLACE"],
+*[_tag="DATAITEM"],
+*[_tag="SOURCE"] {
+    display: list-item;
+}
+*[_tag="DATAITEM"] {
+    font-style: italic;
+    font-weight: bold;
+}
+*[_tag="BIRTHNAME"]:before {
+    content: "Birth Name:";
+    font-weight: normal;
+    font-style: normal;
+}
+*[_tag="NICKNAME"]:before {
+    content: "Nickname:";
+    font-weight: normal;
+    font-style: normal;
+}
+*[_tag="MARRIED"]:before {
+    content: "Married Name:";
+    font-weight: normal;
+    font-style: normal;
+}
+*[_tag="INDEXED"]:before {
+    content: "Indexed:";
+    font-weight: normal;
+    font-style: normal;
+}
+*[_tag="SELFCONSTRUCTED"]:before {
+    content: "Self Constructed:";
+    font-weight: normal;
+    font-style: normal;
+}
+*[_tag="PSEUDONYM"]:before {
+    content: "Pseudonym:";
+    font-weight: normal;
+    font-style: normal;
+}
+*[_tag="RELIGIOUSNAME"]:before {
+    content: "Religious Name:";
+    font-weight: normal;
+    font-style: normal;
+}
+*[_tag="ROYAL"]:before {
+    content: "Royal Name:";
+    font-weight: normal;
+    font-style: normal;
+}
+*[_tag="STYLED"]:before {
+    content: "Styled:";
+    font-weight: normal;
+    font-style: normal;
+}
+*[_tag="TITLED"]:before {
+    content: "Titled:";
+    font-weight: normal;
+    font-style: normal;
+}
+*[_tag="RESPONSIBILITY"] {
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: small;
+    background-color: #F0EDFC;
+    display: list-item;
+}
+*[_tag="STANDARD"] {
+    font-weight: bold;
+}
+*[_tag="EMPH"] {
+    font-style : italic;
+}
+*[_tag="FOREIGN"] {
+    font-style : italic;
+}
+*[_tag="TITLE"][TITLETYPE = "MONOGRAPHIC"],
+*[_tag="TITLE"][TITLETYPE = "JOURNAL"] {
+    font-style : italic;
+    font-weight : bold;
+    color : #336699;
+}
+*[_tag="TITLE[TITLETYPE = "SERIES"] {
+    font-style : normal;
+    font-weight : bold;
+    color : #336699;
+}
+*[_tag="TITLE"][TITLETYPE = "ANALYTIC"],
+*[_tag="TITLE"][TITLETYPE = "UNPUBLISHED"] {
+    font-style : normal;
+    font-weight : bold;
+    color : #336699;
+}
+*[_tag="TITLE"][TITLETYPE = "ANALYTIC"]:before,
+*[_tag="TITLE"][TITLETYPE = "UNPUBLISHED"]:before {
+    content : open-quote;
+}
+*[_tag="TITLE"][TITLETYPE = "ANALYTIC"]:after,
+*[_tag="TITLE"][TITLETYPE = "UNPUBLISHED"]:after {
+    content : close-quote;
+}
+*[_tag="ADDRLINE"] {
+    display : list-item;
+}
+*[_tag="IDNO"] {
+    display : list-item;
+}
+*[_tag="AVAILABILITY"] {
+    display : inline;
+}
+*[_tag="P"] {
+    display : block;
+}
+*[_tag="RESEARCHNOTE"] {
+    background-color : #FBEFEF;
+    color : #663366;
+    font-family : Arial, Helvetica, sans-serif;
+    font-size : smaller;
+    display : list-item;
+}
+*[_tag="DIV0"] *[_tag="HEADING"] {
+    display : list-item;
+    font-weight : bold;
+    font-size : x-large;
+    color : #039;
+}
+*[_tag="DIV1"] *[_tag="HEADING"] {
+    display : list-item;
+    font-weight : bold;
+    font-size : large;
+    color : #039;
+}
+*[_tag="CHRONSTRUCT"] {
+    display : list-item;
+}
+*[_tag="CHRONSTRUCT"] *[_tag="DATE"] {
+    font-weight : bold;
+}
+*[_tag="CHRONSTRUCT"][CHRONCOLUMN = "BRITISHWOMENWRITERS"] {
+    content : url(http://cwrc.ca/templates/images/pen1.gif);
+}
+/*
+  CHRONSTRUCT[CHRONCOLUMN1="BRITISHWOMENWRITERS1"]{
+  content:url(http://cwrc.ca/templates/images/pen1.gif);
+  }
+  CHRONSTRUCT[CHRONCOLUMN2="BRITISHWOMENWRITERS2"]{
+  content:url(http://cwrc.ca/templates/images/pen1.gif);
+  }
+  CHRONSTRUCT[CHRONCOLUMN3="BRITISHWOMENWRITERS3"]{
+  content:url(http://cwrc.ca/templates/images/pen1.gif);
+  }
+ */
+*[_tag="CHRONSTRUCT"][CHRONCOLUMN = "NATIONALINTERNATIONAL"] {
+    content : url(http://cwrc.ca/templates/images/earth1.gif);
+}
+/*
+  CHRONSTRUCT[CHRONCOLUMN1="NATIONALINTERNATIONAL1"]{
+  content:url(http://cwrc.ca/templates/images/earth1.gif);
+  }
+  CHRONSTRUCT[CHRONCOLUMN2="NATIONALINTERNATIONAL2"]{
+  content:url(http://cwrc.ca/templates/images/earth1.gif);
+  }
+  CHRONSTRUCT[CHRONCOLUMN3="NATIONALINTERNATIONAL3"]{
+  content:url(http://cwrc.ca/templates/images/earth1.gif);
+  }
+ */
+*[_tag="CHRONSTRUCT"][CHRONCOLUMN = "SOCIALCLIMATE"] {
+    content : url(http://cwrc.ca/templates/images/people1.gif);
+}
+/*
+  CHRONSTRUCT[CHRONCOLUMN1="SOCIALCLIMATE1"]{
+  content:url(http://cwrc.ca/templates/images/people1.gif);
+  }
+  CHRONSTRUCT[CHRONCOLUMN2="SOCIALCLIMATE2"]{
+  content:url(http://cwrc.ca/templates/images/people1.gif);
+  }
+  CHRONSTRUCT[CHRONCOLUMN3="SOCIALCLIMATE3"]{
+  content:url(http://cwrc.ca/templates/images/people1.gif);
+  }
+ */
+*[_tag="CHRONSTRUCT"][CHRONCOLUMN = "WRITINGCLIMATE"] {
+    content : url(http://cwrc.ca/templates/images/book1.gif);
+}
+/*
+  CHRONSTRUCT[CHRONCOLUMN1="WRITINGCLIMATE1"]{
+  content:url(http://cwrc.ca/templates/images/book1.gif);
+  }
+  CHRONSTRUCT[CHRONCOLUMN2="WRITINGCLIMATE2"]{
+  content:url(http://cwrc.ca/templates/images/book1.gif);
+  }
+  CHRONSTRUCT[CHRONCOLUMN3="WRITINGCLIMATE3"]{
+  content:url(http://cwrc.ca/templates/images/book1.gif);
+  }
+ */
+*[_tag="SHORTPROSE"] {
+    padding-left : 4em;
+}
+*[_tag="BIBCIT"] {
+    content : url(http://cwrc.ca/templates/images/bibcit.gif);
+}
+*[_tag="BIBCIT"]:before {
+    content : "(";
+}
+*[_tag="BIBCIT"]:after {
+    content : ")";
+}
+*[_tag="BIBCITS"] {
+    background-color : #FFC;
+}
+*[_tag="SCHOLARNOTE"] *[_tag="P"] {
+    content : url(http://cwrc.ca/templates/images/note.gif);
+    background-color : #E0E0F8;
+}
+*[_tag="NAME"] {
+    font-weight : bold;
+    color : #336699;
+}
+*[_tag="ORGNAME"] {
+    font-weight : bold;
+    color : #336699;
+}
+*[_tag="SETTLEMENT"] {
+    font-weight : bold;
+    color : #336699;
+}
+*[_tag="REGION"] {
+    font-weight : bold;
+    color : #336699;
+}
+*[_tag="GEOG"] {
+    font-weight : bold;
+    color : #336699;
+}
+*[_tag="AREA"] {
+    font-weight : bold;
+    color : #336699;
+}
+*[_tag="TOPIC"] {
+    font-weight : bold;
+    color : #336699;
+}
+*[_tag="QUOTE"]:before {
+    content : open-quote;
+}
+*[_tag="QUOTE"]:after {
+    content : close-quote;
+}
+*[_tag="QUOTE"][DIRECT = "N"]:before {
+    content : "'";
+}
+*[_tag="QUOTE"][DIRECT = "N"]:after {
+    content : "'";
+}
+*[_tag="SOCALLED"]:before {
+    content : "'";
+}
+*[_tag="SOCALLED"]:after {
+    content : "'";
+}

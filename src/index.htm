@@ -3,8 +3,12 @@
 	<head>
 		<title>CWRC-Writer</title>
 		<link type="text/css" rel="stylesheet" href="css/style.css" />
-		<link type="text/css" rel="stylesheet" href="smoothness/jquery-ui-1.10.4.custom.css" />
+		<link type="text/css" rel="stylesheet" href="css/cwrcstyle/jquery-ui.css" />
 		<style type="text/css">
+		    html, body {
+		       height: auto !important;
+		       overflow: auto !important;
+		    }
 			h1 {
 				font-size: 38px;
 				text-align: center;
@@ -21,6 +25,7 @@
 				width: 640px;
 				margin: 50px auto 0;
 				font-size: 12px;
+				font-family: Lato, Arial, sans-serif;
 			}
 			#buttonsParent {
 				text-align: center;
@@ -40,7 +45,7 @@
 			#buttonsParent button .ui-button-text {
 				font-size: 14px !important;
 			}
-			#orlandoParent {
+			.columnSubParent {
 				clear: both;
 				float: left;
 				margin-top: 10px;
@@ -81,26 +86,36 @@
 				<div class="column" style="width: 640px;">
 					<button data-url="load">Load an Existing Document</button>
 				</div>
-				<div class="column">
-					<button data-url="template_letter">Create a Letter</button>
-					<button data-url="template_poem">Create a Poem</button>
-					<button data-url="template_prose">Create Prose</button>
-					<!-- button data-url="template_event">Create an Event</button -->
-				</div>
-				<div class="column">
-					<button data-url="sample_letter">See a Sample Letter</button>
-					<button data-url="sample_poem">See a Sample Poem</button>
-				</div>
-				<!-- div id="orlandoParent">
+				<div class="columnSubParent">
 					<div class="column">
-						<button data-url="template_biography">Create an Orlando Biography</button>
-						<button data-url="template_writing">Create Orlando Writing</button>
+						<button data-url="templates/letter">Create a Letter</button>
+						<button data-url="templates/poem">Create a Poem</button>
+						<button data-url="templates/prose">Create Prose</button>
+						<!-- button data-url="template_event">Create an Event</button -->
 					</div>
 					<div class="column">
-						<button data-url="sample_biography">See a Sample Orlando Biography</button>
-						<button data-url="sample_writing">See Sample Orlando Writing</button>
+						<button data-url="templates/sample_letter">See a Sample Letter</button>
+						<button data-url="templates/sample_poem">See a Sample Poem</button>
 					</div>
-				</div -->
+				</div>
+				<div class="columnSubParent">
+					<div class="column">
+						<button data-url="templates/biography">Create an Orlando Biography</button>
+						<button data-url="templates/writing">Create Orlando Writing</button>
+					</div>
+					<div class="column">
+						<button data-url="templates/sample_biography">See a Sample Orlando Biography</button>
+						<button data-url="templates/sample_writing">See Sample Orlando Writing</button>
+					</div>
+				</div>
+				<div class="columnSubParent">
+				    <div class="column">
+				        <button data-url="templates/ceww_new_entry_template">Create a CEWW Author Entry</button>
+				    </div>
+				    <div class="column">
+				        <button data-url="templates/Sample_Canadian_Women_Playwrights_entry">See a Sample Canadian Women Playwrights Entry</button>
+				    </div>
+				</div>
 				<div style="clear: both;"></div>
 			</div>
 		</div>
