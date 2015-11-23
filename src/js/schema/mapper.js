@@ -3,7 +3,7 @@ define(['jquery', 'entity', 'jquery.xpath'], function($, Entity) {
 
 function Mapper(config) {
     this.w = config.writer;
-    
+
     this.mappings = {};
 }
 
@@ -28,14 +28,14 @@ Mapper.getAttributeString = function(attObj) {
 Mapper.getRangeString = function(entity) {
     var rangeString = '';
     var range = entity.getRange();
-    
+
     var annoId = range.annotationId || entity.getId();
     rangeString += ' annotationId="'+annoId+'"';
-    
+
     if (range.offsetId !== undefined) {
         rangeString += ' offsetId="'+range.offsetId+'"';
     }
-    
+
     return rangeString;
 };
 
@@ -84,7 +84,7 @@ Mapper.getDefaultMapping = function(entity) {
 
 Mapper.getDefaultReverseMapping = function(xml, customMappings, nsPrefix) {
     var obj = {};
-    
+
     if (customMappings !== undefined) {
         for (var key in customMappings) {
             obj[key] = {};
@@ -128,7 +128,7 @@ Mapper.getXpathResult = function(xmlContext, xpath, nsPrefix) {
     var nsResolver = function(prefix) {
         if (prefix == nsPrefix) return nsUri;
     };
-    
+
     var result = $(xmlContext).xpath(xpath, nsResolver)[0];
     return result;
 };
@@ -149,25 +149,25 @@ Mapper.xmlToString = function(xmlData) {
 
 Mapper.prototype = {
     constructor: Mapper,
-    
+
     /**
      * Loads the mappings for the specified schema.
-     * @param schemaId {String} The schema ID.
+     * @param schemaMappingId {String} The schema mapping ID.
      * @returns {Deferred} Deferred object that resolves when the mappings are loaded.
      */
-    loadMappings: function(schemaId) {
+    loadMappings: function(schemaMappingId) {
         var dfd = $.Deferred();
-        require(['schema/'+schemaId+'/mappings'], $.proxy(function(mappings) {
+        require(['schema/' + schemaMappingId + '/mappings'], $.proxy(function(mappings) {
             this.mappings = mappings;
             dfd.resolve();
         }, this));
         return dfd;
     },
-    
+
     getMappings: function() {
         return this.mappings;
     },
-    
+
     getMapping: function(entity) {
         var mapping = this.mappings.entities[entity.getType()].mapping;
         if (mapping === undefined) {
@@ -179,8 +179,8 @@ Mapper.prototype = {
         } else {
             return mappedString.split(Mapper.TEXT_SELECTION);
         }
-    }, 
-    
+    },
+
     /**
      * Returns the mapping of xml to an entity object.
      * @param xml {XML} The xml.
@@ -195,7 +195,7 @@ Mapper.prototype = {
         }
         return {};
     },
-    
+
     /**
      * Checks if the tag is for an entity.
      * @param {Element|String} el The tag to check.
@@ -229,7 +229,7 @@ Mapper.prototype = {
         }
         return resultType;
     },
-    
+
     /**
      * Checks if the particular entity type is "a note or note-like".
      * @param {String} type The entity type
@@ -243,7 +243,7 @@ Mapper.prototype = {
             return isNote;
         }
     },
-    
+
     /**
      * Gets the content of a note/note-like entity.
      * @param {Entity} entity The entity
@@ -259,7 +259,7 @@ Mapper.prototype = {
             return '';
         }
     },
-    
+
     /**
      * Returns the parent tag for entity when converted to a particular schema.
      * @param type The entity type.
@@ -275,7 +275,7 @@ Mapper.prototype = {
         }
         return tag;
     },
-    
+
     /**
      * Returns the text tag (tag containing user-highlighted text) for entity when converted to a particular schema.
      * @param type The entity type.
@@ -288,7 +288,7 @@ Mapper.prototype = {
         }
         return tag;
     },
-    
+
     /**
      * Returns the name of the header tag for the current schema.
      * @returns {String}
@@ -296,7 +296,7 @@ Mapper.prototype = {
     getHeaderTag: function() {
         return this.mappings.header;
     },
-    
+
     /**
      * Returns the name for the ID attribute for the current schema.
      * @returns {String}
@@ -304,7 +304,7 @@ Mapper.prototype = {
     getIdAttributeName: function() {
         return this.mappings.id;
     },
-    
+
     /**
      * Returns the block level elements for the current schema.
      * @returns {Array}

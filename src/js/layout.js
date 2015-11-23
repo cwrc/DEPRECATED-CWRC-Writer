@@ -7,23 +7,12 @@ function setupLayoutAndModules(w, EntitiesList, Relations, Selection, StructureT
             resizable: true,
             slidable: false
         },
-    //            east: {
-    //                onresize: function() {
-    //                    // TODO: Move this out of the editor somehow.
-    //                    // Accessing 'writer.layout.east.onresize does no
-    //                    // work.
-    //                    resizeCanvas();
-    //                },
-    //            },
         north: {
             size: 35,
-            minSize: 35,
-            maxSize: 60
-        },
-        south: {
-            size: 34,
             spacing_open: 0,
-            spacing_closed: 0
+            minSize: 35,
+            maxSize: 60,
+            closable: false
         },
         west: {
             size: 'auto',
@@ -43,8 +32,12 @@ function setupLayoutAndModules(w, EntitiesList, Relations, Selection, StructureT
         },
         center: {
             onresize: function(region, pane, state, options) {
-                var uiHeight = $('#'+w.editor.id+'_tbl tr.mceFirst').outerHeight() + 2;
-                $('#'+w.editor.id+'_ifr').height(state.layoutHeight - uiHeight);
+                var uiHeight = 4;
+                var toolbar = $('.mce-toolbar-grp', w.editor.getContainer());
+                if (toolbar.is(':visible')) {
+                    uiHeight += toolbar.outerHeight();
+                }
+                $('iframe', w.editor.getContainer()).height(state.layoutHeight - uiHeight);
             }
         },
         south: {
@@ -83,7 +76,7 @@ function setupLayoutAndModules(w, EntitiesList, Relations, Selection, StructureT
             $.layout.callbacks.resizeTabLayout(event, ui);
         },
         create: function(event, ui) {
-            $('#westTabs').parent().find('.ui-corner-all').removeClass('ui-corner-all');
+            $('#westTabs').parent().find('.ui-corner-all:not(button)').removeClass('ui-corner-all');
         }
     });
     $('#southTabs').tabs({
@@ -92,7 +85,7 @@ function setupLayoutAndModules(w, EntitiesList, Relations, Selection, StructureT
             $.layout.callbacks.resizeTabLayout(event, ui);
         },
         create: function(event, ui) {
-            $('#southTabs').parent().find('.ui-corner-all').removeClass('ui-corner-all');
+            $('#southTabs').parent().find('.ui-corner-all:not(button)').removeClass('ui-corner-all');
         }
     });
     

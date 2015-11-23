@@ -169,9 +169,7 @@ return function(writer) {
     
     function _doLoad(filename, type) {
         if (type === 'template') {
-            w.delegator.loadTemplate(filename, function(xml) {
-                w.converter.processDocument(xml);
-            });
+            w.fileManager.loadTemplate(filename);
         } else {
             w.fileManager.loadDocument(filename);
         }

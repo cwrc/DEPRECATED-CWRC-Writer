@@ -9,6 +9,7 @@ return function(id, writer) {
     
     var html = ''+
     '<div id="'+id+'Dialog" class="annotationDialog">'+
+        '<input type="hidden" id="'+id+'_ref" data-type="hidden" data-mapping="REF"/>'+
     '</div>';
     
     var dialog = new DialogForm({
@@ -19,6 +20,13 @@ return function(id, writer) {
         height: 150,
         width: 450,
         html: html
+    });
+    
+    dialog.$el.on('beforeShow', function(e, config, dialog) {
+        var cwrcInfo = dialog.currentData.cwrcInfo;
+        if (cwrcInfo !== undefined) {
+            $('#'+id+'_ref').val(cwrcInfo.id);
+        }
     });
     
     return {

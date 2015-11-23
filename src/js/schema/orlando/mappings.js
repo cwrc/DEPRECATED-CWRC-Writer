@@ -1,10 +1,49 @@
 define(['jquery', 'mapper', 'annotationsManager'], function($, Mapper, AnnotationsManager) {
 
+function handleGraphics($tag) {
+    var url = $tag.attr('url');
+    if (url !== undefined) {
+        $tag.css('backgroundImage','url('+url+')');
+        $tag.css('display','inline-block');
+        var $img = $('<img />');
+        $img.hide();
+        $img.on('load', function() {
+            var height = $(this).height();
+            var width = $(this).width();
+            $tag.width(width);
+            $tag.height(height);
+            $img.remove();
+        });
+        $('body').append($img);
+        $img.attr('src', url);
+    }
+}
+    
 return {
 
 id: 'ID',
 header: 'ORLANDOHEADER',
-blockElements: ['DIV0', 'DIV1', 'EVENTS', 'ORLANDOHEADER', 'DOCAUTHOR', 'DOCEDITOR', 'DOCEXTENT', 'PUBLICATIONSTMT', 'TITLESTMT', 'PUBPLACE', 'L', 'P', 'HEADING', 'CHRONEVENT', 'CHRONSTRUCT'],
+blockElements: ['DIV0', 'DIV1', 'EVENT', 'ORLANDOHEADER', 'DOCAUTHOR', 'DOCEDITOR', 'DOCEXTENT', 'PUBLICATIONSTMT', 'TITLESTMT', 'PUBPLACE', 'L', 'P', 'HEADING', 'CHRONEVENT', 'CHRONSTRUCT'],
+
+listeners: {
+    tagAdded: function(tag) {
+        var $tag = $(tag);
+        if ($tag.attr('_tag') === 'GRAPHIC') {
+            handleGraphics($tag);
+        }
+    },
+    tagEdited: function(tag) {
+        var $tag = $(tag);
+        if ($tag.attr('_tag') === 'GRAPHIC') {
+            handleGraphics($tag);
+        }
+    },
+    documentLoaded: function(body) {
+        $(body).find('*[_tag="GRAPHIC"]').each(function(index, el) {
+            handleGraphics($(el));
+        });
+    }
+},
 
 entities: {
     
@@ -14,7 +53,9 @@ person: {
         return Mapper.getDefaultMapping(entity);
     },
     reverseMapping: function(xml) {
-        return Mapper.getDefaultReverseMapping(xml);
+        return Mapper.getDefaultReverseMapping(xml, {
+            cwrcInfo: {id: '@REF'}
+        });
     },
     annotation: function(entity, format) {
         return AnnotationsManager.commonAnnotation(entity, 'foaf:Person', null, format);
@@ -27,7 +68,9 @@ org: {
         return Mapper.getDefaultMapping(entity);
     },
     reverseMapping: function(xml) {
-        return Mapper.getDefaultReverseMapping(xml);
+        return Mapper.getDefaultReverseMapping(xml, {
+            cwrcInfo: {id: '@REF'}
+        });
     },
     annotation: function(entity, format) {
         return AnnotationsManager.commonAnnotation(entity, 'foaf:Organization', null, format);
@@ -38,23 +81,40 @@ place: {
     parentTag: 'PLACE',
     textTag: ['ADDRESS', 'AREA', 'GEOG', 'PLACENAME', 'REGION', 'SETTLEMENT'],
     mapping: function(entity) {
+        var xml = Mapper.getTagAndDefaultAttributes(entity);
+        
+        var tag = entity.getCustomValue('tag');
         var range = entity.getRange();
         var id = range.annotationId;
-        var offsetId = range.offsetId;
-        var tag = entity.getCustomValue('tag');
         
-        var xml = '<PLACE';
-        if (id) xml += ' annotationId="'+id+'"';
-        if (offsetId) xml += ' offsetId="'+offsetId+'"';
         xml += '><'+tag;
         if (id) xml += ' annotationId="'+id+'"';
-        xml += '>'+Mapper.TEXT_SELECTION+'</'+tag+'></PLACE>';
+        xml += '>'+Mapper.TEXT_SELECTION+'</'+tag+'>';
+        
+        tag = entity.getTag();
+        xml += '</'+tag+'>';
+        
         return xml;
     },
     reverseMapping: function(xml) {
-        return Mapper.getDefaultReverseMapping(xml, {
-            customValues: {tag: 'fn:node-name(child::*)'}
+        var mapping = Mapper.getDefaultReverseMapping(xml, {
+            cwrcInfo: {id: '@REF'}
         });
+        var typesPriority = ['ADDRESS','PLACENAME','SETTLEMENT','REGION','GEOG','AREA'];
+        var placeTypes = $(xml).find(typesPriority.join(','));
+        var type = '', placeType;
+        prioritize:
+        for (var i = 0; i < typesPriority.length; i++) {
+            type = typesPriority[i];
+            for (var j = 0; j < placeTypes.length; j++) {
+                placeType = placeTypes[j];
+                if (placeType.nodeName === type) {
+                    break prioritize;
+                }
+            }
+        }
+        mapping.customValues = {tag: type};
+        return mapping;
     },
     annotation: function(entity, format) {
         return AnnotationsManager.commonAnnotation(entity, 'geo:SpatialThing', null, format);
@@ -67,7 +127,9 @@ title: {
         return Mapper.getDefaultMapping(entity);
     },
     reverseMapping: function(xml) {
-        return Mapper.getDefaultReverseMapping(xml);
+        return Mapper.getDefaultReverseMapping(xml, {
+            cwrcInfo: {id: '@REF'}
+        });
     },
     annotation: function(entity, format) {
         var anno = AnnotationsManager.commonAnnotation(entity, ['dcterms:BibliographicResource', 'dcterms:title'], null, format);

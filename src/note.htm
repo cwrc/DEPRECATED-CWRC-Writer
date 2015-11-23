@@ -11,7 +11,7 @@
 		<link type="text/css" rel="stylesheet" href="css/style.css" />
 		<link type="text/css" rel="stylesheet" href="css/islandora_style.css" />
 		
-		<link type="text/css" rel="stylesheet" href="smoothness/jquery-ui-1.10.4.custom.css" />
+		<link type="text/css" rel="stylesheet" href="css/cwrcstyle/jquery-ui.css" />
 		<link type="text/css" rel="stylesheet" href="css/layout-default-latest.css" />
 		<link type="text/css" rel="stylesheet" href="js/lib/snippet/jquery.snippet.css" />
 		
@@ -49,8 +49,12 @@
 				writer = null;
 				
 				function doResize() {
-					var uiHeight = $('#'+writer.editor.id+'_tbl tr.mceFirst').outerHeight() + 2;
-					$('#'+writer.editor.id+'_ifr').height($(window).height() - uiHeight);
+				    var uiHeight = 4;
+                    var toolbar = $('.mce-toolbar-grp',writer.editor.getContainer());
+                    if (toolbar.is(':visible')) {
+                        uiHeight += toolbar.outerHeight();
+                    }
+                    $('iframe',writer.editor.getContainer()).height($(window).height() - uiHeight);
 				}
 				
 				function doInit(config) {

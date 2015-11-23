@@ -89,6 +89,7 @@ return function(writer) {
     /**
      * A document was loaded into the editor
      * @event Writer#documentLoaded
+     * @param {Element} body The editor body element
      */
     w.event('documentLoaded');
     /**
@@ -203,7 +204,7 @@ return function(writer) {
     /**
      * A structure tag was added
      * @event Writer#tagAdded
-     * @param {String} id The tag ID
+     * @param {Element} tag The tag
      */
     w.event('tagAdded');
     /**
@@ -215,7 +216,7 @@ return function(writer) {
     /**
      * A structure tag was removed
      * @event Writer#tagRemoved
-     * @param {String} id The tag ID
+     * @param {Element} tag The tag
      */
     w.event('tagRemoved');
     /**

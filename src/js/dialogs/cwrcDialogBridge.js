@@ -21,7 +21,7 @@ return function(writer, config) {
                 if (result.response !== undefined && result.response.pid !== undefined) {
                     w.dialogManager.show('schema/'+localDialog, {
                         cwrcInfo: {
-                            id: 'http://cwrc-dev-01.srv.ualberta.ca/islandora/object/'+result.response.pid
+                            id: result.response.uri
                         }
                     });
                 } else {
@@ -50,42 +50,63 @@ return function(writer, config) {
     return {
         show: function(config) {
             if (config.entry) {
-                w.dialogManager.show('schema/'+localDialog, {
-                    entry: config.entry
+                // EDIT
+                var query = config.entry.getContent();
+                cD.popSearch[cwrcType]({
+                    query: query,
+                    success: function(result) {
+                        // set id to the uri
+                        // assume proper uri passed by the dialogs
+                        result.id = result.uri 
+                        if ($.isArray(result.name)) {
+                            result.name = result.name[0];
+                        }                        
+                        delete result.data;
+                        
+                        config.entry.setLookupInfo(result);
+                        
+                        w.dialogManager.show('schema/'+localDialog, {
+                            entry: config.entry
+                        });
+                    },
+                    cancelled: function() {
+                        if (config.convertedEntity === true) {
+                            var $tag = $('#'+config.entry.id, w.editor.getBody());
+                            $tag.removeAttr('_entity _type class name');
+                            w.entitiesManager.removeEntity(config.entry.id);
+                            var attributes = {};
+                            $.each($($tag[0].attributes), function(index, att) {
+                                attributes[att.name] = att.value;
+                            });
+                            w.tagger.editStructureTag($tag, attributes);
+                        }
+                    },
+                    error: function(errorThrown) {
+                    },
+                    buttons: [{
+                        label : 'Edit '+label,
+                        isEdit : true,
+                        action : doEdit
+                    },{
+                        label : 'Skip '+label+' Lookup',
+                        isEdit : false,
+                        action : function() {
+                            w.dialogManager.show('schema/'+localDialog, {
+                                entry: config.entry
+                            });
+                        }
+                    }]
                 });
             } else {
+                // ADD
                 var query = w.editor.currentBookmark.rng.toString();
                 
                 cD.popSearch[cwrcType]({
                     query: query,
                     success: function(result) {
-                        if (result.id == null) {
-                            var id = w.utilities.createGuid();
-                            if (cwrcType === 'place') {
-                                result = {
-                                    id: id,
-                                    data: '<geoname><name>Hamilton</name><asciiName>Hamilton</asciiName><lat>44.0501200</lat><lng>-78.2328200</lng><countryCode>CA</countryCode><countryName>Canada</countryName><fcl>A</fcl><fcode>ADM2</fcode><geonameid>'+w.utilities.createGuid()+'</geonameid><granularity>Province/State</granularity></geoname>',
-                                    name: 'Test '+label,
-                                    repository: 'geonames'
-                                };
-                            } else {
-                                result = {
-                                    id: id,
-                                    name: ['Test '+label],
-                                    repository: 'cwrc'
-                                };
-                            }
-                        }
-                        
-                        if (result.repository === 'viaf') {
-                            result.id = 'http://viaf.org/viaf/'+result.id;
-                        } else if (result.repository === 'geonames') {
-                            var xmlData = w.utilities.stringToXML(result.data);
-                            var id = $('geonameid', xmlData).text();
-                            result.id = 'http://www.geonames.org/'+id;
-                        } else {
-                            result.id = 'http://cwrc-dev-01.srv.ualberta.ca/islandora/object/'+result.id;
-                        }
+                        // set id to the uri
+                        // assume proper uri passed by the dialogs
+                        result.id = result.uri 
                         
                         if ($.isArray(result.name)) {
                             result.name = result.name[0];
@@ -102,9 +123,11 @@ return function(writer, config) {
                     },
                     buttons: [{
                         label : 'Create New '+label,
+                        isEdit : false,
                         action : doCreate
                     },{
                         label : 'Edit '+label,
+                        isEdit : true,
                         action : doEdit
                     }]
                 });

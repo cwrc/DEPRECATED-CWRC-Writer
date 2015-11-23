@@ -92,86 +92,49 @@ return function(writer) {
     };
     
     /**
-     * Get the entity boundary tag that corresponds to the passed tag.
+     * Get the entity boundary tag (and potential inbetween tags) that corresponds to the passed tag.
      * @param {element} tag
+     * @returns {jQuery}
      */
-    tagger.getCorrespondingEntityTag = function(tag) {
+    tagger.getCorrespondingEntityTags = function(tag) {
         tag = $(tag);
-        var corrTag;
-        if (tag.hasClass('start')) {
-            corrTag = tagger.findEntityBoundary('end', tag[0].nextSibling);
-        } else {
-            corrTag = tagger.findEntityBoundary('start', tag[0].previousSibling);
+        if (tag.hasClass('start') && tag.hasClass('end')) {
+            return tag;
         }
-        return corrTag;
-    };
-    
-    /**
-     * Searches for an entity boundary containing the current node.
-     * @param {string} boundaryType Either 'start' or 'end'.
-     * @param {element} currentNode The node that is currently being examined.
-     */
-    tagger.findEntityBoundary = function(boundaryType, currentNode) {
+        var boundaryType;
+        if (tag.hasClass('start')) {
+            boundaryType = 'end';
+        } else {
+            boundaryType = 'start';
+        }
         
-        /**
-         * @param entIds An array of entity ids that are encountered.  Used to prevent false positives.
-         * @param levels An array to track the levels of node depth in order to prevent endless recursion.
-         * @param structIds An object to track the node ids that we've already encountered.
-         */
-        function doFind(boundaryType, currentNode, entIds, levels, structIds) {
-            if (currentNode.id) {
-                if (structIds[currentNode.id]) {
-                    return null;
+        var currentNode = tag[0];
+        var nodeId = currentNode.getAttribute('name');
+        var walker = currentNode.ownerDocument.createTreeWalker(currentNode.ownerDocument, NodeFilter.SHOW_ELEMENT, {
+            acceptNode: function(node) {
+                if (node.getAttribute('name') === nodeId) {
+                    return NodeFilter.FILTER_ACCEPT;
                 } else {
-                    structIds[currentNode.id] = true;
+                    return NodeFilter.FILTER_SKIP;
                 }
             }
-            
-            if (w.editor.dom.hasClass(currentNode, 'entity')) {
-                var nodeId = currentNode.getAttribute('name');
-                if (w.editor.dom.hasClass(currentNode, boundaryType)) {
-                    if (entIds.indexOf(nodeId) == -1) {
-                        return currentNode;
-                    } else if (entIds[0] == nodeId) {
-                        entIds.shift();
-                    }
-                } else {
-                    entIds.push(nodeId);
-                }
-            }
-            
-            if (boundaryType == 'start' && currentNode.lastChild) {
-                levels.push(currentNode);
-                return doFind(boundaryType, currentNode.lastChild, entIds, levels, structIds);
-            } else if (boundaryType == 'end' && currentNode.firstChild) {
-                levels.push(currentNode);
-                return doFind(boundaryType, currentNode.firstChild, entIds, levels, structIds);
-            }
-            
-            if (boundaryType == 'start' && currentNode.previousSibling) {
-                return doFind(boundaryType, currentNode.previousSibling, entIds, levels, structIds);
-            } else if (boundaryType == 'end' && currentNode.nextSibling) {
-                return doFind(boundaryType, currentNode.nextSibling, entIds, levels, structIds);
-            }
-            
-            if (currentNode.parentNode) {
-                if (currentNode.parentNode == levels[levels.length-1]) {
-                    levels.pop();
-                    if (boundaryType == 'start' && currentNode.parentNode.previousSibling) {
-                        return doFind(boundaryType, currentNode.parentNode.previousSibling, entIds, levels, structIds);
-                    } else if (boundaryType == 'end' && currentNode.parentNode.nextSibling) {
-                        return doFind(boundaryType, currentNode.parentNode.nextSibling, entIds, levels, structIds);
-                    } else return null;
-                } else {
-                    return doFind(boundaryType, currentNode.parentNode, entIds, levels, structIds);
-                }
-            }
-            
-            return null;
-        };
+        }, false);
+        walker.currentNode = currentNode;
         
-        var match = doFind(boundaryType, currentNode, [], [currentNode.parentNode], {});
-        return match;
+        var nodes = [];
+        while(walker.currentNode.getAttribute('name') === nodeId) {
+            if (boundaryType === 'start') {
+                walker.previousNode();
+            } else {
+                walker.nextNode();
+            }
+            nodes.push(walker.currentNode);
+            if ($(walker.currentNode).hasClass(boundaryType)) {
+                break;
+            }
+        }
+        
+        return $(nodes);
     };
     
     /**
@@ -220,9 +183,15 @@ return function(writer) {
                         w.entitiesManager.setEntity(newId, newEntity);
                         
                         var newTagStart = $(el);
-                        var newTagEnd = $(tagger.getCorrespondingEntityTag(newTagStart));
+                        var newTags = tagger.getCorrespondingEntityTags(newTagStart);
+                        
                         newTagStart.attr('name', newId);
-                        newTagEnd.attr('name', newId);
+                        if (newTagStart.attr('id') !== undefined) {
+                            newTagStart.attr('id', newId);
+                        }
+                        newTags.each(function(index, tag) {
+                            $(tag).attr('name', newId);
+                        });
                     }
                 });
             }
@@ -317,6 +286,29 @@ return function(writer) {
         } 
     };
     
+    tagger.convertTagToEntity = function($tag) {
+        if ($tag != null) {
+            var id = $tag.attr('id');
+            var type = w.schemaManager.mapper.getEntityTypeForTag($tag.attr('_tag'));
+            var xmlString = w.converter.buildXMLString($tag);
+            var xmlEl = w.utilities.stringToXML(xmlString).firstChild;
+            var info = w.schemaManager.mapper.getReverseMapping(xmlEl, type);
+            
+            var ref = $tag.attr('ref'); // matches ref or REF
+            
+            w.selectStructureTag(id, true);
+            w.editor.currentBookmark = w.editor.selection.getBookmark(1);
+            var newId = tagger.finalizeEntity(type, info);
+            tagger.removeStructureTag(id, false);
+            if (ref == null) {
+                var tag = w.entitiesManager.getEntity(newId);
+                w.editor.currentBookmark = w.editor.selection.getBookmark(1);
+                var type = tag.getType();
+                w.dialogManager.show(type, {type: type, entry: tag, convertedEntity: true});
+            }
+        }
+    };
+    
     /**
      * A general removal function for entities and structure tags
      * @param {String} id The id of the tag to remove
@@ -337,17 +329,55 @@ return function(writer) {
         }
     };
     
+    /**
+     * @param {String} id The id of the tag to copy
+     */
+    tagger.copyTag = function(id) {
+        var tag;
+        if (id != null) {
+            tag = $('#'+id, w.editor.getBody())[0];
+        } else if (w.editor.currentNode != null) {
+            tag = w.editor.currentNode;
+        }
+        if (tag != undefined) {
+            var clone = $(tag).clone();
+            w.editor.copiedElement.element = clone.wrapAll('<div />').parent()[0];
+            w.editor.copiedElement.selectionType = 0; // tag & contents copied
+        }
+    };
+    
+    /**
+     * Pastes a previously copied tag
+     * @fires Writer#contentChanged
+     */
+    tagger.pasteTag = function() {
+        var tag = w.editor.copiedElement.element;
+        if (tag != null) {
+            w.editor.selection.moveToBookmark(w.editor.currentBookmark);
+            var sel = w.editor.selection;
+            sel.collapse();
+            var rng = sel.getRng(true);
+            rng.insertNode(tag);
+            
+            tagger.findDuplicateTags();
+            
+            w.editor.isNotDirty = false;
+            w.event('contentChanged').publish(); // don't use contentPasted since we don't want to trigger copyPaste dialog
+        }
+        
+        w.editor.copiedElement = {selectionType: null, element: null};
+    }
     
     /**
      * Add our own undo level, then erase the next one that gets added by tinymce
      */
     function _doCustomTaggerUndo() {
         // TODO update for 4
-        w.editor.undoManager.add();
-        w.editor.undoManager.onAdd.addToTop(function() {
-            this.data.splice(this.data.length-1, 1); // remove last undo level
-            this.onAdd.listeners.splice(0, 1); // remove this listener
-        }, w.editor.undoManager);
+//        w.editor.undoManager.add();
+//        w.editor.undoManager.onAdd.addToTop(function() {
+//            this.data.splice(this.data.length-1, 1); // remove last undo level
+//            this.onAdd.listeners.splice(0, 1); // remove this listener
+//        }, w.editor.undoManager);
     }
     
     /**
@@ -372,7 +402,7 @@ return function(writer) {
             } else {
                 w.dialogManager.confirm({
                     title: 'Warning',
-                    msg: 'You are attempting to create overlapping entities or to create an entity across sibling XML tags, which is not allowed in this editor mode.<br/><br/>If you wish to continue, the editor mode will be switched to XML and RDF (Overlapping Entites) and only RDF will be created for the entity you intend to add.<br/><br/>Do you wish to continue?',
+                    msg: 'You are attempting to create overlapping entities or to create an entity across sibling XML tags, which is not allowed in this editor mode.<br/><br/>If you wish to continue, the editor mode will be switched to <b>XML and RDF (Overlapping Entities)</b> and only RDF will be created for the entity you intend to add.<br/><br/>Do you wish to continue?',
                     callback: function(confirmed) {
                         if (confirmed) {
                             w.allowOverlap = true;
@@ -401,7 +431,7 @@ return function(writer) {
         
         // add attributes to tag
         var disallowedAttributes = ['id', 'class', 'style'];
-        var tag = w.editor.$('[name='+id+'][_tag]');
+        var tag = $('[name='+id+'][_tag]', w.editor.getBody());
         if (tag.length === 1) {
             for (var key in info.attributes) {
                 if (disallowedAttributes.indexOf(key) === -1) {
@@ -447,6 +477,7 @@ return function(writer) {
      * @protected
      * @param {String} type Then entity type
      * @param {Object} info The entity info
+     * @returns {String} id The new entity ID
      */
     tagger.finalizeEntity = function(type, info) {
         w.editor.selection.moveToBookmark(w.editor.currentBookmark);
@@ -500,6 +531,8 @@ return function(writer) {
                     userId: userUri
                 });
             });
+            
+            return id;
         }
         w.editor.currentBookmark = null;
         w.editor.focus();
@@ -513,6 +546,7 @@ return function(writer) {
      */
     tagger.editEntity = function(id, info) {
         updateEntityInfo(w.entitiesManager.getEntity(id), info);
+        w.editor.isNotDirty = false;
         w.event('entityEdited').publish(id);
     };
     
@@ -571,6 +605,7 @@ return function(writer) {
             rng = sel.getRng(true);
             tagger.insertBoundaryTags(newEntity.getId(), newEntity.getType(), rng);
             
+            w.editor.isNotDirty = false;
             w.event('entityPasted').publish(newEntity.getId());
         }
     };
@@ -703,7 +738,8 @@ return function(writer) {
             tempNode.replaceWith(content);
         }
         
-        w.event('tagAdded').publish(id);
+        var newTag = $('#'+id, w.editor.getBody());
+        w.event('tagAdded').publish(newTag[0]);
         
         if (selection == '\uFEFF') {
             w.selectStructureTag(id, true);
@@ -760,8 +796,7 @@ return function(writer) {
         }
         
         w.structs[id] = attributes;
-        
-        w.event('tagEdited').publish(id);
+        w.event('tagEdited').publish(tag[0]);
     };
     
     /**

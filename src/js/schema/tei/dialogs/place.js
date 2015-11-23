@@ -11,7 +11,7 @@ return function(id, writer) {
     '<div id="'+id+'Dialog" class="annotationDialog">'+
         '<div id="'+id+'_tagAs">'+
             '<p>Tag as:</p>'+
-            '<span class="tagAs"></span>'+
+            '<span class="tagAs" data-type="tagAs"></span>'+
         '</div>'+
         '<div id="'+id+'_certainty" data-transform="buttonset" data-type="radio" data-mapping="cert">'+
             '<p>This identification is:</p>'+

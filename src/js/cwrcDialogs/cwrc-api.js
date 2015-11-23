@@ -3,6 +3,7 @@
  *
  * Requires jQuery
  */
+// NOT USED - CWRC annotiation JavaScript API calls
 function CwrcAnnotion(url, jq){
         if (!jq) {
                 jq = $;
@@ -97,6 +98,7 @@ function CwrcAnnotion(url, jq){
         }
 }
 
+// CWRC Entity JavaScript API calls
 function CwrcEntity(type, url, jq) {
         if (!jq) {
                 jq = $;
@@ -137,8 +139,19 @@ function CwrcEntity(type, url, jq) {
                         url : url + type + "/" + pid,
                         type : 'GET',
                         async : false,
-                        success : function(data) {
-                                result = data;
+                        success : function(data, status, xhr) {
+                                var ct = xhr.getResponseHeader("content-type") || "";
+                                if (ct.indexOf('json') > -1)
+                                {
+                                  // assume XML wrapped in JSON
+                                  // and the following version of the API
+                                  // https://github.com/cwrc/cwrc_entities/commit/b49473832adad70a2e848c86fb5bc312e8616cea 
+                                  result = jq.parseXML(data);
+                                }
+                                else
+                                {
+                                  result = data;
+                                }
                         },
                         error : function(error) {
                                 result = error;
@@ -259,11 +272,13 @@ function CwrcApi(url, jq) {
                 });
         }
 
+        // NOT USED - 2015-02-18
         // Public functions
         /**
          * Initialize the data using a set of existing cookies.
          * var name The cookie to obtaine the information from
          */
+        // NOT USED - 2015-02-18
         this.initializeWithCookieData = function(data) {
                 var result = result;
 
@@ -288,6 +303,7 @@ function CwrcApi(url, jq) {
                 return result;
         }
 
+        // NOT USED - 2015-02-18
         this.initializeWithLogin = function(username, password) {
                 var result = result;
 
@@ -313,6 +329,7 @@ function CwrcApi(url, jq) {
                 return result;
         }
 
+        // NOT USED - 2015-02-18
         this.logout = function() {
                 var result = result;
 

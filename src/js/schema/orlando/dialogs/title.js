@@ -22,6 +22,7 @@ return function(id, writer) {
             '<input type="radio" value="UNPUBLISHED" name="'+id+'_level" id="'+id+'_level_u"/>'+
             '<label for="'+id+'_level_u">Unpublished <span>thesis, manuscript, letters or other unpublished material</span></label><br/>'+
         '</div>'+
+        '<input type="hidden" id="'+id+'_ref" data-type="hidden" data-mapping="REF"/>'+
     '</div>';
     
     var dialog = new DialogForm({
@@ -32,6 +33,13 @@ return function(id, writer) {
         type: 'title',
         title: 'Tag Title',
         html: html
+    });
+    
+    dialog.$el.on('beforeShow', function(e, config, dialog) {
+        var cwrcInfo = dialog.currentData.cwrcInfo;
+        if (cwrcInfo !== undefined) {
+            $('#'+id+'_ref').val(cwrcInfo.id);
+        }
     });
     
     return {

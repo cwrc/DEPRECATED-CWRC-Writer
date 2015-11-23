@@ -2,6 +2,7 @@
     "cwrcRootUrl": "",
     "cwrcDialogs": {
         "cwrcApiUrl": "http://apps.testing.cwrc.ca/islandora/cwrc_entities/v1/",
+        "repositoryBaseObjectUrl": "http://commons.cwrc.ca/",
         "geonameUrl": "http://apps.testing.cwrc.ca/cwrc-mtp/geonames/",
         "viafUrl": "http://apps.testing.cwrc.ca/services/viaf/",
         "googleGeocodeUrl": "http://maps.googleapis.com/maps/api/geocode/xml",
@@ -20,19 +21,19 @@
         },
         "events": {
             "name": "Events Schema",
-            "url": "http://cwrc.ca/schemas/orlando_events.rng",
+            "url": "http://cwrc.ca/schemas/orlando_event_v2.rng",
             "cssUrl": "css/orlando_converted.css",
             "schemaMappingsId": "orlando"
         },
         "biography": {
             "name": "Biography Schema",
-            "url": "http://cwrc.ca/schemas/orlando_biography.rng",
+            "url": "http://cwrc.ca/schemas/orlando_biography_v2.rng",
             "cssUrl": "css/orlando_converted.css",
             "schemaMappingsId": "orlando"
         },
         "writing": {
             "name": "Writing Schema",
-            "url": "http://cwrc.ca/schemas/orlando_writing.rng",
+            "url": "http://cwrc.ca/schemas/orlando_writing_v2.rng",
             "cssUrl": "css/orlando_converted.css",
             "schemaMappingsId": "orlando"
         },
@@ -42,5 +43,6 @@
             "cssUrl": "css/cwrc_converted.css",
             "schemaMappingsId": "cwrcEntry"
         }
-    }
+    },
+    "defaultDocument": "templates/blank_TEI_document"
 }

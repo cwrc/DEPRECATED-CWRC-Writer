@@ -142,7 +142,9 @@ Entity.prototype = {
         this.attributes[name] = value;
     },
     setAttributes: function(attObj) {
-        this.attributes = attObj;
+        for (var key in attObj) {
+            this.attributes[key] = attObj[key];
+        }
     },
     
     getCustomValue: function(key) {

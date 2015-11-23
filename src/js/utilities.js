@@ -17,6 +17,14 @@ return function(writer) {
      */
     var u = {};
     
+    u.getBlockTag = function() {
+        return BLOCK_TAG;
+    }
+    
+    u.getInlineTag = function() {
+        return INLINE_TAG;
+    }
+    
     u.xmlToString = function(xmlData) {
         var xmlString = '';
         try {
@@ -56,6 +64,7 @@ return function(writer) {
      * @returns {String}
      */
     u.getTitleFromContent = function(content) {
+        content = content.trim();
         if (content.length <= 34) return content;
         var title = content.substring(0, 34) + '&#8230;';
         return title;
@@ -438,6 +447,11 @@ return function(writer) {
         return w.editor.schema.getBlockElements()[tagName] != null;
     };
     
+    u.isTagEntity = function(tagName) {
+        var type = w.schemaManager.mapper.getEntityTypeForTag(tagName);
+        return type != null;
+    };
+    
     u.getTagForEditor = function(tagName) {
         return u.isTagBlockLevel(tagName) ? BLOCK_TAG : INLINE_TAG;
     };
@@ -650,56 +664,67 @@ return function(writer) {
                 return;
             }
             
-            var childObj = {
-                name: child['@name'],
-                level: level+0,
-                documentation: docs
-            };
+            var duplicate = false;
+            children.every(function(entry, index, array) {
+                if (entry.name === child['@name']) {
+                    duplicate = true;
+                    return false;
+                }
+                return true;
+            });
             
-            if (type == 'attribute') {
-                if (refParentProps && refParentProps.optional != null) {
-                    childObj.required = !refParentProps.optional;
-                } else {
-                    childObj.required = true;
-                    _queryUp(child['$parent'], function(item) {
-                        if (item.optional) {
-                            childObj.required = false;
+            if (!duplicate) {
+                var childObj = {
+                    name: child['@name'],
+                    level: level+0,
+                    documentation: docs
+                };
+                
+                if (type == 'attribute') {
+                    if (refParentProps && refParentProps.optional != null) {
+                        childObj.required = !refParentProps.optional;
+                    } else {
+                        childObj.required = true;
+                        _queryUp(child['$parent'], function(item) {
+                            if (item.optional) {
+                                childObj.required = false;
+                                return false;
+                            }
+                        });
+                    }
+                    
+                    var defaultVal = null;
+                    _queryDown(child, function(item) {
+                        if (item['@a:defaultValue']) {
+                            defaultVal = item['@a:defaultValue'];
                             return false;
                         }
                     });
-                }
-                
-                var defaultVal = null;
-                _queryDown(child, function(item) {
-                    if (item['@a:defaultValue']) {
-                        defaultVal = item['@a:defaultValue'];
-                        return false;
-                    }
-                });
-                childObj.defaultValue = defaultVal || '';
-                
-                var choice = null;
-                _queryDown(child, function(item) {
-                    if (item.choice) {
-                        choice = item.choice;
-                        return false;
-                    }
-                });
-                if (choice != null) {
-                    var choices = [];
-                    var values = [];
-                    _queryDown(choice, function(item) {
-                        if (item.value) {
-                            values = item.value;
+                    childObj.defaultValue = defaultVal || '';
+                    
+                    var choice = null;
+                    _queryDown(child, function(item) {
+                        if (item.choice) {
+                            choice = item.choice;
+                            return false;
                         }
                     });
-                    for (var j = 0; j < values.length; j++) {
-                        choices.push(values[j]);
+                    if (choice != null) {
+                        var choices = [];
+                        var values = [];
+                        _queryDown(choice, function(item) {
+                            if (item.value) {
+                                values = item.value;
+                            }
+                        });
+                        for (var j = 0; j < values.length; j++) {
+                            choices.push(values[j]);
+                        }
+                        childObj.choices = choices;
                     }
-                    childObj.choices = choices;
                 }
+                children.push(childObj);
             }
-            children.push(childObj);
         }
         
         // now process the references
@@ -950,7 +975,7 @@ return function(writer) {
                 return checkForText(def, defHits, level+1, canContainText);
             }
         });
-    };
+    }
     
     /**
      * Checks to see if the tag can contain text, as specified in the schema

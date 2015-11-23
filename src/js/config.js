@@ -14,13 +14,19 @@ var require = {
         'jquery.snippet': 'lib/snippet/jquery.snippet.min',
         'jquery.xpath': 'lib/jquery/jquery.xpath',
         
-        'tinymce': 'lib/tinymce/tiny_mce_src',
-        'tinymce-copyevent': 'lib/tinymce/copy_event',
+        'tinymce': 'lib/tinymce4/tinymce',
         
         'objtree': 'lib/objtree/ObjTree',
         'moment': 'lib/moment/moment.min',
         
         'octokit': 'lib/octokit/octokit',
+        
+        'css.parser': 'lib/reworkcss/parser/parser',
+        'css.stringify': 'lib/reworkcss/stringify/stringify',
+        'css.compiler': 'lib/reworkcss/stringify/compiler',
+        'css.compress': 'lib/reworkcss/stringify/compress',
+        'css.identity': 'lib/reworkcss/stringify/identity',
+        'inherits': 'lib/reworkcss/stringify/inherits',
         
         'schemaManager': 'schema/schemaManager',
         'mapper': 'schema/mapper',
@@ -29,7 +35,7 @@ var require = {
         'attributeWidget': 'dialogs/attributeWidget',
         
         // cwrcDialogs
-        'knockout': ['http://cdnjs.cloudflare.com/ajax/libs/knockout/2.3.0/knockout-min','lib/knockout/knockout-2.3.0'],
+        'knockout': ['http://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min','lib/knockout/knockout-3.3.0'],
         'bootstrap': ['lib/bootstrap/bootstrap.min'],
         'bootstrap-datepicker': 'lib/bootstrap/bootstrap-datepicker',
         'cwrc-api': 'cwrcDialogs/cwrc-api',
@@ -51,8 +57,7 @@ var require = {
                 return this.tinymce;
             }
         },
-        'tinymce-copyevent': ['tinymce'],
-
+        
         'bootstrap': ['jquery', 'jquery-ui'],
         'bootstrap-datepicker': ['bootstrap'],
         'cwrcDialogs': {

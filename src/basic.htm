@@ -11,12 +11,13 @@
 		<link type="text/css" rel="stylesheet" href="css/style.css" />
 		<link type="text/css" rel="stylesheet" href="css/islandora_style.css" />
 		
-		<link type="text/css" rel="stylesheet" href="smoothness/jquery-ui-1.10.4.custom.css" />
+		<link type="text/css" rel="stylesheet" href="css/cwrcstyle/jquery-ui.css" />
 		<link type="text/css" rel="stylesheet" href="css/layout-default-latest.css" />
 		<link type="text/css" rel="stylesheet" href="js/lib/snippet/jquery.snippet.css" />
 		
 		<link type="text/css" rel="stylesheet" href="js/lib/bootstrap/bootstrap.css" />
 		<link type="text/css" rel="stylesheet" href="js/cwrcDialogs/css/datepicker.css" />
+		<link type="text/css" rel="stylesheet" href="js/lib/fonts/font-awesome/css/font-awesome.min.css" />
 		<link type="text/css" rel="stylesheet" href="js/cwrcDialogs/css/cD.css" />
 
 		<style type="text/css">
@@ -27,84 +28,74 @@
 		</style>
 
 		<script type="text/javascript">
+			require.config({baseUrl: 'js'});
+	        
+	        // and the 'jquery-private' module, in the
+	        // jquery-private.js file:
+	        define('jquery-private', ['jquery'], function ($) {
+	            return $.noConflict(true);
+	        });
+	
+	        require(['jquery', 'knockout'], function($, knockout) {
+	            window.ko = knockout; // requirejs shim isn't working for knockout
+	            
+	            require(['writer',
+	                     'delegator'
+	            ], function(Writer, Delegator) {
+	                $(function() {
+	                    cwrcWriterInit.call(window, $, Writer, Delegator);
+	                });
+	            });
+	        });
+	        
 			function cwrcWriterInit($, Writer, Delegator) {
-				cwrc_params = {};
-				
-				writer = null;
-				
-				function doResize() {
-					var uiHeight = $('#'+writer.editor.id+'_tbl tr.mceFirst').outerHeight() + 2;
-					writer.editor.theme.resizeTo($(window).width(), $(window).height() - uiHeight);
-				}
-				
-				var baseUrl = window.location.protocol+'//'+window.location.host;
-				var config = {
-					id: 'editor',
-					delegator: Delegator,
-					cwrcRootUrl: baseUrl+'/editor/test/',
-					buttons1: 'schematags,removeTag,|,addperson,addplace,|,viewsource',
-					schemas: {
-						tei: {
-							name: 'CWRC Basic TEI Schema',
-							url: baseUrl+'/schema/CWRC-TEIBasic.rng',
-							cssUrl: baseUrl+'/editor/test/css/tei_converted.css'
-						},
-						events: {
-							name: 'Events Schema',
-							url: baseUrl+'/schema/events.rng',
-							cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
-						},
-						biography: {
-							name: 'Biography Schema',
-							url: baseUrl+'/schema/biography.rng',
-							cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
-						},
-						writing: {
-							name: 'Writing Schema',
-							url: baseUrl+'/schema/writing.rng',
-							cssUrl: baseUrl+'/editor/test/css/orlando_converted.css'
-						}
-					}
-				};
-				
-				$.ajax({
-					url: 'http://apps.testing.cwrc.ca/editor/documents/info/projectname',
-					timeout: 3000,
-					success: function(data, status, xhr) {
-						config.project = data;
-						writer = new Writer(config);
-						writer.event('writerInitialized').subscribe(doResize);
-						$(window).on('resize', doResize);
-					},
-					error: function() {
-						config.cwrcRootUrl = baseUrl+'/cwrc/src/';
-						config.schemas = {
-							tei: {
-								name: 'CWRC Basic TEI Schema',
-								url: baseUrl+'/cwrc/src/schema/CWRC-TEIBasic.rng',
-								cssUrl: baseUrl+'/cwrc/src/css/tei_converted.css'
-							},
-							events: {
-								name: 'Events Schema',
-								url: baseUrl+'/cwrc/src/schema/events.rng',
-								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
-							},
-							biography: {
-								name: 'Biography Schema',
-								url: baseUrl+'/cwrc/src/schema/biography.rng',
-								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
-							},
-							writing: {
-								name: 'Writing Schema',
-								url: baseUrl+'/cwrc/src/schema/writing.rng',
-								cssUrl: baseUrl+'/cwrc/src/css/orlando_converted.css'
-							}
-						};
-						writer = new Writer(config);
-						writer.event('writerInitialized').subscribe(doResize);
-						$(window).on('resize', doResize);
-					}
-				});
+			    cwrc_params = {};
+                
+                writer = null;
+                
+                function doResize() {
+                    var uiHeight = 4;
+                    var toolbar = $('.mce-toolbar-grp',writer.editor.getContainer());
+                    if (toolbar.is(':visible')) {
+                        uiHeight += toolbar.outerHeight();
+                    }
+                    $('iframe',writer.editor.getContainer()).height($(window).height() - uiHeight);
+                }
+                
+                function doInit(config) {
+                    config.delegator = Delegator;
+                    config.buttons1 = 'schematags,removeTag,|,addperson,addplace,|,viewsource',
+                    writer = new Writer(config);
+                    writer.init('editor');
+                    writer.event('writerInitialized').subscribe(function(writer) {
+                        writer.fileManager.loadInitialDocument(window.location.hash);
+                    });
+                    writer.event('writerInitialized').subscribe(doResize);
+                    $(window).on('resize', doResize);
+                }
+                
+                (function() {
+                    var configXHR = $.ajax({url: 'js/writerConfig.js', dataType: 'json'});
+                    var projectXHR = $.ajax({url: 'http://apps.testing.cwrc.ca/editor/documents/info/projectname'});
+                    $.when(
+                        configXHR,
+                        projectXHR
+                    ).then(function(config, project) {
+                        config = config[0];
+                        project = project[0];
+                        config.project = project;
+                        config.cwrcRootUrl = window.location.protocol+'//'+window.location.host+window.location.pathname.replace(window.location.pathname.split('/').pop(),'');
+                        doInit(config);
+                    },function(xhr) {
+                        if (configXHR.state() === 'resolved') {
+                            var config = $.parseJSON(configXHR.responseText);
+                            config.cwrcRootUrl = window.location.protocol+'//'+window.location.host+window.location.pathname.replace(window.location.pathname.split('/').pop(),'');
+                            doInit(config);
+                        } else {
+                            alert('Error loading writerConfig.js');
+                        }
+                    });
+                }());
 			};
 		</script>
 	</head>

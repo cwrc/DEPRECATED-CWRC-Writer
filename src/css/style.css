@@ -1,12 +1,26 @@
+@import url(http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext);
+
 html, body {
     height: 100%;
     width: 100%;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    overflow: hidden;
+}
+
+#cwrc_wrapper {
     margin: 0;
     padding: 0;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: 10px;
     color: #333;
     overflow: hidden;
+}
+
+.cwrc {
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: 10px;
 }
 
 .cwrc h1 {
@@ -141,6 +155,8 @@ html, body {
     border-left: none !important;
     border-right: none !important;
     border-radius: 0 !important;
+    border-bottom: 1px solid #b3bbbe !important;
+    background: #eee !important;
 }
 
 .cwrc .tabs > ul li a {
@@ -151,6 +167,25 @@ html, body {
     padding: 5px 0 0 0 !important;
     overflow: auto;
 }
+
+.cwrc .tabs > ul li.ui-state-default {
+	border-color: #eee !important;
+	background: #eee !important;
+}
+
+.cwrc .tabs > ul li.ui-state-hover {
+	background: #b3bbbe !important;
+}
+
+.cwrc .tabs > ul li.ui-state-active {
+	border-color: #b3bbbe !important;
+    background: #ffffff !important;
+}
+
+.cwrc .tabs > ul li.ui-state-active a, .cwrc .tabs > ul li.ui-state-active a:link {
+	color: #333333 !important;
+}
+
 
 .loading {
     background-image: url('../img/loading.gif');
@@ -829,15 +864,6 @@ html, body {
     height: 98%;
 }
 
-/* tinymce style overrides */
-#editor_parent table.mceLayout tr.mceFirst td {
-    border: 0 none !important;
-}
-
-.mceMenuItem .mceIcon img {
-    margin: 2px 0 0 2px;
-}
-
 /* used by schematags plugin */
 .scrollingMenuContainer {
     border: 1px solid #D4D0C8 !important;
@@ -862,11 +888,8 @@ html, body {
     background-color: #ffffff !important;
     border: 1px solid #D4D0C8 !important;
     position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    z-index: 1000 !important;
-    width: 100% !important;
-    font-size: 11px !important;
+    z-index: 100000 !important;
+    font-size: 14px !important;
 }
 
 .cwrc .inputParent span {
@@ -879,6 +902,33 @@ html, body {
     position: relative !important;
     display: inline-block !important;
     cursor: text !important;
+}
+
+.mce-cwrc.mce-btn {
+	border: none;
+	background: rgba(0, 0, 0, 0);
+	margin-bottom: 1px;
+	padding-left: 8px !important;
+}
+
+.mce-cwrc.mce-btn button i {
+	margin-right: 4px;
+	padding: 0px;
+}
+
+.mce-cwrc.mce-btn.mce-active, .mce-cwrc.mce-btn:hover {
+    background-color: #2d8ac7 !important;
+}
+
+.mce-cwrc.mce-btn.mce-active button, .mce-cwrc.mce-btn:hover button {
+    text-decoration: none;
+    color: #fff !important;
+}
+
+.mce-cwrc label {
+	padding: 6px 15px 6px 12px;
+	background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 /* used by the entity plugin */

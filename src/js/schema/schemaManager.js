@@ -1,4 +1,4 @@
-define(['jquery', 'tinymce', 'mapper'], function($, tinymce, Mapper) {
+define(['jquery', 'tinymce', 'mapper', 'css.parser', 'css.stringify'], function($, tinymce, Mapper, cssParser, cssStringify) {
 
 /**
  * @class SchemaManager
@@ -78,9 +78,17 @@ return function(writer, config) {
      * @fires Writer#schemaLoaded
      * @param {String} schemaId The ID of the schema to load (from the config)
      * @param {Boolean} startText Whether to include the default starting text
+     * @param {Boolean} loadCss Whether to load the associated CSS
      * @param {Function} callback Callback for when the load is complete
      */
-    sm.loadSchema = function(schemaId, startText, callback) {
+    sm.loadSchema = function(schemaId, startText, loadCss, callback) {
+        // remove previous mappings listeners
+        if (sm.mapper.mappings.listeners !== undefined) {
+            for (var event in sm.mapper.mappings.listeners) {
+                w.event(event).unsubscribe(sm.mapper.mappings.listeners[event]);
+            }
+        }
+        
         var baseUrl = ''; //w.project == null ? '' : w.baseUrl; // handling difference between local and server urls
         sm.schemaId = schemaId;
         var schemaUrl = sm.schemas[sm.schemaId].url;
@@ -92,9 +100,15 @@ return function(writer, config) {
                 dataType: 'xml'
             }),
             sm.mapper.loadMappings(schemaMappingsId)
-        ).then(function(resp) {
-            var data = resp[0];
-            var status = resp[1];
+        ).then(function(resp1, resp2) {
+            // process mappings
+            if (sm.mapper.mappings.listeners !== undefined) {
+                for (var event in sm.mapper.mappings.listeners) {
+                    w.event(event).subscribe(sm.mapper.mappings.listeners[event]);
+                }
+            }
+            
+            var data = resp1[0];
             
             sm.schemaXML = data;
             // get root element
@@ -121,10 +135,9 @@ return function(writer, config) {
             function processSchema() {
                 // remove old schema elements
                 $('#schemaTags', w.editor.dom.doc).remove();
-                $('#schemaRules', w.editor.dom.doc).remove();
                 
                 var cssUrl = sm.schemas[sm.schemaId].cssUrl;
-                if (cssUrl) {
+                if (cssUrl && loadCss === true) {
                     sm.loadSchemaCSS(cssUrl);
                 }
                 
@@ -137,9 +150,8 @@ return function(writer, config) {
                     var tag = $(el).attr('name');
                     if (tag != null && elements.indexOf(tag) == -1) {
                         elements.push(tag);
-                        var tagName = w.utilities.getTagForEditor(tag);
-                        schemaTags += '.showStructBrackets '+tagName+'[_tag='+tag+']:before { color: #aaa; font-weight: normal; font-style: normal; font-family: monospace; content: "<'+tag+'>"; }';
-                        schemaTags += '.showStructBrackets '+tagName+'[_tag='+tag+']:after { color: #aaa; font-weight: normal; font-style: normal; font-family: monospace; content: "</'+tag+'>"; }';
+                        schemaTags += '.showStructBrackets *[_tag='+tag+']:before { color: #aaa; font-weight: normal; font-style: normal; font-family: monospace; content: "<'+tag+'>"; }';
+                        schemaTags += '.showStructBrackets *[_tag='+tag+']:after { color: #aaa; font-weight: normal; font-style: normal; font-family: monospace; content: "</'+tag+'>"; }';
                     }
                 });
                 elements.sort();
@@ -160,13 +172,6 @@ return function(writer, config) {
                 }
                 
                 sm.schemaJSON = w.utilities.xmlToJSON($('grammar', sm.schemaXML)[0]);
-                
-                // update the schema for schematags.js
-                // TODO migrate to 4
-//              var stb = w.editor.controlManager.controls.editor_schemaTagsButton;
-//              if (stb.menu) {
-//                  stb.parentControl.buildMenu(stb.menu, null, {disabled: false, mode: 'add'});
-//              }
                 
                 w.event('schemaLoaded').publish();
                 
@@ -226,69 +231,40 @@ return function(writer, config) {
     
     /**
      * Load the CSS and convert it to the internal format
-     * NB: Doesn't work in Chrome.
      * @param {String} url The URL for the CSS
      */
     sm.loadSchemaCSS = function(url) {
-        w.editor.dom.loadCSS(url);
-        if (url.match('converted') != null) {
-            // already converted so exit
-            return;
-        }
-        var name = url.split('/');
-        name = name[name.length-1];
-        var numCss = w.editor.getDoc().styleSheets.length;
-        var cssInt = null;
-        function parseCss() {
-            var stylesheet = null;
-            var stylesheets = w.editor.getDoc().styleSheets;
-            for (var i = 0; i < stylesheets.length; i++) {
-                var s = stylesheets[i];
-                if (s.href && s.href.indexOf(name) != -1) {
-                    stylesheet = s;
-                    break;
-                }
-            }
-            if (stylesheet) {
-                try {
-                    $('#schemaRules', w.editor.dom.doc).remove();
-                    
-                    var rules = stylesheet.cssRules;
-                    var newRules = '';
-                    // adapt the rules to our format, should only modify element names in selectors
-                    for (var i = 0; i < rules.length; i++) {
-                        // chrome won't get proper selector, see: https://code.google.com/p/chromium/issues/detail?id=67782
-                        var selector = rules[i].selectorText;
+        $('#schemaRules', w.editor.dom.doc).remove();
+        
+        $.get(url, function(data) {
+            var cssObj = cssParser(data);
+            var rules = cssObj.stylesheet.rules;
+            for (var i = 0; i < rules.length; i++) {
+                var rule = rules[i];
+                if (rule.type === 'rule') {
+                    var convertedSelectors = [];
+                    for (var j = 0; j < rule.selectors.length; j++) {
+                        var selector = rule.selectors[j];
                         var newSelector = selector.replace(/(^|,|\s)(\w+)/g, function(str, p1, p2, offset, s) {
-                            var tagName = w.utilities.getTagForEditor(p2);
-                            return p1+tagName+'[_tag="'+p2+'"]';
+                            return p1+'*[_tag="'+p2+'"]';
                         });
-                        var css = rules[i].cssText;
-                        var newCss = css.replace(selector, newSelector);
-                        newRules += newCss+'\n';
+                        convertedSelectors.push(newSelector);
+                        
                     }
-                    $('head', w.editor.dom.doc).append('<style id="schemaRules" type="text/css" />');
-                    $('#schemaRules', w.editor.dom.doc).text(newRules);
-                    stylesheet.disabled = true;
-                } catch (e) {
-                    setTimeout(parseCss, 25);
+                    rule.selectors = convertedSelectors;
                 }
-            } else {
-                setTimeout(parseCss, 25);
             }
-        };
-        if (numCss > 0) {
-            parseCss();
-        } else {
-            cssInt = setInterval(function() {
-                var len = w.editor.getDoc().styleSheets.length;
-                if (len > numCss) {
-                    clearInterval(cssInt);
-                    parseCss();
-                }
-            }, 25);
-        }
+            var cssString = cssStringify(cssObj);
+            
+            $('head', w.editor.dom.doc).append('<style id="schemaRules" type="text/css" />');
+            $('#schemaRules', w.editor.dom.doc).text(cssString);
+        });
     };
+    
+    w.event('schemaChanged').subscribe(function(schemaId) {
+        w.schemaManager.schemaId = schemaId;
+        w.schemaManager.loadSchema(schemaId, false, true, function() {});
+    });
     
     return sm;
 };

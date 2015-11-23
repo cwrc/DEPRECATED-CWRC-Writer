@@ -1,10 +1,49 @@
 define(['jquery', 'mapper', 'annotationsManager'], function($, Mapper, AnnotationsManager) {
 
+function handleGraphics($tag) {
+    var url = $tag.attr('url');
+    if (url !== undefined) {
+        $tag.css('backgroundImage','url('+url+')');
+        $tag.css('display','inline-block');
+        var $img = $('<img />');
+        $img.hide();
+        $img.on('load', function() {
+            var height = $(this).height();
+            var width = $(this).width();
+            $tag.width(width);
+            $tag.height(height);
+            $img.remove();
+        });
+        $('body').append($img);
+        $img.attr('src', url);
+    }
+}
+
 return {
 
 id: 'ID',
 header: 'CWRCHEADER',
 blockElements: [],
+
+listeners: {
+    tagAdded: function(tag) {
+        var $tag = $(tag);
+        if ($tag.attr('_tag') === 'GRAPHIC') {
+            handleGraphics($tag);
+        }
+    },
+    tagEdited: function(tag) {
+        var $tag = $(tag);
+        if ($tag.attr('_tag') === 'GRAPHIC') {
+            handleGraphics($tag);
+        }
+    },
+    documentLoaded: function(body) {
+        $(body).find('*[_tag="GRAPHIC"]').each(function(index, el) {
+            handleGraphics($(el));
+        });
+    }
+},
 
 entities: {
     
@@ -151,6 +190,7 @@ note: {
     }
 },
 
+// TODO fix citation
 citation: {
     parentTag: 'BIBCITS',
     textTag: 'BIBCIT',
@@ -181,7 +221,8 @@ citation: {
     },
     reverseMapping: function(xml) {
         return Mapper.getDefaultReverseMapping(xml, {
-            customValues: {content: './text()'}
+            cwrcInfo: {id: 'cwrc:BIBCIT/@REF'},
+            customValues: {content: '.'}
         }, 'cwrc');
     },
     annotation: function(entity, format) {
