@@ -48,6 +48,10 @@ return function(writer) {
         w.entitiesManager.highlightEntity();
 
         var xmlString = '<?xml version="1.0" encoding="UTF-8"?>\n';
+        xmlString += '<?xml-model href="'+w.schemaManager.getCurrentSchema().url+'" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>\n';
+        var currentCSS = w.schemaManager.currentCSS || w.schemaManager.getCurrentSchema().cssUrl;
+        xmlString += '<?xml-stylesheet type="text/css" href="'+currentCSS+'"?>\n';
+        
 
         var body = $(w.editor.getBody());
         var clone = body.clone(false, true); // make a copy, don't clone body events, but clone child events
@@ -530,9 +534,8 @@ return function(writer) {
      * @param doc An XML DOM
      */
     converter.processDocument = function(doc) {
-        var rootName = doc.firstChild.nodeName;
         var schemaId;
-        var cssFilename;
+//        var cssFilename;
         var cssUrl;
         var loadSchemaCss = true; // whether to load schema css
 
@@ -549,7 +552,7 @@ return function(writer) {
                     var aliases = schema.aliases || [];
                     if (schemaUrl == schema.url || $.inArray(schemaUrl, aliases) !== -1) {
                         schemaId = id;
-                        cssFilename = null;
+//                        cssFilename = null;
                         return false;
                     }
                 });
@@ -579,10 +582,10 @@ return function(writer) {
             } else if (node.nodeName === 'xml-stylesheet') {
                 var xmlStylesheetData = node.data;
                 cssUrl = xmlStylesheetData.match(/href="([^"]*)"/)[1];
-                cssFilename = cssUrl.match(/(\w+)(.css)$/);
-                if (cssFilename != null) {
-                    cssFilename = 'css/'+cssFilename[1]+'_converted.css';
-                }
+//                cssFilename = cssUrl.match(/(\w+)(.css)$/);
+//                if (cssFilename != null) {
+//                    cssFilename = 'css/'+cssFilename[1]+'_converted.css';
+//                }
 
             }
         }

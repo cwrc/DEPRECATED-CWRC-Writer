@@ -57,6 +57,12 @@ return function(writer, config) {
     },
     
     /**
+     * The URL for the current CSS
+     * @member {String}
+     */
+    sm.currentCSS = null;
+    
+    /**
      * Add a schema to the list.
      * @fires Writer#schemaAdded
      * @param {Object} config The config object
@@ -237,6 +243,8 @@ return function(writer, config) {
         $('#schemaRules', w.editor.dom.doc).remove();
         
         $.get(url, function(data) {
+            sm.currentCSS = url;
+            
             var cssObj = cssParser(data);
             var rules = cssObj.stylesheet.rules;
             for (var i = 0; i < rules.length; i++) {
