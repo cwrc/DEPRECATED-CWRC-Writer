@@ -477,7 +477,7 @@ return function(config) {
                     var text = info._tag;
                     if (w.isReadOnly) {
                         if (tag === w.root) {
-                            text = w.currentDocId || w.root;
+                            text = w.root;// || w.currentDocId;
                         } else {
                             text = w.utilities.getTitleFromContent(node.text());
                         }
