@@ -532,39 +532,42 @@ return function(writer) {
      * Processes a document and loads it into the editor.
      * @fires Writer#documentLoaded
      * @param doc An XML DOM
+     * @param [schemaIdOverride] The (optional) schemaId to use (overrides document schema)
      */
-    converter.processDocument = function(doc) {
-        var schemaId;
+    converter.processDocument = function(doc, schemaIdOverride) {
+        var schemaId = schemaIdOverride;
         var cssUrl;
         var loadSchemaCss = true; // whether to load schema css
 
         // TODO need a better way of tying this to the schemas config
-
-        // grab the schema (and css) from xml-model
-        for (var i = 0; i < doc.childNodes.length; i++) {
-            var node = doc.childNodes[i];
-            if (node.nodeName === 'xml-model') {
-                var xmlModelData = node.data;
-                var schemaUrl = xmlModelData.match(/href="([^"]*)"/)[1];
-                // Search the known schemas, if the url matches it must be the same one.
-                $.each(w.schemaManager.schemas, function(id, schema) {
-                    var aliases = schema.aliases || [];
-                    if (schemaUrl == schema.url || $.inArray(schemaUrl, aliases) !== -1) {
-                        schemaId = id;
-                        return false;
+        
+        if (schemaId === undefined) {
+            // grab the schema (and css) from xml-model
+            for (var i = 0; i < doc.childNodes.length; i++) {
+                var node = doc.childNodes[i];
+                if (node.nodeName === 'xml-model') {
+                    var xmlModelData = node.data;
+                    var schemaUrl = xmlModelData.match(/href="([^"]*)"/)[1];
+                    // Search the known schemas, if the url matches it must be the same one.
+                    $.each(w.schemaManager.schemas, function(id, schema) {
+                        var aliases = schema.aliases || [];
+                        if (schemaUrl == schema.url || $.inArray(schemaUrl, aliases) !== -1) {
+                            schemaId = id;
+                            return false;
+                        }
+                    });
+                    
+                    if (schemaId === undefined) {
+                        schemaId = 'customSchema';
+                        w.schemaManager.schemas.customSchema = {
+                            name: 'Custom Schema',
+                            url: schemaUrl
+                        };
                     }
-                });
-                
-                if (schemaId === undefined) {
-                    schemaId = 'customSchema';
-                    w.schemaManager.schemas.customSchema = {
-                        name: 'Custom Schema',
-                        url: schemaUrl
-                    };
+                } else if (node.nodeName === 'xml-stylesheet') {
+                    var xmlStylesheetData = node.data;
+                    cssUrl = xmlStylesheetData.match(/href="([^"]*)"/)[1];
                 }
-            } else if (node.nodeName === 'xml-stylesheet') {
-                var xmlStylesheetData = node.data;
-                cssUrl = xmlStylesheetData.match(/href="([^"]*)"/)[1];
             }
         }
 
@@ -573,6 +576,7 @@ return function(writer) {
             w.schemaManager.loadSchemaCSS(cssUrl);
         }
 
+        // TODO this shouldn't be hardcoded
         if (schemaId === undefined) {
             // determine the schema based on the root element
             var root = doc.firstElementChild;
