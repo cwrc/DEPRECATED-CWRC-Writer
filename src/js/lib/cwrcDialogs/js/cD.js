@@ -23,8 +23,8 @@
 // </element ..>
 
 // Tree traversal
-define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function ($) {
-    var cD = {};
+define(['jquery', 'knockout', 'jquery-ui', 'bootstrap', 'bootstrap-datepicker', 'cwrc-api'], function ($, ko) {
+    cD = {};
     (function () {
         // Cwrc Api
         var cwrcApi = null;
@@ -3033,11 +3033,10 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
             $("#cwrcSearchDialog").on('show.bs.modal', function (e) {
                 $('.modal-body-area').css('max-height', $(window).height() * 0.7);
             });
-            
-            $('button.close','#cwrcSearchDialog').on('click', function(e) {
+
+			$('button.close','#cwrcSearchDialog').on('click', function(e) {
                 search.cancel();
             });
-
         }
 
         // search functionality
@@ -3384,9 +3383,9 @@ define('cwrcDialogs', ['jquery', 'jquery-ui', 'bootstrap-datepicker'], function 
         };
 
 		search.cancel = function () {
-		    if (search.cancelled) {
-		        search.cancelled();
-		    }
+			if (search.cancelled) {
+				search.cancelled();
+			}
         }
 		
         search.initiateInfo = function () {

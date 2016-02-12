@@ -35,11 +35,11 @@ var require = {
         'attributeWidget': 'dialogs/attributeWidget',
         
         // cwrcDialogs
-        'knockout': ['http://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min','lib/knockout/knockout-3.3.0'],
-        'bootstrap': ['lib/bootstrap/bootstrap.min'],
-        'bootstrap-datepicker': 'lib/bootstrap/bootstrap-datepicker',
-        'cwrc-api': 'cwrcDialogs/cwrc-api',
-        'cwrcDialogs': 'cwrcDialogs/cD'
+        'knockout': ['http://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min'],
+        'bootstrap': ['https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min'],
+        'bootstrap-datepicker': 'lib/cwrcDialogs/js/lib/bootstrap-datepicker',
+        'cwrc-api': 'lib/cwrcDialogs/js/cwrc-api',
+        'cwrcDialogs': 'lib/cwrcDialogs/js/cD'
     },
     shim: {
         'jquery-ui': ['jquery'],
@@ -59,16 +59,7 @@ var require = {
         },
         
         'bootstrap': ['jquery', 'jquery-ui'],
-        'bootstrap-datepicker': ['bootstrap'],
-        'cwrcDialogs': {
-            deps: ['jquery', 'jquery-ui', 'knockout', 'bootstrap', 'bootstrap-datepicker', 'cwrc-api']
-        }
-    },
-    map: {
-        // '*' means all modules will get 'jquery-private'
-        // for their 'jquery' dependency.
-        '*': { 'jquery': 'jquery-private' },
-        'jquery-private': { 'jquery': 'jquery' }
+        'bootstrap-datepicker': ['bootstrap']
     }
     // cache busting
     // urlArgs: "bust=" +  (new Date()).getTime(),

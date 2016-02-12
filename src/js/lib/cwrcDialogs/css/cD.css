@@ -21,8 +21,13 @@
 }
 */
 
-div.interfaceFieldsContainer.entity_person_recordInfo_originInfo > div.seed > span:nth-child(1) > div:nth-child(3) 
-, div.interfaceFieldsContainer.entity_person_recordInfo_originInfo > div.seed > span:nth-child(1) > div:nth-child(4) 
+/* CSS to hide the display of the recordCreationDate element */
+div.interfaceFieldsContainer.entity_person_recordInfo_originInfo > div.seed > span:nth-child(1) > div:nth-child(3),
+div.interfaceFieldsContainer.entity_person_recordInfo_originInfo > div.seed > span:nth-child(1) > div:nth-child(4), 
+div.interfaceFieldsContainer.entity_organization_recordInfo_originInfo > div.seed > span:nth-child(1) > div:nth-child(3), 
+div.interfaceFieldsContainer.entity_organization_recordInfo_originInfo > div.seed > span:nth-child(1) > div:nth-child(4),
+div.interfaceFieldsContainer.entity_place_recordInfo_originInfo > div.seed > span:nth-child(1) > div:nth-child(3),
+div.interfaceFieldsContainer.entity_place_recordInfo_originInfo > div.seed > span:nth-child(1) > div:nth-child(4)  
 {
   display: none;
 }
