@@ -16,7 +16,7 @@ return function(writer) {
         '<div id="objectColumn" class="column"><h2>Object</h2><ul class="entitiesList"></ul><div class="customEntry"><input type="text" name="customObject" value="" /></div></div>'+
         '</div>'+
         '<div id="currentRelation">'+
-        '<p></p><button>Add Relation</button>'+
+        '<p></p><button type="button">Add Relation</button>'+
         '</div>'+
     '</div>');
     

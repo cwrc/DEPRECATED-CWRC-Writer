@@ -13,7 +13,7 @@ return function(config) {
     var id = 'validation';
     
     $('#'+config.parentId).append('<div id="'+id+'">'+
-            '<div id="'+id+'_buttons"><button>Validate</button><button>Clear</button><button>Help</button></div>'+
+            '<div id="'+id+'_buttons"><button type="button">Validate</button><button type="button">Clear</button><button type="button">Help</button></div>'+
             '<ul class="validationList"></ul>'+
         '</div>');
     

@@ -22,12 +22,12 @@ return function(id, writer) {
     function addRow(prevRow) {
         var newRow;
         // TODO add handling for multiple keywords, currently broken when loading a document
-        var html = '<div class="keywordRow"><input type="text" value="" />';//<button class="add">Add Keyword</button>';
+        var html = '<div class="keywordRow"><input type="text" value="" />';//<button type="button" class="add">Add Keyword</button>';
         if (prevRow == null) {
             html += '</div>';
             newRow = $('#'+id+'RowsParent').append(html).find('.keywordRow');
         } else {
-            html += '<button class="remove">Remove This Keyword</button></div>';
+            html += '<button type="button" class="remove">Remove This Keyword</button></div>';
             prevRow.after(html);
             newRow = prevRow.next();
         }

@@ -21,7 +21,7 @@ return function(writer) {
         '<label for="addEndDate">End Date</label><input type="text" id="addEndDate" />'+
         '</div>'+
         '<p>Format: yyyy or yyyy-mm-dd<br/>e.g. 2010, 2010-10-05</p>'+
-        '<button>Add Further Information</button>'+
+        '<button type="button">Add Further Information</button>'+
         '<p>Note: for DEMO purposes only. Saves are NOT permanent.'+
     '</div>');
     

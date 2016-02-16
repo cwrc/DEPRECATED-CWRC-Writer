@@ -73,7 +73,7 @@ return function(writer, config) {
         '<label>Schema</label>'+
         '<select name="schema">'+
         '</select>'+
-        '<br/><button>Add Schema</button>'+
+        '<br/><button type="button">Add Schema</button>'+
     '</div>'+
     '</div>'+
     '</div>');

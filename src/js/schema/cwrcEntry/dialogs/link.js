@@ -8,7 +8,7 @@ return function(id, writer) {
         '<div>'+
             '<label for="'+id+'_input">Hypertext link (URL or URI)</label>'+
             '<input type="text" id="'+id+'_input" data-type="textbox" data-mapping="URL" style="margin-right: 10px;"/>'+
-            '<button>Check Link</button>'+
+            '<button type="button">Check Link</button>'+
         '</div>'+
     '</div>';
     
