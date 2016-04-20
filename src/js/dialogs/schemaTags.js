@@ -11,6 +11,7 @@ return function(writer) {
     var EDIT = 1;
     var mode = null;
     
+    var tagId = null;
     var tag = null;
     var currentTagName = null;
     var action = null;
@@ -116,7 +117,11 @@ return function(writer) {
             
             switch (mode) {
                 case ADD:
+                    if (w.editor.currentBookmark.tagId == null) {
+                        w.editor.currentBookmark.tagId = tagId;
+                    }
                     w.editor.execCommand('addStructureTag', {bookmark: w.editor.currentBookmark, attributes: attributes, action: action});
+                    tagId = null;
                     break;
                 case EDIT:
                     w.editor.execCommand('editStructureTag', tag, attributes);
@@ -173,8 +178,10 @@ return function(writer) {
                     return;
                 }
             }
-            
-            var tagId = w.editor.currentBookmark.tagId;
+            tagId = w.editor.currentBookmark.tagId;
+            if (tagId == null) {
+                if (window.console) console.warn('No tagId found');
+            }
             w.editor.selection.moveToBookmark(w.editor.currentBookmark);
             
             var valid = w.utilities.isSelectionValid(true, action);
