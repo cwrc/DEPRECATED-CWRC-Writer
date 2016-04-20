@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://cwrc.ca/schemas/orlando_biography_v2.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-stylesheet type="text/css" href="http://cwrc.ca/templates/css/orlando.css"?>
+
+<BIOGRAPHY>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cw="http://cwrc.ca/ns/cw#">
+        <rdf:Description rdf:about="http://localhost:8080/editor/documents/null">
+            <cw:mode>0</cw:mode>
+        </rdf:Description>
+    </rdf:RDF>
+    <DIV0><RESEARCHNOTE></RESEARCHNOTE></DIV0>
+</BIOGRAPHY>
