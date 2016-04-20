@@ -78,9 +78,9 @@ return function(id, writer) {
                 setTimeout(el.update, 50);
             });
             
-            var xmlDoc;
             if (dialog.mode === DialogForm.ADD) {
-                xmlDoc = $.parseXML('<'+writer.root+'><RESEARCHNOTE></RESEARCHNOTE></'+writer.root+'>');
+                var noteUrl = w.cwrcRootUrl+'js/schema/cwrcEntry/xml/note_'+writer.schemaManager.schemaId+'.xml';
+                cwrcWriter.fileManager.loadDocumentFromUrl(noteUrl);
             } else {
                 var parent = config.entry.getTag();
                 xmlDoc = $.parseXML(config.entry.getCustomValue('content'));
@@ -89,9 +89,9 @@ return function(id, writer) {
                 annotation.removeAttr('annotationId');
                 // insert the appropriate wrapper tags
                 var xml = $.parseXML('<'+writer.root+'><'+parent+'></'+parent+'></'+writer.root+'>');
-                xmlDoc = $(xml).find(parent).append(annotation.contents()).end()[0];
+                var xmlDoc = $(xml).find(parent).append(annotation.contents()).end()[0];
+                cwrcWriter.fileManager.loadDocumentFromXml(xmlDoc);
             }
-            cwrcWriter.fileManager.loadDocumentFromXml(xmlDoc);
         }
         
         getCwrcWriter();
