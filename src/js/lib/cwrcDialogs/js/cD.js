@@ -63,8 +63,8 @@ define(['jquery', 'knockout', 'jquery-ui', 'bootstrap', 'bootstrap-datepicker', 
         params.modalOptions = {
             show : false,
             keyboard : true,
-            backdrop : false,
-            // maxHeight: 500,
+            backdrop : false
+            // maxHeight: 500
         }
         var dialogType = "";
 
