@@ -52,6 +52,9 @@ return function(config) {
     // id attribute name, based on schema
     w.idName = '';
     
+    // is the editor initialized
+    w.isInitialized = false;
+    
     // is the editor in readonly mode
     w.isReadOnly = false;
     if (config.readonly !== undefined && typeof config.readonly === 'boolean') {
@@ -749,6 +752,7 @@ return function(config) {
                     // highlight tracking
                     body.on('mouseup', _onMouseUpHandler).on('keydown',_onKeyDownHandler).on('keyup',_onKeyUpHandler);
                     
+                    w.isInitialized = true;
                     w.event('writerInitialized').publish(w);
                 });
                 ed.on('change',_onChangeHandler);

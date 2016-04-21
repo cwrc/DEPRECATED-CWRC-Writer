@@ -55,7 +55,11 @@ return function(id, writer) {
             if (cwrcWriter == null) {
                 setTimeout(getCwrcWriter, 50);
             } else {
-                cwrcWriter.event('writerInitialized').subscribe(postSetup);
+                if (cwrcWriter.isInitialized) {
+                    postSetup();
+                } else {
+                    cwrcWriter.event('writerInitialized').subscribe(postSetup);
+                }
             }
         }
         
