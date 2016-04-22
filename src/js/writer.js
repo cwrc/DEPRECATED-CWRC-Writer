@@ -547,7 +547,7 @@ return function(config) {
         if (entity != null) {
             id = entity.getAttribute('name');
             type = w.entitiesManager.getEntity(id).getType();
-            if (entityClick && (type === 'note' || type === 'citation' || type === 'keyword')) {
+            if (type === 'note' || type === 'citation' || type === 'keyword') {
                 // entity marker's clicked so edit the entity
                 w.tagger.editTag(id);
             }

@@ -32,7 +32,11 @@ return function(id, writer) {
     
     dialog.$el.on('beforeShow', function(e, config) {
         iframe = dialog.$el.find('iframe')[0];
-        iframe.src = 'note.htm';
+        var noteUrl = 'note.htm';
+        if (w.isReadOnly) {
+            noteUrl = 'reader.htm';
+        }
+        iframe.src = noteUrl;
         
         // hack to get the writer
         function getCwrcWriter() {
