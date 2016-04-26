@@ -8,22 +8,6 @@ body,
   font-family: 'Trebuchet MS', Tahoma, Arial, sans-serif;
 }
 
-a,
-a:visited,
-a:link,
-A:link
-{
-  color: #000;
-}
-
-a:hover,
-A:hover
-{
-  color: #000;
-  background: transparent;
-  text-decoration: underline;
-}
-
 
 
 /* Header */
@@ -118,10 +102,6 @@ A:hover
   font-size: 11px;
 }
 
-#footer a
-{
-  text-decoration: underline;
-}
 
 
 /* Fullscreen Image Annotation */
