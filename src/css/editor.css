@@ -48,39 +48,40 @@ body {
 .showEntityBrackets .entityHighlight .entity {
     border-width: 2px;
 }
-/*
+
 .entityHighlight.person {
-    background-color: #FF0000;
+    background-color: rgba(255,0,0,0.2);
 }
 
 .entityHighlight.date {
-    background-color: #FF7400;
+    background-color: rgba(255,116,0,0.2);
 }
 
 .entityHighlight.place {
-    background-color: #009999;
+    background-color: rgba(0,153,153,0.2);
 }
 
 .entityHighlight.event {
-    background-color: #00CC00;
+    background-color: rgba(0,204,0,0.2);
 }
 
 .entityHighlight.org {
-    background-color: #3914AF; 
+    background-color: rgba(57,20,175,0.2);
 }
 
 .entityHighlight.title {
-    background-color: #debb00;
+    background-color: rgba(222,187,0,0.2);
 }
 
 .entityHighlight.correction {
-    background-color: #FF3300;
+    background-color: rgba(255,51,0,0.2);
 }
 
 .entityHighlight.link {
-    background-color: #3366ff;
+    background-color: rgba(51,102,255,0.2);
 }
-*/
+
+
 .showEntityBrackets .person {
     border-color: #FF0000;
 }
