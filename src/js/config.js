@@ -5,7 +5,7 @@ var require = {
         'jquery': ['http://code.jquery.com/jquery-1.9.1.min','lib/jquery/jquery-1.9.1'],
         'jquery-ui': ['lib/jquery/jquery-ui-1.10.4.min'],
         'jquery-migrate': ['lib/jquery/jquery-migrate-1.2.1'],
-        'jquery.layout': 'lib/jquery/jquery.layout-latest.min',
+        'jquery.layout': 'lib/jquery/jquery.layout.min',
         'jquery.tablayout': 'lib/jquery/jquery.layout.resizeTabLayout-1.3',
         'jquery.contextmenu': 'lib/jquery/jquery.contextmenu',
         'jquery.tmpl': 'lib/jquery/jquery.tmpl.min',
@@ -43,7 +43,7 @@ var require = {
     },
     shim: {
         'jquery-ui': ['jquery'],
-        'jquery.layout': ['jquery'],
+        'jquery.layout': ['jquery', 'jquery-ui'],
         'jquery.tablayout': ['jquery.layout'],
         'jquery.contextmenu': ['jquery'],
         'jquery.tmpl': ['jquery'],
