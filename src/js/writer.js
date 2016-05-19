@@ -269,7 +269,6 @@ return function(config) {
     };
     
     function _onLinkMouseOver(evt) {
-        console.log('linkmouseover');
         var entityId = this.getAttribute('name');
         var ent = w.entitiesManager.getEntity(entityId);
         var url;
