@@ -13,18 +13,20 @@ define([
 
 function handleResize(dialogEl) {
     if (dialogEl.is(':visible')) {
-        var winWidth = $(window).width();
-        var winHeight = $(window).height();
-        var dialogWidth = dialogEl.dialog('option', 'width');
-        var dialogHeight = dialogEl.dialog('option', 'height');
-        
-        if (dialogWidth > winWidth) {
-            dialogEl.dialog('option', 'width', winWidth * 0.8);
+        if (dialogEl.parent('.ui-dialog').hasClass('linkPopup') == false) {
+            var winWidth = $(window).width();
+            var winHeight = $(window).height();
+            var dialogWidth = dialogEl.dialog('option', 'width');
+            var dialogHeight = dialogEl.dialog('option', 'height');
+            
+            if (dialogWidth > winWidth) {
+                dialogEl.dialog('option', 'width', winWidth * 0.8);
+            }
+            if (dialogHeight > winHeight) {
+                dialogEl.dialog('option', 'height', winHeight * 0.8);
+            }
+            dialogEl.dialog('option', 'position', {my: 'center', at: 'center', of: window});
         }
-        if (dialogHeight > winHeight) {
-            dialogEl.dialog('option', 'height', winHeight * 0.8);
-        }
-        dialogEl.dialog('option', 'position', {my: 'center', at: 'center', of: window});
     }
 }
     

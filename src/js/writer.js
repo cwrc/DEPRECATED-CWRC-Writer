@@ -268,6 +268,77 @@ return function(config) {
         _doHighlightCheck(w.editor, evt);
     };
     
+    function _onLinkMouseOver(evt) {
+        console.log('linkmouseover');
+        var entityId = this.getAttribute('name');
+        var ent = w.entitiesManager.getEntity(entityId);
+        var url;
+        for (var key in ent.getAttributes()) {
+            // FIXME assuming url is first attribute
+            url = ent.getAttributes()[key];
+            break;
+        }
+        var dId = w.editor.id+'_linkDialog';
+        var $dEl = $('#'+dId).first();
+        if ($dEl.length === 0) {
+            $dEl = $('<div id="'+dId+'"></div>').appendTo(document.body);
+        }
+        
+        $dEl.dialog({
+            dialogClass: 'linkPopup',
+            resizable: false,
+            draggable: false,
+            height: 30,
+            minWidth: 40,
+            title: url,
+            open: function(event, ui) {
+                $dEl.parent().find('.ui-dialog-titlebar-close').hide();
+                var width = $dEl.parent().find('.ui-dialog-title').width();
+                $dEl.dialog('option', 'width', width+30);
+            },
+            position: {
+                using: function(w, topLeft, posObj) {
+                    var $dEl = posObj.element.element;
+                    var $entEl = $(this);
+                    var entOffset = $entEl.offset();
+                    var frameOffset = $(w.editor.iframeElement).offset();
+                    var scrollTop = $(w.editor.getBody()).scrollTop();
+                    
+                    var actualOffset = frameOffset.top + entOffset.top + $entEl.height();
+                    var docHeight = $(document.body).height();
+                    if (actualOffset+30 > docHeight) {
+                        // TODO not working
+                        // topLeft.top = actualOffset-(docHeight+30);
+                    }
+                    topLeft.top = actualOffset - (docHeight + scrollTop);
+                    topLeft.left = frameOffset.left + entOffset.left;
+                    $dEl.css({
+                       top: topLeft.top+'px',
+                       left: topLeft.left+'px'
+                    });
+                }.bind(this, w)
+            }
+        });
+        
+        $dEl.parent().find('.ui-dialog-title').one('click', function() {
+            var url = $dEl.dialog('option', 'title');
+            window.open(url);
+        });
+        
+        var closeId;
+        closeId = setTimeout(function() {
+            $dEl.dialog('close');
+        }, 1000);
+        $dEl.parent().on('mouseover', function() {
+            clearTimeout(closeId);
+        });
+        $dEl.parent().on('mouseout', function() {
+            closeId = setTimeout(function() {
+                $dEl.dialog('close');
+            }, 500);
+        });
+    };
+    
     function _onKeyDownHandler(evt) {
         w.editor.lastKeyPress = evt.which; // store the last key press
         if (w.isReadOnly) {
@@ -751,6 +822,8 @@ return function(config) {
                     
                     // highlight tracking
                     body.on('mouseup', _onMouseUpHandler).on('keydown',_onKeyDownHandler).on('keyup',_onKeyUpHandler);
+                    // linkPopup
+                    body.on('mouseover', '[_type="link"]', _onLinkMouseOver);
                     
                     w.isInitialized = true;
                     w.event('writerInitialized').publish(w);

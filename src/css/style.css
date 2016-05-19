@@ -645,6 +645,16 @@ html, body {
     margin-left: 5px;
 }
 
+.linkPopup .ui-dialog-content {
+	padding: 0 !important;
+}
+
+.linkPopup .ui-dialog-title {
+	text-decoration: underline;
+	cursor: pointer;
+	width: auto !important;
+}
+
 .attributeWidget label {
     display: inline;
 }
