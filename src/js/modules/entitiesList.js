@@ -224,10 +224,14 @@ return function(config) {
             for (var infoKey in infoObject) {
                 if (showMetaKeys || metaKeys.indexOf(infoKey) == -1) {
                     var info = infoObject[infoKey];
-                    if ($.isPlainObject(info)) {
-                        buildString(info);
+                    if (infoKey.toLowerCase() == 'ref' || infoKey.toLowerCase() == 'target') {
+                        infoString += '<li><strong>'+infoKey+'</strong>: <a href="'+info+'" target="_blank">'+info+'</a></li>';
                     } else {
-                        infoString += '<li><strong>'+infoKey+'</strong>: '+info+'</li>';
+                        if ($.isPlainObject(info)) {
+                            buildString(info);
+                        } else {
+                            infoString += '<li><strong>'+infoKey+'</strong>: '+info+'</li>';
+                        }
                     }
                 }
             }

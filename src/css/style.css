@@ -378,8 +378,12 @@ html, body {
     height: auto;
 }
 
-.entitiesList li:hover {
+.entitiesList > li:hover {
     cursor: pointer;
+}
+
+.entitiesList > li.selected:hover {
+    cursor: default;
 }
 
 .relationsList li, .validationList li {
