@@ -15,6 +15,8 @@ html, body {
     font-size: 10px;
     color: #333;
     overflow: hidden;
+    height: 100%;
+    width: 100%;
 }
 
 .cwrc {
@@ -67,11 +69,6 @@ html, body {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);}
-
-#cwrc_wrapper {
-    height: 100%;
-    width: 100%;
-}
 
 #cwrc_header {
     padding: 0 10px;
