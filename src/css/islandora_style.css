@@ -1,31 +1,5 @@
 
 
-/* General elements */
-
-body,
-.ui-widget
-{
-  font-family: 'Trebuchet MS', Tahoma, Arial, sans-serif;
-}
-
-a,
-a:visited,
-a:link,
-A:link
-{
-  color: #000;
-}
-
-a:hover,
-A:hover
-{
-  color: #000;
-  background: transparent;
-  text-decoration: underline;
-}
-
-
-
 /* Header */
 
 #cwrc_header
