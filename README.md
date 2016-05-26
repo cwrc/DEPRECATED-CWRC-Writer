@@ -129,9 +129,8 @@ The bulk of the work in setting up the CWRC-Writer is in the delegator.  The fol
 
 The CWRC-Writer can be configured for individual documents by including configuration information in the documents themselves:  
 
-1.  XML/RDF mode.  The default mode is XML & RDF with no overlap.
-
-This can be overridden by a `cw:mode` setting in the RDF:
+#### XML/RDF mode
+The default mode is XML & RDF. This can be overridden by a `cw:mode` setting in the RDF:
 
 ```
 <rdf:Description rdf:about="http://localhost:8080/editor/documents/null">
@@ -145,9 +144,8 @@ where allowable values for `cw:mode` are:
 1 = XML  
 2 = RDF
 
-1.  Allow Overlap. The default is to disallow overlapping annotations.
-
-This can be overridden by a `cw:allowOverlap` setting in the RDF:
+#### Allow Overlap
+The default is to disallow overlapping annotations. This can be overridden by a `cw:allowOverlap` setting in the RDF:
 
 ```
 <rdf:Description rdf:about="http://localhost:8080/editor/documents/null">
