@@ -35,8 +35,6 @@ return function(config) {
     
     w.project = config.project || {}; // the current project (cwrc or russell)
     
-    w.containerId = config.containerId; // the id of the element to initialize cwrcwriter in
-    
     w.baseUrl = window.location.protocol+'//'+window.location.host+'/'; // the url for referencing various external services
     w.cwrcRootUrl = config.cwrcRootUrl; // the url which points to the root of the cwrcwriter location
     if (w.cwrcRootUrl == null) {
