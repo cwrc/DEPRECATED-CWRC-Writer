@@ -21,7 +21,7 @@ The Canadian Writing Research Collaboratory (CWRC) is developing an in-browser t
 
 ## Overview
 
-CWRCWriter is a wysiwyg text editor for in-browser XML editing and stand-off RDF annotation.  The editor is a [JQuery](https://jquery.com) customization of the [TinyMCE](http://www.tinymce.com) editor.  CWRCWriter requires several (not provided) supporting services: 
+CWRC-Writer is a wysiwyg text editor for in-browser XML editing and stand-off RDF annotation.  The editor is a [JQuery](https://jquery.com) customization of the [TinyMCE](http://www.tinymce.com) editor.  CWRC-Writer requires several (not provided) supporting services: 
 
   * document store, to list/retrieve/save/delete/update XML documents
   * annotation store, to list/retrieve/save/delete/update RDF annotations
@@ -32,8 +32,8 @@ CWRCWriter is a wysiwyg text editor for in-browser XML editing and stand-off RDF
   * template service, to provide predefined XML templates 
   * documentation service, to provide help for various functions
 
-The services are configured through a 'delegator' class to which the CWRCWriter makes predefined calls without any knowledge of the underlying implementation, allowing easier substitution of your own document store, etc.  If you have existing server-side services, you'll create a delegator to call out to your services.  You may alternatively create a delegator that implements some or all services in-browser.
-Most of the work in setting up CWRCWriter for your project will be implementing a delegator, and the corresponding services if you don't already have them.  
+The services are configured through a 'delegator' class to which the CWRC-Writer makes predefined calls without any knowledge of the underlying implementation, allowing easier substitution of your own document store, etc.  If you have existing server-side services, you'll create a delegator to call out to your services.  You may alternatively create a delegator that implements some or all services in-browser.
+Most of the work in setting up CWRC-Writer for your project will be implementing a delegator, and the corresponding services if you don't already have them.  
 
 ![Picture](docs/images/Typical_Setup.png)
 
@@ -88,7 +88,7 @@ See https://github.com/cwrc/CWRC-Writer/blob/development/src/js/layout.js for an
 
 ### Delegate to your services
 
-The bulk of the work in setting up the CWRCWriter is in the delegator.  The following UML diagram shows how the default CWRCWriter delegates for the CWRC project.  The methods that must be implemented for a new project are those in the 'delegator' class.
+The bulk of the work in setting up the CWRC-Writer is in the delegator.  The following UML diagram shows how the default CWRC-Writer delegates for the CWRC project.  The methods that must be implemented for a new project are those in the 'delegator' class.
 
 ![Picture](docs/images/Delegator_UML.png)
 
@@ -127,11 +127,11 @@ The bulk of the work in setting up the CWRCWriter is in the delegator.  The foll
 
 ### Configuration within documents
 
-The CWRCWriter can be configured for individual documents by including configuration information in the documents themselves:  
+The CWRC-Writer can be configured for individual documents by including configuration information in the documents themselves:  
 
-1.  XML/RDF mode.  The default mode isXML & RDF with no overlap.
+1.  XML/RDF mode.  The default mode is XML & RDF with no overlap.
 
-This can be overridden by a cw:mode setting in the RDF:
+This can be overridden by a `cw:mode` setting in the RDF:
 
 ```
 <rdf:Description rdf:about="http://localhost:8080/editor/documents/null">
@@ -145,6 +145,16 @@ where allowable values for `cw:mode` are:
 1 = XML  
 2 = RDF
 
+2.  Allow Overlap. The default is to disallow overlapping annotations.
+
+This can be overridden by a `cw:allowOverlap` setting in the RDF:
+
+```
+<rdf:Description rdf:about="http://localhost:8080/editor/documents/null">
+    <cw:allowOverlap>true</cw:allowOverlap>
+</rdf:Description>
+```
+
 **[Back to top](#table-of-contents)**
 
 ## Usage
@@ -155,7 +165,7 @@ where allowable values for `cw:mode` are:
 
 ## Customization
 
-The CWRCWriter menus and layout can be customized.
+The CWRC-Writer menus and layout can be customized.
 
 **[Back to top](#table-of-contents)**
 
