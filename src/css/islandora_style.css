@@ -1,15 +1,5 @@
 
 
-/* General elements */
-
-body,
-.ui-widget
-{
-  font-family: 'Trebuchet MS', Tahoma, Arial, sans-serif;
-}
-
-
-
 /* Header */
 
 #cwrc_header
@@ -102,6 +92,10 @@ body,
   font-size: 11px;
 }
 
+#footer a
+{
+  text-decoration: underline;
+}
 
 
 /* Fullscreen Image Annotation */
