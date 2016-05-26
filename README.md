@@ -145,7 +145,7 @@ where allowable values for `cw:mode` are:
 1 = XML  
 2 = RDF
 
-2.  Allow Overlap. The default is to disallow overlapping annotations.
+1.  Allow Overlap. The default is to disallow overlapping annotations.
 
 This can be overridden by a `cw:allowOverlap` setting in the RDF:
 
