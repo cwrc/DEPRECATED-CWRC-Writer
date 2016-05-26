@@ -71,7 +71,7 @@ require(['jquery', 'knockout'], function($, knockout) {
 #### Initialize the Writer and any modules
 ```
 writer = new Writer(config);
-writer.init('editor');
+writer.init('editor'); // convert the textarea with id "editor" to the CWRC-Writer
 writer.event('writerInitialized').subscribe(function(writer) {
   // load modules then do the setup
   require(['modules/entitiesList','modules/relations','modules/selection',
@@ -133,14 +133,16 @@ The CWRCWriter can be configured for individual documents by including configura
 
 This can be overridden by a cw:mode setting in the RDF:
 
+```
 <rdf:Description rdf:about="http://localhost:8080/editor/documents/null">
     <cw:mode>0</cw:mode>
 </rdf:Description>
+```
 
-where allowable values for cw:mode are:
+where allowable values for `cw:mode` are:
 
-0 = XML & RDF
-1 = XML
+0 = XML & RDF  
+1 = XML  
 2 = RDF
 
 **[Back to top](#table-of-contents)**
