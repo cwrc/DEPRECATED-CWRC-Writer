@@ -10,7 +10,7 @@ var require = {
         'jquery.contextmenu': 'lib/jquery/jquery.contextmenu',
         'jquery.tmpl': 'lib/jquery/jquery.tmpl.min',
         'jquery.watermark': 'lib/jquery/jquery.watermark.min',
-        'jquery.jstree': 'lib/jstree/jstree.3.0.0',
+        'jquery.jstree': 'lib/jstree/jstree.3.3.1.min',
         'jquery.snippet': 'lib/snippet/jquery.snippet.min',
         'jquery.xpath': 'lib/jquery/jquery.xpath',
         
