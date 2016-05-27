@@ -945,11 +945,12 @@ return function(config) {
     $tree.on('keydown.jstree', function(e) {
         //console.log(e.which);
     });
+    $tree.on('loaded.jstree', function(e, data) {
+        w.event('structureTreeInitialized').publish(tree);
+    });
     
     // add to writer
     w.tree = tree;
-    
-    w.event('structureTreeInitialized').publish(tree);
     
     return tree;
 };
