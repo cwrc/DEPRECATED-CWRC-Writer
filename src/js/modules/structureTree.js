@@ -78,7 +78,7 @@ return function(config) {
      * @lends StructureTree.prototype
      */
     var tree = {
-        currentlySelectedNode: null, // id of the currently selected node
+        currentlySelectedNodes: [], // ids of the currently selected nodes
         currentlySelectedEntity: null, // id of the currently selected entity (as opposed to node, ie. struct tag)
         selectionType: null, // is the node or the just the contents of the node selected?
         NODE_SELECTED: 0,
@@ -107,8 +107,8 @@ return function(config) {
         tree.update();
     });
     w.event('contentCopied').subscribe(function() {
-        if (tree.currentlySelectedNode != null) {
-            var clone = $('#'+tree.currentlySelectedNode, w.editor.getBody()).clone();
+        if (tree.currentlySelectedNodes.length > 0) {
+            var clone = $('#'+tree.currentlySelectedNodes[0], w.editor.getBody()).clone();
             w.editor.copiedElement.element = clone.wrapAll('<div />').parent()[0];
             w.editor.copiedElement.selectionType = tree.selectionType;
         }
@@ -117,23 +117,25 @@ return function(config) {
         tree.update();
     });
     w.event('writerKeydown').subscribe(function(evt) {
-        if (tree.currentlySelectedNode != null) {
+        if (tree.currentlySelectedNodes.length > 0) {
+            var nodeId = tree.currentlySelectedNodes[0];
+            
             // browsers have trouble deleting divs, so use the tree and jquery as a workaround
             if (evt.which == 8 || evt.which == 46) {
                     // cancel keyboard delete
+                    // TODO doesn't cancel quickly enough
                     tinymce.dom.Event.cancel(evt);
                     if (tree.selectionType == tree.NODE_SELECTED) {
-                        w.tagger.removeStructureTag(tree.currentlySelectedNode, true);
+                        w.tagger.removeStructureTag(nodeId, true);
                     } else {
-                        var id = tree.currentlySelectedNode;
-                        w.tagger.removeStructureTagContents(tree.currentlySelectedNode);
-                        w.selectStructureTag(id, true);
+                        w.tagger.removeStructureTagContents(nodeId);
+                        w.selectStructureTag(nodeId, true);
                     }
             } else if (evt.ctrlKey == false && evt.metaKey == false && evt.which >= 48 && evt.which <= 90) {
                 // handle alphanumeric characters when whole tree node is selected
                 // remove the selected node and set the focus to the closest node
                 if (tree.selectionType == tree.NODE_SELECTED) {
-                    var currNode = $('#'+tree.currentlySelectedNode, w.editor.getBody());
+                    var currNode = $('#'+nodeId, w.editor.getBody());
                     var collapseToStart = true;
                     var newCurrentNode = currNode.nextAll('[_tag]')[0];
                     if (newCurrentNode == null) {
@@ -143,7 +145,7 @@ return function(config) {
                             newCurrentNode = currNode.prevAll('[_tag]')[0];
                         }
                     }
-                    w.tagger.removeStructureTag(tree.currentlySelectedNode, true);
+                    w.tagger.removeStructureTag(nodeId, true);
                     if (newCurrentNode != null) {
                         var rng = w.editor.selection.getRng(true);
                         rng.selectNodeContents(newCurrentNode);
@@ -155,12 +157,12 @@ return function(config) {
         }
     });
     w.event('writerKeyup').subscribe(function(evt) {
-        // if the user's typing we don't want the currentlySelectedNode to be set
-        // calling highlightNode will clear currentlySelectedNode
-        if (tree.currentlySelectedNode != null) {
-            var currNode = $('#'+tree.currentlySelectedNode, w.editor.getBody())[0];
-            tree.highlightNode(currNode);
-        }
+        // if the user's typing we don't want the currentlySelectedNodes to be set
+        // calling highlightNode will clear currentlySelectedNodes
+//        if (tree.currentlySelectedNodes.length > 0) {
+//            var currNode = $('#'+tree.currentlySelectedNodes[0], w.editor.getBody())[0];
+//            tree.highlightNode(currNode);
+//        }
     });
     
     w.event('entityAdded').subscribe(function(entityId) {
@@ -234,6 +236,9 @@ return function(config) {
             parents.push(el.id);
         });
         parents.reverse();
+        
+        // TODO handling for readonly mode where only headings are in the tree
+        
         // expand the corresponding nodes in the tree
         for (var i = 0; i < parents.length; i++) {
             var parentId = parents[i];
@@ -263,7 +268,7 @@ return function(config) {
                     treeNode = $('[name="'+id+'"]', $tree);
                 }
                 $tree.jstree('deselect_all');
-                _onNodeDeselect(); // manually trigger deselect behaviour, primarily to clear currentlySelectedNode
+                _onNodeDeselect(); // manually trigger deselect behaviour, primarily to clear currentlySelectedNodes
                 var result = $tree.jstree('select_node', treeNode);
                 //if (result === false || result.attr('id') == 'tree') {
                     ignoreSelect = false;
@@ -299,6 +304,7 @@ return function(config) {
      * @param {integer} selectionType The type of selection to do, should match NODE_SELECTED or CONTENTS_SELECTED
      */
     tree.selectNode = function(node, selectionType) {
+        // TODO verify this is ever called
         if (node) {
             var id = node.id;
             if (id) {
@@ -321,6 +327,7 @@ return function(config) {
      * @param {integer} selectionType NODE_SELECTED or CONTENTS_SELECTED
      */
     function selectNode(node, selectionType) {
+        // TODO verify this is ever called
         _removeCustomClasses();
         var activeNode = $('a[class*=ui-state-active]', '#'+id);
         activeNode.removeClass('jstree-clicked ui-state-active');
@@ -336,7 +343,7 @@ return function(config) {
         }
         aChildren.addClass('jstree-clicked ui-state-active');
         
-        tree.currentlySelectedNode = id;
+        tree.currentlySelectedNodes = [id];
         tree.selectionType = selectionType;
         
         if (w.structs[id] != null) {
@@ -349,7 +356,7 @@ return function(config) {
             }
         } else if (w.entitiesManager.getEntity(id) !== undefined) {
             tree.currentlySelectedEntity = id;
-            tree.currentlySelectedNode = null;
+            tree.currentlySelectedNodes = [];
             tree.selectionType = null;
             aChildren.addClass('nodeSelected').removeClass('contentsSelected');
 //            ignoreSelect = true;
@@ -548,6 +555,24 @@ return function(config) {
         });
     }
     
+    function _doConditionalSelect($tree, node, event) {
+        if (event.ctrlKey) {
+            // only allow multiselect for siblings
+            var selected = $tree.jstree('get_selected');
+            if (selected.length == 0) {
+                return true;
+            } else {
+                var liId = selected[0];
+                if (liId == node.id) {
+                    return true;
+                }
+                var isSibling = $('#'+liId).siblings('#'+node.id).length == 1;
+                return isSibling;
+            }
+        }
+        return true;
+    }
+    
     function _onNodeSelect(event, data) {
         if (!ignoreSelect) {
             nodeSelected = true;
@@ -555,10 +580,22 @@ return function(config) {
             var $target = $(data.event.currentTarget);
             var selectContents = $target.hasClass('contentsSelected');
             _removeCustomClasses();
+            
+            // clear other selections if not multiselect
+            if (data.event.ctrlKey == false) {
+                if (tree.currentlySelectedNodes.indexOf(id) != -1) {
+                    tree.currentlySelectedNodes = [id];
+                } else {
+                    tree.currentlySelectedNodes = [];
+                }
+            }
+            
             if (id) {
-                // already selected node, toggle selection type
-                if (id == tree.currentlySelectedNode) {
+                if (tree.currentlySelectedNodes.indexOf(id) != -1) {
+                    // already selected node, toggle selection type
                     selectContents = !selectContents;
+                } else {
+                    tree.currentlySelectedNodes.push(id);
                 }
                 
                 if (selectContents) {
@@ -567,12 +604,11 @@ return function(config) {
                     $target.addClass('nodeSelected').removeClass('contentsSelected');
                 }
                 
-                tree.currentlySelectedNode = id;
                 tree.selectionType = selectContents ? tree.CONTENTS_SELECTED : tree.NODE_SELECTED;
                 
                 if (w.entitiesManager.getEntity(id) !== undefined) {
                     tree.currentlySelectedEntity = id;
-                    tree.currentlySelectedNode = null;
+                    tree.currentlySelectedNodes = [];
                     tree.selectionType = null;
                     $target.addClass('nodeSelected').removeClass('contentsSelected');
                     ignoreSelect = true;
@@ -583,7 +619,7 @@ return function(config) {
                         w.dialogManager.show('header');
                     } else {
                         ignoreSelect = true; // set to true so tree.highlightNode code isn't run by editor's onNodeChange handler
-                        w.selectStructureTag(id, selectContents);
+                        w.selectStructureTag(tree.currentlySelectedNodes, selectContents);
                     }
                 } 
             }
@@ -591,9 +627,20 @@ return function(config) {
         ignoreSelect = false;
     }
     
-    function _onNodeDeselect() {
-        _removeCustomClasses();
-        tree.currentlySelectedNode = null;
+    function _onNodeDeselect(event, data) {
+        if (data !== undefined) {
+            var $target = $(data.event.currentTarget);
+            $target.removeClass('nodeSelected contentsSelected');
+            var id = data.node.li_attr.name;
+            var index = tree.currentlySelectedNodes.indexOf(id);
+            if (index != -1) {
+                tree.currentlySelectedNodes.splice(index, 1);
+            }
+        } else {
+            // clear everything
+            _removeCustomClasses();
+            tree.currentlySelectedNodes = [];
+        }
         tree.currentlySelectedEntity = null;
         tree.selectionType = null;
     }
@@ -703,7 +750,7 @@ return function(config) {
 //    $.vakata.dnd.settings.helper_left = 15;
 //    $.vakata.dnd.settings.helper_top = 20;
     
-    var plugins = ['wholerow','contextmenu'];
+    var plugins = ['wholerow','contextmenu','conditionalselect'];
     if (w.isReadOnly !== true) {
         plugins.push('dnd');
     }
@@ -726,6 +773,8 @@ return function(config) {
                 state: {opened: true}
             }
         },
+        multiple: true,
+        conditionalselect: _doConditionalSelect.bind(this, $tree),
         contextmenu: {
             select_node: false,
             show_at_node: false,

@@ -115,6 +115,11 @@ return function(config) {
         
         w.removeHighlights();
         
+        if ($.isArray(id)) {
+            // TODO add handling for multiple ids
+            id = id[id.length-1];
+        }
+        
         var node = $('#'+id, w.editor.getBody());
         var nodeEl = node[0];
         if (nodeEl != null) {

@@ -811,7 +811,7 @@ return function(writer) {
         id = id || w.editor.currentStruct;
         
         if (removeContents == undefined) {
-            if (w.tree && w.tree.currentlySelectedNode != null && w.tree.selectionType != null) {
+            if (w.tree && w.tree.currentlySelectedNodes.length > 0 && w.tree.selectionType != null) {
                 removeContents = true;
             }
         }
