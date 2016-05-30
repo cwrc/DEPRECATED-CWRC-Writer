@@ -697,7 +697,11 @@ return function(writer) {
         var node;
         if (bookmark.tagId) {
             // this is used when adding tags through the structure tree
-            node = $('#'+bookmark.tagId, w.editor.getBody())[0];
+            if ($.isArray(bookmark.tagId)) {
+                node = $('#'+bookmark.tagId.join(',#'), w.editor.getBody());
+            } else {
+                node = $('#'+bookmark.tagId, w.editor.getBody())[0];
+            }
         } else {
             // this is meant for user text selections
             node = bookmark.rng.commonAncestorContainer;
@@ -723,10 +727,15 @@ return function(writer) {
         } else if (action == 'after') {
             $(node).after(content);
         } else if (action == 'around') {
-            $(node).wrap(content);
+            if (node.length > 1) {
+                $(node).wrapAll(content);
+            } else {
+                $(node).wrap(content);
+            }
         } else if (action == 'inside') {
             $(node).wrapInner(content);
         } else {
+            // default action = add
             w.editor.selection.moveToBookmark(bookmark);
             selection = w.editor.selection.getContent();
             if (selection == '') selection = '\uFEFF';

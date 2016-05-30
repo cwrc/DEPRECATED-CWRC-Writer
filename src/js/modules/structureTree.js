@@ -556,7 +556,7 @@ return function(config) {
     }
     
     function _doConditionalSelect($tree, node, event) {
-        if (event.ctrlKey) {
+        if (event.ctrlKey || event.shiftKey) {
             // only allow multiselect for siblings
             var selected = $tree.jstree('get_selected');
             if (selected.length == 0) {
@@ -582,7 +582,7 @@ return function(config) {
             _removeCustomClasses();
             
             // clear other selections if not multiselect
-            if (data.event.ctrlKey == false) {
+            if (data.event.ctrlKey == false && data.event.shiftKey == false) {
                 if (tree.currentlySelectedNodes.indexOf(id) != -1) {
                     tree.currentlySelectedNodes = [id];
                 } else {
@@ -710,7 +710,11 @@ return function(config) {
                     } else {
                         var actionType = parentText.match(/\w+$/)[0].toLowerCase();
                         w.editor.currentBookmark = w.editor.selection.getBookmark(1);
-                        w.editor.currentBookmark.tagId = tagId;
+                        if (actionType === 'around') {
+                            w.editor.currentBookmark.tagId = tree.currentlySelectedNodes;
+                        } else {
+                            w.editor.currentBookmark.tagId = tagId;
+                        }
                         var parentTag = $('#'+tagId, w.editor.getBody());
                         w.dialogManager.schemaTags.addSchemaTag({key: obj.item.key, action: actionType, parentTag: parentTag});
                     }
@@ -789,6 +793,30 @@ return function(config) {
                 
                 var tagId = node.li_attr.name;
                 
+                if (tree.currentlySelectedNodes.length > 1) {
+                    menuConfig.mergeTags = {
+                        label: 'Merge Tags',
+                        icon: w.cwrcRootUrl+'img/arrow_join.png',
+                        action: function(obj) {
+                            var newHtml = '';
+                            var nodesToRemove = [];
+                            for (var i = 0; i < tree.currentlySelectedNodes.length; i++) {
+                                var nodeId = '#'+tree.currentlySelectedNodes[i];
+                                newHtml += $(nodeId, w.editor.getBody()).html();
+                                if (i > 0) {
+                                    nodesToRemove.push(nodeId);
+                                }
+                            }
+                            
+                            $('#'+tree.currentlySelectedNodes[0], w.editor.getBody()).html(newHtml);
+                            $(nodesToRemove.join(','), w.editor.getBody()).remove();
+                            
+                            w.event('contentChanged').publish();
+                        },
+                        separator_after: true
+                    };
+                }
+                
                 if (w.entitiesManager.getEntity(tagId) !== undefined) {
                     // entity specific actions
                     w.entitiesManager.highlightEntity(tagId); // highlight the entity, otherwise editing will not function
@@ -832,7 +860,8 @@ return function(config) {
                 var path = w.utilities.getElementXPath(tag);
                 var validKeys = w.utilities.getChildrenForTag({tag: tagName, path: path, type: 'element', returnType: 'array'});
                 
-//              var parentKeys = w.utilities.getParentsForTag({tag: info._tag, returnType: 'array'});
+                // TODO ensure that when there are multiple tags selected, they can share the same parent tag
+                var parentKeys = w.utilities.getParentsForTag({tag: tagName, path: path, returnType: 'array'});
                 
                 var siblingKeys = {};
                 var parentInfo = w.structs[parentNode.li_attr.name];
@@ -842,8 +871,24 @@ return function(config) {
                     siblingKeys = w.utilities.getChildrenForTag({tag: parentInfo._tag, path: path, type: 'element', returnType: 'array'});
                 }
                 
+                // find common keys between parent and sibling
+                for (var i = parentKeys.length-1; i >= 0; i--) {
+                    var pk = parentKeys[i];
+                    var match = false;
+                    for (var j = 0; j < siblingKeys.length; j++) {
+                        var sk = siblingKeys[j];
+                        if (pk.name == sk.name) {
+                            match = true;
+                            break;
+                        }
+                    }
+                    if (!match) {
+                        parentKeys.splice(i, 1);
+                    }
+                }
+                
                 var submenu = _getSubmenu(validKeys, tagId);
-//              var parentSubmenu = _getSubmenu(parentKeys, tagId);
+                var parentSubmenu = _getSubmenu(parentKeys, tagId);
                 var siblingSubmenu = _getSubmenu(siblingKeys, tagId);
                 var items = {
                     'before': {
@@ -860,12 +905,12 @@ return function(config) {
                         _class: 'submenu',
                         submenu: siblingSubmenu
                     },
-//                    'around': {
-//                        label: 'Insert Tag Around',
-//                        icon: w.cwrcRootUrl+'img/tag_blue_add.png',
-//                        _class: 'submenu',
-//                        submenu: parentSubmenu
-//                    },
+                    'around': {
+                        label: 'Insert Tag Around',
+                        icon: w.cwrcRootUrl+'img/tag_blue_add.png',
+                        _class: 'submenu',
+                        submenu: parentSubmenu
+                    },
                     'inside': {
                         label: 'Insert Tag Inside',
                         icon: w.cwrcRootUrl+'img/tag_blue_add.png',
