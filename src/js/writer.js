@@ -816,6 +816,7 @@ return function(config) {
                     ed.addCommand('copyTag', w.tagger.copyTag);
                     ed.addCommand('pasteTag', w.tagger.pasteTag);
                     ed.addCommand('changeTag', w.tagger.changeTag);
+                    ed.addCommand('splitTag', w.tagger.splitTag);
                     ed.addCommand('removeTag', w.tagger.removeTag);
                     ed.addCommand('copyEntity', w.tagger.copyEntity);
                     ed.addCommand('pasteEntity', w.tagger.pasteEntity);

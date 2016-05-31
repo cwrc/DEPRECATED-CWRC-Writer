@@ -286,6 +286,41 @@ return function(writer) {
         } 
     };
     
+    tagger.splitTag = function() {
+        var range = w.editor.selection.getRng(true);
+        
+        if (range.startContainer.nodeType === Node.TEXT_NODE) {
+            var textNode = range.startContainer;
+            var parent = textNode.parentNode;
+            
+            if (parent.getAttribute('_entity') != 'true') {
+                
+                var wrapString = '<'+parent.nodeName.toLowerCase();
+                for (var i = 0; i < parent.attributes.length; i++) {
+                    var attr = parent.attributes[i];
+                    if (attr.name !== 'id') {
+                        wrapString += ' '+attr.name+'="'+attr.value+'"';
+                    }
+                }
+                wrapString += '></'+parent.nodeName.toLowerCase()+'>';
+                
+                parent.normalize();
+                textNode.splitText(range.startOffset);
+                var lastChild;
+                for (var i = 0; i < parent.childNodes.length; i++) {
+                    var child = parent.childNodes[i];
+                    if (child.nodeType === Node.TEXT_NODE) {
+                        lastChild = $(child).wrap(wrapString);
+                    }
+                }
+                $(parent).contents().unwrap();
+                w.editor.selection.setCursorLocation(lastChild[0]); // TODO doesn't work with spans on Chrome (at least)
+                
+            }
+        }
+        
+    }
+    
     tagger.convertTagToEntity = function($tag) {
         if ($tag != null) {
             var id = $tag.attr('id');

@@ -114,6 +114,9 @@ tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
             } else {
                 item.show();
             }
+            if (item.settings.category == 'modifyStruct' && currentTag.struct == null) {
+                item.disabled(true);
+            }
             if (item.settings.category == 'modifyTag' && currentTag.entity == null && currentTag.struct == null) {
                 item.disabled(true);
             }
@@ -224,6 +227,13 @@ tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
         category: 'modifyTag',
         onclick : function() {
             editor.execCommand('editTag', null);
+        }
+    },{
+        text: 'Split Tag',
+        image: editor.writer.cwrcRootUrl+'img/arrow_divide.png',
+        category: 'modifyStruct',
+        onclick : function() {
+            editor.execCommand('splitTag');
         }
     },{
         text: 'Remove Tag',
