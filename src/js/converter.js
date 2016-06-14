@@ -415,17 +415,26 @@ return function(writer) {
      * Converts HTML entities to unicode, while preserving those that must be escaped as entities.
      */
     function _htmlEntitiesToUnicode(parentNode) {
+        function doConversion(text) {
+            if (text.match(/&.+?;/gim)) {
+                $('#entitiesConverter')[0].innerHTML = text;
+                text = $('#entitiesConverter')[0].innerText || $('#entitiesConverter')[0].firstChild.nodeValue;
+            }
+            // the following characters must be escaped
+            text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            return text;
+        }
+        
         var contents = $(parentNode).contents();
         contents.each(function(index, el) {
             if (el.nodeType == Node.TEXT_NODE) {
-                var nodeValue = el.nodeValue;
-                if (el.nodeValue.match(/&.+?;/gim)) {
-                    $('#entitiesConverter')[0].innerHTML = el.nodeValue;
-                    nodeValue = $('#entitiesConverter')[0].innerText || $('#entitiesConverter')[0].firstChild.nodeValue;
-                }
-                // the following characters must be escaped
-                el.nodeValue = nodeValue.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                el.nodeValue = doConversion(el.nodeValue);
             } else if (el.nodeType == Node.ELEMENT_NODE) {
+                for (var i = 0; i < el.attributes.length; i++) {
+                    var attr = el.attributes[i];
+                    attr.value = doConversion(attr.value);
+                }
+                
                 _htmlEntitiesToUnicode(el);
             }
         });
