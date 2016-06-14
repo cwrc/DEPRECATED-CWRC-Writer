@@ -204,6 +204,37 @@ return function(writer) {
      * 
      */
     
+    
+    /**
+     * Gets the list of documents
+     * @param {Delegator~getDocumentsCallback} callback
+     */
+    del.getDocuments = function() {
+        $.ajax({
+            url: w.baseUrl+'editor/documents',
+            type: 'GET',
+            dataType: 'json',
+            success: function(docNames, status, xhr) {
+                if (callback) {
+                    callback.call(w, docNames);
+                }
+            },
+            error: function() {
+                if (callback) {
+                    callback.call(w, []);
+                }
+            }
+        });
+    };
+    
+    /**
+     * @callback Delegator~getDocumentsCallback
+     * @param {Array} documents The list of documents
+     * @property {String} name The document name
+     * 
+     */
+    
+    
     /**
      * Loads a template
      * @param {String} path The path to the template, relative to the templates repo

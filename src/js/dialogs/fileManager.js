@@ -150,16 +150,19 @@ return function(writer) {
         $files.find('li').removeClass('selected');
         $files.find('ul').html('<li class="unselectable last"><span class="loading" /></li>');
         loader.dialog('open');
-        _getDocuments(function(docs) {
+        w.delegator.getDocuments(function(docs) {
+            docNames = docs;
             _populateLoader(docs, 0);
         });
-        _getTemplates(function(docs) {
+        w.delegator.getTemplates(function(docs) {
             _populateLoader(docs, 1);
         });
     };
     
     dfm.showSaver = function() {
-        _getDocuments();
+        w.delegator.getDocuments(function(docs) {
+            docNames = docs;
+        });
         saver.dialog('open');
     };
     
@@ -173,31 +176,6 @@ return function(writer) {
         } else {
             w.fileManager.loadDocument(filename);
         }
-    }
-    
-    function _getDocuments(callback) {
-        $.ajax({
-            url: w.baseUrl+'editor/documents',
-            type: 'GET',
-            dataType: 'json',
-            success: [function(data, status, xhr) {
-                docNames = data;
-            }, function() {
-                if (callback) {
-                    callback.call(w, docNames);
-                }
-            }],
-            error: function() {
-                docNames = [];
-                if (callback) {
-                    callback.call(w, docNames);
-                }
-            }
-        });
-    };
-    
-    function _getTemplates(callback) {
-        w.delegator.getTemplates(callback);
     }
     
     function _populateLoader(data, columnIndex) {
