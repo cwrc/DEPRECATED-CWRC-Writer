@@ -1079,7 +1079,7 @@ return function(writer) {
         parent.contents().each(function(index, element) {
             if (this.nodeType !== Node.TEXT_NODE) {
                 var node = $(this);
-                if (node.attr('annotationId')) {
+                var id = node.attr('annotationId');
                     var entityType = processEntity(this);
                     if (entityType !== 'note' && entityType !== 'citation') {
                         // TODO test handling for entities inside correction and keyword
