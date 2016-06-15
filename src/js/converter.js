@@ -11,7 +11,7 @@ return function(writer) {
     var w = writer;
 
     $(document.body).append(''+
-        '<div id="entitiesConverter"></div>' // used by _htmlEntitiesToUnicode
+        '<div id="entitiesConverter"></div>' // used by converter.convertTextForExport
     );
 
     /**
@@ -56,7 +56,7 @@ return function(writer) {
         var body = $(w.editor.getBody());
         var clone = body.clone(false, true); // make a copy, don't clone body events, but clone child events
 
-        _htmlEntitiesToUnicode(body);
+        _recursiveTextConversion(body);
 
         // get the overlapping entity IDs, in the order that they appear in the document.
         var entNodes = $('[_entity][class~="start"]', body).not('[_tag]').not('[_note]');
@@ -156,11 +156,13 @@ return function(writer) {
             for (var key in structEntry) {
                 if (key.indexOf('_') != 0) {
                     var attName = key;
+                    var attValue = structEntry[key];
                     if (attName == 'id') {
                         // leave out IDs
 //                        attName = w.idName;
                     } else {
-                        openingTag += ' '+attName+'="'+structEntry[key]+'"';
+                        var validVal = converter.convertTextForExport(attValue);
+                        openingTag += ' '+attName+'="'+validVal+'"';
                     }
                 }
             }
@@ -187,9 +189,9 @@ return function(writer) {
             var tags = _nodeToStringArray(currentNode);
             xmlString += tags[0];
             currentNode.contents().each(function(index, el) {
-                if (el.nodeType == 1) {
+                if (el.nodeType == Node.ELEMENT_NODE) {
                     doBuild($(el));
-                } else if (el.nodeType == 3) {
+                } else if (el.nodeType == Node.TEXT_NODE) {
                     xmlString += el.data;
                 }
             });
@@ -411,34 +413,39 @@ return function(writer) {
         return annotation;
     }
 
-    /**
-     * Converts HTML entities to unicode, while preserving those that must be escaped as entities.
-     */
-    function _htmlEntitiesToUnicode(parentNode) {
-        function doConversion(text) {
-            if (text.match(/&.+?;/gim)) {
-                $('#entitiesConverter')[0].innerHTML = text;
-                text = $('#entitiesConverter')[0].innerText || $('#entitiesConverter')[0].firstChild.nodeValue;
-            }
-            // the following characters must be escaped
-            text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-            return text;
-        }
-        
+    
+    function _recursiveTextConversion(parentNode) {
         var contents = $(parentNode).contents();
         contents.each(function(index, el) {
             if (el.nodeType == Node.TEXT_NODE) {
-                el.nodeValue = doConversion(el.nodeValue);
+                el.nodeValue = converter.convertTextForExport(el.nodeValue);
             } else if (el.nodeType == Node.ELEMENT_NODE) {
-                for (var i = 0; i < el.attributes.length; i++) {
-                    var attr = el.attributes[i];
-                    attr.value = doConversion(attr.value);
-                }
+                // convert attributes
+//                for (var i = 0; i < el.attributes.length; i++) {
+//                    var attr = el.attributes[i];
+//                    attr.value = converter.convertTextForExport(attr.value);
+//                }
                 
-                _htmlEntitiesToUnicode(el);
+                _recursiveTextConversion(el);
             }
         });
     };
+    
+    /**
+     * Converts HTML entities to unicode, while preserving those that must be escaped as entities.
+     * @param {String} text The text to convert
+     */
+    converter.convertTextForExport = function(text) {
+        var newText = text;
+        if (newText.match(/&.+?;/gim)) { // match all entities
+            $('#entitiesConverter')[0].innerHTML = newText;
+            newText = $('#entitiesConverter')[0].innerText || $('#entitiesConverter')[0].firstChild.nodeValue;
+        }
+        // the following characters must be escaped
+        newText = newText.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        return newText;
+    }
+    
 
     /**
      * For debug
