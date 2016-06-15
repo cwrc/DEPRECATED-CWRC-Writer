@@ -1080,6 +1080,7 @@ return function(writer) {
             if (this.nodeType !== Node.TEXT_NODE) {
                 var node = $(this);
                 var id = node.attr('annotationId');
+                if (id != null && node.parents('[annotationId='+id+']').length === 0) { // don't try to process tags related to parent entity
                     var entityType = processEntity(this);
                     if (entityType !== 'note' && entityType !== 'citation') {
                         // TODO test handling for entities inside correction and keyword
