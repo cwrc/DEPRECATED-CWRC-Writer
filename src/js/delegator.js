@@ -132,6 +132,13 @@ return function(writer) {
         });
     };
     
+    /**
+     * @callback Delegator~validateCallback
+     * @param {Boolean} isValid is the document valid
+     * 
+     */
+    
+    
     function _getDocumentationBranch() {
         var octo = new Octokit({token: '15286e8222a7bc13504996e8b451d82be1cba397'});
         var templateRepo = octo.getRepo('cwrc', 'CWRC-Writer-Documentation');
@@ -209,7 +216,7 @@ return function(writer) {
      * Gets the list of documents
      * @param {Delegator~getDocumentsCallback} callback
      */
-    del.getDocuments = function() {
+    del.getDocuments = function(callback) {
         $.ajax({
             url: w.baseUrl+'editor/documents',
             type: 'GET',
