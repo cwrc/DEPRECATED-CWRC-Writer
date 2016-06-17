@@ -72,7 +72,7 @@ function setupLayoutAndModules(w, EntitiesList, StructureTree, Relations) {
     new Relations({writer: w, parentId: 'westTabsContent'});
     
     $('#westTabs').tabs({
-        active: 0,
+        active: 1,
         activate: function(event, ui) {
             $.layout.callbacks.resizeTabLayout(event, ui);
         },
@@ -86,7 +86,7 @@ function setupLayoutAndModules(w, EntitiesList, StructureTree, Relations) {
     
     var activateReader = function() {
         w.isAnnotator = false;
-        w.layout.close('west');
+        w.layout.open('west');
         w.hideToolbar();
         
         w.editor.plugins.cwrc_contextmenu.disabled = true;
