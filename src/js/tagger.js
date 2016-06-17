@@ -476,6 +476,9 @@ return function(writer) {
             }
         }
         
+        sanitizeObject(info.attributes);
+        sanitizeObject(info.customValues);
+        
         // set attributes
         entity.setAttributes(info.attributes);
         delete info.attributes;
@@ -508,6 +511,17 @@ return function(writer) {
     }
     
     /**
+     * Converts string values of this object into valid XML strings
+     * @param {Object} obj The obj of strings
+     */
+    function sanitizeObject(obj) {
+        for (var key in obj) {
+            var val = obj[key];
+            obj[key] = w.converter.convertTextForExport(val);
+        }
+    }
+    
+    /**
      * Add the remaining entity info to its entry
      * @protected
      * @param {String} type Then entity type
@@ -523,6 +537,9 @@ return function(writer) {
             if (info.properties && info.properties.tag) {
                 tag = info.properties.tag;
             }
+            
+            sanitizeObject(info.attributes);
+            sanitizeObject(info.customValues);
             
             // create entity here so we can set content properly before adding it to the manager
             var entity = new Entity({
@@ -723,6 +740,8 @@ return function(writer) {
         var attributes = params.attributes;
         var action = params.action;
         
+        sanitizeObject(attributes);
+        
         var id = w.getUniqueId('struct_');
         attributes.id = id;
         attributes._textallowed = w.utilities.canTagContainText(attributes._tag);
@@ -804,6 +823,9 @@ return function(writer) {
      */
     tagger.editStructureTag = function(tag, attributes) {
         // TODO add undo support
+        
+        sanitizeObject(attributes);
+        
         var id = tag.attr('id');
         attributes.id = id;
         

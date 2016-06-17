@@ -161,8 +161,8 @@ return function(writer) {
                         // leave out IDs
 //                        attName = w.idName;
                     } else {
-                        var validVal = converter.convertTextForExport(attValue);
-                        openingTag += ' '+attName+'="'+validVal+'"';
+//                        var validVal = converter.convertTextForExport(attValue);
+                        openingTag += ' '+attName+'="'+attValue+'"';
                     }
                 }
             }
@@ -420,12 +420,6 @@ return function(writer) {
             if (el.nodeType == Node.TEXT_NODE) {
                 el.nodeValue = converter.convertTextForExport(el.nodeValue);
             } else if (el.nodeType == Node.ELEMENT_NODE) {
-                // convert attributes
-//                for (var i = 0; i < el.attributes.length; i++) {
-//                    var attr = el.attributes[i];
-//                    attr.value = converter.convertTextForExport(attr.value);
-//                }
-                
                 _recursiveTextConversion(el);
             }
         });
