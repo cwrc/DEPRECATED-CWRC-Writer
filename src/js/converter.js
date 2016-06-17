@@ -1187,13 +1187,14 @@ return function(writer) {
 
             $(currentNode.attributes).each(function(index, att) {
                 var attName = att.name;
+                var attValue = w.converter.convertTextForExport(att.value);
 
                 if (converter.reservedAttributes[attName] !== true) {
-                    editorString += ' '+attName+'="'+att.value+'"';
+                    editorString += ' '+attName+'="'+attValue+'"';
                 }
 
                 if (attName !== 'annotationId' && attName !== 'offsetId') {
-                    w.structs[id][attName] = att.value;
+                    w.structs[id][attName] = attValue;
                 }
             });
 
