@@ -109,14 +109,16 @@ place: {
         var anno = AnnotationsManager.commonAnnotation(entity, 'geo:SpatialThing', null, format);
         
         var precision = entity.getCustomValue('precision');
-        if (format === 'xml') {
-            var precisionXml = $.parseXML('<cw:hasPrecision xmlns:cw="http://cwrc.ca/ns/cw#" rdf:resource="http://cwrc.ca/ns/cw#'+precision+'" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>');
-            // remove rdf namespace as it's included in parent and only needed to parse this XML
-            precisionXml.firstChild.attributes.removeNamedItem('xmlns:rdf');
-            var body = $('[rdf\\:about="'+entity.getUris().annotationId+'"]', anno);
-            body.append(precisionXml.firstChild);
-        } else {
-            anno.hasPrecision = 'cw:'+precision;
+        if (precision !== undefined) {
+            if (format === 'xml') {
+                var precisionXml = $.parseXML('<cw:hasPrecision xmlns:cw="http://cwrc.ca/ns/cw#" rdf:resource="http://cwrc.ca/ns/cw#'+precision+'" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>');
+                // remove rdf namespace as it's included in parent and only needed to parse this XML
+                precisionXml.firstChild.attributes.removeNamedItem('xmlns:rdf');
+                var body = $('[rdf\\:about="'+entity.getUris().annotationId+'"]', anno);
+                body.append(precisionXml.firstChild);
+            } else {
+                anno.hasPrecision = 'cw:'+precision;
+            }
         }
         
         return anno;
