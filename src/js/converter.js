@@ -431,12 +431,14 @@ return function(writer) {
      */
     converter.convertTextForExport = function(text) {
         var newText = text;
-        if (newText.match(/&.+?;/gim)) { // match all entities
-            $('#entitiesConverter')[0].innerHTML = newText;
-            newText = $('#entitiesConverter')[0].innerText || $('#entitiesConverter')[0].firstChild.nodeValue;
+        if (newText != null) {
+            if (newText.match(/&.+?;/gim)) { // match all entities
+                $('#entitiesConverter')[0].innerHTML = newText;
+                newText = $('#entitiesConverter')[0].innerText || $('#entitiesConverter')[0].firstChild.nodeValue;
+            }
+            // the following characters must be escaped
+            newText = newText.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
         }
-        // the following characters must be escaped
-        newText = newText.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
         return newText;
     }
     
