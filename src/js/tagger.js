@@ -512,12 +512,22 @@ return function(writer) {
     
     /**
      * Converts string values of this object into valid XML strings
-     * @param {Object} obj The obj of strings
+     * @param {Object} obj The object of strings/arrays/objects
      */
     function sanitizeObject(obj) {
         for (var key in obj) {
             var val = obj[key];
-            obj[key] = w.converter.convertTextForExport(val);
+            if ($.isArray(val)) {
+                for (var i = 0; i < val.length; i++) {
+                    obj[key][i] = w.converter.convertTextForExport(val[i]);
+                }
+            } else if ($.isPlainObject(val)) {
+                for (var subkey in val) {
+                    obj[key][subkey] = w.converter.convertTextForExport(val[subkey]);
+                }
+            } else {
+                obj[key] = w.converter.convertTextForExport(val);
+            }
         }
     }
     
