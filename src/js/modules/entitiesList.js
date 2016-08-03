@@ -221,10 +221,11 @@ return function(config) {
     function _buildEntity(entity) {
         var infoString = '<ul>';
         var buildString = function(infoObject) {
+            var urlAttributes = w.schemaManager.mapper.getUrlAttributes();
             for (var infoKey in infoObject) {
                 if (showMetaKeys || metaKeys.indexOf(infoKey) == -1) {
                     var info = infoObject[infoKey];
-                    if (infoKey.toLowerCase() == 'ref' || infoKey.toLowerCase() == 'target') {
+                    if (urlAttributes.indexOf(infoKey) !== -1) {
                         infoString += '<li><strong>'+infoKey+'</strong>: <a href="'+info+'" target="_blank">'+info+'</a></li>';
                     } else {
                         if ($.isPlainObject(info)) {

@@ -311,6 +311,14 @@ Mapper.prototype = {
      */
     getBlockLevelElements: function() {
         return this.mappings.blockElements;
+    },
+    
+    /**
+     * Returns the attribute names that define whether the tag is an URL.
+     * @returns {Array}
+     */
+    getUrlAttributes: function() {
+        return this.mappings.urlAttributes;
     }
 };
 

@@ -24,6 +24,7 @@ return {
 id: 'ID',
 header: 'CWRCHEADER',
 blockElements: [],
+urlAttributes: ['URL'],
 
 listeners: {
     tagAdded: function(tag) {

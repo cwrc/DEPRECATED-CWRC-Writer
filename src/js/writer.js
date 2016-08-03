@@ -275,7 +275,7 @@ return function(config) {
         var entityId = this.getAttribute('name');
         var ent = w.entitiesManager.getEntity(entityId);
         var url = null;
-        var urlKeys = ['url', 'target', 'ref']; // TODO move this to schema?
+        var urlKeys = w.schemaManager.mapper.getUrlAttributes();
         var entAtts = ent.getAttributes();
         for (var i = 0; i < urlKeys.length; i++) {
             var urlAtt = entAtts[urlKeys[i]];
