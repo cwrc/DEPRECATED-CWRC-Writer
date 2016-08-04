@@ -16,10 +16,10 @@ return function(config) {
     $(document.body).append('<div id="selectionContents" style="display: none;"></div>');
     
     w.event('nodeChanged').subscribe(function() {
-        updateSelection(w.editor);
+        updateSelection();
     });
     w.event('tagSelected').subscribe(function(tagId) {
-        updateSelection(w.editor);
+        updateSelection();
     });
     
     /**
@@ -27,13 +27,20 @@ return function(config) {
      */
     var selection = {};
     
-    function updateSelection(ed) {
+    function updateSelection(useDoc) {
         var timestamp = new Date().getTime();
         var timeDiff = timestamp - lastUpdate; // track to avoid double update on nodeChanged/tagSelected combo
         if ($('#selection').is(':visible') && timeDiff > 250) {
             lastUpdate = new Date().getTime();
-            var range = ed.selection.getRng(true);
-            var contents = range.cloneContents();
+            
+            var contents = '';
+            if (w.editor.selection.isCollapsed() && useDoc) {
+                contents = w.editor.getBody().firstChild.cloneNode(true);
+            } else {
+                var range = w.editor.selection.getRng(true);
+                contents = range.cloneContents();
+            }
+            
             $('#selectionContents').html(contents);
             var xmlString = w.converter.buildXMLString($('#selectionContents'));
             var escapedContents = w.utilities.escapeHTMLString(xmlString);   //$('#selectionContents')[0].innerHTML
@@ -49,6 +56,12 @@ return function(config) {
                 $('#selection').html('<pre>The selection is too large to display.</pre>');
             }
         }
+    }
+    
+    selection.showSelection = function() {
+        w.layout.center.children.layout1.open('south');
+        $('#southTabs').tabs('option', 'active', 1);
+        updateSelection(true);
     }
     
     // add to writer

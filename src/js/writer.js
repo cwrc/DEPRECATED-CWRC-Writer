@@ -754,10 +754,10 @@ return function(config) {
             external_plugins: {
                 cwrc_contextmenu: w.cwrcRootUrl+'js/tinymce_plugins/cwrc_contextmenu.js',
                 schematags: w.cwrcRootUrl+'js/tinymce_plugins/schematags4.js',
-                cwrcpath: w.cwrcRootUrl+'js/tinymce_plugins/currenttag4.js',
-                viewsource: w.cwrcRootUrl+'js/tinymce_plugins/viewsource.js'
+                cwrcpath: w.cwrcRootUrl+'js/tinymce_plugins/currenttag4.js'
+                //,viewsource: w.cwrcRootUrl+'js/tinymce_plugins/viewsource.js'
             },
-            toolbar1: config.buttons1 == undefined ? 'schematags,|,addperson,addplace,adddate,addorg,addcitation,addnote,addtitle,addcorrection,addkeyword,addlink,|,editTag,removeTag,|,addtriple,|,viewsource,editsource,|,validate,savebutton,loadbutton' : config.buttons1,
+            toolbar1: config.buttons1 == undefined ? 'schematags,|,addperson,addplace,adddate,addorg,addcitation,addnote,addtitle,addcorrection,addkeyword,addlink,|,editTag,removeTag,|,addtriple,|,viewmarkup,editsource,|,validate,savebutton,loadbutton' : config.buttons1,
             toolbar2: config.buttons2 == undefined ? 'cwrcpath' : config.buttons2,
             toolbar3: config.buttons3 == undefined ? '' : config.buttons3,
             menubar: false,
@@ -936,6 +936,13 @@ return function(config) {
                         w.dialogManager.filemanager.showLoader();
                     }
                 });
+                
+                ed.addButton('viewmarkup', {title: 'View Markup', image: w.cwrcRootUrl+'img/page_white_code.png',
+                    onclick: function() {
+                        w.selection.showSelection();
+                    }
+                });
+                
                 ed.addButton('editsource', {title: 'Edit Source', image: w.cwrcRootUrl+'img/page_white_edit.png',
                     onclick: function() {
                         w.fileManager.editSource();
