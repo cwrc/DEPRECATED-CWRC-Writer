@@ -164,6 +164,15 @@ Mapper.prototype = {
         return dfd;
     },
 
+    clearMappings: function() {
+        if (this.mappings.listeners !== undefined) {
+            for (var event in this.mappings.listeners) {
+                this.w.event(event).unsubscribe(this.mappings.listeners[event]);
+            }
+        }
+        this.mappings = {};
+    },
+    
     getMappings: function() {
         return this.mappings;
     },

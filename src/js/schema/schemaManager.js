@@ -88,12 +88,7 @@ return function(writer, config) {
      * @param {Function} callback Callback for when the load is complete
      */
     sm.loadSchema = function(schemaId, startText, loadCss, callback) {
-        // remove previous mappings listeners
-        if (sm.mapper.mappings.listeners !== undefined) {
-            for (var event in sm.mapper.mappings.listeners) {
-                w.event(event).unsubscribe(sm.mapper.mappings.listeners[event]);
-            }
-        }
+        sm.mapper.clearMappings();
         
         var baseUrl = ''; //w.project == null ? '' : w.baseUrl; // handling difference between local and server urls
         sm.schemaId = schemaId;
@@ -181,7 +176,7 @@ return function(writer, config) {
                 
                 w.event('schemaLoaded').publish();
                 
-                if (callback) callback();
+                if (callback) callback(true);
             }
             
             // handle includes
@@ -232,6 +227,7 @@ return function(writer, config) {
         }, function(resp) {
             var status = resp[1];
             w.dialogManager.show('message', {title: 'Error', msg: 'Error loading schema: '+status, type: 'error'});
+            if (callback) callback(false);
         });
     };
     
