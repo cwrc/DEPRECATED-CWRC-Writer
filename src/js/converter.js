@@ -547,6 +547,9 @@ return function(writer) {
      * @param [schemaIdOverride] The (optional) schemaId to use (overrides document schema)
      */
     converter.processDocument = function(doc, schemaIdOverride) {
+        // clear current doc
+        w.editor.setContent('<p>Loading document...</p>', {format: 'raw'});
+        
         var schemaId = schemaIdOverride;
         var cssUrl;
         var loadSchemaCss = true; // whether to load schema css
@@ -652,42 +655,47 @@ return function(writer) {
         } else {
             w.mode = w.XMLRDF;
             w.allowOverlap = false;
-            processEntities($(w.root+', '+w.root.toLowerCase(), doc));
+            processEntities($(doc.documentElement));
+        }
+        
+        var root = doc.documentElement;
+
+        var editorString = converter.buildEditorString(root);
+        w.editor.setContent(editorString, {format: 'raw'}); // format is raw to prevent html parser and serializer from messing up whitespace
+
+        insertEntities();
+        if (!overlapSetFromHeader) {
+            var isOverlapping = w.utilities.doEntitiesOverlap();
+            if (isOverlapping) {
+                w.allowOverlap = true;
+            } else {
+                w.allowOverlap = false;
+            }
         }
 
-        // FIXME temp fix until document format is correct
-        var root = $(w.root+', '+w.root.toLowerCase(), doc)[0];
+        w.event('documentLoaded').publish(w.editor.getBody());
 
-        if (root != null) {
-            var editorString = converter.buildEditorString(root);
-            w.editor.setContent(editorString, {format: 'raw'}); // format is raw to prevent html parser and serializer from messing up whitespace
-
-            insertEntities();
-            if (!overlapSetFromHeader) {
-                var isOverlapping = w.utilities.doEntitiesOverlap();
-                if (isOverlapping) {
-                    w.allowOverlap = true;
-                } else {
-                    w.allowOverlap = false;
-                }
+        // try putting the cursor in the body
+        window.setTimeout(function() {
+            var bodyTag = $('[_tag='+w.header+']', w.editor.getBody()).next()[0];
+            if (bodyTag != null) {
+                w.editor.selection.select(bodyTag);
+                w.editor.selection.collapse(true);
+                w._fireNodeChange(bodyTag);
             }
+        }, 50);
 
-            w.event('documentLoaded').publish(w.editor.getBody());
+        // reset the undo manager
+        w.editor.undoManager.clear();
 
-            // try putting the cursor in the body
-            window.setTimeout(function() {
-                var bodyTag = $('[_tag='+w.header+']', w.editor.getBody()).next()[0];
-                if (bodyTag != null) {
-                    w.editor.selection.select(bodyTag);
-                    w.editor.selection.collapse(true);
-                    w._fireNodeChange(bodyTag);
-                }
-            }, 50);
-
-            // reset the undo manager
-            w.editor.undoManager.clear();
-
-            if (w.isReadOnly !== true) {
+        if (w.isReadOnly !== true) {
+            if (root.nodeName.toLowerCase() !== w.root.toLowerCase()) {
+                w.dialogManager.show('message', {
+                    title: 'Schema Mismatch',
+                    msg: 'The wrong schema is specified.<br/>Schema root: '+w.root+'<br/>Document root: '+root.nodeName,
+                    type: 'error'
+                });
+            } else {
                 var msg;
                 if (w.mode === w.XML) {
                     msg = '<b>XML only</b><br/>Only XML tags and no RDF/Semantic Web annotations will be created.';
@@ -705,12 +713,6 @@ return function(writer) {
                     type: 'info'
                 });
             }
-        } else {
-            w.dialogManager.show('message', {
-                title: 'Error',
-                msg: 'Couldn\'t load the document because the root ('+w.root+') was not found.',
-                type: 'error'
-            });
         }
     }
 
@@ -1088,7 +1090,7 @@ return function(writer) {
             }
         });
     }
-
+    
     /**
      * Process the tag of an entity, and creates a new entry in the manager.
      * @param {Element} el The XML element
@@ -1103,26 +1105,28 @@ return function(writer) {
 
         var entityType = w.schemaManager.mapper.getEntityTypeForTag(el);
 
-        var info = w.schemaManager.mapper.getReverseMapping(el, entityType);
-
-        var config = {
-            id: id,
-            type: entityType,
-            attributes: info.attributes,
-            customValues: info.customValues,
-            cwrcLookupInfo: info.cwrcInfo,
-            range: {
+        if (entityType !== null) {
+            var info = w.schemaManager.mapper.getReverseMapping(el, entityType);
+    
+            var config = {
                 id: id,
-                parentStart: structId
+                type: entityType,
+                attributes: info.attributes,
+                customValues: info.customValues,
+                cwrcLookupInfo: info.cwrcInfo,
+                range: {
+                    id: id,
+                    parentStart: structId
+                }
+            };
+            if (info.properties !== undefined) {
+                for (var key in info.properties) {
+                    config[key] = info.properties[key];
+                }
             }
-        };
-        if (info.properties !== undefined) {
-            for (var key in info.properties) {
-                config[key] = info.properties[key];
-            }
+    
+            var entity = w.entitiesManager.addEntity(config);
         }
-
-        var entity = w.entitiesManager.addEntity(config);
 
         return entityType;
     }
