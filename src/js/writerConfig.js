@@ -44,5 +44,5 @@
             "schemaMappingsId": "cwrcEntry"
         }
     },
-    "defaultDocument": "templates/blank_TEI_document"
+    "defaultDocument": "templates/letter"
 }
