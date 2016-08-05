@@ -35,7 +35,7 @@ $.extend($.ui.dialog.prototype.options, {
     create: function(e) {
         $(e.target).on('dialogopen', function(event) {
             // wrap our dialogs in the cwrc css scope
-            $(event.target).parent('.ui-dialog').prev('.ui-widget-overlay').andSelf().wrapAll('<div class="cwrc" style="position: fixed;"/>');
+            $(event.target).parent('.ui-dialog').prev('.ui-widget-overlay').andSelf().wrapAll('<div class="cwrc" style="position: fixed; z-index: 100;"/>');
             
             handleResize($(event.target));
             $(window).on('resize', $.proxy(handleResize, this, $(event.target)));
