@@ -17,6 +17,10 @@ tinymce.PluginManager.add('cwrcpath', function(editor) {
                 return false;
             }
 
+            editor.writer.event('loadingDocument').subscribe(function() {
+                self.row([]);
+            });
+            
 //            if (editor.settings.elementpath !== false) {
                 self.on('select', function(e) {
 //                    editor.focus();

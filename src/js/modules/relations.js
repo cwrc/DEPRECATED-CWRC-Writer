@@ -40,6 +40,9 @@ return function(config) {
         }
     });
     
+    w.event('loadingDocument').subscribe(function() {
+        pm.clear();
+    });
     w.event('documentLoaded').subscribe(function() {
         pm.update();
     });
@@ -70,7 +73,7 @@ return function(config) {
      * Update the list of relations.
      */
     pm.update = function() {
-        $('#relations ul').empty();
+        pm.clear();
         
         var relationsString = '';
         
@@ -117,6 +120,10 @@ return function(config) {
                 border: 'none'
             }
         });
+    };
+    
+    pm.clear = function() {
+        $('#relations ul').empty();
     };
     
     // add to writer

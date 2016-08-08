@@ -94,6 +94,9 @@ return function(config) {
     
     var $tree; // tree reference
     
+    w.event('loadingDocument').subscribe(function() {
+        tree.clear();
+    });
     w.event('documentLoaded').subscribe(function() {
         tree.update();
     });
@@ -205,7 +208,9 @@ return function(config) {
             var id = $(this).attr('name');
             openNodes.push(id);
         });
-        treeRef.delete_node('#cwrc_tree_root');
+        
+        tree.clear();
+        
         var rootNode = $('[_tag="'+w.root+'"]', w.editor.getBody());
         if (rootNode.length === 0) {
             // fallback if schema/root has changed
@@ -223,6 +228,11 @@ return function(config) {
                 treeRef.open_node($('li[name='+val+']', $tree), false, true); 
             });
         }
+    };
+    
+    tree.clear = function() {
+        var treeRef = $.jstree.reference('#'+id);
+        treeRef.delete_node('#cwrc_tree_root');
     };
     
     /**

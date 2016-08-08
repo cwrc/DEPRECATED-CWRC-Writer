@@ -62,6 +62,9 @@ return function(config) {
         }
     });
     
+    w.event('loadingDocument').subscribe(function() {
+        pm.clear();
+    });
     w.event('documentLoaded').subscribe(function() {
         pm.update();
     });
@@ -99,6 +102,8 @@ return function(config) {
      * @param sort
      */
     pm.update = function(sort) {
+        pm.clear();
+        
         if (sort == null) {
             if ($('#sequence').prop('checked')) {
                 sort = 'sequence';
@@ -106,8 +111,6 @@ return function(config) {
                 sort = 'category';
             }
         }
-        
-        $('#entities > ul').empty(); // remove previous nodes and event handlers
         
         var id, entry, i;
         var entitiesString = '';
@@ -216,6 +219,10 @@ return function(config) {
         if (w.entitiesManager.getCurrentEntity()) {
             $('#entities > ul > li[name="'+w.entitiesManager.getCurrentEntity()+'"]').addClass('selected').find('div[class="info"]').show();
         }
+    };
+    
+    pm.clear = function() {
+        $('#entities > ul').empty();
     };
     
     function _buildEntity(entity) {
