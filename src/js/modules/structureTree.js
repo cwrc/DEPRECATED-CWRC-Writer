@@ -90,10 +90,6 @@ return function(config) {
     // 2) a tree node has been clicked and we want to avoid re-running the selectNode function triggered by the editor's onNodeChange handler
     var ignoreSelect = false;
     
-    // used in conjunction with ignoreSelect
-    // true if the user clicked on a node in the tree
-    var nodeSelected = false;
-    
     var $tree; // tree reference
     
     w.event('loadingDocument').subscribe(function() {
@@ -197,7 +193,10 @@ return function(config) {
     w.event('tagSelected').subscribe(function(tagId) {
 //        tree.currentlySelectedNodes = [tagId];
 //        tree.selectNode(tagId, false);
-        nodeSelected = false;
+        if (!ignoreSelect) {
+            tree.selectNode(tagId, false);
+        }
+        ignoreSelect = false;
     });
     
     
@@ -271,8 +270,7 @@ return function(config) {
     tree.highlightNode = function(node) {
         if (node) {
             var id = node.id;
-            //console.log('ignore', ignoreSelect, 'ns', nodeSelected, id);
-            if (id && !ignoreSelect && !nodeSelected) {
+            if (id && !ignoreSelect) {
                 ignoreSelect = true;
                 if (id === 'entityHighlight') {
                     id = $(node).find('[_entity]').first().attr('name');
@@ -343,11 +341,6 @@ return function(config) {
         
         _removeCustomClasses();
         
-        if (external) {
-//          var activeNode = $('a[class*=ui-state-active]', '#'+id);
-//          activeNode.removeClass('jstree-clicked ui-state-active');
-        }
-        
         // clear other selections if not multiselect
         if (!multiselect) {
             if (tree.currentlySelectedNodes.indexOf(id) != -1) {
@@ -358,7 +351,7 @@ return function(config) {
         }
         
         if (id) {
-            if (tree.currentlySelectedNodes.indexOf(id) != -1) {
+            if (tree.currentlySelectedNodes.indexOf(id) != -1 && !external) {
                 // already selected node, toggle selection type
                 selectContents = !selectContents;
             } else {
@@ -369,9 +362,6 @@ return function(config) {
                 aChildren.addClass('contentsSelected').removeClass('nodeSelected');
             } else {
                 aChildren.addClass('nodeSelected').removeClass('contentsSelected');
-            }
-            if (external) {
-//              aChildren.addClass('jstree-clicked ui-state-active');
             }
             
             tree.selectionType = selectContents ? tree.CONTENTS_SELECTED : tree.NODE_SELECTED;
@@ -397,9 +387,6 @@ return function(config) {
                 }
             } 
         }
-        
-        
-        
     }
     
     /**
@@ -611,9 +598,7 @@ return function(config) {
     }
     
     function _onNodeSelect(event, data) {
-        //console.log('onNodeSelect', 'ignore', ignoreSelect, 'ns', nodeSelected, data.node.li_attr.name);
         if (!ignoreSelect) {
-            nodeSelected = true;
             var id = data.node.li_attr.name;
             var $target = $(data.event.currentTarget);
             var selectContents = $target.hasClass('contentsSelected');
@@ -622,7 +607,6 @@ return function(config) {
             
             selectNode($target.parent(), selectContents, multiselect, false) 
         }
-        ignoreSelect = false;
     }
     
     function _onNodeDeselect(event, data) {
