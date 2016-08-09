@@ -89,7 +89,9 @@ return function(config) {
     // 2 uses, 1) we want to highlight a node in the tree without selecting it's counterpart in the editor
     // 2) a tree node has been clicked and we want to avoid re-running the selectNode function triggered by the editor's onNodeChange handler
     var ignoreSelect = false;
+    
     // used in conjunction with ignoreSelect
+    // true if the user clicked on a node in the tree
     var nodeSelected = false;
     
     var $tree; // tree reference
@@ -193,6 +195,8 @@ return function(config) {
         tree.update();
     });
     w.event('tagSelected').subscribe(function(tagId) {
+//        tree.currentlySelectedNodes = [tagId];
+//        tree.selectNode(tagId, false);
         nodeSelected = false;
     });
     
@@ -225,7 +229,7 @@ return function(config) {
             _onNodeLoad($('#cwrc_tree_root', $tree).first());
             
             $.each(openNodes, function (i, val) {
-                treeRef.open_node($('li[name='+val+']', $tree), false, true); 
+                treeRef.open_node($('li[name='+val+']', $tree), null, false); 
             });
         }
     };
@@ -267,6 +271,7 @@ return function(config) {
     tree.highlightNode = function(node) {
         if (node) {
             var id = node.id;
+            //console.log('ignore', ignoreSelect, 'ns', nodeSelected, id);
             if (id && !ignoreSelect && !nodeSelected) {
                 ignoreSelect = true;
                 if (id === 'entityHighlight') {
@@ -310,69 +315,91 @@ return function(config) {
     
     /**
      * Selects a node in the tree based on a node in the editor
-     * @param {element} node A node that exists in the editor
-     * @param {integer} selectionType The type of selection to do, should match NODE_SELECTED or CONTENTS_SELECTED
+     * @param {String} id The id of the node
+     * @param {Boolean} selectContents True to select contents
      */
-    tree.selectNode = function(node, selectionType) {
-        // TODO verify this is ever called
-        if (node) {
-            var id = node.id;
-            if (id) {
-                if (id == 'entityHighlight') {
-                    id = $(node).find('[_entity]').first().attr('name');
-                }
-                var treeNode = $('[name="'+id+'"]', $tree);
-                if (treeNode.length === 0) {
-                    _expandParentsForNode(node);
-                    treeNode = $('[name="'+id+'"]', $tree);
-                }
-                selectNode(treeNode, selectionType);
+    tree.selectNode = function(id, selectContents) {
+        if (id) {
+            var treeNode = $('[name="'+id+'"]', $tree);
+            if (treeNode.length === 0) {
+                _expandParentsForNode($('#'+id, w.editor.getBody()));
+                treeNode = $('[name="'+id+'"]', $tree);
             }
+            
+            selectNode(treeNode, selectContents, false, true);
         }
     };
     
     /**
      * Performs actual selection of a tree node
-     * @param {element} node A node (LI) in the tree
-     * @param {integer} selectionType NODE_SELECTED or CONTENTS_SELECTED
+     * @param {Element} $node A jquery node (LI) in the tree
+     * @param {Boolean} selectContents True to select contents
+     * @param {Boolean} multiselect True if ctrl or select was held when selecting
+     * @param {Boolean} external True if selectNode came from outside structureTree, i.e. tree.selectNode
      */
-    function selectNode(node, selectionType) {
-        // TODO verify this is ever called
+    function selectNode($node, selectContents, multiselect, external) {
+        var aChildren = $node.children('a');
+        var id = $node.attr('name');
+        
         _removeCustomClasses();
-        var activeNode = $('a[class*=ui-state-active]', '#'+id);
-        activeNode.removeClass('jstree-clicked ui-state-active');
         
-        var aChildren = node.children('a');
-        var id = node.attr('name');
-        
-        var selectContents = selectionType == tree.CONTENTS_SELECTED;
-        if (selectContents) {
-            aChildren.addClass('contentsSelected').removeClass('nodeSelected');
-        } else {
-            aChildren.addClass('nodeSelected').removeClass('contentsSelected');
+        if (external) {
+//          var activeNode = $('a[class*=ui-state-active]', '#'+id);
+//          activeNode.removeClass('jstree-clicked ui-state-active');
         }
-        aChildren.addClass('jstree-clicked ui-state-active');
         
-        tree.currentlySelectedNodes = [id];
-        tree.selectionType = selectionType;
-        
-        if (w.structs[id] != null) {
-            tree.currentlySelectedEntity = null;
-            if (w.structs[id]._tag == w.header) {
-                w.dialogManager.show('header');
+        // clear other selections if not multiselect
+        if (!multiselect) {
+            if (tree.currentlySelectedNodes.indexOf(id) != -1) {
+                tree.currentlySelectedNodes = [id];
             } else {
-                ignoreSelect = true; // set to true so tree.highlightNode code isn't run by editor's onNodeChange handler
-                w.selectStructureTag(id, selectContents);
+                tree.currentlySelectedNodes = [];
             }
-        } else if (w.entitiesManager.getEntity(id) !== undefined) {
-            tree.currentlySelectedEntity = id;
-            tree.currentlySelectedNodes = [];
-            tree.selectionType = null;
-            aChildren.addClass('nodeSelected').removeClass('contentsSelected');
-//            ignoreSelect = true;
-            w.entitiesManager.highlightEntity(id, null, true);
         }
-        ignoreSelect = false;
+        
+        if (id) {
+            if (tree.currentlySelectedNodes.indexOf(id) != -1) {
+                // already selected node, toggle selection type
+                selectContents = !selectContents;
+            } else {
+                tree.currentlySelectedNodes.push(id);
+            }
+            
+            if (selectContents) {
+                aChildren.addClass('contentsSelected').removeClass('nodeSelected');
+            } else {
+                aChildren.addClass('nodeSelected').removeClass('contentsSelected');
+            }
+            if (external) {
+//              aChildren.addClass('jstree-clicked ui-state-active');
+            }
+            
+            tree.selectionType = selectContents ? tree.CONTENTS_SELECTED : tree.NODE_SELECTED;
+            
+            if (w.entitiesManager.getEntity(id) !== undefined) {
+                tree.currentlySelectedEntity = id;
+                tree.currentlySelectedNodes = [];
+                tree.selectionType = null;
+                aChildren.addClass('nodeSelected').removeClass('contentsSelected');
+                if (!external) {
+                    ignoreSelect = true;
+                    w.entitiesManager.highlightEntity(id, null, true);
+                }
+            } else if (w.structs[id] != null) {
+                tree.currentlySelectedEntity = null;
+                if (!external) {
+                    if (w.structs[id]._tag == w.header) {
+                        w.dialogManager.show('header');
+                    } else {
+                        ignoreSelect = true; // set to true so tree.highlightNode code isn't run by editor's onNodeChange handler
+                        w.selectStructureTag(tree.currentlySelectedNodes, selectContents);
+                    }
+                }
+            } 
+        }
+        
+        
+        
     }
     
     /**
@@ -584,55 +611,16 @@ return function(config) {
     }
     
     function _onNodeSelect(event, data) {
+        //console.log('onNodeSelect', 'ignore', ignoreSelect, 'ns', nodeSelected, data.node.li_attr.name);
         if (!ignoreSelect) {
             nodeSelected = true;
             var id = data.node.li_attr.name;
             var $target = $(data.event.currentTarget);
             var selectContents = $target.hasClass('contentsSelected');
-            _removeCustomClasses();
             
-            // clear other selections if not multiselect
-            if (data.event.ctrlKey == false && data.event.shiftKey == false) {
-                if (tree.currentlySelectedNodes.indexOf(id) != -1) {
-                    tree.currentlySelectedNodes = [id];
-                } else {
-                    tree.currentlySelectedNodes = [];
-                }
-            }
+            var multiselect = data.event.ctrlKey == true || data.event.shiftKey == true;
             
-            if (id) {
-                if (tree.currentlySelectedNodes.indexOf(id) != -1) {
-                    // already selected node, toggle selection type
-                    selectContents = !selectContents;
-                } else {
-                    tree.currentlySelectedNodes.push(id);
-                }
-                
-                if (selectContents) {
-                    $target.addClass('contentsSelected').removeClass('nodeSelected');
-                } else {
-                    $target.addClass('nodeSelected').removeClass('contentsSelected');
-                }
-                
-                tree.selectionType = selectContents ? tree.CONTENTS_SELECTED : tree.NODE_SELECTED;
-                
-                if (w.entitiesManager.getEntity(id) !== undefined) {
-                    tree.currentlySelectedEntity = id;
-                    tree.currentlySelectedNodes = [];
-                    tree.selectionType = null;
-                    $target.addClass('nodeSelected').removeClass('contentsSelected');
-                    ignoreSelect = true;
-                    w.entitiesManager.highlightEntity(id, null, true);
-                } else if (w.structs[id] != null) {
-                    tree.currentlySelectedEntity = null;
-                    if (w.structs[id]._tag == w.header) {
-                        w.dialogManager.show('header');
-                    } else {
-                        ignoreSelect = true; // set to true so tree.highlightNode code isn't run by editor's onNodeChange handler
-                        w.selectStructureTag(tree.currentlySelectedNodes, selectContents);
-                    }
-                } 
-            }
+            selectNode($target.parent(), selectContents, multiselect, false) 
         }
         ignoreSelect = false;
     }
