@@ -265,9 +265,10 @@ return function(writer) {
             }
 
             // process child entities (for note, citation)
-            if (entity.getCustomValues().entities && entity.getCustomValues().content) {
+            if (entity.getNoteContent()) {
                 // get the rdf and append it
-                var xml = w.utilities.stringToXML(entity.getCustomValues().content);
+                var xml = w.utilities.stringToXML(entity.getNoteContent());
+                // TODO should RDF be in note content???
                 var rdf = $('rdf\\:RDF, RDF', xml);
                 $('[rdf\\:datatype]', rdf).each(function(index, el) {
                     rdfString += w.utilities.xmlToString(el);
@@ -617,7 +618,7 @@ return function(writer) {
             });
         } else {
             if (schemaId !== w.schemaManager.schemaId) {
-                w.schemaManager.loadSchema(schemaId, false, loadSchemaCss, function() {
+                w.schemaManager.loadSchema(schemaId, false, loadSchemaCss, function(success) {
                     doProcessing(doc);
                 });
             } else {
@@ -657,6 +658,8 @@ return function(writer) {
             w.allowOverlap = false;
             processEntities($(doc.documentElement));
         }
+
+//        convertEntityTags(doc);
         
         var root = doc.documentElement;
 
@@ -996,6 +999,7 @@ return function(writer) {
                     }
 
                     // process the element for attributes, etc.
+                    var noteContent;
                     if (el !== undefined) {
                         var entityType = w.schemaManager.mapper.getEntityTypeForTag(el[0]);
                         var info = w.schemaManager.mapper.getReverseMapping(el[0], entityType);
@@ -1003,7 +1007,7 @@ return function(writer) {
                         $.extend(cwrcAttributes, info.attributes);
 
                         if (type === 'note' || type === 'citation') {
-//                            typeInfo.content = w.utilities.xmlToString(el[0]);
+                            noteContent = w.utilities.xmlToString(el[0]);
                             rangeObj.el.contents().remove();
                         }
                     }
@@ -1015,6 +1019,7 @@ return function(writer) {
                         type: type,
                         attributes: cwrcAttributes,
                         customValues: propObj,
+                        noteContent: noteContent,
                         cwrcLookupInfo: cwrcLookupObj,
                         range: rangeObj,
                         uris: annotationObj
@@ -1090,6 +1095,33 @@ return function(writer) {
             }
         });
     }
+
+    /**
+     * Scan document for entities that could be converted
+     */
+    function convertEntityTags(doc) {
+        var entityTagNames = [];
+        var typesToConvert = ['link'];
+        
+        var entityMappings = w.schemaManager.mapper.getMappings().entities;
+        for (var type in entityMappings) {
+            if (typesToConvert.indexOf(type) != -1) {
+                var parentTag = entityMappings[type].parentTag;
+                if ($.isArray(parentTag)) {
+                    entityTagNames = entityTagNames.concat(parentTag);
+                } else if (parentTag !== '') {
+                    entityTagNames.push(parentTag);
+                }
+            }
+        }
+
+        var potentialEntities = $(entityTagNames.join(','), doc);
+        potentialEntities.each(function(index, el) {
+            if (el.getAttribute('_entity') == null) {
+                processEntity(el);
+            }
+        });
+    }
     
     /**
      * Process the tag of an entity, and creates a new entry in the manager.
@@ -1113,6 +1145,7 @@ return function(writer) {
                 type: entityType,
                 attributes: info.attributes,
                 customValues: info.customValues,
+                noteContent: info.noteContent,
                 cwrcLookupInfo: info.cwrcInfo,
                 range: {
                     id: id,
@@ -1126,6 +1159,10 @@ return function(writer) {
             }
     
             var entity = w.entitiesManager.addEntity(config);
+            
+            if (w.schemaManager.mapper.isEntityTypeNote(entityType)) {
+                node.contents().remove();
+            }
         }
 
         return entityType;
@@ -1288,7 +1325,7 @@ return function(writer) {
                         // TODO remove schema specific properties
                         var content = '';
                         if (type === 'note' || type === 'citation') {
-                            content = $($.parseXML(entry.getCustomValues().content)).text();
+                            content = $($.parseXML(entry.getNoteContent())).text();
                         } else if (type === 'keyword') {
                             content = entry.getCustomValues().keywords.join(', ');
                         } else if (type === 'correction') {

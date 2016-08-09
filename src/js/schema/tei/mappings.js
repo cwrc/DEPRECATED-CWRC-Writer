@@ -260,21 +260,14 @@ date: {
 
 note: {
     parentTag: 'note',
+    xpathSelector: 'self::tei:note/*',
     textTag: '',
     isNote: true,
-    getNoteContent: function(entity, returnString) {
-        var xml = $.parseXML(entity.getCustomValue('content'));
-        if (returnString) {
-            return $(xml).text();
-        } else {
-            return xml;
-        }
-    },
     mapping: function(entity) {
         var xml = Mapper.getTagAndDefaultAttributes(entity);
         xml += '>';
         
-        var content = entity.getCustomValue('content');
+        var content = entity.getNoteContent();
         if (content) {
             var xmlDoc = $.parseXML(content);
             var noteContent = $('note', xmlDoc)[0];
@@ -286,7 +279,7 @@ note: {
     },
     reverseMapping: function(xml) {
         return Mapper.getDefaultReverseMapping(xml, {
-            customValues: {content: '.'}
+            noteContent: '.'
         }, 'tei');
     },
     annotation: function(entity, format) {
@@ -299,14 +292,6 @@ citation: {
     xpathSelector: 'self::tei:note/tei:bibl',
     textTag: 'bibl',
     isNote: true,
-    getNoteContent: function(entity, returnString) {
-        var xml = $.parseXML(entity.getCustomValue('content'));
-        if (returnString) {
-            return $(xml).text();
-        } else {
-            return xml;
-        }
-    },
     mapping: function(entity) {
         var xml = '<note';
         xml += Mapper.getRangeString(entity);
@@ -314,7 +299,7 @@ citation: {
         xml += ' ref="'+entity.getAttribute('ref')+'"';
         xml += '>';
         
-        var content = entity.getCustomValue('content');
+        var content = entity.getNoteContent();
         if (content) {
             var xmlDoc = $.parseXML(content);
             var biblContent = $('bibl', xmlDoc)[0];
@@ -326,7 +311,7 @@ citation: {
     reverseMapping: function(xml) {
         return Mapper.getDefaultReverseMapping(xml, {
             cwrcInfo: {id: 'tei:bibl/@ref'},
-            customValues: {content: '.'}
+            noteContent: '.'
         }, 'tei');
     },
     annotation: function(entity, format) {

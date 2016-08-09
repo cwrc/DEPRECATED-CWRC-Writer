@@ -83,37 +83,48 @@ Mapper.getDefaultMapping = function(entity) {
 };
 
 Mapper.getDefaultReverseMapping = function(xml, customMappings, nsPrefix) {
+    function getValueFromXpath(xpath) {
+        var val;
+        var result = Mapper.getXpathResult(xml, xpath, nsPrefix);
+        if (result !== undefined) {
+            switch (result.nodeType) {
+                case Node.ELEMENT_NODE:
+                    val = Mapper.xmlToString(result);
+                    break;
+                case Node.TEXT_NODE:
+                    val = $(result).text();
+                    break;
+                case Node.ATTRIBUTE_NODE:
+                    val = $(result).val();
+                    break;
+                case undefined:
+                    val = result;
+            }
+        }
+        return val;
+    }
+    
     var obj = {};
-
     if (customMappings !== undefined) {
         for (var key in customMappings) {
-            obj[key] = {};
-            for (var key2 in customMappings[key]) {
-                var xpath = customMappings[key][key2];
-                var result = Mapper.getXpathResult(xml, xpath, nsPrefix);
-                if (result !== undefined) {
-                    var val;
-                    switch (result.nodeType) {
-                        case Node.ELEMENT_NODE:
-                            val = Mapper.xmlToString(result);
-                            break;
-                        case Node.TEXT_NODE:
-                            val = $(result).text();
-                            break;
-                        case Node.ATTRIBUTE_NODE:
-                            val = $(result).val();
-                            break;
-                        case undefined:
-                            val = result;
-                    }
+            if (typeof customMappings[key] === 'object') {
+                obj[key] = {};
+                for (var key2 in customMappings[key]) {
+                    var xpath = customMappings[key][key2];
+                    var val = getValueFromXpath(xpath);
                     if (val !== undefined) {
                         obj[key][key2] = val;
                     }
                 }
+            } else if (typeof customMappings[key] === 'string') {
+                var xpath = customMappings[key];
+                var val = getValueFromXpath(xpath);
+                obj[key] = val;
             }
         }
     }
     obj.attributes = Mapper.getAttributesFromXml(xml);
+    
     return obj;
 };
 
@@ -262,7 +273,15 @@ Mapper.prototype = {
     getNoteContentForEntity: function(entity, returnString) {
         var entry = this.mappings.entities[entity.getType()];
         if (entry.isNote) {
-            var content = entry.getNoteContent(entity, returnString);
+            var content;
+            if (entry.getNoteContent !== undefined) {
+                content = entry.getNoteContent(entity, returnString);
+            } else {
+                content = entity.getNoteContent();
+                if (returnString !== true) {
+                    content = $.parseXML(content);
+                }
+            }
             return content;
         } else {
             return '';

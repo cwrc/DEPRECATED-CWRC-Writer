@@ -195,20 +195,12 @@ note: {
     xpathSelector: 'self::orlando:RESEARCHNOTE|self::orlando:SCHOLARNOTE',
     parentTag: ['RESEARCHNOTE', 'SCHOLARNOTE'],
     isNote: true,
-    getNoteContent: function(entity, returnString) {
-        var xml = $.parseXML(entity.getCustomValue('content'));
-        if (returnString) {
-            return $(xml).text();
-        } else {
-            return xml;
-        }
-    },
     mapping: function(entity) {
         var tag = entity.getTag();
         var xml = Mapper.getTagAndDefaultAttributes(entity);
         xml += '>';
         
-        var content = entity.getCustomValue('content');
+        var content = entity.getNoteContent();
         if (content) {
             var xmlDoc = $.parseXML(content);
             var noteContent = $(tag, xmlDoc).first()[0];
@@ -220,7 +212,8 @@ note: {
     },
     reverseMapping: function(xml) {
         return Mapper.getDefaultReverseMapping(xml, {
-            customValues: {parent: 'fn:node-name(.)', content: '.'}
+            customValues: {parent: 'fn:node-name(.)'},
+            noteContent: '.'
         });
     },
     annotation: function(entity, format) {
@@ -232,19 +225,11 @@ citation: {
     parentTag: 'BIBCITS',
     textTag: 'BIBCIT',
     isNote: true,
-    getNoteContent: function(entity, returnString) {
-        var xml = $.parseXML(entity.getCustomValue('content'));
-        if (returnString) {
-            return $(xml).text();
-        } else {
-            return xml;
-        }
-    },
     mapping: function(entity) {
         var range = entity.getRange();
         var id = range.annotationId;
         var offsetId = range.offsetId;
-        var content = entity.getCustomValue('content');
+        var content = entity.getNoteContent();
         
         var xml = '<BIBCITS';
         if (id) xml += ' annotationId="'+id+'"';
@@ -258,7 +243,7 @@ citation: {
     },
     reverseMapping: function(xml) {
         return Mapper.getDefaultReverseMapping(xml, {
-            customValues: {content: './text()'}
+            noteContent: './text()'
         }, 'cwrc');
     },
     annotation: function(entity, format) {

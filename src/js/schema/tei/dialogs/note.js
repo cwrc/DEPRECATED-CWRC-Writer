@@ -75,7 +75,7 @@ return function(id, writer) {
                 var noteUrl = w.cwrcRootUrl+'js/schema/tei/xml/note_tei.xml';
                 cwrcWriter.fileManager.loadDocumentFromUrl(noteUrl);
             } else {
-                var xmlDoc = $.parseXML(config.entry.getCustomValue('content'));
+                var xmlDoc = $.parseXML(config.entry.getNoteContent());
                 if (xmlDoc.firstChild.nodeName === 'note') {
                     // remove the annotationId attribute
                     xmlDoc.firstChild.removeAttribute('annotationId');
@@ -104,7 +104,7 @@ return function(id, writer) {
         tinymce.DOM.counter = iframe.contentWindow.tinymce.DOM.counter + 1;
         
         var content = cwrcWriter.converter.getDocumentContent();
-        dialog.currentData.customValues.content = content;
+        dialog.currentData.noteContent = content;
     });
     
     return {

@@ -87,7 +87,7 @@ return function(id, writer) {
                 cwrcWriter.fileManager.loadDocumentFromUrl(noteUrl);
             } else {
                 var parent = config.entry.getTag();
-                xmlDoc = $.parseXML(config.entry.getCustomValue('content'));
+                xmlDoc = $.parseXML(config.entry.getNoteContent());
                 var annotation = $(parent, xmlDoc).first();
                 // remove the annotationId attribute
                 annotation.removeAttr('annotationId');
@@ -115,7 +115,7 @@ return function(id, writer) {
         tinymce.DOM.counter = iframe.contentWindow.tinymce.DOM.counter + 1;
         
         var content = cwrcWriter.converter.getDocumentContent();
-        dialog.currentData.customValues.content = content;
+        dialog.currentData.noteContent = content;
     });
     
     return {

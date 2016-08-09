@@ -28,6 +28,7 @@ listeners: {
  * isNote {Boolean}: boolean indicating the entity is a "note type" (default is false)
  * getNoteContent {Function}: if the entity is a note it requires this member. This is a function which accepts an Entity and a boolean, and which returns a string or XML, depending on the boolean.
  *     It should return the content of the note (typically, what's inside the parentTag).
+ *     NB: replaced by Entity.getNoteContent, currently only used by keyword entities
  * xpathSelector {String}: if the entity can have several different parentTags or if several entities share the same parentTag, this selector can help differentiate
  */
 

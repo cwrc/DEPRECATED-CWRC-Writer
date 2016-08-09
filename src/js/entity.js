@@ -32,7 +32,7 @@ function Entity(config) {
     
     /**
      * A label for use when displaying information about the entity.
-     * Typically will be a concatentaed version of the content.
+     * Typically will be a concatenated version of the content.
      * @type String
      */
     this.title;
@@ -47,6 +47,12 @@ function Entity(config) {
      * Values that can't be directly mapped onto the entity's tag.
      */
     this.customValues = {};
+    
+    /**
+     * XML content, used by note-type entities.
+     * @type String
+     */
+    this.noteContent;
     
     /**
      * URIs used to create the annotation object.
@@ -87,6 +93,9 @@ function Entity(config) {
     }
     if (config.customValues !== undefined) {
         this.customValues = config.customValues;
+    }
+    if (config.noteContent !== undefined) {
+        this.noteContent = config.noteContent;
     }
     if (config.cwrcLookupInfo !== undefined) {
         this.cwrcLookupInfo = config.cwrcLookupInfo;
@@ -158,6 +167,13 @@ Entity.prototype = {
     },
     setCustomValues: function(propOjb) {
         this.customValues = propOjb;
+    },
+    
+    getNoteContent: function() {
+        return this.noteContent;
+    },
+    setNoteContent: function(content) {
+        this.noteContent = content;
     },
     
     

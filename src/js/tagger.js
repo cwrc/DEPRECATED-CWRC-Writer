@@ -323,14 +323,12 @@ return function(writer) {
     
     tagger.convertTagToEntity = function($tag) {
         if ($tag != null) {
-            var id = $tag.attr('id');
-            var type = w.schemaManager.mapper.getEntityTypeForTag($tag.attr('_tag'));
             var xmlString = w.converter.buildXMLString($tag);
             var xmlEl = w.utilities.stringToXML(xmlString).firstChild;
+            var type = w.schemaManager.mapper.getEntityTypeForTag(xmlEl);
             var info = w.schemaManager.mapper.getReverseMapping(xmlEl, type);
-            
             var ref = $tag.attr('ref'); // matches ref or REF
-            
+            var id = $tag.attr('id');
             w.selectStructureTag(id, true);
             w.editor.currentBookmark = w.editor.selection.getBookmark(1);
             var newId = tagger.finalizeEntity(type, info);
@@ -459,6 +457,7 @@ return function(writer) {
      * @param {Object} info.properties Key/value pairs of Entity properties
      * @param {Object} info.cwrcInfo CWRC lookup info
      * @param {Object} info.customValues Any additional custom values
+     * @param {Object} info.noteContent XML content specific to notes
      */
     function updateEntityInfo(entity, info) {
         var id = entity.getId();
@@ -505,6 +504,9 @@ return function(writer) {
         
         var isNote = w.schemaManager.mapper.isEntityTypeNote(type);
         if (isNote) {
+            if (info.noteContent) {
+                entity.setNoteContent(info.noteContent);
+            }
             var content = w.schemaManager.mapper.getNoteContentForEntity(entity, true);
             entity.setContent(content);
         }
@@ -558,6 +560,7 @@ return function(writer) {
                 tag: tag,
                 attributes: info.attributes,
                 customValues: info.customValues,
+                noteContent: info.noteContent,
                 cwrcLookupInfo: info.cwrcInfo
             });
             

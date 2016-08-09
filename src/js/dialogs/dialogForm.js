@@ -21,7 +21,8 @@ function DialogForm(config) {
     this.currentData = {
         attributes: {},
         properties: {},
-        customValues: {}
+        customValues: {},
+        noteContent: {}
     };;
     this.currentId = null;
 
@@ -176,7 +177,8 @@ DialogForm.prototype = {
         this.currentData = {
             attributes: {},
             properties: {},
-            customValues: {}
+            customValues: {},
+            noteContent: {}
         };
         
         if (this.mode === DialogForm.ADD) {
