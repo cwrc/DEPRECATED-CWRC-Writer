@@ -189,11 +189,19 @@ citation: {
     parentTag: 'BIBCITS',
     textTag: 'BIBCIT',
     isNote: true,
+    getNoteContent: function(entity, returnString) {
+        var xml = $.parseXML(entity.getCustomValue('content'));
+        if (returnString) {
+            return $(xml).text();
+        } else {
+            return xml;
+        }
+    },
     mapping: function(entity) {
         var range = entity.getRange();
         var id = range.annotationId;
         var offsetId = range.offsetId;
-        var content = entity.getNoteContent();
+        var content = entity.getCustomValue('content');
         
         var xml = '<BIBCITS';
         if (id) xml += ' annotationId="'+id+'"';
@@ -208,7 +216,7 @@ citation: {
     reverseMapping: function(xml) {
         return Mapper.getDefaultReverseMapping(xml, {
             cwrcInfo: {id: 'cwrc:BIBCIT/@REF'},
-            noteContent: '.'
+            customValues: {content: '.'}
         }, 'cwrc');
     },
     annotation: function(entity, format) {
