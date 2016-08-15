@@ -718,7 +718,11 @@ return function(writer) {
                             }
                         });
                         for (var j = 0; j < values.length; j++) {
-                            choices.push(values[j]);
+                            var val = values[j];
+                            if (val['#text']) {
+                                val = val['#text'];
+                            }
+                            choices.push(val);
                         }
                         childObj.choices = choices;
                     }
