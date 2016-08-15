@@ -720,7 +720,7 @@ return function(writer) {
         content = content.replace(/<\/?[^>]+>/gi, '');
         
         // trim whitespace
-        if (range.startContainer == range.endContainer) {
+        if (range.startContainer === range.endContainer && range.startContainer.nodeType === Node.TEXT_NODE) {
             var leftTrimAmount = content.match(/^\s{0,1}/)[0].length;
             var rightTrimAmount = content.match(/\s{0,1}$/)[0].length;
             range.setStart(range.startContainer, range.startOffset+leftTrimAmount);
