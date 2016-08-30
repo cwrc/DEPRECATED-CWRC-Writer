@@ -4,19 +4,24 @@ return function(id, writer) {
     var w = writer;
     
     var html = ''+
-    '<div id="'+id+'Dialog">'+
+    '<div id="'+id+'Dialog" class="annotationDialog">'+
         '<div>'+
             '<label for="'+id+'_input">Hypertext link (URL or URI)</label>'+
             '<input type="text" id="'+id+'_input" data-type="textbox" data-mapping="target" style="margin-right: 10px;"/>'+
             '<button type="button">Check Link</button>'+
+        '</div>'+
+        '<div data-transform="accordion">'+
+            '<h3>Markup options</h3>'+
+            '<div id="'+id+'_teiParent" class="attributes" data-type="attributes" data-mapping="attributes">'+
+            '</div>'+
         '</div>'+
     '</div>';
     
     var dialog = new DialogForm({
         writer: w,
         id: id,
-        width: 345,
-        height: 125,
+        width: 350,
+        height: 350,
         type: 'link',
         title: 'Tag Link',
         html: html

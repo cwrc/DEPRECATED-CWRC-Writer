@@ -4,8 +4,13 @@ return function(id, writer) {
     var w = writer;
     
     var html = ''+
-    '<div id="'+id+'Dialog">'+
+    '<div id="'+id+'Dialog" class="annotationDialog">'+
         '<div id="'+id+'RowsParent">'+
+        '</div>'+
+        '<div data-transform="accordion">'+
+            '<h3>Markup options</h3>'+
+            '<div id="'+id+'_teiParent" class="attributes" data-type="attributes" data-mapping="attributes">'+
+            '</div>'+
         '</div>'+
     '</div>';
     
@@ -14,8 +19,8 @@ return function(id, writer) {
         id: id,
         type: 'keyword',
         title: 'Tag Keyword',
-        height: 200,
-        width: 275,
+        height: 350,
+        width: 350,
         html: html
     });
     
@@ -63,6 +68,8 @@ return function(id, writer) {
             keywordsParent.find('.keywordRow').remove();
             if (dialog.mode === DialogForm.ADD) {
                 addRow();
+                dialog.attributesWidget.setData({type: 'keyword'});
+                dialog.attributesWidget.expand();
             } else {
                 var keywords = config.entry.getCustomValue('keywords');
                 var prevRow = null;

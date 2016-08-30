@@ -157,29 +157,30 @@ correction: {
     parentTag: ['choice', 'corr'],
     textTag: 'sic',
     mapping: function(entity) {
-        var range = entity.getRange();
-        var id = range.annotationId;
-        var offsetId = range.offsetId;
         var corrText = entity.getCustomValue('corrText');
         
-        var xml;
+        var tag;
         if (corrText) {
-            xml = '<choice';
-            if (id) xml += ' annotationId="'+id+'"';
-            if (offsetId) xml += ' offsetId="'+offsetId+'"';
+            tag = 'choice';
+        } else {
+            tag = 'corr';
+        }
+        var rangeString = Mapper.getRangeString(entity);
+        
+        var xml = '<'+tag;
+        xml += rangeString;
+        xml += Mapper.getAttributeString(entity.getAttributes());
+        
+        if (corrText) {
             xml += '>';
-            xml += '<sic';
-            if (id) xml += ' annotationId="'+id+'"';
+            xml += '<sic'+rangeString;
             xml += '>'+Mapper.TEXT_SELECTION+'</sic>';
-            xml += '<corr';
-            if (id) xml += ' annotationId="'+id+'"';
+            xml += '<corr'+rangeString;
             xml += '>'+corrText+'</corr></choice>';
         } else {
-            xml = '<corr';
-            if (id) xml += ' annotationId="'+id+'"';
-            if (offsetId) xml += ' offsetId="'+offsetId+'"';
-            xml += '>'+Mapper.TEXT_SELECTION+'</corr>';
+            xml += '>'+Mapper.TEXT_SELECTION+'</'+tag+'>';
         }
+        
         return xml;
     },
     reverseMapping: function(xml) {
@@ -335,15 +336,11 @@ keyword: {
     mapping: function(entity) {
         var keywords = entity.getCustomValue('keywords');
         var rangeString = Mapper.getRangeString(entity);
-        var annotationId = entity.getRange().annotationId;
         
         var xml = '';
         for (var i = 0; i < keywords.length; i++) {
-            xml += '<note type="keyword"';
-            xml += rangeString;
-            xml +='><term';
-            if (annotationId) xml += ' annotationId="'+annotationId+'"';
-            xml +='>'+keywords[i]+'</term></note>';
+            xml += Mapper.getTagAndDefaultAttributes(entity);
+            xml += '><term'+rangeString+'>'+keywords[i]+'</term></note>';
         }
         return xml;
     },

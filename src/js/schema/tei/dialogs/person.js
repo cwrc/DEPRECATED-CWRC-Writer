@@ -37,7 +37,6 @@ return function(id, writer) {
             '<div id="'+id+'_teiParent" class="attributes" data-type="attributes" data-mapping="attributes">'+
             '</div>'+
         '</div>'+
-        '<input type="hidden" id="'+id+'_ref" data-type="hidden" data-mapping="ref"/>'+
     '</div>';
     
     var dialog = new DialogForm({
