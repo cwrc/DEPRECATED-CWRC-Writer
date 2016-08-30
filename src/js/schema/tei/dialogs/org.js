@@ -34,7 +34,6 @@ return function(id, writer) {
         width: 400,
         height: 450,
         type: 'org',
-        tag: 'orgName',
         title: 'Tag Organization',
         html: html
     });

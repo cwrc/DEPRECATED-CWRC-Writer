@@ -16,7 +16,6 @@ function DialogForm(config) {
     this.isValid = true;
     
     this.type = config.type;
-    this.tag = config.tag;
     this.mode = null;
     this.currentData = {
         attributes: {},
@@ -130,7 +129,8 @@ DialogForm.processForm = function(dialogInstance) {
 };
 
 function initAttributeWidget(dialogInstance) {
-    var atts = dialogInstance.w.utilities.getChildrenForTag({tag: dialogInstance.tag, type: 'attribute', returnType: 'array'});
+    var tag = dialogInstance.w.schemaManager.mapper.getParentTag(dialogInstance.type);
+    var atts = dialogInstance.w.utilities.getChildrenForTag({tag: tag, type: 'attribute', returnType: 'array'});
     dialogInstance.attributesWidget.buildWidget(atts);
     dialogInstance.attWidgetInit = true;
 };

@@ -42,7 +42,6 @@ return function(id, writer) {
         writer: w,
         id: id,
         type: 'date',
-        tag: 'date',
         title: 'Tag Date',
         height: 580,
         width: 400,

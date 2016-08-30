@@ -44,7 +44,6 @@ return function(id, writer) {
         writer: w,
         id: id,
         type: 'person',
-        tag: 'persName',
         title: 'Tag Person',
         html: html
     });

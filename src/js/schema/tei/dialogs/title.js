@@ -43,7 +43,6 @@ return function(id, writer) {
         width: 435,
         height: 630,
         type: 'title',
-        tag: 'title',
         title: 'Tag Title',
         html: html
     });
