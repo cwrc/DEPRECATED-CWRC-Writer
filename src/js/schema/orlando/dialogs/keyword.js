@@ -10,6 +10,7 @@ return function(id, writer) {
         '</div>'+
         '<div data-transform="accordion">'+
             '<h3>Markup options</h3>'+
+            '<div id="'+id+'_attParent" class="attributes" data-type="attributes" data-mapping="attributes">'+
             '</div>'+
         '</div>'+
     '</div>';
