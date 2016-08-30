@@ -42,14 +42,18 @@ return function(id, writer) {
                 '<option value="school">school</option>'+
             '</select>'+
         '</div>'+
-        '<input type="hidden" id="'+id+'_ref" data-type="hidden" data-mapping="REF"/>'+
+        '<div data-transform="accordion">'+
+            '<h3>Markup options</h3>'+
+            '<div id="'+id+'_attParent" class="attributes" data-type="attributes" data-mapping="attributes">'+
+            '</div>'+
+        '</div>'+
     '</div>';
     
     var dialog = new DialogForm({
         writer: w,
         id: id,
-        width: 200,
-        height: 200,
+        width: 350,
+        height: 400,
         type: 'org',
         title: 'Tag Organization',
         html: html
@@ -58,7 +62,8 @@ return function(id, writer) {
     dialog.$el.on('beforeShow', function(e, config, dialog) {
         var cwrcInfo = dialog.currentData.cwrcInfo;
         if (cwrcInfo !== undefined) {
-            $('#'+id+'_ref').val(cwrcInfo.id);
+            dialog.attributesWidget.setData({REF: cwrcInfo.id});
+            dialog.attributesWidget.expand();
         }
     });
     

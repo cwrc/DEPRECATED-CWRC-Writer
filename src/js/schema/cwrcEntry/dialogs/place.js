@@ -9,7 +9,11 @@ return function(id, writer) {
     
     var html = ''+
     '<div id="'+id+'Dialog" class="annotationDialog">'+
-        '<input type="hidden" id="'+id+'_ref" data-type="hidden" data-mapping="REF"/>'+
+        '<div data-transform="accordion">'+
+            '<h3>Markup options</h3>'+
+            '<div id="'+id+'_attParent" class="attributes" data-type="attributes" data-mapping="attributes">'+
+            '</div>'+
+        '</div>'+
     '</div>';
     
     var dialog = new DialogForm({
@@ -17,15 +21,16 @@ return function(id, writer) {
         id: id,
         type: 'place',
         title: 'Tag Place',
-        height: 150,
-        width: 450,
+        height: 350,
+        width: 350,
         html: html
     });
     
     dialog.$el.on('beforeShow', function(e, config, dialog) {
         var cwrcInfo = dialog.currentData.cwrcInfo;
         if (cwrcInfo !== undefined) {
-            $('#'+id+'_ref').val(cwrcInfo.id);
+            dialog.attributesWidget.setData({REF: cwrcInfo.id});
+            dialog.attributesWidget.expand();
         }
     });
     
