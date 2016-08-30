@@ -85,11 +85,9 @@ place: {
         var xml = Mapper.getTagAndDefaultAttributes(entity);
         
         var tag = entity.getCustomValue('tag');
-        var range = entity.getRange();
-        var id = range.annotationId;
+        var rangeString = Mapper.getRangeString(entity);
         
-        xml += '><'+tag;
-        if (id) xml += ' annotationId="'+id+'"';
+        xml += '><'+tag+rangeString;
         xml += '>'+Mapper.TEXT_SELECTION+'</'+tag+'>';
         
         tag = entity.getTag();
@@ -226,17 +224,11 @@ citation: {
     textTag: 'BIBCIT',
     isNote: true,
     mapping: function(entity) {
-        var range = entity.getRange();
-        var id = range.annotationId;
-        var offsetId = range.offsetId;
+        var rangeString = Mapper.getRangeString(entity);
         var content = entity.getNoteContent();
         
-        var xml = '<BIBCITS';
-        if (id) xml += ' annotationId="'+id+'"';
-        if (offsetId) xml += ' offsetId="'+offsetId+'"';
-        xml += '><BIBCIT';
-        if (id) xml += ' annotationId="'+id+'"';
-        xml += '>';
+        var xml = Mapper.getTagAndDefaultAttributes(entity);
+        xml += '><BIBCIT'+rangeString+'>';
         xml += content;
         xml += '</BIBCIT></BIBCITS>';
         return xml;

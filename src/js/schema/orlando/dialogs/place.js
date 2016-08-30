@@ -18,7 +18,11 @@ return function(id, writer) {
             '<input type="radio" id="'+id+'_region" name="'+id+'_type_place" value="REGION" /><label for="'+id+'_region">Region</label>'+
             '<input type="radio" id="'+id+'_settlement" name="'+id+'_type_place" value="SETTLEMENT" /><label for="'+id+'_settlement">Settlement</label>'+
         '</div>'+
-        '<input type="hidden" id="'+id+'_ref" data-type="hidden" data-mapping="REF"/>'+
+        '<div data-transform="accordion">'+
+            '<h3>Markup options</h3>'+
+            '<div id="'+id+'_teiParent" class="attributes" data-type="attributes" data-mapping="attributes">'+
+            '</div>'+
+        '</div>'+
     '</div>';
     
     var dialog = new DialogForm({
@@ -26,7 +30,7 @@ return function(id, writer) {
         id: id,
         type: 'place',
         title: 'Tag Place',
-        height: 150,
+        height: 400,
         width: 450,
         html: html
     });

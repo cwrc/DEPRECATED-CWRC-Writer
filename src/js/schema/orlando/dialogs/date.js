@@ -39,6 +39,11 @@ return function(id, writer) {
             '<input type="radio" name="calendarType" value="NEWSTYLE" id="'+id+'_calendar_new" checked="checked"/><label for="'+id+'_calendar_new">New style</label>'+
             '<input type="radio" name="calendarType" value="BC" id="'+id+'_calendar_old"/><label for="'+id+'_calendar_old">BC</label>'+
         '</div>'+
+        '<div data-transform="accordion">'+
+            '<h3>Markup options</h3>'+
+            '<div id="'+id+'_teiParent" class="attributes" data-type="attributes" data-mapping="attributes">'+
+            '</div>'+
+        '</div>'+
     '</div>';
     
     var dialog = new DialogForm({
@@ -46,7 +51,7 @@ return function(id, writer) {
         id: id,
         type: 'date',
         title: 'Tag Date',
-        height: 430,
+        height: 600,
         width: 550,
         html: html
     });

@@ -8,16 +8,26 @@ return function(id, writer) {
         '<div>'+
             '<p>Citation</p><textarea data-type="textbox" data-mapping="custom.content"></textarea>'+
         '</div>'+
+        '<div data-transform="accordion">'+
+            '<h3>Markup options</h3>'+
+            '<div id="'+id+'_teiParent" class="attributes" data-type="attributes" data-mapping="attributes">'+
+            '</div>'+
+        '</div>'+
     '</div>';
     
     var dialog = new DialogForm({
         writer: w,
         id: id,
-        width: 385,
-        height: 250,
+        width: 350,
+        height: 400,
         type: 'citation',
         title: 'Tag Citation',
         html: html
+    });
+    
+    dialog.$el.on('beforeSave', function() {
+        var content = dialog.currentData.customValues.content;
+        dialog.currentData.noteContent = content;
     });
     
     return {
