@@ -74,7 +74,7 @@ function DialogForm(config) {
         }
     });
     $('[data-type="attributes"]', this.$el).first().each($.proxy(function(index, el) {
-        this.attributesWidget = new AttributeWidget({writer: this.w, parentId: id+'_teiParent', dialogForm: this});
+        this.attributesWidget = new AttributeWidget({writer: this.w, parentId: id+'_attParent', dialogForm: this});
         this.attWidgetInit = false;
     }, this));
 }
