@@ -764,10 +764,10 @@
             if (tree.selectionType != null) {
                 if (tree.selectionType == tree.CONTENTS_SELECTED) {
 //                    console.log('tree paste contents', h);
-                    $('#'+tree.currentlySelectedNode, ed.getBody()).html(h);
+                    $('#'+tree.currentlySelectedNodes[0], ed.getBody()).html(h);
                 } else {
 //                    console.log('tree paste node', h);
-                    $('#'+tree.currentlySelectedNode, ed.getBody()).replaceWith(h);
+                    $('#'+tree.currentlySelectedNodes[0], ed.getBody()).replaceWith(h);
                 }
             } else {
                 // First delete the contents seems to work better on WebKit when the selection spans multiple list items or multiple table cells.
