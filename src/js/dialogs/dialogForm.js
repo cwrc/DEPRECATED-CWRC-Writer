@@ -207,7 +207,7 @@ DialogForm.prototype = {
                 if (type === 'attributes') {
                     var showWidget = that.attributesWidget.setData(data);
                     if (showWidget) {
-                        formEl.parents('[data-transform="accordion"]').accordion('option', 'active', 0);
+                        that.attributesWidget.expand();
                     }
                 } else {
                     var mapping = formEl.data('mapping');

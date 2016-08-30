@@ -231,6 +231,12 @@ AttributeWidget.prototype = {
         
         return attributes;
     },
+    expand: function() {
+        this.$parent.parent('[data-transform="accordion"]').accordion('option', 'active', 0);
+    },
+    collapse: function() {
+        this.$parent.parent('[data-transform="accordion"]').accordion('option', 'active', false);
+    },
     destroy: function() {
         try {
             $('ins', this.$parent).tooltip('destroy');
