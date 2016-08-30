@@ -8,6 +8,8 @@ id: '',
 header: '',
 // Additional block level elements that should be added to TinyMCE
 blockElements: [],
+// Attributes that should be treated as URLs by the various CWRC-Writer modules
+urlAttributes: [],
 
 listeners: {
     // Listeners to CWRC-Writer events can go here and will subscribe upon mappings load

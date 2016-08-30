@@ -24,7 +24,7 @@ return {
 id: 'ID',
 header: 'ORLANDOHEADER',
 blockElements: ['DIV0', 'DIV1', 'EVENT', 'ORLANDOHEADER', 'DOCAUTHOR', 'DOCEDITOR', 'DOCEXTENT', 'PUBLICATIONSTMT', 'TITLESTMT', 'PUBPLACE', 'L', 'P', 'HEADING', 'CHRONEVENT', 'CHRONSTRUCT'],
-urlAttributes: ['URL'],
+urlAttributes: ['URL', 'REF'],
 
 listeners: {
     tagAdded: function(tag) {
