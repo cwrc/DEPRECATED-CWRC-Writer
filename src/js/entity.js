@@ -67,7 +67,7 @@ function Entity(config) {
     this.annotationUris = {};
     
     /**
-     * Values used to identify the text range of the entity.
+     * Values used to identify the text range of the entity. Mainly set by converter when loading a document.
      * @type Object
      */
     this.annotationRange = {};

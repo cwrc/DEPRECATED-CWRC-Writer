@@ -82,16 +82,27 @@ return function(writer) {
     
     
     /**
-     * A document is being loaded into the editor
+     * A document is being fetched from a source
      * @event Writer#loadingDocument
      */
     w.event('loadingDocument');
     /**
+     * A document is being processed into the editor format
+     * @event Writer#processingDocument
+     */
+    w.event('processingDocument');
+    /**
      * A document was loaded into the editor
      * @event Writer#documentLoaded
      * @param {Element} body The editor body element
+     * @param {Object} msgObj A message dialog config object with information about the loaded document
      */
     w.event('documentLoaded');
+    /**
+     * The user has requested to save the document
+     * @event Writer#documentSaveRequested
+     */
+    w.event('documentSaveRequested');
     /**
      * A document was saved
      * @event Writer#documentSaved
@@ -156,7 +167,13 @@ return function(writer) {
      */
     w.event('writerKeyup');
     
-    
+    /**
+     * The user has requested an entity lookup
+     * @event Writer#entityLookupRequested
+     * @param {String} type Entity type (person, place, etc)
+     * @param {String} query Query string
+     */
+    w.event('entityLookupRequested');
     /**
      * An entity was added to the document
      * @event Writer#entityAdded

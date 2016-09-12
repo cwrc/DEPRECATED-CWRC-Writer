@@ -543,13 +543,16 @@ return function(writer) {
 
     /**
      * Processes a document and loads it into the editor.
+     * @fires Writer#processingDocument
      * @fires Writer#documentLoaded
      * @param doc An XML DOM
      * @param [schemaIdOverride] The (optional) schemaId to use (overrides document schema)
      */
     converter.processDocument = function(doc, schemaIdOverride) {
+        w.event('processingDocument').publish();
+        
         // clear current doc
-        w.editor.setContent('<p>Loading document...</p>', {format: 'raw'});
+        w.editor.setContent('', {format: 'raw'});
         
         var schemaId = schemaIdOverride;
         var cssUrl;
@@ -676,8 +679,6 @@ return function(writer) {
             }
         }
 
-        w.event('documentLoaded').publish(w.editor.getBody());
-
         // try putting the cursor in the body
         window.setTimeout(function() {
             var bodyTag = $('[_tag='+w.header+']', w.editor.getBody()).next()[0];
@@ -691,13 +692,14 @@ return function(writer) {
         // reset the undo manager
         w.editor.undoManager.clear();
 
+        var msgObj = {};
         if (w.isReadOnly !== true) {
             if (root.nodeName.toLowerCase() !== w.root.toLowerCase()) {
-                w.dialogManager.show('message', {
+                msgObj = {
                     title: 'Schema Mismatch',
                     msg: 'The wrong schema is specified.<br/>Schema root: '+w.root+'<br/>Document root: '+root.nodeName,
                     type: 'error'
-                });
+                };
             } else {
                 var msg;
                 if (w.mode === w.XML) {
@@ -710,13 +712,15 @@ return function(writer) {
                     }
                 }
     
-                w.dialogManager.show('message', {
+                msgObj = {
                     title: 'CWRC-Writer Mode',
                     msg: msg,
                     type: 'info'
-                });
+                };
             }
         }
+        
+        w.event('documentLoaded').publish(w.editor.getBody(), msgObj);
     }
 
     // Needs to be public, to be able to process documents after the schema
@@ -1105,7 +1109,7 @@ return function(writer) {
         
         var entityMappings = w.schemaManager.mapper.getMappings().entities;
         for (var type in entityMappings) {
-            if (typesToConvert.indexOf(type) != -1) {
+            if (typesToConvert.length == 0 || typesToConvert.indexOf(type) != -1) {
                 var parentTag = entityMappings[type].parentTag;
                 if ($.isArray(parentTag)) {
                     entityTagNames = entityTagNames.concat(parentTag);

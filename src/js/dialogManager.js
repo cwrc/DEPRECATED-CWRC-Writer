@@ -2,11 +2,11 @@ define([
     'jquery',
     'jquery-ui',
     'cwrcDialogs',
-    'dialogs/addSchema','dialogs/fileManager','dialogs/header','dialogs/message','dialogs/triple',
+    'dialogs/addSchema','dialogs/fileManager','dialogs/loadingIndicator','dialogs/header','dialogs/message','dialogs/triple',
     'dialogs/cwrcPerson','dialogs/cwrcOrg','dialogs/cwrcPlace','dialogs/cwrcTitle','dialogs/cwrcCitation',
     'dialogs/schemaTags','dialogs/help','dialogs/copyPaste'
 ], function($, jqueryui, cD,
-        AddSchema, FileManager, Header, Message, Triple,
+        AddSchema, FileManager, LoadingIndicator, Header, Message, Triple,
         CwrcPerson, CwrcOrg, CwrcPlace, CwrcTitle, CwrcCitation,
         SchemaTags, Help, CopyPaste
 ) {
@@ -71,6 +71,7 @@ return function(writer) {
         triple: new Triple(w),
         header: new Header(w),
         filemanager: new FileManager(w),
+        loadingindicator: new LoadingIndicator(w),
         addschema: new AddSchema(w),
         person: new CwrcPerson(w),
         org: new CwrcOrg(w),
