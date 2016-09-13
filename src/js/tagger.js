@@ -332,7 +332,7 @@ return function(writer) {
             w.selectStructureTag(id, true);
             w.editor.currentBookmark = w.editor.selection.getBookmark(1);
             var newId = tagger.finalizeEntity(type, info);
-            tagger.removeStructureTag(id, false);
+            tagger.removeStructureTag(id, false); // TODO re-add structure tag if conversion was cancelled
             if (ref == null) {
                 var tag = w.entitiesManager.getEntity(newId);
                 w.editor.currentBookmark = w.editor.selection.getBookmark(1);
@@ -729,9 +729,11 @@ return function(writer) {
             content = content.replace(/^\s+|\s+$/g, '');
         }
         
+        var isNote = w.schemaManager.mapper.isEntityTypeNote(type);
+        
         if (content !== '') {
             tagger.insertBoundaryTags(id, type, range, tag);
-        } else {
+        } else if (!isNote){
             w.emptyTagId = id;
         }
         
