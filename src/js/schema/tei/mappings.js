@@ -261,7 +261,7 @@ date: {
 
 note: {
     parentTag: 'note',
-    xpathSelector: 'self::tei:note/*',
+    xpathSelector: 'self::tei:note/node()',
     textTag: '',
     isNote: true,
     mapping: function(entity) {
