@@ -49,6 +49,7 @@ return function(id, writer) {
     dialog.$el.on('beforeShow', function(e, config, dialog) {
         var cwrcInfo = dialog.currentData.cwrcInfo;
         if (cwrcInfo !== undefined) {
+            dialog.attributesWidget.setData({ref: cwrcInfo.id});
             dialog.attributesWidget.expand();
         }
     });
