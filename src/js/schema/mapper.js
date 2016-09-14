@@ -279,7 +279,13 @@ Mapper.prototype = {
             } else {
                 content = entity.getNoteContent();
                 if (returnString !== true) {
-                    content = $.parseXML(content);
+                    try {
+                        content = $.parseXML(content);
+                    } catch(e) {
+                        if (window.console) {
+                            console.warn("error parsing xml:", content);
+                        }
+                    }
                 }
             }
             return content;
