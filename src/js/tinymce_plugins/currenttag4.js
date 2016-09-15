@@ -1,5 +1,5 @@
 tinymce.PluginManager.add('cwrcpath', function(editor) {
-    tinymce.ui.CWRCPath = tinymce.ui.ElementPath.extend({
+    tinymce.ui.CWRCPath = tinymce.ui.Path.extend({
         postRender: function() {
             var self = this;
 
