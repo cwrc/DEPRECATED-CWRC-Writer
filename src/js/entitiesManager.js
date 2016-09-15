@@ -153,6 +153,7 @@ EntitiesManager.prototype = {
      */
     highlightEntity: function(id, bm, doScroll) {
         if (id == null || id !== this.currentEntity) {
+            // clear previous highlight
             var body = this.w.editor.getBody();
             var prevHighlight = $('.entityHighlight', body);
             if (prevHighlight.length !== 0) {
@@ -174,27 +175,36 @@ EntitiesManager.prototype = {
             this.currentEntity = null;
             
             if (id) {
-                // clear selection
-                var rng = this.w.editor.dom.createRng();
-                this.w.editor.selection.setRng(rng);
-                
                 this.currentEntity = id;
-                var type = this.getEntity(id).getType();
                 
                 var entityTags = $('[name="'+id+'"]', body);
-                entityTags.wrap('<span class="entityHighlight '+type+'"/>');
-
-                // maintain the original caret position
-                if (bm) {
-                    this.w.editor.selection.moveToBookmark(bm);
+                if (entityTags.length > 0) {
+                    // clear selection
+                    var rng = this.w.editor.dom.createRng();
+                    this.w.editor.selection.setRng(rng);
+                    
+                    var type = this.getEntity(id).getType();
+                    
+                    entityTags.wrap('<span class="entityHighlight '+type+'"/>');
+                    
+                    if (bm) {
+                        // maintain the original caret position
+                        this.w.editor.selection.moveToBookmark(bm);
+                    } else {
+                        // move inside entity
+                        rng = this.w.editor.dom.createRng();
+                        rng.setStart(entityTags[0], 0);
+                        rng.collapse(true);
+                        this.w.editor.selection.setRng(rng);
+                    }
+                    
+                    if (doScroll) {
+                        var val = entityTags.offset().top;
+                        $(body).scrollTop(val);
+                    }
+                    
+                    this.w.event('entityFocused').publish(id);
                 }
-                
-                if (doScroll) {
-                    var val = entityTags.offset().top;
-                    $(body).scrollTop(val);
-                }
-                
-                this.w.event('entityFocused').publish(id);
             }
         }
     },
