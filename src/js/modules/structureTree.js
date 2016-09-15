@@ -300,13 +300,16 @@ return function(config) {
             var t = o + $tree.scrollTop();
             var b = t + $node.outerHeight();
             var ch = $tree.innerHeight();
+            var halfCH = ch*0.5;
             var ct = parseInt($tree.scrollTop(), 10);
             var cb = ct + ch;
             
             if ($node.outerHeight() > ch || t < ct) {
-                $tree.scrollTop(t);
+                // scroll up
+                $tree.scrollTop(t - halfCH);
             } else if (b > cb) {
-                $tree.scrollTop(b - ch);
+                // scroll down
+                $tree.scrollTop(b - halfCH);
             }
         }
     }

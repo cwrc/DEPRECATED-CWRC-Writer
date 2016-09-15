@@ -158,7 +158,16 @@ return function(config) {
             w.editor.selection.setRng(rng);
             
             // scroll node into view
-            $(w.editor.getDoc()).scrollTop(node.position().top - $(w.editor.getContentAreaContainer()).height()*0.25);
+            var nodeTop;
+            if (node.is(':hidden')) {
+                node.show();
+                nodeTop = node.position().top;
+                node.hide();
+            } else {
+                nodeTop = node.position().top;
+            }
+            var newScrollTop = nodeTop - $(w.editor.getContentAreaContainer()).height()*0.25;
+            $(w.editor.getDoc()).scrollTop(newScrollTop);
             
             // using setRng triggers nodeChange event so no need to call it manually
 //            w._fireNodeChange(nodeEl);
