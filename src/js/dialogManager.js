@@ -1,11 +1,12 @@
 define([
     'jquery',
     'jquery-ui',
+    'jquery.popup',
     'cwrcDialogs',
     'dialogs/addSchema','dialogs/fileManager','dialogs/loadingIndicator','dialogs/header','dialogs/message','dialogs/triple',
     'dialogs/cwrcPerson','dialogs/cwrcOrg','dialogs/cwrcPlace','dialogs/cwrcTitle','dialogs/cwrcCitation',
     'dialogs/schemaTags','dialogs/help','dialogs/copyPaste'
-], function($, jqueryui, cD,
+], function($, jqueryui, Popup, cD,
         AddSchema, FileManager, LoadingIndicator, Header, Message, Triple,
         CwrcPerson, CwrcOrg, CwrcPlace, CwrcTitle, CwrcCitation,
         SchemaTags, Help, CopyPaste
@@ -56,6 +57,22 @@ $.extend($.ui.tooltip.prototype.options, {
         });
     }
 });
+// do the same for popups
+$.extend($.custom.popup.prototype.options, {
+    create: function(e) {
+        $(e.target).on('popupopen', function(event) {
+            // wrap our dialogs in the cwrc css scope
+            $(event.target).parent('.ui-dialog').prev('.ui-widget-overlay').andSelf().wrapAll('<div class="cwrc" style="position: fixed; z-index: 100;"/>');
+            
+            handleResize($(event.target));
+            $(window).on('resize', $.proxy(handleResize, this, $(event.target)));
+        }).on('popupclose', function(event) {
+            $(event.target).parent('.ui-dialog').unwrap();
+            
+            $(window).off('resize', $.proxy(handleResize, this, $(event.target)));
+        });
+    }
+});
 
 /**
  * @class DialogManager
@@ -64,6 +81,11 @@ $.extend($.ui.tooltip.prototype.options, {
 return function(writer) {
     var w = writer;
 
+    /**
+     * @lends DialogManager.prototype
+     */
+    var dm = {};
+    
     var dialogs = {
         message: new Message(w),
         help: new Help(w),
@@ -125,31 +147,27 @@ return function(writer) {
 
     w.event('schemaLoaded').subscribe(loadSchemaDialogs);
 
-    /**
-     * @lends DialogManager.prototype
-     */
-    var pm = {
-        show: function(type, config) {
-            if (type.indexOf('schema/') === 0) {
-                var typeParts = type.split('/');
-                var type = typeParts[1];
+    
+    dm.show = function(type, config) {
+        if (type.indexOf('schema/') === 0) {
+            var typeParts = type.split('/');
+            type = typeParts[1];
+            schemaDialogs[w.schemaManager.getCurrentSchema().schemaMappingsId][type].show(config);
+        } else {
+            if (dialogs[type]) {
+                dialogs[type].show(config);
+            } else if (schemaDialogs[w.schemaManager.getCurrentSchema().schemaMappingsId][type]) {
                 schemaDialogs[w.schemaManager.getCurrentSchema().schemaMappingsId][type].show(config);
-            } else {
-                if (dialogs[type]) {
-                    dialogs[type].show(config);
-                } else if (schemaDialogs[w.schemaManager.getCurrentSchema().schemaMappingsId][type]) {
-                    schemaDialogs[w.schemaManager.getCurrentSchema().schemaMappingsId][type].show(config);
-                }
             }
-        },
-        confirm: function(config) {
-            dialogs.message.confirm(config);
         }
     };
+    dm.confirm = function(config) {
+        dialogs.message.confirm(config);
+    };
 
-    $.extend(pm, dialogs);
+    $.extend(dm, dialogs);
 
-    return pm;
+    return dm;
 };
 
 });

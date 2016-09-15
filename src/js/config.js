@@ -13,6 +13,7 @@ var require = {
         'jquery.jstree': 'lib/jstree/jstree.3.3.1.min',
         'jquery.snippet': 'lib/snippet/jquery.snippet.min',
         'jquery.xpath': 'lib/jquery/jquery.xpath',
+        'jquery.popup': 'lib/jquery/jquery.popup',
         
         'tinymce': 'lib/tinymce4/tinymce',
         
@@ -50,6 +51,7 @@ var require = {
         'jquery.watermark': ['jquery'],
         'jquery.snippet': ['jquery', 'jquery-migrate'],
         'jquery.xpath': ['jquery'],
+        'jquery.popup': ['jquery-ui'],
         'tinymce': {
             exports: 'tinymce',
             init: function() {

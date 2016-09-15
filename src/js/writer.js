@@ -2,10 +2,11 @@ define([
     'jquery',
     'tinymce',
     'eventManager','schemaManager','dialogManager','entitiesManager','utilities',
-    'tagger','converter','fileManager','annotationsManager','dialogs/settings'
+    'tagger','converter','fileManager','annotationsManager','dialogs/settings',
+    'jquery.popup'
 ], function($, tinymce,
         EventManager, SchemaManager, DialogManager, EntitiesManager, Utilities, Tagger,
-        Converter, FileManager, AnnotationsManager, SettingsDialog
+        Converter, FileManager, AnnotationsManager, SettingsDialog, Popup
 ) {
 
 /**
@@ -300,7 +301,7 @@ return function(config) {
                 $dEl = $('<div id="'+dId+'"></div>').appendTo(document.body);
             }
             
-            $dEl.dialog({
+            $dEl.popup({
                 dialogClass: 'linkPopup',
                 resizable: false,
                 draggable: false,
@@ -310,7 +311,7 @@ return function(config) {
                 open: function(event, ui) {
                     $dEl.parent().find('.ui-dialog-titlebar-close').hide();
                     var width = $dEl.parent().find('.ui-dialog-title').width();
-                    $dEl.dialog('option', 'width', width+30);
+                    $dEl.popup('option', 'width', width+30);
                 },
                 position: {
                     using: function(w, topLeft, posObj) {
@@ -337,20 +338,20 @@ return function(config) {
             });
             
             $dEl.parent().find('.ui-dialog-title').one('click', function() {
-                var url = $dEl.dialog('option', 'title');
+                var url = $dEl.popup('option', 'title');
                 window.open(url);
             });
             
             var closeId;
             closeId = setTimeout(function() {
-                $dEl.dialog('close');
+                $dEl.popup('close');
             }, 1000);
             $dEl.parent().on('mouseover', function() {
                 clearTimeout(closeId);
             });
             $dEl.parent().on('mouseout', function() {
                 closeId = setTimeout(function() {
-                    $dEl.dialog('close');
+                    $dEl.popup('close');
                 }, 500);
             });
         }
