@@ -3,58 +3,63 @@ define(['jquery', 'jquery-ui'], function($, jqueryUi) {
 return function(writer) {
     var w = writer;
     
-    $(document.body).append(''+
-    '<div id="messageDialog">'+
-        '<p>'+
-        '<span class="ui-state-highlight" style="border: none;"><span style="float: left; margin-right: 4px;" class="ui-icon ui-icon-info"></span></span>'+
-        '<span class="ui-state-error" style="border: none;"><span style="float: left; margin-right: 4px;" class="ui-icon ui-icon-alert"></span></span>'+
-        '<span class="message"></span>'+
-        '</p>'+
-    '</div>');
+    function createMessageDialog(config) {
+        var id = w.getUniqueId('msg');
+        
+        $(document.body).append(''+
+        '<div id="'+id+'">'+
+            '<p>'+
+            '<span class="ui-state-highlight" style="border: none;"><span style="float: left; margin-right: 4px;" class="ui-icon ui-icon-info"></span></span>'+
+            '<span class="ui-state-error" style="border: none;"><span style="float: left; margin-right: 4px;" class="ui-icon ui-icon-alert"></span></span>'+
+            '<span class="message"></span>'+
+            '</p>'+
+        '</div>');
+        var message = $('#'+id);
+        
+        var title = config.title;
+        var modal = config.modal == null ? true : config.modal;
+        message.dialog({
+            title: title,
+            modal: modal,
+            resizable: true,
+            closeOnEscape: true,
+            height: 250,
+            width: 300,
+            autoOpen: false,
+            close: function(ev) {
+                message.dialog('destroy');
+                message.remove();
+            }
+        });
+        
+        var msg = config.msg;
+        message.find('p > span[class=message]').html(msg);
+        
+        var type = config.type;
+        message.find('p > span[class^=ui-state]').hide();
+        if (type == 'info') {
+            message.find('p > span[class=ui-state-highlight]').show();
+        } else if (type == 'error') {
+            message.find('p > span[class=ui-state-error]').show();
+        }
+        
+        return message;
+    }
     
-    var message = $('#messageDialog');
-    message.dialog({
-        modal: true,
-        resizable: true,
-        closeOnEscape: true,
-        height: 250,
-        width: 300,
-        autoOpen: false
-    });
     
     return {
         show: function(config) {
-            var title = config.title;
-            var msg = config.msg;
-            var modal = config.modal == null ? true : config.modal;
-            var type = config.type;
-            
-            $('#messageDialog > p > span[class^=ui-state]').hide();
-            if (type == 'info') {
-                $('#messageDialog > p > span[class=ui-state-highlight]').show();
-            } else if (type == 'error') {
-                $('#messageDialog > p > span[class=ui-state-error]').show();
-            }
-            
-            message.dialog('option', 'title', title);
-            message.dialog('option', 'modal', modal);
+            var message = createMessageDialog(config);
             message.dialog('option', 'buttons', {
                 'Ok': function() {
                     message.dialog('close');
                 }
             });
-            $('#messageDialog > p > span[class=message]').html(msg);
-            
             message.dialog('open');
         },
         confirm: function(config) {
-            var title = config.title;
-            var msg = config.msg;
+            var message = createMessageDialog(config);
             var callback = config.callback;
-            
-            $('#messageDialog > p > span[class^=ui-state]').hide();
-            
-            message.dialog('option', 'title', title);
             message.dialog('option', 'buttons', {
                 'Yes': function() {
                     message.dialog('close');
@@ -65,12 +70,9 @@ return function(writer) {
                     callback(false);
                 }
             });
-            $('#messageDialog > p > span[class=message]').html(msg);
-            
             message.dialog('open');
         },
         hide: function() {
-            message.dialog('close');
         }
     };
 };
