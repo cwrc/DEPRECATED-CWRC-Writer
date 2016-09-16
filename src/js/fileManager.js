@@ -124,6 +124,7 @@ return function(writer) {
                     msg: 'An error ('+status+') occurred and '+docUrl+' was not loaded.',
                     type: 'error'
                 });
+                w.event('documentLoaded').publish(false, null);
             },
             dataType: 'xml'
         });

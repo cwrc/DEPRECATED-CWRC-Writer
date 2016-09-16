@@ -12,6 +12,10 @@ return function(writer) {
      */
     var del = {};
     
+    w.event('documentSaveRequested').subscribe(function(docId) {
+        del.saveDocument(docId);
+    });
+    
     /**
      * Gets the URI for the entity
      * @param {Object} entity The entity object
@@ -282,6 +286,8 @@ return function(writer) {
                     type: 'error'
                 });
                 callback.call(w, null);
+                
+                w.event('documentLoaded').publish(false, null);
             },
             dataType: 'xml'
         });

@@ -622,7 +622,9 @@ return function(writer) {
         } else {
             if (schemaId !== w.schemaManager.schemaId) {
                 w.schemaManager.loadSchema(schemaId, false, loadSchemaCss, function(success) {
-                    doProcessing(doc);
+                    if (success) {
+                        doProcessing(doc);
+                    }
                 });
             } else {
                 doProcessing(doc);
@@ -719,8 +721,10 @@ return function(writer) {
                 };
             }
         }
+        w.dialogManager.show('message', msgObj);
         
-        w.event('documentLoaded').publish(w.editor.getBody(), msgObj);
+        
+        w.event('documentLoaded').publish(true, w.editor.getBody());
     }
 
     // Needs to be public, to be able to process documents after the schema

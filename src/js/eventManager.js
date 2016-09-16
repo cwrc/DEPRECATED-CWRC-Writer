@@ -94,13 +94,14 @@ return function(writer) {
     /**
      * A document was loaded into the editor
      * @event Writer#documentLoaded
+     * @params {Boolean} success Was the document successfully loaded?
      * @param {Element} body The editor body element
-     * @param {Object} msgObj A message dialog config object with information about the loaded document
      */
     w.event('documentLoaded');
     /**
      * The user has requested to save the document
      * @event Writer#documentSaveRequested
+     * @param {String} docId The document ID
      */
     w.event('documentSaveRequested');
     /**
