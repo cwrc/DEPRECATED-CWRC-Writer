@@ -38,15 +38,17 @@ return function(writer) {
         progressBar.progressbar('value', 100);
         if (success !== true) {
             progressLabel.text('Error Loading Document');
+            loadingIndicator.dialog('option', 'buttons', {
+                'Ok': function() {
+                    loadingIndicator.dialog('close');
+                }
+            });
         } else {
             progressLabel.text('Document Loaded');
-        }
-        
-        loadingIndicator.dialog('option', 'buttons', {
-            'Ok': function() {
+            loadingIndicator.fadeOut(1000, function() {
                 loadingIndicator.dialog('close');
-            }
-        });
+            });
+        }
     });
     w.event('schemaLoaded').subscribe(function() {
         progressLabel.text('Schema Loaded');
