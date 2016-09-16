@@ -173,7 +173,11 @@ return function(config) {
         tree.update();
     });
     w.event('entityFocused').subscribe(function(entityId) {
-        tree.highlightNode($('#entityHighlight', w.editor.getBody())[0]);
+        if (!ignoreSelect) {
+            var entityNode = $('[name="'+entityId+'"]', w.editor.getBody())[0];
+            tree.highlightNode(entityNode);
+        }
+        ignoreSelect = false;
     });
     w.event('entityPasted').subscribe(function(entityId) {
         tree.update();
@@ -270,24 +274,23 @@ return function(config) {
     tree.highlightNode = function(node) {
         if (node) {
             var id = node.id;
-            if (id && !ignoreSelect) {
-                ignoreSelect = true;
-                if (id === 'entityHighlight') {
-                    id = $(node).find('[_entity]').first().attr('name');
+            if (id) { // TODO handling of entity name attribute
+                if (tree.currentlySelectedNodes.indexOf(id) == -1 && tree.currentlySelectedEntity !== id) {
+                    ignoreSelect = true;
+                    var treeNode = $('[name="'+id+'"]', $tree);
+                    if (treeNode.length === 0) {
+                        _expandParentsForNode(node);
+                        treeNode = $('[name="'+id+'"]', $tree);
+                    }
+                    $tree.jstree('deselect_all');
+                    _onNodeDeselect(); // manually trigger deselect behaviour, primarily to clear currentlySelectedNodes
+                    var result = $tree.jstree('select_node', treeNode);
+                    //if (result === false || result.attr('id') == 'tree') {
+                        ignoreSelect = false;
+                    //}
+    
+                    _scrollIntoView(treeNode);
                 }
-                var treeNode = $('[name="'+id+'"]', $tree);
-                if (treeNode.length === 0) {
-                    _expandParentsForNode(node);
-                    treeNode = $('[name="'+id+'"]', $tree);
-                }
-                $tree.jstree('deselect_all');
-                _onNodeDeselect(); // manually trigger deselect behaviour, primarily to clear currentlySelectedNodes
-                var result = $tree.jstree('select_node', treeNode);
-                //if (result === false || result.attr('id') == 'tree') {
-                    ignoreSelect = false;
-                //}
-
-                _scrollIntoView(treeNode);
             }
         } else {
             _onNodeDeselect();
@@ -339,7 +342,6 @@ return function(config) {
      * @param {Boolean} external True if selectNode came from outside structureTree, i.e. tree.selectNode
      */
     function selectNode($node, selectContents, multiselect, external) {
-        var aChildren = $node.children('a');
         var id = $node.attr('name');
         
         _removeCustomClasses();
@@ -354,32 +356,38 @@ return function(config) {
         }
         
         if (id) {
-            if (tree.currentlySelectedNodes.indexOf(id) != -1 && !external) {
-                // already selected node, toggle selection type
-                selectContents = !selectContents;
-            } else {
-                tree.currentlySelectedNodes.push(id);
-            }
+            var isEntity = w.entitiesManager.getEntity(id) !== undefined;
+            var aChildren = $node.children('a');
             
-            if (selectContents) {
-                aChildren.addClass('contentsSelected').removeClass('nodeSelected');
-            } else {
-                aChildren.addClass('nodeSelected').removeClass('contentsSelected');
-            }
-            
-            tree.selectionType = selectContents ? tree.CONTENTS_SELECTED : tree.NODE_SELECTED;
-            
-            if (w.entitiesManager.getEntity(id) !== undefined) {
-                tree.currentlySelectedEntity = id;
+            if (isEntity) {
                 tree.currentlySelectedNodes = [];
-                tree.selectionType = null;
                 aChildren.addClass('nodeSelected').removeClass('contentsSelected');
-                if (!external) {
-                    ignoreSelect = true;
-                    w.entitiesManager.highlightEntity(id, null, true);
+                if (tree.currentlySelectedEntity !== id) {
+                    tree.currentlySelectedEntity = id;
+                    tree.selectionType = null;
+                    
+                    if (!external) {
+                        ignoreSelect = true;
+                        w.entitiesManager.highlightEntity(id, null, true);
+                    }
                 }
             } else if (w.structs[id] != null) {
                 tree.currentlySelectedEntity = null;
+                if (tree.currentlySelectedNodes.indexOf(id) != -1 && !external) {
+                    // already selected node, toggle selection type
+                    selectContents = !selectContents;
+                } else {
+                    tree.currentlySelectedNodes.push(id);
+                }
+                
+                if (selectContents) {
+                    aChildren.addClass('contentsSelected').removeClass('nodeSelected');
+                } else {
+                    aChildren.addClass('nodeSelected').removeClass('contentsSelected');
+                }
+                
+                tree.selectionType = selectContents ? tree.CONTENTS_SELECTED : tree.NODE_SELECTED;
+
                 if (!external) {
                     if (w.structs[id]._tag == w.header) {
                         w.dialogManager.show('header');
@@ -602,7 +610,6 @@ return function(config) {
     
     function _onNodeSelect(event, data) {
         if (!ignoreSelect) {
-            var id = data.node.li_attr.name;
             var $target = $(data.event.currentTarget);
             var selectContents = $target.hasClass('contentsSelected');
             

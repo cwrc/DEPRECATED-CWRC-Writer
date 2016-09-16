@@ -152,59 +152,57 @@ EntitiesManager.prototype = {
      * @param {Boolean} doScroll True to scroll to the entity
      */
     highlightEntity: function(id, bm, doScroll) {
-        if (id == null || id !== this.currentEntity) {
-            // clear previous highlight
-            var body = this.w.editor.getBody();
-            var prevHighlight = $('.entityHighlight', body);
-            if (prevHighlight.length !== 0) {
-                prevHighlight.each(function(index, el) {
-                    var $p = $(el);
-                    var parent = $p.parent()[0];
-                    if ($p.contents().length !== 0) {
-                        $p.contents().unwrap();
-                    } else {
-                        $p.remove();
-                    }
-                    parent.normalize();
-                });
-            }
-            if (this.currentEntity !== null) {
-                this.w.event('entityUnfocused').publish(this.currentEntity);
-            }
-            
-            this.currentEntity = null;
-            
-            if (id) {
-                this.currentEntity = id;
-                
-                var entityTags = $('[name="'+id+'"]', body);
-                if (entityTags.length > 0) {
-                    // clear selection
-                    var rng = this.w.editor.dom.createRng();
-                    this.w.editor.selection.setRng(rng);
-                    
-                    var type = this.getEntity(id).getType();
-                    
-                    entityTags.wrap('<span class="entityHighlight '+type+'"/>');
-                    
-                    if (bm) {
-                        // maintain the original caret position
-                        this.w.editor.selection.moveToBookmark(bm);
-                    } else {
-                        // move inside entity
-                        rng = this.w.editor.dom.createRng();
-                        rng.setStart(entityTags[0], 0);
-                        rng.collapse(true);
-                        this.w.editor.selection.setRng(rng);
-                    }
-                    
-                    if (doScroll) {
-                        var val = entityTags.offset().top;
-                        $(body).scrollTop(val);
-                    }
-                    
-                    this.w.event('entityFocused').publish(id);
+        // clear previous highlight
+        var body = this.w.editor.getBody();
+        var prevHighlight = $('.entityHighlight', body);
+        if (prevHighlight.length !== 0) {
+            prevHighlight.each(function(index, el) {
+                var $p = $(el);
+                var parent = $p.parent()[0];
+                if ($p.contents().length !== 0) {
+                    $p.contents().unwrap();
+                } else {
+                    $p.remove();
                 }
+                parent.normalize();
+            });
+        }
+        if (this.currentEntity !== null) {
+            this.w.event('entityUnfocused').publish(this.currentEntity);
+        }
+        
+        this.currentEntity = null;
+        
+        if (id) {
+            this.currentEntity = id;
+            
+            var entityTags = $('[name="'+id+'"]', body);
+            if (entityTags.length > 0) {
+                // clear selection
+                var rng = this.w.editor.dom.createRng();
+                this.w.editor.selection.setRng(rng);
+                
+                var type = this.getEntity(id).getType();
+                
+                entityTags.wrap('<span class="entityHighlight '+type+'"/>');
+                
+                if (bm) {
+                    // maintain the original caret position
+                    this.w.editor.selection.moveToBookmark(bm);
+                } else {
+                    // move inside entity
+                    rng = this.w.editor.dom.createRng();
+                    rng.setStart(entityTags[0], 0);
+                    rng.collapse(true);
+                    this.w.editor.selection.setRng(rng);
+                }
+                
+                if (doScroll) {
+                    var val = entityTags.offset().top;
+                    $(body).scrollTop(val);
+                }
+                
+                this.w.event('entityFocused').publish(id);
             }
         }
     },
