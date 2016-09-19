@@ -72,7 +72,7 @@ return function(id, writer) {
             });
             
             if (dialog.mode === DialogForm.ADD) {
-                var noteUrl = w.cwrcRootUrl+'js/schema/tei/xml/note_tei.xml';
+                var noteUrl = writer.schemaManager.getCurrentSchema().entityTemplates.note;
                 cwrcWriter.fileManager.loadDocumentFromUrl(noteUrl);
             } else {
                 var xmlDoc = $.parseXML(config.entry.getNoteContent());

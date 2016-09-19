@@ -116,6 +116,7 @@ date: {
 note: {
     parentTag: '',
     textTag: '',
+    isNote: true,
     mapping: function(entity) {
     },
     reverseMapping: function(xml) {

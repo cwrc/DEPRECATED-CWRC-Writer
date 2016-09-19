@@ -83,7 +83,7 @@ return function(id, writer) {
             });
             
             if (dialog.mode === DialogForm.ADD) {
-                var noteUrl = w.cwrcRootUrl+'js/schema/orlando/xml/note_'+writer.schemaManager.schemaId+'.xml';
+                var noteUrl = writer.schemaManager.getCurrentSchema().entityTemplates.note;
                 cwrcWriter.fileManager.loadDocumentFromUrl(noteUrl);
             } else {
                 var parent = config.entry.getTag();

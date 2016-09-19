@@ -17,31 +17,47 @@
             "name": "CWRC Basic TEI Schema",
             "url": "http://cwrc.ca/schemas/cwrc_tei_lite.rng",
             "cssUrl": "http://cwrc.ca/templates/css/tei.css",
-            "schemaMappingsId": "tei"
+            "schemaMappingsId": "tei",
+            "entityTemplates": {
+                "note": "js/schema/tei/xml/note.xml",
+                "citation": "js/schema/tei/xml/citation.xml"
+            }
         },
         "events": {
             "name": "Events Schema",
             "url": "http://cwrc.ca/schemas/orlando_event_v2.rng",
             "cssUrl": "http://cwrc.ca/templates/css/orlando.css",
-            "schemaMappingsId": "orlando"
+            "schemaMappingsId": "orlando",
+            "entityTemplates": {
+                "note": "js/schema/orlando/xml/note_events.xml"
+            }
         },
         "biography": {
             "name": "Biography Schema",
             "url": "http://cwrc.ca/schemas/orlando_biography_v2.rng",
             "cssUrl": "http://cwrc.ca/templates/css/orlando.css",
-            "schemaMappingsId": "orlando"
+            "schemaMappingsId": "orlando",
+            "entityTemplates": {
+                "note": "js/schema/orlando/xml/note_biography.xml"
+            }
         },
         "writing": {
             "name": "Writing Schema",
             "url": "http://cwrc.ca/schemas/orlando_writing_v2.rng",
             "cssUrl": "http://cwrc.ca/templates/css/orlando.css",
-            "schemaMappingsId": "orlando"
+            "schemaMappingsId": "orlando",
+            "entityTemplates": {
+                "note": "js/schema/orlando/xml/note_writing.xml"
+            }
         },
         "cwrcEntry": {
             "name": "CWRC Entry Schema",
             "url": "http://cwrc.ca/schemas/cwrc_entry.rng",
             "cssUrl": "http://cwrc.ca/templates/css/cwrc.css",
-            "schemaMappingsId": "cwrcEntry"
+            "schemaMappingsId": "cwrcEntry",
+            "entityTemplates": {
+                "note": "js/schema/cwrcEntry/xml/note.xml"
+            }
         }
     },
     "defaultDocument": "templates/letter"
