@@ -405,12 +405,14 @@ return function(writer) {
      * Add our own undo level, then erase the next one that gets added by tinymce
      */
     function _doCustomTaggerUndo() {
-        // TODO update for 4
-//        w.editor.undoManager.add();
-//        w.editor.undoManager.onAdd.addToTop(function() {
-//            this.data.splice(this.data.length-1, 1); // remove last undo level
-//            this.onAdd.listeners.splice(0, 1); // remove this listener
-//        }, w.editor.undoManager);
+//        function customUndo(e) {
+//            console.log(this.undoManager.data);
+////            this.data.splice(this.data.length-1, 1); // remove last undo level
+////            this.onAdd.listeners.splice(0, 1); // remove this listener
+//            this.off('BeforeAddUndo', customUndo);
+//        }
+        w.editor.undoManager.add();
+//        w.editor.on('BeforeAddUndo', customUndo, true);
     }
     
     /**
@@ -682,6 +684,8 @@ return function(writer) {
      * @param {Boolean} [removeContents] Remove the contents as well
      */
     tagger.removeEntity = function(id, removeContents) {
+        _doCustomTaggerUndo();
+        
         id = id || w.entitiesManager.getCurrentEntity();
         removeContents = removeContents || false;
         
@@ -924,6 +928,8 @@ return function(writer) {
     // TODO refactor this with removeStructureTag
     tagger.removeStructureTagContents = function(id) {
         _doCustomTaggerUndo();
+        
+        id = id || w.editor.currentStruct;
         
         var node = $('#'+id, w.editor.getBody());
         node.contents().remove();

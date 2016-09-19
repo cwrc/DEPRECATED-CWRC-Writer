@@ -932,7 +932,6 @@ html, body {
 	border: none;
 	background: rgba(0, 0, 0, 0);
 	margin-bottom: 1px;
-	padding-left: 8px !important;
 }
 
 .mce-cwrc.mce-btn button i {
@@ -1039,7 +1038,7 @@ html, body {
 }
 
 .mce-cwrc .mce-btn {
-	padding: 4px 0px;
+	padding: 4px 6px;
 }
 
 .mce-cwrc .mce-btn button {
