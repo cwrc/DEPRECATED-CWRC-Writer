@@ -1029,6 +1029,35 @@ html, body {
     border-bottom: 2px solid #3366ff !important;
 }
 
+/* tinymce context menu overrides */
+.mce-cwrc .mce-menu-item {
+	padding: 4px 2px;
+}
+
+.mce-cwrc .mce-menu-item span, .mce-cwrc .mce-btn span {
+	font-size: 11px;
+}
+
+.mce-cwrc .mce-btn {
+	padding: 4px 0px;
+}
+
+.mce-cwrc .mce-btn button {
+	font-size 11px;
+	line-height: 14px;
+	padding: 0px;
+}
+
+div.mce-cwrc div.mce-menu-item-sep, div.mce-cwrc div.mce-menu-item-sep:hover {
+	margin: 1px;
+}
+
+.mce-cwrc input.mce-textbox {
+	font-size: 11px;
+	height: 26px;
+}
+
+
 /* tinymce overrides */
 div.mceDropDown {
     box-shadow: 1px 1px 2px #ccc;

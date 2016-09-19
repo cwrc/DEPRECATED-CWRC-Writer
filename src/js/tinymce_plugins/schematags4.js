@@ -237,8 +237,8 @@ tinymce.PluginManager.add('schematags', function(editor) {
             onshow: function(e) {
                 if (e.control.type != 'menuitem') {
                     var textbox = e.control.items()[0];
-                    textbox.value('');
                     var menu = e.control.items()[1];
+                    textbox.value('');
                     if (menu.type === 'cwrcmenu') {
                         filterMenu(menu);
                         menu.show();
@@ -250,8 +250,11 @@ tinymce.PluginManager.add('schematags', function(editor) {
             },
             onPostRender: function(e) {
                 var textbox = e.control.items()[0];
-                $(textbox.getEl()).watermark('Filter');
                 var menu = e.control.items()[1];
+                
+                $(textbox.getEl()).watermark('Filter');
+                $(textbox.getEl()).width(menu.getEl().offsetWidth);
+                
                 var items = [];
                 editor.execCommand('getTagsMenu', items);
                 menu.append(items);

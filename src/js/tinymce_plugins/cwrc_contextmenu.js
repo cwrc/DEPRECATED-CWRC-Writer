@@ -68,6 +68,7 @@ tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
             
             menu = new tinymce.ui.Menu({
                 style: 'max-height: none !important;',
+                containerCls: 'cwrc',
                 items: items,
                 context: 'contextmenu'
             });
