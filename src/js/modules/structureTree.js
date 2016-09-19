@@ -46,7 +46,7 @@ $.vakata.context._show_submenu = function (o) {
     e.show();
     filterParent.show().offset({
         left: e.offset().left,
-        top: (e.offset().top-22)
+        top: (e.offset().top-filterParent.height())
     }).width(e.outerWidth()-2);
 };
 $(document).on('context_hide.vakata', function(e) {

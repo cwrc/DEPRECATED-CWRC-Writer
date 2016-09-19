@@ -30,13 +30,15 @@
 .vakata-context .submenu .filterParent {
 	position: absolute;
 	display: none;
+	height: 26px;
+	padding-top: 2px;
 	background-color: #fff !important;
 	border: 1px solid #D4D0C8 !important;
     box-shadow: 2px 2px 2px #999999;
 }
 
 .vakata-context .submenu .filterParent span {
-	margin: 2px 3px;
+	margin: 2px 0.5em;
 	font-size: 11px;
 }
 
@@ -60,7 +62,7 @@
 	width: 16px;
 }
 
-.vakata-context li > a {
+.vakata-context li > a, .vakata-context .submenu .filterParent span {
 	font-family: Tahoma,Verdana,Arial,Helvetica !important;
 	font-size: 11px !important;
 	line-height: 22px !important;
