@@ -697,11 +697,11 @@ return function(writer) {
         var msgObj = {};
         if (w.isReadOnly !== true) {
             if (root.nodeName.toLowerCase() !== w.root.toLowerCase()) {
-                msgObj = {
+                w.dialogManager.show('message', {
                     title: 'Schema Mismatch',
                     msg: 'The wrong schema is specified.<br/>Schema root: '+w.root+'<br/>Document root: '+root.nodeName,
                     type: 'error'
-                };
+                });
             } else {
                 var msg;
                 if (w.mode === w.XML) {
@@ -713,16 +713,13 @@ return function(writer) {
                         msg = '<b>XML and RDF (no overlap)</b><br/>XML tags and RDF/Semantic Web annotations equivalent to the XML tags will be created, consistent with the hierarchy of the XML schema, so annotations will not be allowed to overlap.';
                     }
                 }
-    
-                msgObj = {
+                w.dialogManager.show('message', {
                     title: 'CWRC-Writer Mode',
                     msg: msg,
                     type: 'info'
-                };
+                });
             }
         }
-        w.dialogManager.show('message', msgObj);
-        
         
         w.event('documentLoaded').publish(true, w.editor.getBody());
     }
