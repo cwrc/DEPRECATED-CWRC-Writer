@@ -58,22 +58,42 @@ return function(writer) {
 
         _recursiveTextConversion(body);
 
+        
+        // PROCESS ENTITIES
+        
         // get the overlapping entity IDs, in the order that they appear in the document.
-        var entNodes = $('[_entity][class~="start"]', body).not('[_tag]').not('[_note]');
-        var entIds = $.map(entNodes, function(val, index) {
+        var overlappingEntNodes = $('[_entity][class~="start"]', body).not('[_tag]').not('[_note]');
+        var overlappingEntIds = $.map(overlappingEntNodes, function(val, index) {
             return $(val).attr('name');
         });
-
-        // get ranges for overlapping entities
+        // get ranges for overlapping entities, set offsetIds
         // then remove the associated nodes
-        $(entIds).each(function(index, id) {
-            var range = getRangesForEntity(id);
+        $(overlappingEntIds).each(function(index, id) {
             var entry = w.entitiesManager.getEntity(id);
-            // TODO make sure this is working
+            var range = getRangesForEntity(id);
             $.extend(entry.getRange(), range);
             $('[name="'+id+'"]', body).each(function(index, el) {
                 $(el).contents().unwrap();
             });
+        });
+        
+        // set annotationIds for entities
+        w.entitiesManager.eachEntity(function(entityId, entry) {
+            var entity = $('#'+entityId, w.editor.getBody());
+            if (entity.length === 0) {
+                // shouldn't be here
+                if (window.console) {
+                    console.warn('no entity element found for', entityId);
+                }
+            } else {
+                // get the xpath for the entity's tag
+                entity[0].setAttribute('annotationId', entityId);
+                var range = {};
+                var tag = entry.getTag();
+                range.start = '//'+tag+'[@annotationId="'+entityId+'"]';
+                range.annotationId = entityId;
+                $.extend(entry.getRange(), range);
+            }
         });
 
         // RDF
@@ -81,7 +101,7 @@ return function(writer) {
         var rdfString = '';
         if (w.mode === w.RDF || (w.mode === w.XMLRDF && includeRDF)) {
             var rdfmode = 'xml';
-            rdfString = buildAnnotations(rdfmode);
+            rdfString = w.annotationsManager.getAnnotations(rdfmode);
         }
         if (w.mode === w.RDF) {
             return rdfString;
@@ -116,6 +136,7 @@ return function(writer) {
         });
         bodyString = bodyString.replace(/\uFEFF/g, ''); // remove characters inserted by node selecting
 
+        // replace modified body with original (clone)
         body.replaceWith(clone);
 
         if (includeRDF === false) {
@@ -201,101 +222,6 @@ return function(writer) {
         doBuild(node);
         return xmlString;
     };
-
-    /**
-     * Constructs the annotations string for the header.
-     * @param {String} format What format to build the annotations with: 'xml' or 'json'.
-     * @returns {String}
-     */
-    function buildAnnotations(format) {
-        format = format || 'xml';
-
-        var namespaces = {
-            'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-            'cw': 'http://cwrc.ca/ns/cw#'
-        };
-
-        var rdfString = '';
-
-        // xml mode
-        var uri = w.baseUrl+'editor/documents/'+w.currentDocId;
-        rdfString += '<rdf:Description rdf:about="'+uri+'">\n\t<cw:mode>'+w.mode+'</cw:mode>\n\t<cw:allowOverlap>'+w.allowOverlap+'</cw:allowOverlap>\n</rdf:Description>';
-
-        var body = w.editor.getBody();
-        w.entitiesManager.eachEntity(function(id, entity) {
-            // TODO temp fix for entities that don't have URIs
-            if (entity.getUris().annotationId == null) {
-                // generate the URIs
-                $.when(
-                    w.delegator.getUriForEntity(entity),
-                    w.delegator.getUriForAnnotation(),
-                    w.delegator.getUriForDocument(),
-                    w.delegator.getUriForTarget(),
-                    w.delegator.getUriForSelector(),
-                    w.delegator.getUriForUser()
-                ).then(function(entityUri, annoUri, docUri, targetUri, selectorUri, userUri) {
-                    entity.setUris({
-                        entityId: entityUri,
-                        annotationId: annoUri,
-                        docId: docUri,
-                        targetId: targetUri,
-                        selectorId: selectorUri,
-                        userId: userUri
-                    });
-                });
-            }
-            var annotation = getAnnotationForEntity(id, format);
-
-            if (format === 'xml') {
-                // process namespaces
-                $(annotation.attributes).each(function(index, el) {
-                    if (el.prefix === 'xmlns') {
-                        namespaces[el.localName] = el.value;
-                    }
-                });
-
-                // get the child descriptions
-                $('rdf\\:Description, Description', annotation).each(function(index, el) {
-                    rdfString += w.utilities.xmlToString(el);
-                });
-            } else if (format === 'json') {
-                rdfString += '\n<rdf:Description rdf:datatype="http://www.w3.org/TR/json-ld/"><![CDATA[\n';
-                rdfString += JSON.stringify(annotation, null, '\t');
-                rdfString += '\n]]></rdf:Description>';
-            }
-
-            // process child entities (for note, citation)
-            if (entity.getNoteContent()) {
-                // get the rdf and append it
-                var xml = w.utilities.stringToXML(entity.getNoteContent());
-                // TODO should RDF be in note content???
-                var rdf = $('rdf\\:RDF, RDF', xml);
-                $('[rdf\\:datatype]', rdf).each(function(index, el) {
-                    rdfString += w.utilities.xmlToString(el);
-                });
-            }
-        });
-
-        // triples
-        for (var i = 0; i < w.triples.length; i++) {
-            var t = w.triples[i];
-
-            rdfString += '\n<rdf:Description rdf:about="'+t.subject.uri+'" cw:external="'+t.subject.external+'">'+
-            '\n\t<cw:'+t.predicate.name+' cw:text="'+t.predicate.text+'" cw:external="'+t.predicate.external+'">'+
-            '\n\t\t<rdf:Description rdf:about="'+t.object.uri+'" cw:external="'+t.object.external+'" />'+
-            '\n\t</cw:'+t.predicate.name+'>'+
-            '\n</rdf:Description>';
-        }
-
-        var rdfHead = '<rdf:RDF';
-        for (var name in namespaces) {
-            rdfHead += ' xmlns:'+name+'="'+namespaces[name]+'"';
-        }
-
-        rdfString = rdfHead + '>\n' + rdfString + '\n</rdf:RDF>\n';
-
-        return rdfString;
-    }
 
     /**
      * Determines the range that an entity spans, using xpath and character offset.
@@ -386,34 +312,6 @@ return function(writer) {
 
         return range;
     }
-
-    /**
-     * Sets annotation info in the entity entry, and returns a string representation of it. Must call after convertEntityToTag.
-     * @param {String} entityId The id for the entity
-     * @param {String} format What format to build the annotation with: 'xml' or 'json'
-     * @returns {XML|JSON} What's returned depends on the mode parameter
-     */
-    function getAnnotationForEntity(entityId, format) {
-        var entry = w.entitiesManager.getEntity(entityId);
-
-        var entity = $('#'+entityId, w.editor.getBody());
-        if (entity.length === 0) {
-//            range = getRangesForEntity(entityId);
-            // TODO fill this in
-        } else {
-            // get the xpath for the entity's tag
-            entity[0].setAttribute('annotationId', entityId);
-            var range = {};
-            var tag = entry.getTag();
-            range.start = '//'+tag+'[@annotationId="'+entityId+'"]';
-            range.annotationId = entityId;
-            $.extend(entry.getRange(), range);
-        }
-
-        var annotation = w.annotationsManager.getAnnotation(entry, format);
-        return annotation;
-    }
-
     
     function _recursiveTextConversion(parentNode) {
         var contents = $(parentNode).contents();
@@ -737,13 +635,13 @@ return function(writer) {
 
             // json-ld
             if (rdf.attr('rdf:datatype') == 'http://www.w3.org/TR/json-ld/') {
-                var entityConfig = w.annotationsManager.getEntityFromJSON(rdf[0]);
+                var entityConfig = w.annotationsManager.getEntityFromJsonAnnotation(rdf[0]);
                 if (entityConfig != null) {
                     w.entitiesManager.addEntity(entityConfig);
                 }
             // rdf/xml
             } else if (rdf.attr('rdf:about')) {
-                var entityConfig = w.annotationsManager.getEntityFromXML(rdf[0]);
+                var entityConfig = w.annotationsManager.getEntityFromXmlAnnotation(rdf[0]);
                 if (entityConfig != null) {
                     w.entitiesManager.addEntity(entityConfig);
                 }

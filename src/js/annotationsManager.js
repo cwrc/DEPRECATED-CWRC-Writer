@@ -93,7 +93,7 @@ AnnotationsManager.commonAnnotation = function(entity, types, motivations, forma
             var prefix = typeParts[0];
             var namespace = AnnotationsManager.prefixMap[prefix];
             namespaces[prefix] = 'xmlns:'+prefix+'="'+namespace+'"';
-            typesString += '<rdf:type rdf:resource="'+namespace+typeParts[1]+'"/>';
+            typesString += '\n\t<rdf:type rdf:resource="'+namespace+typeParts[1]+'"/>';
         }
         
         var motivationsString = '';
@@ -102,7 +102,7 @@ AnnotationsManager.commonAnnotation = function(entity, types, motivations, forma
             var prefix = motivationParts[0];
             var namespace = AnnotationsManager.prefixMap[prefix];
             namespaces[prefix] = 'xmlns:'+prefix+'="'+namespace+'"';
-            motivationsString += '<oa:motivatedBy rdf:resource="'+namespace+motivationParts[1]+'"/>';
+            motivationsString += '\n\t<oa:motivatedBy rdf:resource="'+namespace+motivationParts[1]+'"/>';
         }
         
         var namespaceString = '';
@@ -116,64 +116,64 @@ AnnotationsManager.commonAnnotation = function(entity, types, motivations, forma
             if (certainty === 'reasonably certain') {
                 certainty = 'reasonable';
             }
-            certaintyString = '<cw:hasCertainty rdf:resource="http://cwrc.ca/ns/cw#'+certainty+'"/>';
+            certaintyString = '\n\t<cw:hasCertainty rdf:resource="http://cwrc.ca/ns/cw#'+certainty+'"/>';
         }
         
         var selectorString = ''+
-        '<rdf:Description rdf:about="'+targetId+'">'+
-            '<oa:hasSource rdf:resource="'+docId+'"/>'+
-            '<rdf:type rdf:resource="http://www.w3.org/ns/oa#SpecificResource"/>'+
-            '<oa:hasSelector rdf:resource="'+selectorId+'"/>'+
-        '</rdf:Description>';
+        '\n<rdf:Description rdf:about="'+targetId+'">'+
+            '\n\t<oa:hasSource rdf:resource="'+docId+'"/>'+
+            '\n\t<rdf:type rdf:resource="http://www.w3.org/ns/oa#SpecificResource"/>'+
+            '\n\t<oa:hasSelector rdf:resource="'+selectorId+'"/>'+
+        '\n</rdf:Description>';
         if (range.end) {
             selectorString += ''+
-            '<rdf:Description rdf:about="'+selectorId+'">'+
-                '<oa:start>xpointer(string-range('+range.start+',"",'+range.startOffset+'))</oa:start>'+
-                '<oa:end>xpointer(string-range('+range.end+',"",'+range.endOffset+'))</oa:end>'+
-                '<rdf:type rdf:resource="http://www.w3.org/ns/oa#TextPositionSelector"/>'+
-            '</rdf:Description>';
+            '\n<rdf:Description rdf:about="'+selectorId+'">'+
+                '\n\t<oa:start>xpointer(string-range('+range.start+',"",'+range.startOffset+'))</oa:start>'+
+                '\n\t<oa:end>xpointer(string-range('+range.end+',"",'+range.endOffset+'))</oa:end>'+
+                '\n\t<rdf:type rdf:resource="http://www.w3.org/ns/oa#TextPositionSelector"/>'+
+            '\n</rdf:Description>';
         } else {
             selectorString += ''+
-            '<rdf:Description rdf:about="'+selectorId+'">'+
-                '<rdf:value>xpointer('+range.start+')</rdf:value>'+
-                '<rdf:type rdf:resource="http://www.w3.org/ns/oa#FragmentSelector"/>'+
-            '</rdf:Description>';
+            '\n<rdf:Description rdf:about="'+selectorId+'">'+
+                '\n\t<rdf:value>xpointer('+range.start+')</rdf:value>'+
+                '\n\t<rdf:type rdf:resource="http://www.w3.org/ns/oa#FragmentSelector"/>'+
+            '\n</rdf:Description>';
         }
         
         var cwrcInfoString = '';
         if (cwrcInfo !== undefined) {
             delete cwrcInfo.data; // remove extra XML data
             var cwrcInfo = JSON.stringify(cwrcInfo);
-            cwrcInfoString = '<cw:cwrcInfo>'+cwrcInfo+'</cw:cwrcInfo>';
+            cwrcInfoString = '\n\t<cw:cwrcInfo>'+cwrcInfo+'</cw:cwrcInfo>';
         }
         
         var cwrcAttributesString = '';
         if (attributes != null) {
             var cwrcAttributes = JSON.stringify(attributes);
-            cwrcAttributesString = '<cw:cwrcAttributes>'+cwrcAttributes+'</cw:cwrcAttributes>';
+            cwrcAttributesString = '\n\t<cw:cwrcAttributes>'+cwrcAttributes+'</cw:cwrcAttributes>';
         }
         
         var rdfString = ''+
-            '<rdf:RDF'+namespaceString+'>'+
-            '<rdf:Description rdf:about="'+annotationId+'">'+
-                '<oa:hasTarget rdf:resource="'+targetId+'"/>'+
-                '<oa:hasBody rdf:resource="'+entityId+'"/>'+
-                '<oa:annotatedBy rdf:resource="'+annotatedById+'"/>'+
-                '<oa:annotatedAt>'+date+'</oa:annotatedAt>'+
-                '<oa:serializedBy rdf:resource=""/>'+
-                '<oa:serializedAt>'+date+'</oa:serializedAt>'+
-                '<rdf:type rdf:resource="http://www.w3.org/ns/oa#Annotation"/>'+
+        '\n<rdf:RDF'+namespaceString+'>'+
+            '\n<rdf:Description rdf:about="'+annotationId+'">'+
+                '\n\t<oa:hasTarget rdf:resource="'+targetId+'"/>'+
+                '\n\t<oa:hasBody rdf:resource="'+entityId+'"/>'+
+                '\n\t<oa:annotatedBy rdf:resource="'+annotatedById+'"/>'+
+                '\n\t<oa:annotatedAt>'+date+'</oa:annotatedAt>'+
+                '\n\t<oa:serializedBy rdf:resource=""/>'+
+                '\n\t<oa:serializedAt>'+date+'</oa:serializedAt>'+
+                '\n\t<rdf:type rdf:resource="http://www.w3.org/ns/oa#Annotation"/>'+
                 motivationsString+
                 certaintyString+
                 cwrcInfoString+
                 cwrcAttributesString+
-            '</rdf:Description>'+
-            '<rdf:Description rdf:about="'+entityId+'">'+
-                '<rdf:type rdf:resource="http://www.w3.org/ns/oa#SemanticTag"/>'+
+            '\n</rdf:Description>'+
+            '\n<rdf:Description rdf:about="'+entityId+'">'+
+                '\n\t<rdf:type rdf:resource="http://www.w3.org/ns/oa#SemanticTag"/>'+
                 typesString+
-            '</rdf:Description>'+
+            '\n</rdf:Description>'+
             selectorString+
-        '</rdf:RDF>';
+        '\n</rdf:RDF>';
         
         annotation = $($.parseXML(rdfString));
     } else if (format === 'json') {
@@ -297,12 +297,107 @@ AnnotationsManager.prototype = {
         return anno;
     },
     
+    getAnnotations: function(format) {
+        format = format || 'xml';
+
+        var namespaces = {
+            'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+            'cw': 'http://cwrc.ca/ns/cw#'
+        };
+
+        var rdfString = '';
+
+        // xml mode
+        var uri = this.w.baseUrl+'editor/documents/'+this.w.currentDocId;
+        rdfString += ''+
+        '<rdf:Description rdf:about="'+uri+'">'+
+            '\n\t<cw:mode>'+this.w.mode+'</cw:mode>'+
+            '\n\t<cw:allowOverlap>'+this.w.allowOverlap+'</cw:allowOverlap>'+
+        '\n</rdf:Description>';
+
+        var me = this;
+        this.w.entitiesManager.eachEntity(function(id, entity) {
+            // TODO temp fix for entities that don't have URIs
+            if (entity.getUris().annotationId == null) {
+                // generate the URIs
+                $.when(
+                    me.w.delegator.getUriForEntity(entity),
+                    me.w.delegator.getUriForAnnotation(),
+                    me.w.delegator.getUriForDocument(),
+                    me.w.delegator.getUriForTarget(),
+                    me.w.delegator.getUriForSelector(),
+                    me.w.delegator.getUriForUser()
+                ).then(function(entityUri, annoUri, docUri, targetUri, selectorUri, userUri) {
+                    entity.setUris({
+                        entityId: entityUri,
+                        annotationId: annoUri,
+                        docId: docUri,
+                        targetId: targetUri,
+                        selectorId: selectorUri,
+                        userId: userUri
+                    });
+                });
+            }
+            var annotation = me.getAnnotation(entity, format);
+
+            if (format === 'xml') {
+                // process namespaces
+                $(annotation.attributes).each(function(index, el) {
+                    if (el.prefix === 'xmlns') {
+                        namespaces[el.localName] = el.value;
+                    }
+                });
+
+                // get the child descriptions
+                $('rdf\\:Description, Description', annotation).each(function(index, el) {
+                    rdfString += '\n';
+                    rdfString += me.w.utilities.xmlToString(el);
+                });
+            } else if (format === 'json') {
+                rdfString += '\n<rdf:Description rdf:datatype="http://www.w3.org/TR/json-ld/"><![CDATA[\n';
+                rdfString += JSON.stringify(annotation, null, '\t');
+                rdfString += '\n]]></rdf:Description>';
+            }
+
+            // process child entities (for note, citation)
+            if (entity.getNoteContent()) {
+                // get the rdf and append it
+                var xml = me.w.utilities.stringToXML(entity.getNoteContent());
+                // TODO should RDF be in note content???
+                var rdf = $('rdf\\:RDF, RDF', xml);
+                $('[rdf\\:datatype]', rdf).each(function(index, el) {
+                    rdfString += me.w.utilities.xmlToString(el);
+                });
+            }
+        });
+
+        // triples
+        for (var i = 0; i < me.w.triples.length; i++) {
+            var t = me.w.triples[i];
+
+            rdfString += '\n<rdf:Description rdf:about="'+t.subject.uri+'" cw:external="'+t.subject.external+'">'+
+            '\n\t<cw:'+t.predicate.name+' cw:text="'+t.predicate.text+'" cw:external="'+t.predicate.external+'">'+
+            '\n\t\t<rdf:Description rdf:about="'+t.object.uri+'" cw:external="'+t.object.external+'" />'+
+            '\n\t</cw:'+t.predicate.name+'>'+
+            '\n</rdf:Description>';
+        }
+
+        var rdfHead = '<rdf:RDF';
+        for (var name in namespaces) {
+            rdfHead += ' xmlns:'+name+'="'+namespaces[name]+'"';
+        }
+
+        rdfString = rdfHead + '>\n' + rdfString + '\n</rdf:RDF>\n';
+
+        return rdfString;
+    },
+    
     /**
      * Parse JSON and get an Entity config object
      * @param {Element} rdfEl An RDF element containing JSON text
      * @returns {Object|null} Entity config object
      */
-    getEntityFromJSON: function(rdfEl) {
+    getEntityFromJsonAnnotation: function(rdfEl) {
         var newEntity = null;
         
         var rdf = $(rdfEl);
@@ -320,8 +415,8 @@ AnnotationsManager.prototype = {
 
                 var xpointerStart = selector['oa:start'];
                 var xpointerEnd = selector['oa:end'];
-                var xpathStart = this.parseXpointer(xpointerStart, doc);
-                var xpathEnd = this.parseXpointer(xpointerEnd, doc);
+                var xpathStart = this._parseXpointer(xpointerStart, doc);
+                var xpathEnd = this._parseXpointer(xpointerEnd, doc);
 
                 if (xpathStart != null && xpathEnd != null) {
                     rangeObj = {
@@ -334,7 +429,7 @@ AnnotationsManager.prototype = {
                 }
             } else if (selector['@type'] == 'oa:FragmentSelector') {
                 var xpointer = selector['rdf:value'];
-                var xpathObj = this.parseXpointer(xpointer, doc);
+                var xpathObj = this._parseXpointer(xpointer, doc);
 
                 id = xpathObj.parentId;
 
@@ -368,7 +463,7 @@ AnnotationsManager.prototype = {
      * @param {Element} xml An RDF element containing XML elements
      * @returns {Object|null} Entity config object
      */
-    getEntityFromXML: function(xml) {
+    getEntityFromXmlAnnotation: function(xml) {
         var newEntity = null;
         
         var rdf = $(xml);
@@ -480,7 +575,7 @@ AnnotationsManager.prototype = {
             // matching element
             if (selectorType.indexOf('FragmentSelector') !== -1) {
                 var xpointer = selector.find('rdf\\:value, value').text();
-                var xpathObj = this.parseXpointer(xpointer, doc);
+                var xpathObj = this._parseXpointer(xpointer, doc);
 
                 id = xpathObj.parentId;
                 el = xpathObj.el;
@@ -493,8 +588,8 @@ AnnotationsManager.prototype = {
             } else {
                 var xpointerStart = selector.find('oa\\:start, start').text();
                 var xpointerEnd = selector.find('oa\\:end, end').text();
-                var xpathStart = this.parseXpointer(xpointerStart, doc);
-                var xpathEnd = this.parseXpointer(xpointerEnd, doc);
+                var xpathStart = this._parseXpointer(xpointerStart, doc);
+                var xpathEnd = this._parseXpointer(xpointerEnd, doc);
 
                 id = this.w.getUniqueId('ent_');
 
@@ -540,7 +635,7 @@ AnnotationsManager.prototype = {
         return newEntity;
     },
     
-    parseXpointer: function(xpointer, doc) {
+    _parseXpointer: function(xpointer, doc) {
         var nsr = doc.createNSResolver(doc.documentElement);
         var defaultNamespace = doc.documentElement.getAttribute('xmlns');
 
