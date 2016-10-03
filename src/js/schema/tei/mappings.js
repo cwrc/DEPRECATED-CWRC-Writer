@@ -41,7 +41,7 @@ listeners: {
             handleGraphics($tag);
         }
     },
-    documentLoaded: function(body) {
+    documentLoaded: function(success, body) {
         $(body).find('*[_tag="graphic"]').each(function(index, el) {
             handleGraphics($(el));
         });
