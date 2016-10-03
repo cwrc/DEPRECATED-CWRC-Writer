@@ -34,7 +34,16 @@ return function(id, writer) {
         iframe = dialog.$el.find('iframe')[0];
         var noteUrl = 'note.htm';
         if (w.isReadOnly) {
-            noteUrl = 'reader.htm';
+            noteUrl += '?readonly=true';
+            $('#'+id+'_type').buttonset('disable');
+            dialog.$el.dialog('option', 'buttons', [{
+                text: 'Close',
+                click: function() {
+                    dialog.$el.trigger('beforeCancel');
+                    dialog.$el.trigger('beforeClose');
+                    dialog.$el.dialog('close');
+                }
+            }]);
         }
         iframe.src = noteUrl;
         

@@ -47,7 +47,20 @@ return function(id, writer) {
     
     dialog.$el.on('beforeShow', function(e, config) {
         iframe = dialog.$el.find('iframe')[0];
-        iframe.src = 'note.htm';
+        var noteUrl = 'note.htm';
+        if (w.isReadOnly) {
+            noteUrl += '?readonly=true';
+            $('#'+id+'_type').buttonset('disable');
+            dialog.$el.dialog('option', 'buttons', [{
+                text: 'Close',
+                click: function() {
+                    dialog.$el.trigger('beforeCancel');
+                    dialog.$el.trigger('beforeClose');
+                    dialog.$el.dialog('close');
+                }
+            }]);
+        }
+        iframe.src = noteUrl;
         
         // hack to get the writer
         function getCwrcWriter() {
