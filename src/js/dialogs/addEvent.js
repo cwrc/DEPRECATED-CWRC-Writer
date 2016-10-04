@@ -26,6 +26,7 @@ return function(writer) {
     '</div>');
     
     var d = $('#addEventDialog');
+    var $writer = $('#cwrc_wrapper');
     d.dialog({
         modal: true,
         resizable: false,
@@ -36,6 +37,7 @@ return function(writer) {
         title: 'Create New Event',
         height: 300,
         width: 400,
+        position: { my: "center", at: "center", of: $writer },
         autoOpen: false,
         buttons: {
             'Submit for Review': function() {

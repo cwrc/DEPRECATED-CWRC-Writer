@@ -9,6 +9,7 @@ return function(writer) {
     '</div>');
     
     var loadingIndicator = $('#loadingIndicatorDialog');
+    var $writer = $('#cwrc_wrapper');
     loadingIndicator.dialog({
         title: 'CWRC-Writer',
         modal: true,
@@ -16,6 +17,7 @@ return function(writer) {
         closeOnEscape: true,
         height: 160,
         width: 300,
+        position: { my: "center", at: "center", of: $writer },
         autoOpen: false
     });
     

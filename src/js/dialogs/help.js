@@ -15,12 +15,14 @@ return function(writer) {
     '</div>');
     
     var $helpDialog = $('#helpDialog');
+    var $writer = $('#cwrc_wrapper');
     $helpDialog.dialog({
         modal: true,
         resizable: true,
         closeOnEscape: true,
         height: 650,
         width: 650,
+        position: { my: "center", at: "center", of: $writer },
         autoOpen: false,
         dialogClass: 'splitButtons',
         buttons: [{

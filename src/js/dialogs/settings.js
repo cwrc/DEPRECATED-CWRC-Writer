@@ -20,6 +20,7 @@ return function(writer, config) {
     $.extend(defaultSettings, settings);
     
     var $settingsDialog;
+    var $writer = $('#cwrc_wrapper');
     
     $('#headerButtons').append(''+
     '<div id="helpLink"><h2>Help</h2></div>'+
@@ -121,6 +122,7 @@ return function(writer, config) {
         closeOnEscape: true,
         height: 350,
         width: 350,
+        position: { my: "center", at: "center", of: $writer },
         autoOpen: false,
         buttons: [{
             text: 'Help',

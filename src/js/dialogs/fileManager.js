@@ -30,11 +30,13 @@ return function(writer) {
     var $files = $('#files');
     
     var loader = $('#loaderDialog');
+    var $writer = $('#cwrc_wrapper');
     loader.dialog({
         title: 'Load Document',
         modal: true,
         height: 450,
         width: 450,
+        position: { my: "center", at: "center", of: $writer },
         autoOpen: false,
         buttons: [{
             text: 'Load',
@@ -66,6 +68,7 @@ return function(writer) {
         resizable: false,
         height: 160,
         width: 300,
+        position: { my: "center", at: "center", of: $writer },
         autoOpen: false,
         buttons: {
             'Save': function() {
@@ -114,6 +117,7 @@ return function(writer) {
         resizable: false,
         height: 150,
         width: 300,
+        position: { my: "center", at: "center", of: $writer },
         autoOpen: false,
         buttons: {
             'Save': function() {
