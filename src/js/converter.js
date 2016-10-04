@@ -39,28 +39,99 @@ return function(writer) {
 
     /**
      * Gets the content of the document, converted from internal format to the schema format
-     * @param includeRDF True to include RDF in the header
-     * @param separateRDF True to return RDF as a separate string (in an object)
-     * @returns {String|Object}
+     * @param {boolean} includeRDF True to include RDF in the header
+     * @returns {String}
      */
-    converter.getDocumentContent = function(includeRDF, separateRDF) {
+    converter.getDocumentContent = function(includeRDF) {
         // remove highlights
         w.entitiesManager.highlightEntity();
+
+        var body = $(w.editor.getBody()).clone(false);
+        prepareText(body);
+        
+        // RDF
+        
+        var rdfString = '';
+        if (w.mode === w.RDF || (w.mode === w.XMLRDF && includeRDF)) {
+            var rdfmode = 'xml';
+            rdfString = w.annotationsManager.getAnnotations(rdfmode);
+        }
+        if (w.mode === w.RDF) {
+            return rdfString;
+        }
+        
+        // XML
+        
+        var root = body.children('[_tag='+w.root+']');
+        // make sure the root has the right namespaces for validation purposes
+        var struct = w.structs[root.attr('id')];
+        // add them to the structs entry and they'll get added to the markup later
+        struct['xmlns:cw'] = 'http://cwrc.ca/ns/cw#';
+        if (w.root === 'TEI') {
+            struct['xmlns'] = 'http://www.tei-c.org/ns/1.0';
+        }
+        if (includeRDF) {
+            struct['xmlns:rdf'] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
+        } else {
+            delete struct['xmlns:rdf'];
+        }
 
         var xmlString = '<?xml version="1.0" encoding="UTF-8"?>\n';
         xmlString += '<?xml-model href="'+w.schemaManager.getCurrentSchema().url+'" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>\n';
         var currentCSS = w.schemaManager.currentCSS || w.schemaManager.getCurrentSchema().cssUrl;
         xmlString += '<?xml-stylesheet type="text/css" href="'+currentCSS+'"?>\n';
         
+        var tags = _nodeToStringArray(root);
+        xmlString += tags[0];
 
-        var body = $(w.editor.getBody());
-        var clone = body.clone(false, true); // make a copy, don't clone body events, but clone child events
+        var bodyString = '';
+        root.contents().each(function(index, el) {
+            if (el.nodeType == 1) {
+                bodyString += converter.buildXMLString($(el));
+            } else if (el.nodeType == 3) {
+                bodyString += el.data;
+            }
+        });
+        bodyString = bodyString.replace(/\uFEFF/g, ''); // remove characters inserted by node selecting
 
+        if (includeRDF === false) {
+            // strip out RDF related ids
+            bodyString = bodyString.replace(/\s?(annotation|offset)Id=".*?"/g, '');
+        }
+
+        xmlString += rdfString + bodyString + tags[1];
+        return xmlString;
+    };
+
+    /**
+     * Get the annotations for the current document
+     * @param {String} mode 'xml' or 'json'
+     * @returns {String} A stringified version, either XML or JSON based on mode param
+     */
+    converter.getAnnotations = function(mode) {
+        w.entitiesManager.highlightEntity();
+
+        var body = $(w.editor.getBody()).clone(false);
+        prepareText(body);
+        
+        var rdfString = w.annotationsManager.getAnnotations(mode);
+        return rdfString;
+    };
+    
+    /**
+     * Prepare text for conversion to XML
+     * @param {jQuery} body The text body
+     */
+    function prepareText(body) {
         _recursiveTextConversion(body);
-
-        
-        // PROCESS ENTITIES
-        
+        setEntityRanges(body);
+    };
+    
+    /**
+     * Determine and set the range objects for each entity.
+     * @param {jQuery} body The text body
+     */
+    function setEntityRanges(body) {
         // get the overlapping entity IDs, in the order that they appear in the document.
         var overlappingEntNodes = $('[_entity][class~="start"]', body).not('[_tag]').not('[_note]');
         var overlappingEntIds = $.map(overlappingEntNodes, function(val, index) {
@@ -95,66 +166,13 @@ return function(writer) {
                 $.extend(entry.getRange(), range);
             }
         });
-
-        // RDF
-        
-        var rdfString = '';
-        if (w.mode === w.RDF || (w.mode === w.XMLRDF && includeRDF)) {
-            var rdfmode = 'xml';
-            rdfString = w.annotationsManager.getAnnotations(rdfmode);
-        }
-        if (w.mode === w.RDF) {
-            return rdfString;
-        }
-        
-        // XML
-        
-        var root = body.children('[_tag='+w.root+']');
-        // make sure the root has the right namespaces for validation purposes
-        var struct = w.structs[root.attr('id')];
-        // add them to the structs entry and they'll get added to the markup later
-        struct['xmlns:cw'] = 'http://cwrc.ca/ns/cw#';
-        if (w.root === 'TEI') {
-            struct['xmlns'] = 'http://www.tei-c.org/ns/1.0';
-        }
-        if (includeRDF) {
-            struct['xmlns:rdf'] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
-        } else {
-            delete struct['xmlns:rdf'];
-        }
-
-        var tags = _nodeToStringArray(root);
-        xmlString += tags[0];
-
-        var bodyString = '';
-        root.contents().each(function(index, el) {
-            if (el.nodeType == 1) {
-                bodyString += converter.buildXMLString($(el));
-            } else if (el.nodeType == 3) {
-                bodyString += el.data;
-            }
-        });
-        bodyString = bodyString.replace(/\uFEFF/g, ''); // remove characters inserted by node selecting
-
-        // replace modified body with original (clone)
-        body.replaceWith(clone);
-
-        if (includeRDF === false) {
-            // strip out RDF related ids
-            bodyString = bodyString.replace(/\s?(annotation|offset)Id=".*?"/g, '');
-        }
-
-        if (separateRDF) {
-            xmlString = bodyString + tags[1];
-            return {xml: xmlString, rdf: rdfString};
-        } else {
-            xmlString += rdfString + bodyString + tags[1];
-            return xmlString;
-        }
-    };
-
-    // gets any metadata info for the node and adds as attributes
-    // returns an array of 2 strings: opening and closing tags
+    }
+    
+    /**
+     * Get any metadata info for the node and adds as attributes
+     * @param {jQuery} node
+     * @returns {Array} An array of 2 strings: opening and closing tags
+     */
     function _nodeToStringArray(node) {
         var array = [];
         var id = node.attr('id');
@@ -327,6 +345,7 @@ return function(writer) {
     /**
      * Converts HTML entities to unicode, while preserving those that must be escaped as entities.
      * @param {String} text The text to convert
+     * @returns {String} The converted text
      */
     converter.convertTextForExport = function(text) {
         var newText = text;
@@ -371,22 +390,25 @@ return function(writer) {
                 var el = $(this);
                 if (this.nodeType == Node.TEXT_NODE && this.data != ' ') {
                     currentOffset += this.length;
-                } else if (el.attr('_tag')) {
-                    var id = el.attr('id');
-                    offsets.push({
-                        id: id,
-                        offset: currentOffset,
-                        length: el.text().length
-                    });
-                    getOffsets(el);
-                } else if (el.attr('_entity') && el.hasClass('start')) {
-                    var id = el.attr('name');
-                    offsets.push({
-                        id: id,
-                        offset: currentOffset,
-                        length: w.entitiesManager.getEntity(id).getContent().length,
-                        entity: true
-                    });
+                } else {
+                    if (el.attr('_tag')) {
+                        var id = el.attr('id');
+                        offsets.push({
+                            id: id,
+                            offset: currentOffset,
+                            length: el.text().length,
+                            entity: el.attr('_entity') !== undefined
+                        });
+                        getOffsets(el);
+                    } else if (el.attr('_entity') && el.hasClass('start')) {
+                        var id = el.attr('name');
+                        offsets.push({
+                            id: id,
+                            offset: currentOffset,
+                            length: w.entitiesManager.getEntity(id).getContent().length,
+                            entity: true
+                        });
+                    }
                 }
             });
         }
