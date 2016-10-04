@@ -1,5 +1,14 @@
 /* jstree overrides */
 
+#vakata-dnd {
+    display: block;
+    overflow: hidden;
+    background-color: #fff;
+    border: 1px solid #D4D0C8;
+    border-radius: 4px;
+    padding: 4px !important;
+}
+
 .vakata-context, .vakata-context .submenu ul {
 	border: 1px solid #D4D0C8 !important;
 	background-color: #fff !important;

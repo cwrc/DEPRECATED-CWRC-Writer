@@ -657,6 +657,8 @@ return function(config) {
             dropNodeEditor.after(dragNodeEditor);
         }
 
+        $tree.jstree('open_node', dropNode, null, false);
+        
         tree.update();
         if (isCopy) {
             w.tagger.findDuplicateTags();
@@ -771,6 +773,10 @@ return function(config) {
         },
         multiple: true,
         conditionalselect: _doConditionalSelect.bind(this, $tree),
+        dnd: {
+            large_drag_target: true,
+            large_drop_target: true
+        },
         contextmenu: {
             select_node: false,
             show_at_node: false,
@@ -970,6 +976,15 @@ return function(config) {
     
     $tree.on('select_node.jstree', _onNodeSelect);
     $tree.on('deselect_node.jstree', _onNodeDeselect);
+    $(document).on('dnd_start.vakata', function(e, data) {
+        data.helper.addClass('cwrc');
+    });
+    $(document).on('dnd_move.vakata', function(e, data) {
+        // adjust marker pos for our styles
+        var marker = $('#jstree-marker');
+        var o = marker.offset();
+        marker.offset({top: o.top-6, left: o.left-2});
+    });
     $tree.on('copy_node.jstree', function(e, data) {
         _onDragDrop(data, true);
     });

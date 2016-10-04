@@ -67,7 +67,8 @@ return function(writer) {
         } else {
             w.delegator.validate(function (valid) {
                 if (valid) {
-                    w.delegator.saveDocument(w.currentDocId);
+//                    w.delegator.saveDocument(w.currentDocId);
+                    w.event('documentSaveRequested').publish(w.currentDocId);
                 } else {
                     var doc = w.currentDocId;
                     if (doc == null) doc = 'The current document';
@@ -76,7 +77,8 @@ return function(writer) {
                         msg: doc+' is not valid. <b>Save anyways?</b>',
                         callback: function(yes) {
                             if (yes) {
-                                w.delegator.saveDocument(w.currentDocId);
+//                                w.delegator.saveDocument(w.currentDocId);
+                                w.event('documentSaveRequested').publish(w.currentDocId);
                             }
                         }
                     });
