@@ -12,12 +12,14 @@ return function(writer) {
     '</div>');
     
     var header = $('#headerDialog');
+    var $writer = $('#cwrc_wrapper');
     header.dialog({
         title: 'Edit Header',
         modal: true,
         resizable: true,
         height: 380,
         width: 400,
+        position: { my: "center", at: "center", of: $writer },
         autoOpen: false,
         buttons: {
             'Ok': function() {

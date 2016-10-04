@@ -21,6 +21,7 @@ return function(writer) {
     '</div>');
     
     var d = $('#tripleDialog');
+    var $writer = $('#cwrc_wrapper');
     d.dialog({
         title: 'Add Relation',
         modal: true,
@@ -28,6 +29,7 @@ return function(writer) {
         closeOnEscape: true,
         height: 450,
         width: 600,
+        position: { my: "center", at: "center", of: $writer },
         autoOpen: false,
         buttons: {
             'Close': function() {

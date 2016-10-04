@@ -23,6 +23,7 @@ return function(writer) {
     var dialogOpenTimestamp = null;
     
     var schemaDialog = $('#schemaDialog');
+    var $writer = $('#cwrc_wrapper');
     schemaDialog.dialog({
         modal: true,
         resizable: true,
@@ -30,6 +31,7 @@ return function(writer) {
         closeOnEscape: false,
         height: 460,
         width: 550,
+        position: { my: "center", at: "center", of: $writer },
         minHeight: 400,
         minWidth: 510,
         autoOpen: false,

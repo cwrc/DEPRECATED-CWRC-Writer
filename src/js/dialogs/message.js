@@ -18,6 +18,7 @@ return function(writer) {
         
         var title = config.title;
         var modal = config.modal == null ? true : config.modal;
+        var $writer = $('#cwrc_wrapper');
         message.dialog({
             title: title,
             modal: modal,
@@ -25,6 +26,7 @@ return function(writer) {
             closeOnEscape: true,
             height: 250,
             width: 300,
+            position: { my: "center", at: "center", of: $writer },
             autoOpen: false,
             close: function(ev) {
                 message.dialog('destroy');

@@ -21,6 +21,7 @@ return function(writer) {
     '</div>');
     
     var d = $('#addSchemaDialog');
+    var $writer = $('#cwrc_wrapper');
     d.dialog({
         modal: true,
         resizable: false,
@@ -31,6 +32,7 @@ return function(writer) {
         title: 'Add Schema',
         height: 170,
         width: 300,
+        position: { my: "center", at: "center", of: $writer },
         autoOpen: false,
         buttons: {
             'Add': function() {

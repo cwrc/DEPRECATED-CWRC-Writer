@@ -11,6 +11,7 @@ function DialogForm(config) {
     var height = config.height || 650;
     var width = config.width || 400;
     var html = config.html;
+    var $writer = $('#cwrc_wrapper');
     
     // set to false to cancel saving
     this.isValid = true;
@@ -39,6 +40,7 @@ function DialogForm(config) {
         }, this),
         height: height,
         width: width,
+        position: { my: "center", at: "center", of: $writer },
         autoOpen: false,
         buttons: [{
             text: 'Cancel',

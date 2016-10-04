@@ -17,6 +17,7 @@ return function(writer) {
     '</div>');
     
     var $copyPasteDialog = $('#copyPasteDialog');
+    var $writer = $('#cwrc_wrapper');
     $copyPasteDialog.dialog({
         title: 'Copy & Paste Help',
         modal: true,
@@ -24,6 +25,7 @@ return function(writer) {
         closeOnEscape: true,
         height: 150,
         width: 350,
+        position: { my: "center", at: "center", of: $writer },
         autoOpen: false,
         dialogClass: 'splitButtons',
         buttons: [{
