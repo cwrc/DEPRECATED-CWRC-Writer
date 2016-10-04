@@ -847,7 +847,7 @@ return function(config) {
                     w.isInitialized = true;
                     w.event('writerInitialized').publish(w);
                 });
-                ed.on('change',_onChangeHandler);
+                ed.on('Change',_onChangeHandler);
                 ed.on('NodeChange',_onNodeChangeHandler);
                 ed.on('copy', _onCopyHandler);
                 
@@ -918,7 +918,11 @@ return function(config) {
                 });
                 ed.addButton('removeTag', {title: 'Remove Tag', image: w.cwrcRootUrl+'img/tag_blue_delete.png',
                     onclick : function() {
-                        ed.execCommand('removeTag');
+                        if (w.entitiesManager.getCurrentEntity() != null) {
+                            w.tagger.removeEntity(w.entitiesManager.getCurrentEntity(), false);
+                        } else if (w.editor.currentStruct != null) {
+                            w.tagger.removeStructureTag(w.editor.currentStruct, false);
+                        }
                     }
                 });
                 ed.addButton('newbutton', {title: 'New', image: w.cwrcRootUrl+'img/page_white_text.png',
