@@ -21,7 +21,7 @@ return function(writer) {
     
     $(document.body).append(''+
         '<div id="editSourceDialog">'+
-            '<textarea></textarea>'+
+            '<textarea spellcheck="false"></textarea>'+
         '</div>'
         //'<iframe id="editDocLoader" style="display: none;"></iframe>'
     );
