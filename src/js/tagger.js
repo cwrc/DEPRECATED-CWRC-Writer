@@ -402,20 +402,6 @@ return function(writer) {
     }
     
     /**
-     * Add our own undo level, then erase the next one that gets added by tinymce
-     */
-    function _doCustomTaggerUndo() {
-//        function customUndo(e) {
-//            console.log(this.undoManager.data);
-////            this.data.splice(this.data.length-1, 1); // remove last undo level
-////            this.onAdd.listeners.splice(0, 1); // remove this listener
-//            this.off('BeforeAddUndo', customUndo);
-//        }
-        w.editor.undoManager.add();
-//        w.editor.on('BeforeAddUndo', customUndo, true);
-    }
-    
-    /**
      * Displays the appropriate dialog for adding an entity
      * @param {String} type The entity type
      */
@@ -684,8 +670,6 @@ return function(writer) {
      * @param {Boolean} [removeContents] Remove the contents as well
      */
     tagger.removeEntity = function(id, removeContents) {
-        _doCustomTaggerUndo();
-        
         id = id || w.entitiesManager.getCurrentEntity();
         removeContents = removeContents || false;
         
@@ -704,6 +688,8 @@ return function(writer) {
         parent.normalize();
         
         w.entitiesManager.removeEntity(id);
+        
+        w.editor.undoManager.add();
     };
     
     /**
@@ -714,8 +700,6 @@ return function(writer) {
      * @returns {String} The text content of the tag
      */
     tagger.addEntityTag = function(id, type, tag) {
-        _doCustomTaggerUndo();
-        
         var sel = w.editor.selection;
         var content = sel.getContent();
         var range = sel.getRng(true);
@@ -741,6 +725,8 @@ return function(writer) {
             w.emptyTagId = id;
         }
         
+        w.editor.undoManager.add();
+        
         return content;
     };
     
@@ -753,8 +739,6 @@ return function(writer) {
      * @param params.action Where to insert the tag, relative to the bookmark (before, after, around, inside); can also be null
      */
     tagger.addStructureTag = function(params) {
-        _doCustomTaggerUndo();
-        
         var bookmark = params.bookmark;
         var attributes = params.attributes;
         var action = params.action;
@@ -822,6 +806,8 @@ return function(writer) {
         
         var newTag = $('#'+id, w.editor.getBody());
         w.event('tagAdded').publish(newTag[0]);
+        
+        w.editor.undoManager.add();
         
         if (selection == '\uFEFF') {
             w.selectStructureTag(id, true);
@@ -891,8 +877,6 @@ return function(writer) {
      * @param {Boolean} [removeContents] True to remove tag contents only
      */
     tagger.removeStructureTag = function(id, removeContents) {
-        _doCustomTaggerUndo();
-        
         id = id || w.editor.currentStruct;
         
         if (removeContents == undefined) {
@@ -915,6 +899,8 @@ return function(writer) {
             parent.normalize();
         }
         
+        w.editor.undoManager.add();
+        
         w.event('tagRemoved').publish(id);
         
         w.editor.currentStruct = null;
@@ -927,12 +913,12 @@ return function(writer) {
      */
     // TODO refactor this with removeStructureTag
     tagger.removeStructureTagContents = function(id) {
-        _doCustomTaggerUndo();
-        
         id = id || w.editor.currentStruct;
         
         var node = $('#'+id, w.editor.getBody());
         node.contents().remove();
+        
+        w.editor.undoManager.add();
         
         w.event('tagContentsRemoved').publish(id);
     };
