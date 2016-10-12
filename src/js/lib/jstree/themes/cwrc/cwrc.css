@@ -1,5 +1,5 @@
 /* jstree overrides */
-#vakata-dragged {
+#vakata-dnd {
 	display: block;
 	overflow: hidden;
 	background-color: #fff;
@@ -8,7 +8,7 @@
     padding: 4px !important;
 }
 
-#vakata-dragged ins {
+#vakata-dnd ins {
 	background-image: url("../smoothness/images/ui-icons_ffffff_256x240.png") !important;
 	background-repeat: no-repeat !important;
 	position: relative !important;
@@ -19,11 +19,11 @@
 	vertical-align: bottom;
 }
 
-#vakata-dragged ins.jstree-ok {
+#vakata-dnd ins.jstree-ok {
 	background-position: -64px -144px;
 }
 
-#vakata-dragged ins.jstree-invalid {
+#vakata-dnd ins.jstree-invalid {
 	background-position: -96px -128px;
 }
 
