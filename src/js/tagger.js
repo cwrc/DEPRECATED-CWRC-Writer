@@ -232,7 +232,7 @@ return function(writer) {
             w.dialogManager.show(type, {type: type, entry: tag.entity});
         } else if (tag.struct) {
             if ($(tag.struct, w.editor.getBody()).attr('_tag')) {
-                w.dialogManager.schemaTags.editSchemaTag(tag.struct);
+                w.dialogManager.getDialog('schemaTags').editSchemaTag(tag.struct);
             } else {
                 alert('Tag not recognized!');
             }
@@ -275,13 +275,13 @@ return function(writer) {
                         w.editor.selection.select(selectionContents[0].firstChild);
                         w.editor.currentBookmark = w.editor.selection.getBookmark();
                         selectionContents.contents().unwrap();
-                        w.dialogManager.schemaTags.addSchemaTag({key: params.key, parentTag: parentTag});
+                        w.dialogManager.getDialog('schemaTags').addSchemaTag({key: params.key, parentTag: parentTag});
                     }
                 }
             });
         } else if (tag.struct) {
             if ($(tag.struct, w.editor.getBody()).attr('_tag')) {
-                w.dialogManager.schemaTags.changeSchemaTag({tag: tag.struct, key: params.key});
+                w.dialogManager.getDialog('schemaTags').changeSchemaTag({tag: tag.struct, key: params.key});
             }
         } 
     };

@@ -146,10 +146,7 @@ return function(writer) {
         _doLoad(fileName, docType);
     });
     
-    /**
-     * @memberOf dfm
-     */
-    dfm.showLoader = function() {
+    function showLoader() {
         $files.css({borderColor: '#fff'});
         $files.find('li').removeClass('selected');
         $files.find('ul').html('<li class="unselectable last"><span class="loading" /></li>');
@@ -163,14 +160,14 @@ return function(writer) {
         });
     };
     
-    dfm.showSaver = function() {
+    function showSaver() {
         w.delegator.getDocuments(function(docs) {
             docNames = docs;
         });
         saver.dialog('open');
     };
     
-    dfm.showUnsaved = function() {
+    function showUnsaved() {
         unsaved.dialog('open');
     };
     
@@ -212,7 +209,21 @@ return function(writer) {
         return name.match(/[^A-Za-z]+/) == null;
     };
     
-    return dfm;
+    return {
+        show: function(config) {
+            switch(config.type) {
+            case 'loader':
+                showLoader();
+                break;
+            case 'saver':
+                showSaver();
+                break;
+            case 'unsaved':
+                showUnsaved();
+                break;
+            }
+        }
+    };
 };
 
 });

@@ -710,7 +710,7 @@ return function(config) {
                             w.editor.currentBookmark.tagId = tagId;
                         }
                         var parentTag = $('#'+tagId, w.editor.getBody());
-                        w.dialogManager.schemaTags.addSchemaTag({key: obj.item.key, action: actionType, parentTag: parentTag});
+                        w.dialogManager.getDialog('schemaTags').addSchemaTag({key: obj.item.key, action: actionType, parentTag: parentTag});
                     }
                 }
             };

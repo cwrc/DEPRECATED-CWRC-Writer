@@ -30,7 +30,7 @@ function handleResize(dialogEl) {
         }
     }
 }
-    
+
 // add event listeners to all of our jquery ui dialogs
 $.extend($.ui.dialog.prototype.options, {
     create: function(e) {
@@ -81,27 +81,66 @@ $.extend($.custom.popup.prototype.options, {
 return function(writer) {
     var w = writer;
 
+    // dialog name, class map
+    var dialogs = {};
+    
     /**
      * @lends DialogManager.prototype
      */
     var dm = {};
     
-    var dialogs = {
-        message: new Message(w),
-        help: new Help(w),
-        copyPaste: new CopyPaste(w),
-        triple: new Triple(w),
-        header: new Header(w),
-        filemanager: new FileManager(w),
-        loadingindicator: new LoadingIndicator(w),
-        addschema: new AddSchema(w),
-        person: new CwrcPerson(w),
-        org: new CwrcOrg(w),
-        title: new CwrcTitle(w),
-        citation: new CwrcCitation(w),
-        place: new CwrcPlace(w),
-        schemaTags: new SchemaTags(w)
+    dm.addDialog = function(dialogName, DialogClass) {
+        var dialog = new DialogClass(w);
+        if (dialog.show === undefined) {
+            if (window.console) {
+                console.warn(dialogName+" doesn't have required method \"show\"!");
+            }
+        }
+        dialogs[dialogName] = dialog;
+        return dialog;
     };
+    
+    dm.getDialog = function(dialogName) {
+        return dialogs[dialogName];
+    };
+    
+    dm.show = function(type, config) {
+        if (type.indexOf('schema/') === 0) {
+            var typeParts = type.split('/');
+            type = typeParts[1];
+            schemaDialogs[w.schemaManager.getCurrentSchema().schemaMappingsId][type].show(config);
+        } else {
+            if (dialogs[type]) {
+                dialogs[type].show(config);
+            } else if (schemaDialogs[w.schemaManager.getCurrentSchema().schemaMappingsId][type]) {
+                schemaDialogs[w.schemaManager.getCurrentSchema().schemaMappingsId][type].show(config);
+            }
+        }
+    };
+    
+    dm.confirm = function(config) {
+        dialogs.message.confirm(config);
+    };
+    
+    var defaultDialogs = {
+        message: Message,
+        help: Help,
+        copyPaste: CopyPaste,
+        triple: Triple,
+        header: Header,
+        filemanager: FileManager,
+        loadingindicator: LoadingIndicator,
+        addschema: AddSchema,
+        person: CwrcPerson,
+        org: CwrcOrg,
+        title: CwrcTitle,
+        citation: CwrcCitation,
+        place: CwrcPlace,
+        schemaTags: SchemaTags
+    };
+    for (var dialogName in defaultDialogs) {
+        dm.addDialog(dialogName, defaultDialogs[dialogName]);
+    }
 
     if (w.initialConfig.cwrcDialogs !== undefined) {
         var conf = w.initialConfig.cwrcDialogs;
@@ -146,26 +185,6 @@ return function(writer) {
     };
 
     w.event('schemaLoaded').subscribe(loadSchemaDialogs);
-
-    
-    dm.show = function(type, config) {
-        if (type.indexOf('schema/') === 0) {
-            var typeParts = type.split('/');
-            type = typeParts[1];
-            schemaDialogs[w.schemaManager.getCurrentSchema().schemaMappingsId][type].show(config);
-        } else {
-            if (dialogs[type]) {
-                dialogs[type].show(config);
-            } else if (schemaDialogs[w.schemaManager.getCurrentSchema().schemaMappingsId][type]) {
-                schemaDialogs[w.schemaManager.getCurrentSchema().schemaMappingsId][type].show(config);
-            }
-        }
-    };
-    dm.confirm = function(config) {
-        dialogs.message.confirm(config);
-    };
-
-    $.extend(dm, dialogs);
 
     return dm;
 };

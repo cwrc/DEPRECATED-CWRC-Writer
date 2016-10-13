@@ -55,7 +55,7 @@ return function(writer) {
     
     fm.newDocument = function() {
         if (w.editor.isDirty()) {
-            w.dialogManager.filemanager.showUnsaved();
+            w.dialogManager.show('filemanager', {type: 'unsaved'});
         } else {
             window.location = 'index.htm';
         }
@@ -63,7 +63,7 @@ return function(writer) {
     
     fm.saveDocument = function() {
         if (w.currentDocId == null) {
-            w.dialogManager.filemanager.showSaver();
+            w.dialogManager.show('filemanager', {type: 'saver'});
         } else {
             w.delegator.validate(function (valid) {
                 if (valid) {
@@ -178,7 +178,7 @@ return function(writer) {
     fm.loadInitialDocument = function(start) {
         start = start.substr(1); // remove hash
         if (start === 'load') {
-            w.dialogManager.filemanager.showLoader();
+            w.dialogManager.show('filemanager', {type: 'loader'});
         } else if (start.match(/^templates\//) !== null) {
             start += '.xml';
             fm.loadTemplate(start);

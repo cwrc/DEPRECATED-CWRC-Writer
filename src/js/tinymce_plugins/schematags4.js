@@ -140,7 +140,7 @@ tinymce.PluginManager.add('schematags', function(editor) {
                 image: imageUrl+'tag_blue.png',
                 onclick: function(e) {
                     var tag = this.settings.key;
-                    editor.writer.dialogManager.schemaTags.addSchemaTag({key: tag});
+                    editor.writer.dialogManager.getDialog('schemaTags').addSchemaTag({key: tag});
                 }
             });
         }
