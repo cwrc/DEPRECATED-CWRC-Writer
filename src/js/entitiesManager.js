@@ -7,9 +7,7 @@ define(['jquery', 'entity'], function($, Entity) {
 function EntitiesManager(writer) {
     this.w = writer;
     
-    this.entities = {};
-    
-    this.currentEntity = null;
+    this.reset();
     
     this.w.event('entityAdded').subscribe($.proxy(function(entityId) {
         this.highlightEntity(entityId);
@@ -211,6 +209,7 @@ EntitiesManager.prototype = {
      * Removes all the entities.
      */
     reset: function() {
+        this.currentEntity = null;
         this.entities = {};
     }
 };

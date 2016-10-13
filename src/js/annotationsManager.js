@@ -708,6 +708,92 @@ AnnotationsManager.prototype = {
         }
         
         return doParseXpointer(xpointer, doc);
+    },
+    
+    /**
+     * Parses the RDF and adds entities to the EntitiesManager.
+     * Also processes any relations/triples.
+     * @param {Element} rdfEl RDF parent element
+     */
+    setAnnotations: function(rdfEl) {
+        this.w.entitiesManager.reset();
+        this.w.deletedEntities = {};
+        
+        var rdfs = $(rdfEl);
+        
+        var triples = [];
+        rdfs.children().each(function(index, el) {
+            var rdf = $(el);
+
+            // json-ld
+            if (rdf.attr('rdf:datatype') == 'http://www.w3.org/TR/json-ld/') {
+                var entityConfig = this.getEntityFromJsonAnnotation(rdf[0]);
+                if (entityConfig != null) {
+                    this.w.entitiesManager.addEntity(entityConfig);
+                }
+            // rdf/xml
+            } else if (rdf.attr('rdf:about')) {
+                var entityConfig = this.getEntityFromXmlAnnotation(rdf[0]);
+                if (entityConfig != null) {
+                    this.w.entitiesManager.addEntity(entityConfig);
+                }
+            // triple
+            } else if (rdf.attr('cw:external')){
+                triples.push(rdf);
+            }
+        }.bind(this));
+        
+        this._processTriples(triples);
+    },
+    
+    _processTriples: function(triples) {
+        this.w.triples = [];
+        
+        for (var i = 0; i < triples.length; i++) {
+            var subject = triples[i];
+            var subjectUri = subject.attr('rdf:about');
+            var predicate = subject.children().first();
+            var object = subject.find('rdf\\:Description, Description');
+            var objectUri = object.attr('rdf:about');
+
+            var subEnt = null;
+            var objEnt = null;
+            this.w.entitiesManager.eachEntity(function(id, ent) {
+                if (ent.getUris().annotationId === subjectUri) {
+                    subEnt = ent;
+                }
+                if (ent.getUris().annotationId === objectUri) {
+                    objEnt = ent;
+                }
+                if (subEnt != null && objEnt != null) {
+                    return false;
+                }
+            });
+
+            if (subEnt != null && objEnt != null) {
+                var subExt = subject.attr('cw:external') == 'true' ? true : false;
+                var predExt = predicate.attr('cw:external') == 'true' ? true : false;
+                var objExt = object.attr('cw:external') == 'true' ? true : false;
+                var triple = {
+                    subject: {
+                        uri: subjectUri,
+                        text: subExt ? subjectUri : subEnt.getTitle(),
+                        external: subExt
+                    },
+                    predicate: {
+                        text: predicate.attr('cw:text'),
+                        name: predicate[0].nodeName.split(':')[1],
+                        external: predExt
+                    },
+                    object: {
+                        uri: objectUri,
+                        text: objExt ? objectUri : objEnt.getTitle(),
+                        external: objExt
+                    }
+                };
+                this.w.triples.push(triple);
+            }
+        }
     }
 };
 

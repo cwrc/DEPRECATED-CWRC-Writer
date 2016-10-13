@@ -576,7 +576,7 @@ return function(writer) {
             w.allowOverlap = allowOverlap === 'true';
             overlapSetFromHeader = true;
 
-            processRdf(rdfs);
+            w.annotationsManager.setAnnotations(rdfs[0]);
             rdfs.remove();
         } else {
             w.mode = w.XMLRDF;
@@ -647,78 +647,6 @@ return function(writer) {
     // Needs to be public, to be able to process documents after the schema
     // changes.
     converter.doProcessing = doProcessing;
-
-    function processRdf(rdfs) {
-        // store triples and process later
-        var triples = [];
-
-        rdfs.children().each(function() {
-            var rdf = $(this);
-
-            // json-ld
-            if (rdf.attr('rdf:datatype') == 'http://www.w3.org/TR/json-ld/') {
-                var entityConfig = w.annotationsManager.getEntityFromJsonAnnotation(rdf[0]);
-                if (entityConfig != null) {
-                    w.entitiesManager.addEntity(entityConfig);
-                }
-            // rdf/xml
-            } else if (rdf.attr('rdf:about')) {
-                var entityConfig = w.annotationsManager.getEntityFromXmlAnnotation(rdf[0]);
-                if (entityConfig != null) {
-                    w.entitiesManager.addEntity(entityConfig);
-                }
-            // triple
-            } else if (rdf.attr('cw:external')){
-                triples.push(rdf);
-            }
-        });
-
-        for (var i = 0; i < triples.length; i++) {
-            var subject = triples[i];
-            var subjectUri = subject.attr('rdf:about');
-            var predicate = subject.children().first();
-            var object = subject.find('rdf\\:Description, Description');
-            var objectUri = object.attr('rdf:about');
-
-            var subEnt = null;
-            var objEnt = null;
-            w.entitiesManager.eachEntity(function(id, ent) {
-                if (ent.getUris().annotationId === subjectUri) {
-                    subEnt = ent;
-                }
-                if (ent.getUris().annotationId === objectUri) {
-                    objEnt = ent;
-                }
-                if (subEnt != null && objEnt != null) {
-                    return false;
-                }
-            });
-
-            if (subEnt != null && objEnt != null) {
-                var subExt = subject.attr('cw:external') == 'true' ? true : false;
-                var predExt = predicate.attr('cw:external') == 'true' ? true : false;
-                var objExt = object.attr('cw:external') == 'true' ? true : false;
-                var triple = {
-                    subject: {
-                        uri: subjectUri,
-                        text: subExt ? subjectUri : subEnt.getTitle(),
-                        external: subExt
-                    },
-                    predicate: {
-                        text: predicate.attr('cw:text'),
-                        name: predicate[0].nodeName.split(':')[1],
-                        external: predExt
-                    },
-                    object: {
-                        uri: objectUri,
-                        text: objExt ? objectUri : objEnt.getTitle(),
-                        external: objExt
-                    }
-                };
-                w.triples.push(triple);
-            }
-        }
-    }
 
     /**
      * Recursively builds offset info from entity tags.
