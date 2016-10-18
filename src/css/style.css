@@ -88,6 +88,10 @@ html, body {
     margin-left: 55px;
 }
 
+#headerButtons {
+	margin-top: 10px;
+}
+
 #headerButtons > div {
     float: right;
     cursor: pointer;
@@ -95,7 +99,7 @@ html, body {
 }
 
 #helpLink {
-    background: url("../img/help.png") no-repeat scroll 0 7px transparent;
+    background: url("../img/help.png") no-repeat scroll 0 0 transparent;
     padding-left: 20px;
 }
 
