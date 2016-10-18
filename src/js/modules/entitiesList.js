@@ -180,41 +180,45 @@ return function(config) {
         }).mousedown(function(event) {
             $(this).removeClass('over');
             w.entitiesManager.highlightEntity(this.getAttribute('name'), null, true);
-        }).contextMenu('entitiesMenu', {
-            bindings: {
-                'editEntity': function(tag) {
-                    w.tagger.editTag($(tag).attr('name'));
-                },
-                'removeEntity': function(tag) {
-                    w.tagger.removeEntity($(tag).attr('name'));
-                },
-                'copyEntity': function(tag) {
-                    w.tagger.copyEntity($(tag).attr('name'));
-                }
-            },
-            shadow: false,
-            menuStyle: {
-                backgroundColor: '#FFFFFF',
-                border: '1px solid #D4D0C8',
-                boxShadow: '1px 1px 2px #CCCCCC',
-                padding: '0px'
-            },
-            itemStyle: {
-                fontFamily: 'Tahoma,Verdana,Arial,Helvetica',
-                fontSize: '11px',
-                color: '#000',
-                lineHeight: '20px',
-                padding: '0px',
-                cursor: 'pointer',
-                textDecoration: 'none',
-                border: 'none'
-            },
-            itemHoverStyle: {
-                color: '#000',
-                backgroundColor: '#DBECF3',
-                border: 'none'
-            }
         });
+        
+        if (w.isReadOnly !== true) {
+            $('#entities > ul > li').contextMenu('entitiesMenu', {
+                bindings: {
+                    'editEntity': function(tag) {
+                        w.tagger.editTag($(tag).attr('name'));
+                    },
+                    'removeEntity': function(tag) {
+                        w.tagger.removeEntity($(tag).attr('name'));
+                    },
+                    'copyEntity': function(tag) {
+                        w.tagger.copyEntity($(tag).attr('name'));
+                    }
+                },
+                shadow: false,
+                menuStyle: {
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid #D4D0C8',
+                    boxShadow: '1px 1px 2px #CCCCCC',
+                    padding: '0px'
+                },
+                itemStyle: {
+                    fontFamily: 'Tahoma,Verdana,Arial,Helvetica',
+                    fontSize: '11px',
+                    color: '#000',
+                    lineHeight: '20px',
+                    padding: '0px',
+                    cursor: 'pointer',
+                    textDecoration: 'none',
+                    border: 'none'
+                },
+                itemHoverStyle: {
+                    color: '#000',
+                    backgroundColor: '#DBECF3',
+                    border: 'none'
+                }
+            });
+        }
         
         if (w.entitiesManager.getCurrentEntity()) {
             $('#entities > ul > li[name="'+w.entitiesManager.getCurrentEntity()+'"]').addClass('selected').find('div[class="info"]').show();

@@ -748,9 +748,10 @@ return function(config) {
 //    $.vakata.dnd.settings.helper_left = 15;
 //    $.vakata.dnd.settings.helper_top = 20;
     
-    var plugins = ['wholerow','contextmenu','conditionalselect'];
+    var plugins = ['wholerow','conditionalselect'];
     if (w.isReadOnly !== true) {
         plugins.push('dnd');
+        plugins.push('contextmenu');
     }
     
     $tree.jstree({
