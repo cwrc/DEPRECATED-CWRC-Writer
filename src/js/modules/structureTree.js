@@ -816,39 +816,27 @@ return function(config) {
                     };
                 }
                 
-                if (w.entitiesManager.getEntity(tagId) !== undefined) {
-                    // entity specific actions
+                // check for entity entry
+                var isTagEntity = w.entitiesManager.getEntity(tagId) !== undefined;
+                
+                var editTagText = 'Edit Tag';
+                var copyTagText = 'Copy Tag & Contents';
+                if (isTagEntity) {
                     w.entitiesManager.highlightEntity(tagId); // highlight the entity, otherwise editing will not function
-                    
-                    menuConfig.editEntity = {
-                        label: 'Edit Entity',
-                        icon: w.cwrcRootUrl+'img/tag_blue_edit.png',
-                        action: function(obj) {
-                            var id = obj.reference.parent('li').attr('name');
-                            w.tagger.editTag(id);
-                        }
-                    };
-                    menuConfig.copyEntity = {
-                        label: 'Copy Entity',
-                        icon: w.cwrcRootUrl+'img/tag_blue_copy.png',
-                        action: function(obj) {
-                            var id = obj.reference.parent('li').attr('name');
-                            w.tagger.copyEntity(id);
-                        },
-                        separator_after: true
-                    };
+                    editTagText = 'Edit Entity';
+                    copyTagText = 'Copy Entity';
                 } else if (w.utilities.isTagEntity(node.text)) {
                     menuConfig.convertEntity = {
-                        label: 'Convert to Entity',
-                        icon: w.cwrcRootUrl+'img/tag_blue_edit.png',
-                        action: function(obj) {
-                            var id = obj.reference.parent('li').attr('name');
-                            var tag = $('#'+id, w.editor.getBody());
-                            w.tagger.convertTagToEntity(tag);
-                        },
-                        separator_after: true
-                    };
-                }
+                            label: 'Convert to Entity',
+                            icon: w.cwrcRootUrl+'img/tag_blue_edit.png',
+                            action: function(obj) {
+                                var id = obj.reference.parent('li').attr('name');
+                                var tag = $('#'+id, w.editor.getBody());
+                                w.tagger.convertTagToEntity(tag);
+                            },
+                            separator_after: true
+                        };
+                    }
                 
                 // general tag actions;
                 var tag = $('#'+tagId, w.editor.getBody())[0];
@@ -926,7 +914,7 @@ return function(config) {
                         submenu: siblingSubmenu
                     },
                     'edit': {
-                        label: 'Edit Tag',
+                        label: editTagText,
                         icon: w.cwrcRootUrl+'img/tag_blue_edit.png',
                         action: function(obj) {
                             var id = obj.reference.parent('li').attr('name');
@@ -934,11 +922,15 @@ return function(config) {
                         }
                     },
                     'copy': {
-                        label: 'Copy Tag & Contents',
+                        label: copyTagText,
                         icon: w.cwrcRootUrl+'img/tag_blue_copy.png',
                         action: function(obj) {
                             var id = obj.reference.parent('li').attr('name');
-                            w.tagger.copyTag(id);
+                            if (isTagEntity) {
+                                w.tagger.copyEntity(id);
+                            } else {
+                                w.tagger.copyTag(id);
+                            }
                         }
                     },
                     'delete': {
