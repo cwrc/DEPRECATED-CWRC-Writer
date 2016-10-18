@@ -186,7 +186,6 @@ return function(writer) {
                         var newId = newEntity.getId();
                         w.entitiesManager.setEntity(newId, newEntity);
                         
-                        var isNote = w.schemaManager.mapper.isEntityTypeNote(newEntity.getType());
                         var newTagStart = $(el);
                         var newTags = tagger.getCorrespondingEntityTags(newTagStart);
                         
@@ -368,17 +367,15 @@ return function(writer) {
     };
     
     /**
-     * @param {String} id The id of the tag to copy
+     * @param {String} id The id of the struct tag or entity to copy
      */
     tagger.copyTag = function(id) {
-        var tag;
-        if (id != null) {
-            tag = $('#'+id, w.editor.getBody())[0];
-        } else if (w.editor.currentNode != null) {
-            tag = w.editor.currentNode;
-        }
-        if (tag != undefined) {
-            var clone = $(tag).clone();
+        var tag = tagger.getCurrentTag(id);
+        if (tag.entity) {
+            w.editor.entityCopy = tag.entity;
+            w.event('entityCopied').publish(id);
+        } else if (tag.struct) {
+            var clone = $(tag.struct, w.editor.getBody()).clone();
             w.editor.copiedElement.element = clone.wrapAll('<div />').parent()[0];
             w.editor.copiedElement.selectionType = 0; // tag & contents copied
         }
@@ -606,21 +603,6 @@ return function(writer) {
         updateEntityInfo(w.entitiesManager.getEntity(id), info);
         w.editor.isNotDirty = false;
         w.event('entityEdited').publish(id);
-    };
-    
-    /**
-     * Copy an entity internally
-     * @fires Writer#entityCopied
-     * @param {String} id The entity id
-     */
-    tagger.copyEntity = function(id) {
-        var tag = tagger.getCurrentTag(id);
-        if (tag.entity) {
-            w.editor.entityCopy = tag.entity;
-            w.event('entityCopied').publish(id);
-        } else {
-            tagger.copyTag(id);
-        }
     };
     
     /**

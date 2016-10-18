@@ -783,9 +783,9 @@ return function(config) {
                 ed.currentStruct = null; // the id of the currently selected structural tag
                 ed.currentBookmark = null; // for storing a bookmark used when adding a tag
                 ed.currentNode = null; // the node that the cursor is currently in
-                ed.entityCopy = null; // store a copy of an entity for pasting
                 ed.contextMenuPos = null; // the position of the context menu (used to position related dialog box)
                 ed.copiedElement = {selectionType: null, element: null}; // the element that was copied (when first selected through the structure tree)
+                ed.entityCopy = null; // store a copy of an entity for pasting
                 ed.lastKeyPress = null; // the last key the user pressed
                 
                 if (w.isReadOnly === true) {
@@ -828,7 +828,6 @@ return function(config) {
                     ed.addCommand('changeTag', w.tagger.changeTag);
                     ed.addCommand('splitTag', w.tagger.splitTag);
                     ed.addCommand('removeTag', w.tagger.removeTag);
-                    ed.addCommand('copyEntity', w.tagger.copyEntity);
                     ed.addCommand('pasteEntity', w.tagger.pasteEntity);
                     ed.addCommand('removeEntity', w.tagger.removeEntity);
                     ed.addCommand('addStructureTag', w.tagger.addStructureTag);

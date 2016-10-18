@@ -47,8 +47,8 @@ tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
             // get the filtered tag menus and add them
             var filterPanel = {};
             editor.execCommand('getFilterMenu', filterPanel);
-            items.splice(5, 0, {
-                text: 'Structural Tags',
+            items.splice(1, 0, {
+                text: 'Insert Tag',
                 category: 'xmlTags',
                 type: 'cwrcpanelbutton',
                 popoverAlign: ['tr-tl', 'br-bl'],
@@ -127,31 +127,40 @@ tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
                 isTagEntity = editor.writer.utilities.isTagEntity(tagName);
             }
         }
+        
         menu.items().each(function(item) {
-            item.disabled(false);
+            item.show();
             if (item.settings.category != 'tagEntity' && editor.plugins.cwrc_contextmenu.entityTagsOnly === true) {
                 item.hide();
-            } else {
-                item.show();
-            }
-            if (item.settings.category == 'modifyStruct' && currentTag.struct == null) {
-                item.disabled(true);
-            }
-            if (item.settings.category == 'modifyTag' && currentTag.entity == null && currentTag.struct == null) {
-                item.disabled(true);
-            }
-            if (item.settings.category == 'pasteTag' && editor.copiedElement.element == null) {
-                item.disabled(true);
             }
             if (item.settings.category == 'convertEntity' && isTagEntity === false) {
-                item.disabled(true);
+                item.hide();
             }
-            if (item.settings.category == 'copyEntity' && currentTag.entity == null) {
-                item.disabled(true);
+            if (item.settings.category == 'modifyStruct' && currentTag.struct == null) {
+                item.hide();
+            }
+            if (item.settings.category == 'modifyTag' && currentTag.entity == null && currentTag.struct == null) {
+                item.hide();
+            }
+            if (item.settings.category == 'editTag' && currentTag.struct == null) {
+                item.hide();
+            }
+            if (item.settings.category == 'editEntity' && currentTag.entity == null) {
+                item.hide();
+            }
+            if (item.settings.category == 'pasteTag' && editor.copiedElement.element == null) {
+                item.hide();
             }
             if (item.settings.category == 'pasteEntity' && editor.entityCopy == null) {
-                item.disabled(true);
+                item.hide();
             }
+            if (item.settings.category == 'copyTag' && currentTag.struct == null) {
+                item.hide();
+            }
+            if (item.settings.category == 'copyEntity' && currentTag.entity == null) {
+                item.hide();
+            }
+            
         });
         
         menu.show();
@@ -169,7 +178,7 @@ tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
     });
     
     items = [{
-        text: 'Tag Entity',
+        text: 'Insert Entity',
         image: editor.writer.cwrcRootUrl+'img/tag_blue_add.png',
         category: 'tagEntity',
         classes: 'cwrc',
@@ -261,25 +270,16 @@ tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
             editor.writer.tagger.convertTagToEntity(currentTag.struct);
         }
     },{
-        text: 'Copy Entity',
-        image: editor.writer.cwrcRootUrl+'img/tag_blue_copy.png',
-        category: 'copyEntity',
-        onclick : function() {
-            editor.execCommand('copyEntity');
-        }
-    },{
-        text: 'Paste Entity',
-        image: editor.writer.cwrcRootUrl+'img/tag_blue_paste.png',
-        category: 'pasteEntity',
-        onclick : function() {
-            editor.execCommand('pasteEntity');
-        }
-    },{
-        text: '|'
-    },{
         text: 'Edit Tag',
         image: editor.writer.cwrcRootUrl+'img/tag_blue_edit.png',
-        category: 'modifyTag',
+        category: 'editTag',
+        onclick : function() {
+            editor.execCommand('editTag', null);
+        }
+    },{
+        text: 'Edit Entity',
+        image: editor.writer.cwrcRootUrl+'img/tag_blue_edit.png',
+        category: 'editEntity',
         onclick : function() {
             editor.execCommand('editTag', null);
         }
@@ -293,7 +293,14 @@ tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
     },{
         text: 'Copy Tag & Contents',
         image: editor.writer.cwrcRootUrl+'img/tag_blue_copy.png',
-        category: 'modifyTag',
+        category: 'copyTag',
+        onclick : function() {
+            editor.execCommand('copyTag');
+        }
+    },{
+        text: 'Copy Entity',
+        image: editor.writer.cwrcRootUrl+'img/tag_blue_copy.png',
+        category: 'copyEntity',
         onclick : function() {
             editor.execCommand('copyTag');
         }
@@ -303,6 +310,13 @@ tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
         category: 'pasteTag',
         onclick : function() {
             editor.execCommand('pasteTag');
+        }
+    },{
+        text: 'Paste Entity',
+        image: editor.writer.cwrcRootUrl+'img/tag_blue_paste.png',
+        category: 'pasteEntity',
+        onclick : function() {
+            editor.execCommand('pasteEntity');
         }
     },{
       text: '|'  

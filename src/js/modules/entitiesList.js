@@ -192,7 +192,7 @@ return function(config) {
                         w.tagger.removeEntity($(tag).attr('name'));
                     },
                     'copyEntity': function(tag) {
-                        w.tagger.copyEntity($(tag).attr('name'));
+                        w.tagger.copyTag($(tag).attr('name'));
                     }
                 },
                 shadow: false,

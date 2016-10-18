@@ -926,11 +926,7 @@ return function(config) {
                         icon: w.cwrcRootUrl+'img/tag_blue_copy.png',
                         action: function(obj) {
                             var id = obj.reference.parent('li').attr('name');
-                            if (isTagEntity) {
-                                w.tagger.copyEntity(id);
-                            } else {
-                                w.tagger.copyTag(id);
-                            }
+                            w.tagger.copyTag(id);
                         }
                     },
                     'delete': {
