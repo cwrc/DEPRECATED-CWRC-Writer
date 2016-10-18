@@ -29,7 +29,7 @@ return function(writer) {
         if (w.schemaManager.mapper.isEntityTypeNote(type)) {
             // handling for note type entities
             var tag = w.editor.dom.create('span', {
-                '_entity': true, '_note': true, '_tag': parentTag, '_type': type, 'class': 'entity '+type+' start', 'name': id, 'id': id
+                '_entity': true, '_note': true, '_tag': parentTag, '_type': type, 'class': 'entity '+type+' start end', 'name': id, 'id': id
             }, '');
             var sel = w.editor.selection;
             sel.setRng(range);
@@ -123,10 +123,14 @@ return function(writer) {
         
         var nodes = [];
         while(walker.currentNode.getAttribute('name') === nodeId) {
+            var result;
             if (boundaryType === 'start') {
-                walker.previousNode();
+                result = walker.previousNode();
             } else {
-                walker.nextNode();
+                result = walker.nextNode();
+            }
+            if (result === null) {
+                break;
             }
             nodes.push(walker.currentNode);
             if ($(walker.currentNode).hasClass(boundaryType)) {
@@ -182,6 +186,7 @@ return function(writer) {
                         var newId = newEntity.getId();
                         w.entitiesManager.setEntity(newId, newEntity);
                         
+                        var isNote = w.schemaManager.mapper.isEntityTypeNote(newEntity.getType());
                         var newTagStart = $(el);
                         var newTags = tagger.getCorrespondingEntityTags(newTagStart);
                         
@@ -614,11 +619,7 @@ return function(writer) {
             w.editor.entityCopy = tag.entity;
             w.event('entityCopied').publish(id);
         } else {
-            w.dialogManager.show('message', {
-                title: 'Error',
-                msg: 'Cannot copy structural tags.',
-                type: 'error'
-            });
+            tagger.copyTag(id);
         }
     };
     
