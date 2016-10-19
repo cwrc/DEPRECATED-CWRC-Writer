@@ -96,14 +96,14 @@ title: {
         return Mapper.getDefaultReverseMapping(xml);
     },
     annotation: function(entity, format) {
-        var anno = AnnotationsManager.commonAnnotation(entity, ['dcterms:BibliographicResource', 'dcterms:title'], null, format);
+        var anno = AnnotationsManager.commonAnnotation(entity, ['dcterms:BibliographicResource', 'dcterms:title'], 'oa:identifying', format);
         
         if (format === 'xml') {
             var levelXml = $.parseXML('<cw:pubType xmlns:cw="http://cwrc.ca/ns/cw#">'+entity.getAttribute('TITLETYPE')+'</cw:pubType>');
             var body = $('[rdf\\:about="'+entity.getUris().entityId+'"]', anno);
             body.prepend(levelXml.firstChild);
         } else {
-            anno.motivation = 'oa:identifying';
+            anno.hasBody['pubType'] = entity.getAttribute('TITLETYPE');
         }
         
         return anno;
