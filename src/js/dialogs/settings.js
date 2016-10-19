@@ -14,6 +14,7 @@ return function(writer, config) {
     
     var defaultSettings = {
         mode: w.mode,
+        annotationMode: w.annotationMode,
         allowOverlap: w.allowOverlap,
         validationSchema: w.schemaManager.schemaId
     };
@@ -71,6 +72,13 @@ return function(writer, config) {
         '</select>'+
     '</div>'+
     '<div style="margin-top: 10px;">'+
+    '<label>Annotations Format</label>'+
+        '<select name="annotations">'+
+            '<option value="xml">RDF/XML</option>'+
+            '<option value="json">JSON-LD</option>'+
+        '</select>'+
+    '</div>'+
+    '<div style="margin-top: 10px;">'+
         '<label>Schema</label>'+
         '<select name="schema">'+
         '</select>'+
@@ -101,6 +109,11 @@ return function(writer, config) {
             }
         } else if (w.mode === w.RDF) {
             $('select[name="editormode"] > option[value="rdf"]', $settingsDialog).attr('selected', true);
+        }
+        if (w.annotationMode === w.XML) {
+            $('select[name="annotations"] > option[value="xml"]', $settingsDialog).attr('selected', true);
+        } else {
+            $('select[name="annotations"] > option[value="json"]', $settingsDialog).attr('selected', true);
         }
         $('select[name="schema"] > option[value="'+w.schemaManager.schemaId+'"]', $settingsDialog).attr('selected', true);
         $settingsDialog.dialog('open');
@@ -246,6 +259,13 @@ return function(writer, config) {
                 }
             }
             
+            settings.annotationMode = $('select[name="annotations"]', $settingsDialog).val();
+            if (settings.annotationMode === 'xml') {
+                w.annotationMode = w.XML;
+            } else {
+                w.annotationMode = w.JSON;
+            }
+            
             settings.fontSize = $('select[name="fontsize"]', $settingsDialog).val();
             settings.fontFamily = $('select[name="fonttype"]', $settingsDialog).val();
             
@@ -281,6 +301,8 @@ return function(writer, config) {
         $('#showstructbrackets').prop('checked', defaultSettings.showStructBrackets);
         
         $('select[name="editormode"]', $settingsDialog).val(defaultSettings.mode);
+        $('select[name="annotations"]', $settingsDialog).val(defaultSettings.annotationMode);
+        
         $('select[name="schema"]', $settingsDialog).val(defaultSettings.validationSchema);
     };
     

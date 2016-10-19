@@ -53,7 +53,12 @@ return function(writer) {
         
         var rdfString = '';
         if (w.mode === w.RDF || (w.mode === w.XMLRDF && includeRDF)) {
-            var rdfmode = 'xml';
+            var rdfmode;
+            if (w.annotationMode === w.XML) {
+                rdfmode = 'xml';
+            } else {
+                rdfmode = 'json';
+            }
             rdfString = w.annotationsManager.getAnnotations(rdfmode);
         }
         if (w.mode === w.RDF) {

@@ -67,6 +67,7 @@ return function(config) {
     w.XMLRDF = 0; // XML + RDF
     w.XML = 1; // XML only
     w.RDF = 2; // RDF only (not currently used)
+    w.JSON = 3; // annotation type
     
     // editor mode
     w.mode = w.XMLRDF;
@@ -77,6 +78,9 @@ return function(config) {
             w.mode = w.RDF;
         }
     }
+    
+    // what format to produce annotations in (XML or JSON)
+    w.annotationMode = w.XML;
     
     // can entities overlap?
     w.allowOverlap = false;
