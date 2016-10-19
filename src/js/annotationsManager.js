@@ -440,17 +440,70 @@ AnnotationsManager.prototype = {
                 };
             }
 
-            var atts = json.cwrcAttributes.attributes;
-            delete json.cwrcAttributes.attributes;
-            var cwrcInfo = json.cwrcAttributes.cwrcInfo;
-            delete json.cwrcAttributes.cwrcInfo;
+            // determine type
+            var type = null;
+            
+            var bodyTypes = json.hasBody['@type'];
+            var needsMotivation = bodyTypes.indexOf('cnt:ContentAsText') !== -1;
+            if (needsMotivation) {
+                bodyTypes = bodyTypes.concat(json.motivatedBy);
+            }
+            for (var i = 0; i < bodyTypes.length; i++) {
+                var typeUri = bodyTypes[i];
+                type = this.w.annotationsManager.getEntityTypeForAnnotation(typeUri);
+                if (type != null) {
+                    break;
+                }
+            }
+            
+            // get type specific info
+            var typeInfo = {};
+            var propObj = {};
+            
+            switch (type) {
+            case 'date':
+                var dateString = json.hasBody['xsd:date'];
+                var dateParts = dateString.split('/');
+                if (dateParts.length === 1) {
+                    typeInfo.date = dateParts[0];
+                } else {
+                    typeInfo.startDate = dateParts[0];
+                    typeInfo.endDate = dateParts[1];
+                }
+                break;
+            case 'place':
+                var precisionString = json.hasPrecision;
+                if (precisionString && precisionString != '') {
+                    precisionString = precisionString.split('#')[1];
+                }
+                propObj.precision = precisionString;
+                break;
+            case 'title':
+                var levelString = json.hasBody.pubType;
+                typeInfo.level = levelString;
+                break;
+            case 'correction':
+                var corrString = json.hasBody['cnt:chars'];
+                typeInfo.corrText = corrString;
+                break;
+            case 'keyword':
+                var keywordsArray = json.hasBody['cnt:chars'];
+                typeInfo.keywords = keywordsArray;
+                break;
+            case 'link':
+                typeInfo.url = ''; // FIXME never used
+                break;
+            }
+            
+            // FIXME cwrcAttributes
+            $.extend(propObj, typeInfo);
 
             newEntity = {
                 id: id,
-                type: json.cwrcType,
-                attributes: atts,
-                customValues: json.cwrcAttributes,
-                cwrcLookupInfo: cwrcInfo,
+                type: type,
+                attributes: json.cwrcAttributes,
+                customValues: propObj,
+                cwrcLookupInfo: json.cwrcInfo,
                 range: rangeObj
             };
         }
@@ -478,7 +531,7 @@ AnnotationsManager.prototype = {
             var target = rdfs.find('[rdf\\:about="'+hasTargetUri+'"]');
 
             // determine type
-            var typeUri = body.children().last().attr('rdf:resource');
+            var typeUri = body.children().last().attr('rdf:resource'); // FIXME relies on consistent order of rdf:type elements
             if (typeUri == null || typeUri.indexOf('ContentAsText') !== -1) {
                 // body is external resource (e.g. link), or it's a generic type so must use motivation instead
                 typeUri = rdf.find('oa\\:motivatedBy, motivatedBy').last().attr('rdf:resource');
@@ -523,7 +576,7 @@ AnnotationsManager.prototype = {
                     typeInfo.keywords = keywordsArray;
                     break;
                 case 'link':
-                    typeInfo.url = hasBodyUri;
+                    typeInfo.url = hasBodyUri; // FIXME never used
                     break;
             }
 
