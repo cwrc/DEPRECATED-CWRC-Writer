@@ -601,6 +601,9 @@ return function(writer) {
             }
         }
 
+        // clean up leftover w.structs entries removed during entity insertion
+        w.tagger.findNewAndDeletedTags();
+        
         // try putting the cursor in the body
         window.setTimeout(function() {
             var bodyTag = $('[_tag='+w.header+']', w.editor.getBody()).next()[0];
