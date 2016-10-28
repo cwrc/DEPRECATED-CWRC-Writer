@@ -536,153 +536,161 @@ AnnotationsManager.prototype = {
                 // body is external resource (e.g. link), or it's a generic type so must use motivation instead
                 typeUri = rdf.find('oa\\:motivatedBy, motivatedBy').last().attr('rdf:resource');
             }
-            var type = this.w.annotationsManager.getEntityTypeForAnnotation(typeUri);
-
-            // get type specific info
-            var typeInfo = {};
-            var propObj = {};
             
-            switch (type) {
-                case 'date':
-                    var dateString = body.find('xsd\\:date, date').text();
-                    var dateParts = dateString.split('/');
-                    if (dateParts.length === 1) {
-                        typeInfo.date = dateParts[0];
-                    } else {
-                        typeInfo.startDate = dateParts[0];
-                        typeInfo.endDate = dateParts[1];
-                    }
-                    break;
-                case 'place':
-                    var precisionString = rdf.find('cw\\:hasPrecision, hasPrecision').attr('rdf:resource');
-                    if (precisionString && precisionString != '') {
-                        precisionString = precisionString.split('#')[1];
-                    }
-                    propObj.precision = precisionString;
-                    break;
-                case 'title':
-                    var levelString = body.find('cw\\:pubType, pubType').text();
-                    typeInfo.level = levelString;
-                    break;
-                case 'correction':
-                    var corrString = body.find('cnt\\:chars, chars').text();
-                    typeInfo.corrText = corrString;
-                    break;
-                case 'keyword':
-                    var keywordsArray = [];
-                    body.find('cnt\\:chars, chars').each(function() {
-                        keywordsArray.push($(this).text());
-                    });
-                    typeInfo.keywords = keywordsArray;
-                    break;
-                case 'link':
-                    typeInfo.url = hasBodyUri; // FIXME never used
-                    break;
-            }
-
-            // certainty
-            var certainty = rdf.find('cw\\:hasCertainty, hasCertainty').attr('rdf:resource');
-            if (certainty && certainty != '') {
-                certainty = certainty.split('#')[1];
-                if (certainty === 'reasonable') {
-                    // fix for discrepancy between schemas
-                    certainty = 'reasonably certain';
+            if (typeUri == null) {
+                if (window.console) {
+                    console.warn('can\'t determine type for', xml);
                 }
-                propObj.certainty = certainty;
-            }
-
-            // cwrcInfo (from cwrcDialogs lookups)
-            var cwrcLookupObj = rdf.find('cw\\:cwrcInfo, cwrcInfo').text();
-            if (cwrcLookupObj != '') {
-                cwrcLookupObj = JSON.parse(cwrcLookupObj);
             } else {
-                cwrcLookupObj = {};
-            }
-
-            // cwrcAttributes (catch-all for properties not fully supported in rdf yet
-            var cwrcAttributes = rdf.find('cw\\:cwrcAttributes, cwrcAttributes').text();
-            if (cwrcAttributes != '') {
-                cwrcAttributes = JSON.parse(cwrcAttributes);
-            } else {
-                cwrcAttributes = {};
-            }
-
-            // selector and annotation uris
-            var docUri = target.find('oa\\:hasSource, hasSource').attr('rdf:resource');
-            var selectorUri = target.find('oa\\:hasSelector, hasSelector').attr('rdf:resource');
-            var selector = rdfs.find('[rdf\\:about="'+selectorUri+'"]');
-            var selectorType = selector.find('rdf\\:type, type').attr('rdf:resource');
-            var annotationObj = {
-                entityId: hasBodyUri,
-                annotationId: aboutUri,
-                targetId: hasTargetUri,
-                docId: docUri,
-                selectorId: selectorUri,
-                userId: ''
-            };
-
-            // range
-            var rangeObj = {};
-            var id;
-            var el;
-            // matching element
-            if (selectorType.indexOf('FragmentSelector') !== -1) {
-                var xpointer = selector.find('rdf\\:value, value').text();
-                var xpathObj = this._parseXpointer(xpointer, doc);
-
-                id = xpathObj.parentId;
-                el = xpathObj.el;
-                rangeObj = {
-                    id: id,
-                    el: xpathObj.el,
-                    parentStart: xpathObj.parentId
+                var type = this.w.annotationsManager.getEntityTypeForAnnotation(typeUri);
+    
+                // get type specific info
+                var typeInfo = {};
+                var propObj = {};
+                
+                switch (type) {
+                    case 'date':
+                        var dateString = body.find('xsd\\:date, date').text();
+                        var dateParts = dateString.split('/');
+                        if (dateParts.length === 1) {
+                            typeInfo.date = dateParts[0];
+                        } else {
+                            typeInfo.startDate = dateParts[0];
+                            typeInfo.endDate = dateParts[1];
+                        }
+                        break;
+                    case 'place':
+                        var precisionString = rdf.find('cw\\:hasPrecision, hasPrecision').attr('rdf:resource');
+                        if (precisionString && precisionString != '') {
+                            precisionString = precisionString.split('#')[1];
+                        }
+                        propObj.precision = precisionString;
+                        break;
+                    case 'title':
+                        var levelString = body.find('cw\\:pubType, pubType').text();
+                        typeInfo.level = levelString;
+                        break;
+                    case 'correction':
+                        var corrString = body.find('cnt\\:chars, chars').text();
+                        typeInfo.corrText = corrString;
+                        break;
+                    case 'keyword':
+                        var keywordsArray = [];
+                        body.find('cnt\\:chars, chars').each(function() {
+                            keywordsArray.push($(this).text());
+                        });
+                        typeInfo.keywords = keywordsArray;
+                        break;
+                    case 'link':
+                        typeInfo.url = hasBodyUri; // FIXME never used
+                        break;
+                }
+    
+                // certainty
+                var certainty = rdf.find('cw\\:hasCertainty, hasCertainty').attr('rdf:resource');
+                if (certainty && certainty != '') {
+                    certainty = certainty.split('#')[1];
+                    if (certainty === 'reasonable') {
+                        // fix for discrepancy between schemas
+                        certainty = 'reasonably certain';
+                    }
+                    propObj.certainty = certainty;
+                }
+    
+                // cwrcInfo (from cwrcDialogs lookups)
+                var cwrcLookupObj = rdf.find('cw\\:cwrcInfo, cwrcInfo').text();
+                if (cwrcLookupObj != '') {
+                    cwrcLookupObj = JSON.parse(cwrcLookupObj);
+                } else {
+                    cwrcLookupObj = {};
+                }
+    
+                // cwrcAttributes (catch-all for properties not fully supported in rdf yet
+                var cwrcAttributes = rdf.find('cw\\:cwrcAttributes, cwrcAttributes').text();
+                if (cwrcAttributes != '') {
+                    cwrcAttributes = JSON.parse(cwrcAttributes);
+                } else {
+                    cwrcAttributes = {};
+                }
+    
+                // selector and annotation uris
+                var docUri = target.find('oa\\:hasSource, hasSource').attr('rdf:resource');
+                var selectorUri = target.find('oa\\:hasSelector, hasSelector').attr('rdf:resource');
+                var selector = rdfs.find('[rdf\\:about="'+selectorUri+'"]');
+                var selectorType = selector.find('rdf\\:type, type').attr('rdf:resource');
+                var annotationObj = {
+                    entityId: hasBodyUri,
+                    annotationId: aboutUri,
+                    targetId: hasTargetUri,
+                    docId: docUri,
+                    selectorId: selectorUri,
+                    userId: ''
                 };
-            // offset
-            } else {
-                var xpointerStart = selector.find('oa\\:start, start').text();
-                var xpointerEnd = selector.find('oa\\:end, end').text();
-                var xpathStart = this._parseXpointer(xpointerStart, doc);
-                var xpathEnd = this._parseXpointer(xpointerEnd, doc);
-
-                id = this.w.getUniqueId('ent_');
-
-                if (xpathStart != null && xpathEnd != null) {
+    
+                // range
+                var rangeObj = {};
+                var id;
+                var el;
+                // matching element
+                if (selectorType.indexOf('FragmentSelector') !== -1) {
+                    var xpointer = selector.find('rdf\\:value, value').text();
+                    var xpathObj = this._parseXpointer(xpointer, doc);
+    
+                    id = xpathObj.parentId;
+                    el = xpathObj.el;
                     rangeObj = {
                         id: id,
-                        parentStart: xpathStart.parentId,
-                        startOffset: xpathStart.offset,
-                        parentEnd: xpathEnd.parentId,
-                        endOffset: xpathEnd.offset
+                        el: xpathObj.el,
+                        parentStart: xpathObj.parentId
                     };
+                // offset
+                } else {
+                    var xpointerStart = selector.find('oa\\:start, start').text();
+                    var xpointerEnd = selector.find('oa\\:end, end').text();
+                    var xpathStart = this._parseXpointer(xpointerStart, doc);
+                    var xpathEnd = this._parseXpointer(xpointerEnd, doc);
+    
+                    id = this.w.getUniqueId('ent_');
+    
+                    if (xpathStart != null && xpathEnd != null) {
+                        rangeObj = {
+                            id: id,
+                            parentStart: xpathStart.parentId,
+                            startOffset: xpathStart.offset,
+                            parentEnd: xpathEnd.parentId,
+                            endOffset: xpathEnd.offset
+                        };
+                    }
                 }
-            }
-
-            // process the element for attributes, etc.
-            var noteContent;
-            if (el !== undefined) {
-                var entityType = this.w.schemaManager.mapper.getEntityTypeForTag(el[0]);
-                var info = this.w.schemaManager.mapper.getReverseMapping(el[0], entityType);
-                $.extend(propObj, info.customValues);
-                $.extend(cwrcAttributes, info.attributes);
-
-                if (type === 'note' || type === 'citation') {
-                    noteContent = this.w.utilities.xmlToString(el[0]);
-                    rangeObj.el.contents().remove();
+    
+                // process the element for attributes, etc.
+                var noteContent;
+                if (el !== undefined) {
+                    var entityType = this.w.schemaManager.mapper.getEntityTypeForTag(el[0]);
+                    var info = this.w.schemaManager.mapper.getReverseMapping(el[0], entityType);
+                    $.extend(propObj, info.customValues);
+                    $.extend(cwrcAttributes, info.attributes);
+    
+                    if (type === 'note' || type === 'citation') {
+                        noteContent = this.w.utilities.xmlToString(el[0]);
+                        rangeObj.el.contents().remove();
+                    }
                 }
+    
+                // FIXME cwrcAttributes
+                $.extend(propObj, typeInfo);
+                newEntity = {
+                    id: id,
+                    type: type,
+                    attributes: cwrcAttributes,
+                    customValues: propObj,
+                    noteContent: noteContent,
+                    cwrcLookupInfo: cwrcLookupObj,
+                    range: rangeObj,
+                    uris: annotationObj
+                };
+            
             }
-
-            // FIXME cwrcAttributes
-            $.extend(propObj, typeInfo);
-            newEntity = {
-                id: id,
-                type: type,
-                attributes: cwrcAttributes,
-                customValues: propObj,
-                noteContent: noteContent,
-                cwrcLookupInfo: cwrcLookupObj,
-                range: rangeObj,
-                uris: annotationObj
-            };
         }
         
         return newEntity;
