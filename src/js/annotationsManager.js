@@ -405,6 +405,7 @@ AnnotationsManager.prototype = {
         if (json != null) {
             var id;
             var rangeObj;
+            var tag;
 
             var rdfs = rdf.parent('rdf\\:RDF, RDF');            
             var doc = rdfs.parents().last()[0].parentNode;
@@ -500,6 +501,7 @@ AnnotationsManager.prototype = {
 
             newEntity = {
                 id: id,
+                tag: tag,
                 type: type,
                 attributes: json.cwrcAttributes,
                 customValues: propObj,
@@ -665,8 +667,18 @@ AnnotationsManager.prototype = {
     
                 // process the element for attributes, etc.
                 var noteContent;
+                var tag;
                 if (el !== undefined) {
+                    tag = el[0].nodeName;
+                    
+                    // FIXME why are we finding type twice?
                     var entityType = this.w.schemaManager.mapper.getEntityTypeForTag(el[0]);
+                    if (entityType !== type) {
+                        if (window.console) {
+                            console.warn('type mismatch', type, entityType, el[0]);
+                        }
+                    }
+                    
                     var info = this.w.schemaManager.mapper.getReverseMapping(el[0], entityType);
                     $.extend(propObj, info.customValues);
                     $.extend(cwrcAttributes, info.attributes);
@@ -681,6 +693,7 @@ AnnotationsManager.prototype = {
                 $.extend(propObj, typeInfo);
                 newEntity = {
                     id: id,
+                    tag: tag,
                     type: type,
                     attributes: cwrcAttributes,
                     customValues: propObj,
