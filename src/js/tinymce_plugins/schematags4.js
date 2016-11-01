@@ -77,13 +77,18 @@ tinymce.PluginManager.add('schematags', function(editor) {
     });
     
     tinymce.ui.CWRCPanelButton = tinymce.ui.PanelButton.extend({
+        // CHANGES
         // set popover to false
+        // override popoverAlign
+        
         showPanel: function() {
             var self = this, settings = self.settings;
 
             self.active(true);
 
             if (!self.panel) {
+                settings.popoverAlign = ['tr-tl','tl-tr','br-bl','bl-br'];
+                
                 var panelSettings = settings.panel;
 
                 // Wrap panel in grid layout if type if specified
@@ -126,21 +131,30 @@ tinymce.PluginManager.add('schematags', function(editor) {
     /**
      * Gets the menu items for all tags in the schema.
      * @param menuItems {Array} The array to fill with tags.
+     * @param action {String} The action to perform: "add" or "change".
      */
-    function getTagsMenu(menuItems) {
+    function getTagsMenu(menuItems, action) {
         var imageUrl = editor.writer.cwrcRootUrl+'img/';
         var schema = editor.writer.schemaManager.schema;
+        action = action === undefined ? "add" : action;
         for (var i = 0; i < schema.elements.length; i++) {
             var key = schema.elements[i];
             menuItems.push({
                 type: 'menuitem',
                 text: key,
                 key: key,
+                action: action,
                 initialFilterState: null,
                 image: imageUrl+'tag_blue.png',
                 onclick: function(e) {
                     var tag = this.settings.key;
-                    editor.writer.dialogManager.getDialog('schemaTags').addSchemaTag({key: tag});
+                    var action = this.settings.action;
+                    var d = editor.writer.dialogManager.getDialog('schemaTags');
+                    if (action == "add") {
+                        d.addSchemaTag({key: tag});
+                    } else {
+                        d.changeSchemaTag({key: tag});
+                    }
                 }
             });
         }
@@ -153,7 +167,6 @@ tinymce.PluginManager.add('schematags', function(editor) {
             onclick : function() {}
         });
     }
-    editor.addCommand('getTagsMenu', getTagsMenu);
     
     /**
      * Hide menu items based on their validity, according to the schema.
@@ -252,11 +265,13 @@ tinymce.PluginManager.add('schematags', function(editor) {
                 var textbox = e.control.items()[0];
                 var menu = e.control.items()[1];
                 
+                var action = this.settings.action;
+                
                 $(textbox.getEl()).watermark('Filter');
                 $(textbox.getEl()).width(menu.getEl().offsetWidth);
                 
                 var items = [];
-                editor.execCommand('getTagsMenu', items);
+                getTagsMenu(items, action);
                 menu.append(items);
                 menu.reflow();
                 
@@ -269,7 +284,7 @@ tinymce.PluginManager.add('schematags', function(editor) {
                         }
                     }
                     var items = [];
-                    editor.execCommand('getTagsMenu', items);
+                    getTagsMenu(items, action);
                     menu.append(items);
                     menu.reflow();
                 });

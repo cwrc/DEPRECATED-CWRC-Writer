@@ -236,7 +236,17 @@ return function(writer) {
         changeSchemaTag: function(params) {
             currentTagName = params.key;
             tag = params.tag;
-            var path = w.utilities.getElementXPath(params.tag[0]);
+            
+            if (tag === undefined || tag.length === 0) {
+                var selectionParent = w.editor.currentBookmark.rng.commonAncestorContainer;
+                if (selectionParent.nodeType === Node.TEXT_NODE) {
+                    tag = $(selectionParent).parent();
+                } else {
+                    tag = $(selectionParent);
+                }
+            }
+            
+            var path = w.utilities.getElementXPath(tag[0]);
             mode = EDIT;
             this.show({tagName: params.key, tagPath: path});
         }

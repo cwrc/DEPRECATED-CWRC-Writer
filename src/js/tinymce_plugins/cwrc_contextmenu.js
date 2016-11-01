@@ -45,18 +45,27 @@ tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
         // render menu
         if (!menu) {
             // get the filtered tag menus and add them
-            var filterPanel = {};
-            editor.execCommand('getFilterMenu', filterPanel);
+            var insertFilterPanel = {
+                action: 'add'
+            };
+            editor.execCommand('getFilterMenu', insertFilterPanel);
+            
+            var changeFilterPanel = {
+                action: 'change'
+            };
+            editor.execCommand('getFilterMenu', changeFilterPanel);
+            
             items.splice(1, 0, {
                 text: 'Insert Tag',
                 category: 'xmlTags',
                 type: 'cwrcpanelbutton',
                 popoverAlign: ['tr-tl', 'br-bl'],
-                panel: filterPanel,
+                panel: insertFilterPanel,
                 classes: 'cwrc',
                 icon: 'cwrc',
                 image: editor.writer.cwrcRootUrl+'img/tag_blue_add.png',
                 onPostRender: function(e) {
+//                    $(e.control.getEl()).find('button').after('<div class="mce-caret"></div>');
                     e.control.on('mouseover', function(e2) {
                         e2.control.parent().items().each(function(ctrl) {
                             if (ctrl !== e2.control) {
@@ -73,11 +82,12 @@ tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
                 category: 'modifyTag',
                 type: 'cwrcpanelbutton',
                 popoverAlign: ['tr-tl', 'br-bl'],
-                panel: filterPanel,
+                panel: changeFilterPanel,
                 classes: 'cwrc',
                 icon: 'cwrc',
                 image: editor.writer.cwrcRootUrl+'img/tag_blue_edit.png',
                 onPostRender: function(e) {
+//                    $(e.control.getEl()).find('button').after('<div class="mce-caret"></div>');
                     e.control.on('mouseover', function(e2) {
                         e2.control.parent().items().each(function(ctrl) {
                             if (ctrl !== e2.control) {
@@ -91,6 +101,7 @@ tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
             
             menu = new tinymce.ui.Menu({
                 style: 'max-height: none !important;',
+                minWidth: 195,
                 classes: 'cwrc',
                 items: items,
                 context: 'contextmenu'
