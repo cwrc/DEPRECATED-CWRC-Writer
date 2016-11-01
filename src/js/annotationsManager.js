@@ -405,7 +405,7 @@ AnnotationsManager.prototype = {
         if (json != null) {
             var id;
             var rangeObj;
-            var tag;
+            var el;
 
             var rdfs = rdf.parent('rdf\\:RDF, RDF');            
             var doc = rdfs.parents().last()[0].parentNode;
@@ -433,6 +433,7 @@ AnnotationsManager.prototype = {
                 var xpathObj = this._parseXpointer(xpointer, doc);
 
                 id = xpathObj.parentId;
+                el = xpathObj.el;
 
                 rangeObj = {
                     id: id,
@@ -496,6 +497,29 @@ AnnotationsManager.prototype = {
                 break;
             }
             
+            var noteContent;
+            var tag;
+            if (el !== undefined) {
+                tag = el[0].nodeName;
+                
+                // FIXME why are we finding type twice?
+                var entityType = this.w.schemaManager.mapper.getEntityTypeForTag(el[0]);
+                if (entityType !== type) {
+                    if (window.console) {
+                        console.warn('type mismatch', type, entityType, el[0]);
+                    }
+                }
+                
+                var info = this.w.schemaManager.mapper.getReverseMapping(el[0], entityType);
+                $.extend(propObj, info.customValues);
+                $.extend(json.cwrcAttributes, info.attributes);
+
+                if (type === 'note' || type === 'citation') {
+                    noteContent = this.w.utilities.xmlToString(el[0]);
+                    rangeObj.el.contents().remove();
+                }
+            }
+            
             // FIXME cwrcAttributes
             $.extend(propObj, typeInfo);
 
@@ -505,6 +529,7 @@ AnnotationsManager.prototype = {
                 type: type,
                 attributes: json.cwrcAttributes,
                 customValues: propObj,
+                noteContent: noteContent,
                 cwrcLookupInfo: json.cwrcInfo,
                 range: rangeObj
             };
