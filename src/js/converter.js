@@ -68,6 +68,14 @@ return function(writer) {
         // XML
         
         var root = body.children('[_tag='+w.root+']');
+        
+        if (root.length == 0) {
+            if (window.console) {
+                console.warn('no root found for', w.root);
+            }
+            return '';
+        }
+        
         // make sure the root has the right namespaces for validation purposes
         var struct = w.structs[root.attr('id')];
         // add them to the structs entry and they'll get added to the markup later
