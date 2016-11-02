@@ -552,6 +552,7 @@ return function(writer) {
                 msg: 'Couldn\'t load the document because the schema could not be determined.',
                 type: 'error'
             });
+            w.event('documentLoaded').publish(false, doc);
         } else {
             if (schemaId !== w.schemaManager.schemaId) {
                 w.schemaManager.loadSchema(schemaId, false, loadSchemaCss, function(success) {
@@ -638,7 +639,7 @@ return function(writer) {
                     msg: 'The wrong schema is specified.<br/>Schema root: '+w.root+'<br/>Document root: '+root.nodeName,
                     type: 'error'
                 });
-            } else {
+            } else if (w.showModeMessage === true) {
                 var msg;
                 if (w.mode === w.XML) {
                     msg = '<b>XML only</b><br/>Only XML tags and no RDF/Semantic Web annotations will be created.';

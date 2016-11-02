@@ -67,6 +67,7 @@ return function(config) {
     w.XMLRDF = 0; // XML + RDF
     w.XML = 1; // XML only
     w.RDF = 2; // RDF only (not currently used)
+    
     w.JSON = 3; // annotation type
     
     // editor mode
@@ -77,6 +78,12 @@ return function(config) {
         } else if (config.mode === 'rdf') {
             w.mode = w.RDF;
         }
+    }
+    
+    // should we tell the user the editor mode after loading a document?
+    w.showModeMessage = true;
+    if (config.showModeMessage !== undefined && typeof config.showModeMessage === 'boolean') {
+        w.showModeMessage = config.showModeMessage;
     }
     
     // what format to produce annotations in (XML or JSON)
