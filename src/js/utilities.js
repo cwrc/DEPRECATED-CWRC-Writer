@@ -252,6 +252,7 @@ return function(writer) {
             return doFind(node, direction, 0);
         }
         
+        // TODO rework this
         // fix for when start and/or end containers are element nodes
         if (range.startContainer.nodeType === Node.ELEMENT_NODE) {
             var end = range.endContainer;
@@ -260,7 +261,9 @@ return function(writer) {
                 if (end == null) return w.NO_COMMON_PARENT;
                 range.setEnd(end, end.length);
             }
-            range.setStart(end, 0);
+            var start = findTextNode(range.startContainer, 'forward'); 
+            if (start == null) return w.NO_COMMON_PARENT;
+            range.setStart(start, 0);
         }
         if (range.endContainer.nodeType === Node.ELEMENT_NODE) {
             // don't need to check nodeType here since we've already ensured startContainer is text
@@ -495,16 +498,16 @@ return function(writer) {
         
         var defHits = {};
         
-        function doQuery(c) {
+        function doQuery(currContext) {
             if (continueQuery) {
-                continueQuery = matchingFunc.call(this, c);
+                continueQuery = matchingFunc.call(this, currContext);
                 if (continueQuery == undefined) continueQuery = true;
-                for (var key in c) {
+                for (var key in currContext) {
                     
-                    // filter out attributes
-                    if (key != '$parent' && key.search('@') != 0) {
+                    // filter out metadata and attributes
+                    if (key != '$parent' && key != '$key' && key.search('@') != 0) {
                         
-                        var prop = c[key];
+                        var prop = currContext[key];
                         
                         if (processRefs === true && key === 'ref') {
                             var refs;
@@ -680,7 +683,13 @@ return function(writer) {
                     documentation: docs
                 };
                 
-                if (type == 'attribute') {
+                if (type == 'element') {
+                    if (refParentProps && refParentProps.optional != null) {
+                        childObj.required = !refParentProps.optional;
+                    } else {
+                        childObj.required = false;
+                    }
+                } else if (type == 'attribute') {
                     if (refParentProps && refParentProps.optional != null) {
                         childObj.required = !refParentProps.optional;
                     } else {
@@ -760,10 +769,18 @@ return function(writer) {
             // store optional value
             var optional = null;
             _queryUp(ref, function(item) {
-                if (item.optional) {
-                    optional = true;
-                    return false;
+                if (item['$parent'] && item['$parent']['$key']) {
+                    var parentKey = item['$parent']['$key'];
+                    if (parentKey == 'choice' || parentKey == 'optional' || parentKey == 'zeroOrMore') {
+                        // we're taking choice to mean optional, even though it could mean a requirement to choose one or more elements
+                        optional = true;
+                        return false;
+                    } else if (parentKey == 'oneOrMore') {
+                        optional = false;
+                        return false;
+                    }
                 }
+                return false;
             });
             
             if (!defHits[name]) {
@@ -802,7 +819,7 @@ return function(writer) {
             }
             if (element === null) {
                 if (window.console) {
-                    console.warn('Cannot find element for:'+config.tag);
+                    console.warn('Cannot find element for: '+config.tag);
                 }
             } else {
                 var defHits = {};
@@ -883,6 +900,21 @@ return function(writer) {
         return match;
     };
     
+    /**
+     * Gets the children for a tag but only includes those that are required.
+     * @param {String} tag The tag name.
+     * @returns {Object}
+     */
+    u.getRequiredChildrenForTag = function(tag) {
+        var tags = u.getChildrenForTag({tag: tag, type:'element', returnType:'object'});
+        for (var key in tags) {
+            if (tags[key].required != true) {
+                delete tags[key];
+            }
+        }
+        return tags;
+    };
+    
     function _getParentElementsFromDef(defName, defHits, level, parents) {
         $('define:has(ref[name="'+defName+'"])', w.schemaManager.schemaXML).each(function(index, el) {
             var name = $(el).attr('name');
@@ -912,7 +944,26 @@ return function(writer) {
                 parents = JSON.parse(localData);
             }
         }
+        
         if (parents.length === 0) {
+            
+//            var element = _getElement(config.tag);
+//            // can't find element in define so try path
+//            if (element === null && config.path !== undefined) {
+//                element = u.getJsonEntryFromPath(config.path);
+//            }
+//            if (element === null) {
+//                if (window.console) {
+//                    console.warn('Cannot find element for:'+config.tag);
+//                }
+//            } else {
+//                var defHits = {};
+//                var level = 0;
+//                _getChildrenJSON(element, defHits, level, config.type, children);
+//            }
+            
+            
+            
             var element = $('element[name="'+tag+'"]', w.schemaManager.schemaXML);
             var defName = element.parents('define').attr('name');
             var defHits = {};

@@ -178,7 +178,9 @@ XML.ObjTree.prototype.parseElement = function ( elem ) {
                 
                 // CHANGED
                 // add parent property
+                // add key property
             	val['$parent'] = retval;
+            	val['$key'] = key;
             }
         }
     }
