@@ -59,21 +59,19 @@ tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
                 text: 'Insert Tag',
                 category: 'xmlTags',
                 type: 'cwrcpanelbutton',
-                popoverAlign: ['tr-tl', 'br-bl'],
+                popoverAlign: ['tr-tl','tl-tr','br-bl','bl-br'],
                 panel: insertFilterPanel,
                 classes: 'cwrc',
                 icon: 'cwrc',
                 image: editor.writer.cwrcRootUrl+'img/tag_blue_add.png',
-                onPostRender: function(e) {
+                onMouseOver: function(e) {
 //                    $(e.control.getEl()).find('button').after('<div class="mce-caret"></div>');
-                    e.control.on('mouseover', function(e2) {
-                        e2.control.parent().items().each(function(ctrl) {
-                            if (ctrl !== e2.control) {
-                                ctrl.hideMenu();
-                            }
-                        });
-                        e2.control.showPanel(); 
+                    e.control.parent().items().each(function(ctrl) {
+                        if (ctrl !== e.control) {
+                            ctrl.hideMenu();
+                        }
                     });
+                    e.control.showPanel(); 
                 }
             },{
                 text: '|'
@@ -81,22 +79,20 @@ tinymce.PluginManager.add('cwrc_contextmenu', function(editor) {
                 text: 'Change Tag',
                 category: 'modifyTag',
                 type: 'cwrcpanelbutton',
-                popoverAlign: ['tr-tl', 'br-bl'],
+                popoverAlign: ['tr-tl','tl-tr','br-bl','bl-br'],
                 panel: changeFilterPanel,
                 classes: 'cwrc',
                 icon: 'cwrc',
                 image: editor.writer.cwrcRootUrl+'img/tag_blue_edit.png',
-                onPostRender: function(e) {
-//                    $(e.control.getEl()).find('button').after('<div class="mce-caret"></div>');
-                    e.control.on('mouseover', function(e2) {
-                        e2.control.parent().items().each(function(ctrl) {
-                            if (ctrl !== e2.control) {
-                                ctrl.hideMenu();
-                            }
-                        });
-                        e2.control.showPanel(); 
-                    });
-                }
+                onMouseOver: function(e) {
+//                  $(e.control.getEl()).find('button').after('<div class="mce-caret"></div>');
+                  e.control.parent().items().each(function(ctrl) {
+                      if (ctrl !== e.control) {
+                          ctrl.hideMenu();
+                      }
+                  });
+                  e.control.showPanel(); 
+              }
             });
             
             menu = new tinymce.ui.Menu({

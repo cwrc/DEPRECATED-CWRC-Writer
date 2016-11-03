@@ -79,7 +79,6 @@ tinymce.PluginManager.add('schematags', function(editor) {
     tinymce.ui.CWRCPanelButton = tinymce.ui.PanelButton.extend({
         // CHANGES
         // set popover to false
-        // override popoverAlign
         
         showPanel: function() {
             var self = this, settings = self.settings;
@@ -87,8 +86,6 @@ tinymce.PluginManager.add('schematags', function(editor) {
             self.active(true);
 
             if (!self.panel) {
-                settings.popoverAlign = ['tr-tl','tl-tr','br-bl','bl-br'];
-                
                 var panelSettings = settings.panel;
 
                 // Wrap panel in grid layout if type if specified
@@ -130,13 +127,15 @@ tinymce.PluginManager.add('schematags', function(editor) {
     
     /**
      * Gets the menu items for all tags in the schema.
-     * @param menuItems {Array} The array to fill with tags.
      * @param action {String} The action to perform: "add" or "change".
+     * @returns {Array} The array of tags.
      */
-    function getTagsMenu(menuItems, action) {
+    function getTagsMenu(action) {
+        var menuItems = [];
         var imageUrl = editor.writer.cwrcRootUrl+'img/';
         var schema = editor.writer.schemaManager.schema;
         action = action === undefined ? "add" : action;
+        
         for (var i = 0; i < schema.elements.length; i++) {
             var key = schema.elements[i];
             menuItems.push({
@@ -166,6 +165,8 @@ tinymce.PluginManager.add('schematags', function(editor) {
             image: imageUrl+'cross.png',
             onclick : function() {}
         });
+        
+        return menuItems;
     }
     
     /**
@@ -270,8 +271,7 @@ tinymce.PluginManager.add('schematags', function(editor) {
                 $(textbox.getEl()).watermark('Filter');
                 $(textbox.getEl()).width(menu.getEl().offsetWidth);
                 
-                var items = [];
-                getTagsMenu(items, action);
+                var items = getTagsMenu(action);
                 menu.append(items);
                 menu.reflow();
                 
@@ -283,8 +283,7 @@ tinymce.PluginManager.add('schematags', function(editor) {
                             item.remove();
                         }
                     }
-                    var items = [];
-                    getTagsMenu(items, action);
+                    var items = getTagsMenu(action);
                     menu.append(items);
                     menu.reflow();
                 });
