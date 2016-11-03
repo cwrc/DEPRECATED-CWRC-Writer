@@ -785,6 +785,13 @@ return function(config) {
             elementpath: false,
             statusbar: false,
             
+            // disables style keyboard shortcuts
+            formats: {
+                bold: {},
+                italic: {},
+                underline: {}
+            },
+            
             setup: function(ed) {
                 // link the writer and editor
                 w.editor = ed;
