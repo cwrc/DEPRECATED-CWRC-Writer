@@ -25,6 +25,7 @@ id: 'ID',
 header: 'CWRCHEADER',
 blockElements: [],
 urlAttributes: ['URL', 'REF'],
+popupAttributes: [],
 
 listeners: {
     tagAdded: function(tag) {

@@ -25,6 +25,7 @@ id: 'ID',
 header: 'ORLANDOHEADER',
 blockElements: ['DIV0', 'DIV1', 'EVENT', 'ORLANDOHEADER', 'DOCAUTHOR', 'DOCEDITOR', 'DOCEXTENT', 'PUBLICATIONSTMT', 'TITLESTMT', 'PUBPLACE', 'L', 'P', 'HEADING', 'CHRONEVENT', 'CHRONSTRUCT'],
 urlAttributes: ['URL', 'REF'],
+popupAttributes: ['PLACEHOLDER'],
 
 listeners: {
     tagAdded: function(tag) {
@@ -219,6 +220,7 @@ note: {
     }
 },
 
+//TODO support for multiple BIBCIT within BIBCITS
 citation: {
     parentTag: 'BIBCITS',
     textTag: 'BIBCIT',
@@ -230,7 +232,8 @@ citation: {
         var xml = Mapper.getTagAndDefaultAttributes(entity);
         xml += '><BIBCIT'+rangeString+'>';
         xml += content;
-        xml += '</BIBCIT></BIBCITS>';
+        xml += '</BIBCIT>';
+        xml += '</BIBCITS>';
         return xml;
     },
     reverseMapping: function(xml) {

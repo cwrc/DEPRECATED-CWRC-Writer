@@ -1,20 +1,19 @@
 define([
     'jquery',
     'jquery-ui',
-    'jquery.popup',
     'cwrcDialogs',
     'dialogs/addSchema','dialogs/fileManager','dialogs/loadingIndicator','dialogs/header','dialogs/message','dialogs/triple',
     'dialogs/cwrcPerson','dialogs/cwrcOrg','dialogs/cwrcPlace','dialogs/cwrcTitle','dialogs/cwrcCitation',
-    'dialogs/schemaTags','dialogs/help','dialogs/copyPaste'
-], function($, jqueryui, Popup, cD,
+    'dialogs/schemaTags','dialogs/help','dialogs/copyPaste','dialogs/popup'
+], function($, jqueryui, cD,
         AddSchema, FileManager, LoadingIndicator, Header, Message, Triple,
         CwrcPerson, CwrcOrg, CwrcPlace, CwrcTitle, CwrcCitation,
-        SchemaTags, Help, CopyPaste
+        SchemaTags, Help, CopyPaste, Popup
 ) {
 
 function handleResize(dialogEl) {
     if (dialogEl.is(':visible')) {
-        if (dialogEl.parent('.ui-dialog').hasClass('linkPopup') == false) {
+        if (dialogEl.parent('.ui-dialog').hasClass('linkPopup') == false && dialogEl.parent('.ui-dialog').hasClass('tagPopup') == false) {
             var winWidth = $(window).width();
             var winHeight = $(window).height();
             var dialogWidth = dialogEl.dialog('option', 'width');
@@ -124,6 +123,7 @@ return function(writer) {
     
     var defaultDialogs = {
         message: Message,
+        popup: Popup,
         help: Help,
         copyPaste: CopyPaste,
         triple: Triple,

@@ -2,11 +2,10 @@ define([
     'jquery',
     'tinymce',
     'eventManager','schemaManager','dialogManager','entitiesManager','utilities',
-    'tagger','converter','fileManager','annotationsManager','dialogs/settings',
-    'jquery.popup'
+    'tagger','converter','fileManager','annotationsManager','dialogs/settings'
 ], function($, tinymce,
         EventManager, SchemaManager, DialogManager, EntitiesManager, Utilities, Tagger,
-        Converter, FileManager, AnnotationsManager, SettingsDialog, Popup
+        Converter, FileManager, AnnotationsManager, SettingsDialog
 ) {
 
 /**
@@ -238,7 +237,6 @@ return function(config) {
             w.layout.resizeAll();
         }
     }
-    
 
     w.getButtonByName = function(name) {
         var buttons = w.editor.buttons,
@@ -290,82 +288,6 @@ return function(config) {
     function _onMouseUpHandler(evt) {
         _hideContextMenus(evt);
         _doHighlightCheck(w.editor, evt);
-    };
-    
-    function _onEntityMouseOver(evt) {
-        var entityId = this.getAttribute('name');
-        var ent = w.entitiesManager.getEntity(entityId);
-        var url = null;
-        var urlKeys = w.schemaManager.mapper.getUrlAttributes();
-        var entAtts = ent.getAttributes();
-        for (var i = 0; i < urlKeys.length; i++) {
-            var urlAtt = entAtts[urlKeys[i]];
-            if (urlAtt !== undefined) {
-                url = urlAtt;
-                break;
-            }
-        }
-        if (url != null) {
-            var dId = w.editor.id+'_linkDialog';
-            var $dEl = $('#'+dId).first();
-            if ($dEl.length === 0) {
-                $dEl = $('<div id="'+dId+'"></div>').appendTo(document.body);
-            }
-            
-            $dEl.popup({
-                dialogClass: 'linkPopup',
-                resizable: false,
-                draggable: false,
-                height: 30,
-                minWidth: 40,
-                title: url,
-                open: function(event, ui) {
-                    $dEl.parent().find('.ui-dialog-titlebar-close').hide();
-                    var width = $dEl.parent().find('.ui-dialog-title').width();
-                    $dEl.popup('option', 'width', width+30);
-                },
-                position: {
-                    using: function(w, topLeft, posObj) {
-                        var $dEl = posObj.element.element;
-                        var $entEl = $(this);
-                        var entOffset = $entEl.offset();
-                        var frameOffset = $(w.editor.iframeElement).offset();
-                        var scrollTop = $(w.editor.getBody()).scrollTop();
-                        
-                        var actualOffset = frameOffset.top + entOffset.top + $entEl.height();
-                        var docHeight = $(document.body).height();
-                        if (actualOffset+30 > docHeight) {
-                            // TODO not working
-                            // topLeft.top = actualOffset-(docHeight+30);
-                        }
-                        topLeft.top = actualOffset - (docHeight + scrollTop);
-                        topLeft.left = frameOffset.left + entOffset.left;
-                        $dEl.css({
-                           top: topLeft.top+'px',
-                           left: topLeft.left+'px'
-                        });
-                    }.bind(this, w)
-                }
-            });
-            
-            $dEl.parent().find('.ui-dialog-title').one('click', function() {
-                var url = $dEl.popup('option', 'title');
-                window.open(url);
-            });
-            
-            var closeId;
-            closeId = setTimeout(function() {
-                $dEl.popup('close');
-            }, 1000);
-            $dEl.parent().on('mouseover', function() {
-                clearTimeout(closeId);
-            });
-            $dEl.parent().on('mouseout', function() {
-                closeId = setTimeout(function() {
-                    $dEl.popup('close');
-                }, 500);
-            });
-        }
     };
     
     function _onKeyDownHandler(evt) {
@@ -858,8 +780,6 @@ return function(config) {
                     
                     // highlight tracking
                     body.on('mouseup', _onMouseUpHandler).on('keydown',_onKeyDownHandler).on('keyup',_onKeyUpHandler);
-                    // linkPopup
-                    body.on('mouseover', '[_entity="true"]', _onEntityMouseOver);
                     
                     w.isInitialized = true;
                     w.event('writerInitialized').publish(w);

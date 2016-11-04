@@ -10,6 +10,8 @@ header: '',
 blockElements: [],
 // Attributes that should be treated as URLs by the various CWRC-Writer modules
 urlAttributes: [],
+// Attributes that should be shown in a popup in the editor
+popupAttributes: [],
 
 listeners: {
     // Listeners to CWRC-Writer events can go here and will subscribe upon mappings load

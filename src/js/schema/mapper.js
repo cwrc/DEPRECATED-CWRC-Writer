@@ -353,6 +353,14 @@ Mapper.prototype = {
      */
     getUrlAttributes: function() {
         return this.mappings.urlAttributes;
+    },
+    
+    /**
+     * Returns the attribute names that should be displayed in a popup.
+     * @returns {Array}
+     */
+    getPopupAttributes: function() {
+        return this.mappings.popupAttributes;
     }
 };
 

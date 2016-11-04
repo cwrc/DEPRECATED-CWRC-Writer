@@ -664,13 +664,17 @@ html, body {
     margin-left: 5px;
 }
 
-.linkPopup .ui-dialog-content {
+.linkPopup .ui-dialog-content, .tagPopup .ui-dialog-content {
 	padding: 0 !important;
 }
 
 .linkPopup .ui-dialog-title {
 	text-decoration: underline;
 	cursor: pointer;
+	width: auto !important;
+}
+
+.tagPopup .ui-dialog-title {
 	width: auto !important;
 }
 
