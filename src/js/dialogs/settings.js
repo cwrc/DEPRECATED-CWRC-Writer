@@ -300,7 +300,22 @@ return function(writer, config) {
         $('#showentitybrackets').prop('checked', defaultSettings.showEntityBrackets);
         $('#showstructbrackets').prop('checked', defaultSettings.showStructBrackets);
         
-        $('select[name="editormode"]', $settingsDialog).val(defaultSettings.mode);
+        var editorVal;
+        switch(defaultSettings.mode) {
+        case w.XMLRDF:
+            editorVal = 'xmlrdf';
+            if (defaultSettings.allowOverlap) {
+                editorVal = 'xmlrdfoverlap';
+            }
+            break;
+        case w.XML:
+            editorVal = 'xml';
+            break;
+        case w.RDF:
+            editorVal = 'rdf';
+            break;
+        }
+        $('select[name="editormode"]', $settingsDialog).val(editorVal);
         $('select[name="annotations"]', $settingsDialog).val(defaultSettings.annotationMode);
         
         $('select[name="schema"]', $settingsDialog).val(defaultSettings.validationSchema);
