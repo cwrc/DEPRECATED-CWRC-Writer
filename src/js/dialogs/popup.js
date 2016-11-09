@@ -42,7 +42,7 @@ return function(writer) {
                     // TODO not working
                     // topLeft.top = actualOffset-(docHeight+30);
                 }
-                topLeft.top = actualOffset - (docHeight + scrollTop);
+                topLeft.top = actualOffset;// - (docHeight + scrollTop);
                 topLeft.left = frameOffset.left + tagOffset.left;
                 $popupEl.css({
                    top: topLeft.top+'px',

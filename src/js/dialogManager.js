@@ -35,7 +35,7 @@ $.extend($.ui.dialog.prototype.options, {
     create: function(e) {
         $(e.target).on('dialogopen', function(event) {
             // wrap our dialogs in the cwrc css scope
-            $(event.target).parent('.ui-dialog').prev('.ui-widget-overlay').andSelf().wrapAll('<div class="cwrc" style="position: fixed; z-index: 100;"/>');
+            $(event.target).parent('.ui-dialog').prev('.ui-widget-overlay').andSelf().wrapAll('<div class="cwrc" style="position: fixed; top: 0px; left: 0px; z-index: 100;"/>');
             
             handleResize($(event.target));
             $(window).on('resize', $.proxy(handleResize, this, $(event.target)));
@@ -61,7 +61,7 @@ $.extend($.custom.popup.prototype.options, {
     create: function(e) {
         $(e.target).on('popupopen', function(event) {
             // wrap our dialogs in the cwrc css scope
-            $(event.target).parent('.ui-dialog').prev('.ui-widget-overlay').andSelf().wrapAll('<div class="cwrc" style="position: fixed; z-index: 100;"/>');
+            $(event.target).parent('.ui-dialog').prev('.ui-widget-overlay').andSelf().wrapAll('<div class="cwrc" style="position: fixed; top: 0px; left: 0px; z-index: 100;"/>');
             
             handleResize($(event.target));
             $(window).on('resize', $.proxy(handleResize, this, $(event.target)));
