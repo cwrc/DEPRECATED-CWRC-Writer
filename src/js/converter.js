@@ -842,7 +842,8 @@ return function(writer) {
                     if (el.nodeType == 1) {
                         doBuild(el, isInline);
                     } else if (el.nodeType == 3) {
-                        editorString += el.data;
+                        var stringContents = el.data.replace(/</g, '&lt;').replace(/>/g, '&gt;'); // prevent tags from accidentally being created
+                        editorString += stringContents;
                     }
                 });
 
