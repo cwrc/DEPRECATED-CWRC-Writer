@@ -467,46 +467,11 @@ return function(config) {
             
         // structure tag
         } else if (node.attr('_tag')) {
-            var id = node.attr('id');
             var tag = node.attr('_tag');
-            
             if (w.isReadOnly === false || (w.isReadOnly && (tag === w.root || tree.tagFilter.indexOf(tag.toLowerCase()) !== -1))) {
-                
-                
-    //            var isLeaf = node.find('[_tag]').length > 0 ? 'open' : null;
-    //            if (tag == w.header) isLeaf = false;
-                
-                // TODO move this out of here
-                // new struct check
-                if (id == '' || id == null) {
-                    id = w.getUniqueId('struct_');
-                    if (w.schemaManager.schema.elements.indexOf(tag) != -1) {
-                        node.attr('id', id).attr('_tag', tag);
-                        w.structs[id] = {
-                            id: id,
-                            _tag: tag
-                        };
-                    }                    
-                // duplicate struct check
-                } else {
-                    var match = $('[id='+id+']', w.editor.getBody());
-                    if (match.length > 1) {
-                        match.each(function(index, el) {
-                            if (index > 0) {
-                                var newStruct = $(el);
-                                var newId = w.getUniqueId('struct_');
-                                newStruct.attr('id', newId);
-                                w.structs[newId] = {};
-                                for (var key in w.structs[id]) {
-                                    w.structs[newId][key] = w.structs[id][key];
-                                }
-                                w.structs[newId].id = newId;
-                            }
-                        });
-                    }
-                }
-                
+                var id = node.attr('id');
                 var info = w.structs[id];
+                
                 if (info == undefined) {
                     // redo/undo re-added a struct check
                     info = w.deletedStructs[id];
@@ -515,6 +480,7 @@ return function(config) {
                         delete w.deletedStructs[id];
                     }
                 }
+                
                 if (info) {
                     var text = info._tag;
                     if (w.isReadOnly) {

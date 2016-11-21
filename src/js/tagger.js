@@ -149,11 +149,23 @@ return function(writer) {
     tagger.findNewAndDeletedTags = function() {
         var updateRequired = false;
         
-        // new tags
-        var newTags = w.editor.dom.select('[_tag]:not([id])');
-        if (newTags.length > 0) updateRequired = true;
+        // new structs
+        var newStructs = w.editor.dom.select('[_tag]:not([id])');
+        if (newStructs.length > 0) updateRequired = true;
+        newStructs.forEach(function(struct, index) {
+            var node = $(struct);
+            var tag = node.attr('_tag');
+            if (w.schemaManager.schema.elements.indexOf(tag) != -1) { // TODO is this check necessary?
+                var id = w.getUniqueId('struct_');
+                node.attr('id', id);
+                w.structs[id] = {
+                    id: id,
+                    _tag: tag
+                };
+            } 
+        });
         
-        // deleted tags
+        // deleted entities
         w.entitiesManager.eachEntity(function(id, entity) {
             var nodes = w.editor.dom.select('[name="'+id+'"]');
             if (nodes.length === 0) {
@@ -162,12 +174,27 @@ return function(writer) {
                 w.entitiesManager.removeEntity(id);
             }
         });
+        
+        // deleted and duplicate structs
         for (var id in w.structs) {
             var nodes = w.editor.dom.select('#'+id);
             if (nodes.length === 0) {
                 updateRequired = true;
                 w.deletedStructs[id] = w.structs[id];
                 delete w.structs[id];
+            } else if (nodes.length > 1) {
+                nodes.forEach(function(el, index) {
+                    if (index > 0) {
+                        var newStruct = $(el);
+                        var newId = w.getUniqueId('struct_');
+                        newStruct.attr('id', newId);
+                        w.structs[newId] = {};
+                        for (var key in w.structs[id]) {
+                            w.structs[newId][key] = w.structs[id][key];
+                        }
+                        w.structs[newId].id = newId;
+                    }
+                });
             }
         }
         return updateRequired;
