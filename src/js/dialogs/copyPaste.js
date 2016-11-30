@@ -1,6 +1,9 @@
-define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+'use strict';
+
+var $ = require('jquery');
+var jqueryUi = require('jquery-ui');
     
-return function(writer) {
+function CopyPaste(writer) {
     var w = writer;
     
     var firstCopy = true;
@@ -89,4 +92,4 @@ return function(writer) {
     return cp;
 };
 
-});
+module.exports = CopyPaste;

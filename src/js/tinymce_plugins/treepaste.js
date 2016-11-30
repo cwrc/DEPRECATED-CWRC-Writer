@@ -35,7 +35,6 @@
                 [/[\x60\x91\x92\u2018\u2019]/g, "'"]
             ]
         };
-    var $ = require('jquery');
 
     function getParam(ed, name) {
         return ed.getParam(name, defs[name]);

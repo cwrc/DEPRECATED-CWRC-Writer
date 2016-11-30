@@ -1,6 +1,7 @@
-define(['jquery', 'mapper'], function($, Mapper) {
+var $ = require('jquery');
+var Mapper = require('./mapper.js');
 
-return {
+module.exports = {
 
 // The name of the ID attribute
 id: '',
@@ -163,5 +164,3 @@ event: {
 }
 
 };
-
-});

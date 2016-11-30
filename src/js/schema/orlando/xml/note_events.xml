@@ -8,5 +8,5 @@
             <cw:mode>0</cw:mode>
         </rdf:Description>
     </rdf:RDF>
-    <CHRONEVENT><RESEARCHNOTE></RESEARCHNOTE></CHRONEVENT>
+    <CHRONEVENT><RESEARCHNOTE><P></P></RESEARCHNOTE></CHRONEVENT>
 </EVENT>

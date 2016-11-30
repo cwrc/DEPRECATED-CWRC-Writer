@@ -1,7 +1,10 @@
 /**
  * Contains the load and save dialogs, as well as file related functions.
  */
-define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+'use strict';
+
+var $ = require('jquery');
+var jqueryUi = require('jquery-ui');
 
 //cross browser xml node finder
 //http://www.steveworkman.com/html5-2/javascript/2011/improving-javascript-xml-node-finding-performance-by-2000/
@@ -15,7 +18,7 @@ $.fn.filterNode = function(name) {
  * @class FileManager
  * @param {Writer} writer
  */
-return function(writer) {
+function FileManager(writer) {
     
     var w = writer;
     
@@ -192,4 +195,4 @@ return function(writer) {
     return fm;
 };
 
-});
+module.exports = FileManager;

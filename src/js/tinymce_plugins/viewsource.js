@@ -1,7 +1,4 @@
 (function(tinymce) {
-    // make sure snippet is available
-    var $ = require('jquery');
-    require(['jquery.snippet']);
     
     tinymce.PluginManager.add('viewsource', function(editor) {
         

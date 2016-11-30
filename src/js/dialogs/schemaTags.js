@@ -1,10 +1,10 @@
-define([
-    'jquery',
-    'jquery-ui',
-    'attributeWidget'
-], function($, jqueryUi, AttributeWidget) {
+'use strict';
+
+var $ = require('jquery');
+var jqueryUi = require('jquery-ui');
+var AttributeWidget = require('./attributeWidget.js');
     
-return function(writer) {
+function SchemaTags(writer) {
     var w = writer;
     
     var ADD = 0;
@@ -253,4 +253,4 @@ return function(writer) {
     };
 };
 
-});
+module.exports = SchemaTags;

@@ -1,13 +1,17 @@
 /**
  * Converts between CWRCWriter format and XML format.
  */
-define(['jquery','tinymce'], function($, tinymce) {
+//define(['jquery','tinymce'], function($, tinymce) {
+'use strict';
+
+var $ = require('jquery');
+var tinymce = require('tinymce');
 
 /**
  * @class Converter
  * @param {Writer} writer
  */
-return function(writer) {
+function Converter(writer) {
     var w = writer;
 
     $(document.body).append(''+
@@ -982,9 +986,8 @@ return function(writer) {
             $('[annotationId="'+annotationId+'"]', $node).remove(); // remove all child elements with matching ID
 
             var id = $node.attr('id');
-            var structsEntry = w.structs[id];
-            if (structsEntry !== undefined) {
-                delete structsEntry;
+            if (w.structs[id] !== undefined) {
+                delete w.structs[id];
             }
 
             /*
@@ -1052,4 +1055,4 @@ return function(writer) {
     return converter;
 };
 
-});
+module.exports = Converter;

@@ -1,18 +1,23 @@
-define([
-    'jquery',
-    'tinymce',
-    'eventManager','schemaManager','dialogManager','entitiesManager','utilities',
-    'tagger','converter','fileManager','annotationsManager','dialogs/settings'
-], function($, tinymce,
-        EventManager, SchemaManager, DialogManager, EntitiesManager, Utilities, Tagger,
-        Converter, FileManager, AnnotationsManager, SettingsDialog
-) {
+'use strict';
+
+var $ = require('jquery');
+var tinymce = require('tinymce');
+var EventManager = require('./eventManager.js');
+var Utilities = require('./utilities.js');
+var SchemaManager = require('./schema/schemaManager.js');
+var DialogManager = require('./dialogManager.js');
+var EntitiesManager = require('./entitiesManager.js');
+var Tagger = require('./tagger.js');
+var Converter = require('./converter.js');
+var FileManager = require('./fileManager.js');
+var AnnotationsManager = require('./annotationsManager.js');
+var SettingsDialog = require('./dialogs/settings.js');
 
 /**
- * @class Writer
+ * @class CWRCWriter
  * @param {Object} config
  */
-return function(config) {
+function CWRCWriter(config) {
     config = config || {};
     
     /**
@@ -632,7 +637,7 @@ return function(config) {
             }
         });
 
-        $(window).unload(function(e) {
+        $(window).on('unload', function(e) {
             try {
                 // clear the editor first (large docs can cause the browser to freeze)
                 w.utilities.getRootTag().remove();
@@ -693,13 +698,7 @@ return function(config) {
             
             valid_elements: '*[*]', // allow everything
             
-            plugins: 'paste',
-            external_plugins: {
-                cwrc_contextmenu: w.cwrcRootUrl+'js/tinymce_plugins/cwrc_contextmenu.js',
-                schematags: w.cwrcRootUrl+'js/tinymce_plugins/schematags4.js',
-                cwrcpath: w.cwrcRootUrl+'js/tinymce_plugins/currenttag4.js'
-                //,viewsource: w.cwrcRootUrl+'js/tinymce_plugins/viewsource.js'
-            },
+            plugins: 'paste,schematags,cwrc_contextmenu,cwrcpath',
             toolbar1: config.buttons1 == undefined ? 'schematags,|,addperson,addplace,adddate,addorg,addcitation,addnote,addtitle,addcorrection,addkeyword,addlink,|,editTag,removeTag,|,addtriple,|,viewmarkup,editsource,|,validate,savebutton,loadbutton' : config.buttons1,
             toolbar2: config.buttons2 == undefined ? 'cwrcpath' : config.buttons2,
             toolbar3: config.buttons3 == undefined ? '' : config.buttons3,
@@ -925,4 +924,4 @@ return function(config) {
     return w;
 };
 
-});
+module.exports = CWRCWriter;

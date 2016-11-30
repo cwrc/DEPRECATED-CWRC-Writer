@@ -1,15 +1,38 @@
-define([
-    'jquery',
-    'jquery-ui',
-    'cwrcDialogs',
-    'dialogs/addSchema','dialogs/fileManager','dialogs/loadingIndicator','dialogs/header','dialogs/message','dialogs/triple',
-    'dialogs/cwrcPerson','dialogs/cwrcOrg','dialogs/cwrcPlace','dialogs/cwrcTitle','dialogs/cwrcCitation',
-    'dialogs/schemaTags','dialogs/help','dialogs/copyPaste','dialogs/popup'
-], function($, jqueryui, cD,
-        AddSchema, FileManager, LoadingIndicator, Header, Message, Triple,
-        CwrcPerson, CwrcOrg, CwrcPlace, CwrcTitle, CwrcCitation,
-        SchemaTags, Help, CopyPaste, Popup
-) {
+//define([
+//    'jquery',
+//    'jquery-ui',
+//    'cwrcDialogs',
+//    'dialogs/addSchema','dialogs/fileManager','dialogs/loadingIndicator','dialogs/header','dialogs/message','dialogs/triple',
+//    'dialogs/cwrcPerson','dialogs/cwrcOrg','dialogs/cwrcPlace','dialogs/cwrcTitle','dialogs/cwrcCitation',
+//    'dialogs/schemaTags','dialogs/help','dialogs/copyPaste','dialogs/popup'
+//], function($, jqueryui, cD,
+//        AddSchema, FileManager, LoadingIndicator, Header, Message, Triple,
+//        CwrcPerson, CwrcOrg, CwrcPlace, CwrcTitle, CwrcCitation,
+//        SchemaTags, Help, CopyPaste, Popup
+//) {
+'use strict';
+
+var $ = require('jquery');
+var jqueryUi = require('jquery-ui');
+var DialogForm = require('./dialogs/dialogForm.js');
+
+//var cD = require('cwrcDialogs');
+
+var AddSchema = require('./dialogs/addSchema.js');
+var FileManager = require('./dialogs/fileManager.js');
+var LoadingIndicator = require('./dialogs/loadingIndicator.js');
+var Header = require('./dialogs/header.js');
+var Message = require('./dialogs/message.js');
+var Triple = require('./dialogs/triple.js');
+var SchemaTags = require('./dialogs/schemaTags.js');
+var Help = require('./dialogs/help.js');
+var CopyPaste = require('./dialogs/copyPaste.js');
+var Popup = require('./dialogs/popup.js');
+var CwrcPerson = require('./dialogs/cwrcPerson.js');
+var CwrcPlace = require('./dialogs/cwrcPlace.js');
+var CwrcOrg = require('./dialogs/cwrcOrg.js');
+var CwrcTitle = require('./dialogs/cwrcTitle.js');
+var CwrcCitation = require('./dialogs/cwrcCitation.js');
 
 function handleResize(dialogEl) {
     if (dialogEl.is(':visible')) {
@@ -35,7 +58,7 @@ $.extend($.ui.dialog.prototype.options, {
     create: function(e) {
         $(e.target).on('dialogopen', function(event) {
             // wrap our dialogs in the cwrc css scope
-            $(event.target).parent('.ui-dialog').prev('.ui-widget-overlay').andSelf().wrapAll('<div class="cwrc" style="position: fixed; top: 0px; left: 0px; z-index: 100;"/>');
+            $(event.target).parent('.ui-dialog').next('.ui-widget-overlay').addBack().wrapAll('<div class="cwrc" style="position: fixed; top: 0px; left: 0px; z-index: 100;"/>');
             
             handleResize($(event.target));
             $(window).on('resize', $.proxy(handleResize, this, $(event.target)));
@@ -61,7 +84,7 @@ $.extend($.custom.popup.prototype.options, {
     create: function(e) {
         $(e.target).on('popupopen', function(event) {
             // wrap our dialogs in the cwrc css scope
-            $(event.target).parent('.ui-dialog').prev('.ui-widget-overlay').andSelf().wrapAll('<div class="cwrc" style="position: fixed; top: 0px; left: 0px; z-index: 100;"/>');
+            $(event.target).parent('.ui-dialog').next('.ui-widget-overlay').addBack().wrapAll('<div class="cwrc" style="position: fixed; top: 0px; left: 0px; z-index: 100;"/>');
             
             handleResize($(event.target));
             $(window).on('resize', $.proxy(handleResize, this, $(event.target)));
@@ -77,7 +100,7 @@ $.extend($.custom.popup.prototype.options, {
  * @class DialogManager
  * @param {Writer} writer
  */
-return function(writer) {
+function DialogManager(writer) {
     var w = writer;
 
     // dialog name, class map
@@ -189,4 +212,4 @@ return function(writer) {
     return dm;
 };
 
-});
+module.exports = DialogManager;

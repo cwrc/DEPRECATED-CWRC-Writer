@@ -1,11 +1,13 @@
 // a wrapper for the pub/sub pattern described here: http://api.jquery.com/jQuery.Callbacks/
-define(['jquery'], function($) {
+'use strict';
+
+var $ = require('jquery');
 
 /**
  * @class EventManager
  * @param {Writer} writer
  */
-return function(writer) {
+function EventManager(writer) {
     var w = writer;
     
     var events = {};
@@ -89,6 +91,7 @@ return function(writer) {
     /**
      * A document is being processed into the editor format
      * @event Writer#processingDocument
+     * @param {Number} percentComplete
      */
     w.event('processingDocument');
     /**
@@ -267,4 +270,4 @@ return function(writer) {
     return e;
 };
 
-});
+module.exports = EventManager;

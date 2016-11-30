@@ -1,6 +1,9 @@
-define(['jquery', 'jquery-ui', 'jquery.watermark'], function($, jqueryUi, watermark) {
+'use strict';
 
-return function(writer) {
+var $ = require('jquery');
+var jqueryUi = require('jquery-ui');
+    
+function Triple(writer) {
     var w = writer;
     
     var precidateList = {
@@ -199,4 +202,4 @@ return function(writer) {
     };
 };
 
-});
+module.exports = Triple;

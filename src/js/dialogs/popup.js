@@ -1,6 +1,10 @@
-define(['jquery', 'jquery-ui', 'jquery.popup'], function($, jqueryUi, jPopup) {
+//define(['jquery', 'jquery-ui', 'jquery.popup'], function($, jqueryUi, jPopup) {
+'use strict';
+
+var $ = require('jquery');
+var jqueryUi = require('jquery-ui');
     
-return function(writer) {
+function Popup(writer) {
     var w = writer;
     
     var popupSelector = '';
@@ -192,4 +196,4 @@ return function(writer) {
     }
 }
 
-});
+module.exports = Popup;

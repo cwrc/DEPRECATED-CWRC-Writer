@@ -1,4 +1,6 @@
-define(['jquery'], function($) {
+'use strict';
+
+var $ = require('jquery');
 
 function AttributeWidget(config) {
     this.w = config.writer;
@@ -246,6 +248,4 @@ AttributeWidget.prototype = {
     }
 };
 
-return AttributeWidget;
-
-});
+module.exports = AttributeWidget;

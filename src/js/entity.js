@@ -1,4 +1,4 @@
-define([], function() {
+'use strict';
 
 /**
  * @class Entity
@@ -211,6 +211,4 @@ Entity.prototype = {
     }
 };
 
-return Entity;
-    
-});
+module.exports = Entity;

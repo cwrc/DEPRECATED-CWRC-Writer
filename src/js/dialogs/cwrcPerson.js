@@ -1,5 +1,11 @@
-define(['jquery', 'jquery-ui', 'dialogs/cwrcDialogBridge', 'cwrcDialogs'], function($, jqueryUi, cwrcDialogBridge, cD) {
-return function(writer) {
+//define(['jquery', 'jquery-ui', 'dialogs/cwrcDialogBridge', 'cwrcDialogs'], function($, jqueryUi, cwrcDialogBridge, cD) {
+'use strict';
+
+var $ = require('jquery');
+var jqueryUi = require('jquery-ui');
+var cwrcDialogBridge = require('./cwrcDialogBridge.js');
+
+function CwrcPerson(writer) {
     var w = writer;
 
     var schema = null;
@@ -19,4 +25,5 @@ return function(writer) {
 
     return bridge;
 };
-});
+
+module.exports = CwrcPerson;

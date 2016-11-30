@@ -1,4 +1,6 @@
-define(['jquery'], function($) {
+'use strict';
+
+var $ = require('jquery');
  
 /**
  * @class AnnotationsManager
@@ -896,6 +898,4 @@ AnnotationsManager.prototype = {
     }
 };
 
-return AnnotationsManager;
-
-});
+module.exports = AnnotationsManager;

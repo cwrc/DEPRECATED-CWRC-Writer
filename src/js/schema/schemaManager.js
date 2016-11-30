@@ -1,4 +1,10 @@
-define(['jquery', 'tinymce', 'mapper', 'css.parser', 'css.stringify'], function($, tinymce, Mapper, cssParser, cssStringify) {
+'use strict';
+
+var $ = require('jquery');
+var tinymce = require('tinymce');
+var Mapper = require('./mapper.js');
+var cssParser = require('css-parse');
+var cssStringify = require('css-stringify');
 
 /**
  * @class SchemaManager
@@ -6,7 +12,7 @@ define(['jquery', 'tinymce', 'mapper', 'css.parser', 'css.stringify'], function(
  * @param {Object} config
  * @param {Object} config.schemas
  */
-return function(writer, config) {
+function SchemaManager(writer, config) {
     var w = writer;
     
     /**
@@ -279,4 +285,4 @@ return function(writer, config) {
     return sm;
 };
 
-});
+module.exports = SchemaManager;

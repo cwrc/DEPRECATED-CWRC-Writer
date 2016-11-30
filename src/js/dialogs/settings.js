@@ -1,6 +1,9 @@
-define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+'use strict';
+
+var $ = require('jquery');
+var jqueryUi = require('jquery-ui');
     
-return function(writer, config) {
+function Settings(writer, config) {
     var w = writer;
     
     var settings = {
@@ -334,4 +337,4 @@ return function(writer, config) {
     };
 };
 
-});
+module.exports = Settings;

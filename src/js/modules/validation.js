@@ -36,6 +36,7 @@ return function(config) {
         validation.showValidationResult(resultDoc, docString);
     });
     
+    // TODO decouple
     function showValidation() {
         w.layout.center.children.layout1.open('south');
         $('#southTabs').tabs('option', 'active', 0);

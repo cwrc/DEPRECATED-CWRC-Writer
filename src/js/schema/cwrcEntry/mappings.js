@@ -1,4 +1,6 @@
-define(['jquery', 'mapper', 'annotationsManager'], function($, Mapper, AnnotationsManager) {
+var $ = require('jquery');
+var Mapper = require('./mapper.js');
+var AnnotationsManager = require('../annotationsManager.js');
 
 function handleGraphics($tag) {
     var url = $tag.attr('url');
@@ -19,7 +21,7 @@ function handleGraphics($tag) {
     }
 }
 
-return {
+module.exports = {
 
 id: 'ID',
 header: 'CWRCHEADER',
@@ -301,5 +303,3 @@ event: {
 }
 
 };
-
-});

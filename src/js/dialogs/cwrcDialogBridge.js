@@ -1,7 +1,11 @@
-define(['jquery', 'jquery-ui', 'cwrcDialogs'], function($, jqueryUi, cD) {
+//define(['jquery', 'jquery-ui', 'cwrcDialogs'], function($, jqueryUi, cD) {
+'use strict';
+
+var $ = require('jquery');
+var jqueryUi = require('jquery-ui');
 
 // a bridge between the CWRC-Writer and the cwrcDialogs
-return function(writer, config) {
+function CwrcDialogBridge(writer, config) {
     var w = writer;
     
     var label = config.label;
@@ -138,4 +142,4 @@ return function(writer, config) {
     };
 };
 
-});
+module.exports = CwrcDialogBridge;

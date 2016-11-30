@@ -1,9 +1,6 @@
-define([
-    'jquery',
-    'jquery-ui',
-    'attributeWidget'
-], function($, jqueryUi, AttributeWidget) {
-
+var $ = require('jquery');
+var AttributeWidget = require('./attributeWidget.js');
+    
 function DialogForm(config) {
     this.w = config.writer;
     var id = config.id;
@@ -272,6 +269,4 @@ DialogForm.prototype = {
     }
 };
 
-return DialogForm;
-
-});
+module.exports = DialogForm;

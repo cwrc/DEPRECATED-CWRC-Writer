@@ -1,7 +1,4 @@
 (function(tinymce) {
-// make sure snippet is available
-var $ = require('jquery');
-var watermark = require('jquery.watermark');
     
 tinymce.PluginManager.add('schematags', function(editor) {
     

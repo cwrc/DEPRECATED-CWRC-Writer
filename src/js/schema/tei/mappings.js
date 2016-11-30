@@ -1,4 +1,6 @@
-define(['jquery', 'mapper', 'annotationsManager'], function($, Mapper, AnnotationsManager) {
+var $ = require('jquery');
+var Mapper = require('../mapper.js');
+var AnnotationsManager = require('../../annotationsManager.js');
 
 // TODO add resp for note type entities
     
@@ -21,7 +23,7 @@ function handleGraphics($tag) {
     }
 }
 
-return {
+module.exports = {
 
 id: 'xml:id',
 header: 'teiHeader',
@@ -381,5 +383,3 @@ event: {
 }
 
 };
-
-});

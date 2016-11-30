@@ -1,0 +1,98 @@
+{
+  "name": "cwrcwriter",
+  "version": "1.0.0",
+  "description": "intuitive document editing with xml and rdf",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cwrc/CWRC-Writer.git"
+  },
+  "keywords": [
+    "xml",
+    "rdf",
+    "editor",
+    "annotation"
+  ],
+  "author": "Andrew MacDonald",
+  "license": "GPL-2.0",
+  "bugs": {
+    "url": "https://github.com/jchartrand/CWRC-Writer/issues"
+  },
+  "homepage": "https://github.com/cwrc/CWRC-Writer#readme",
+  "config": {
+    "tinymceDir": "D:\\git\\tinymce",
+    "cwrcDialogsDir": "D:\\git\\CWRC-Dialogs"
+  },
+  "scripts": {
+    "clean": "rmdir build /s /q & mkdir build\\css & mkdir build\\img & mkdir build\\js & mkdir build\\lib",
+    
+    "browserify": "browserify src\\js\\writer.js --debug --standalone CWRCWriter > build\\js\\app.js",
+    "browserify:min": "browserify src\\js\\writer.js --debug --standalone CWRCWriter -p [ minifyify -- p app.js.map --output build/app.js.map ] > build\\js\\app.js",
+    "browserify:delegator": "browserify src\\js\\delegator.js --debug --standalone Delegator > build\\js\\delegator.js",
+    
+    "watch": "watchify src\\js\\writer.js --debug --standalone CWRCWriter -o build\\js\\app.js --verbose",
+    
+    "jquery": "xcopy node_modules\\jquery\\dist\\jquery.js build\\lib\\jquery\\ /E /Y && npm run jquery-ui && npm run jquery:plugins",
+    "jquery-ui": "xcopy node_modules\\jquery-ui\\dist\\jquery-ui.js build\\lib\\jquery\\ /E /Y",
+    "jquery:plugins": "copy /b src\\js\\lib\\jquery\\plugins\\*.js build\\lib\\jquery\\plugins.js",
+    
+    "build": "npm run clean && npm run build:images && npm run build:css && npm run build:html && npm run build:js",
+    "build:js": "npm run jquery && npm run tinymce:copyjs && npm run cwrcDialogs && npm run build:extrajs && npm run browserify:delegator && npm run browserify",
+    "build:images": "xcopy src\\img build\\img\\ /E",
+    "build:css": "xcopy src\\css build\\css\\ /E",
+    "build:html": "xcopy src\\*.htm build\\ ",
+    "build:extrajs": "copy src\\js\\writerConfig.js build\\js\\writerConfig.js",
+    
+    "schema": "mkdir build\\js\\schema & xcopy src\\js\\schema\\* build\\js\\schema\\ /E /Y",
+    "schema:tei": "mkdir build\\js\\schema\\tei & browserify src\\js\\schema\\tei\\dialogs_map.js > build\\js\\schema\\tei\\dialogs.js && browserify src\\js\\schema\\tei\\mappings.js > build\\js\\schema\\tei\\mappings.js",
+    
+    "tinymce": "npm run tinymce:theme && npm run tinymce:bundle && npm run tinymce:copyjs && npm run tinymce:copyskin",
+    "tinymce:theme": "grunt --gruntfile %npm_package_config_tinymceDir%\\Gruntfile.js bolt-build:modern-theme && grunt --gruntfile %npm_package_config_tinymceDir%\\Gruntfile.js copy:bolt-themes",
+    "tinymce:build": "grunt --gruntfile %npm_package_config_tinymceDir%\\Gruntfile.js",
+    "tinymce:bundle": "grunt --gruntfile %npm_package_config_tinymceDir%\\Gruntfile.js bundle:source --themes=modern --plugins=paste",
+    "tinymce:importjs": "xcopy %npm_package_config_tinymceDir%\\js\\tinymce\\tinymce.full.js node_modules\\tinymce\\ /E /Y && rename node_modules\\tinymce\\tinymce.full.js tinymce.js",
+    "tinymce:copyjs": "npm run tinymce:plugins && copy node_modules\\tinymce\\tinymce.js build\\lib\\tinymce\\tinymce.js && copy src\\js\\tinymce_plugins\\plugins.js build\\lib\\tinymce\\plugins.js",
+    
+    "tinymce:plugins": "del src\\js\\tinymce_plugins\\plugins.js & copy /b src\\js\\tinymce_plugins\\*.js src\\js\\tinymce_plugins\\plugins.js",
+    
+    "tinymce:copyskin": "npm run tinymce:copyimg && npm run tinymce:copyfonts && npm run tinymce:copycss",
+    "tinymce:copyimg": "xcopy %npm_package_config_tinymceDir%\\js\\tinymce\\skins\\lightgray\\img build\\lib\\tinymce\\skins\\lightgray\\img\\ /E /Y",
+    "tinymce:copyfonts": "xcopy %npm_package_config_tinymceDir%\\js\\tinymce\\skins\\lightgray\\fonts build\\lib\\tinymce\\skins\\lightgray\\fonts\\ /E /Y",
+    "tinymce:copycss": "xcopy %npm_package_config_tinymceDir%\\js\\tinymce\\skins\\lightgray\\*.css build\\lib\\tinymce\\skins\\lightgray\\ /E /Y",
+        
+    "cwrcDialogs": "mkdir build\\lib\\cwrc & xcopy %npm_package_config_cwrcDialogsDir%\\dist\\* build\\lib\\cwrc\\ /E /Y"
+  },
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
+  },
+  "browserify-shim": {
+    "jquery": "global:$",
+    "tinymce": "global:tinymce",
+    "jquery-ui": "global:$",
+    "jquery.watermark": "global:$",
+    "jquery.snippet": "global:$"
+  },
+  "devDependencies": {
+    "browserify": "^13.0.1",
+    "browserify-shim": "^3.2.0",
+    "grunt": "^1.0.1",
+    "watchify": "^3.7.0",
+    "minifier": "^0.8.0",
+    
+    "jquery": "^3.1.0",
+    "jquery-ui": "^1.12.0",
+    "jquery-xpath": "^0.3.1",
+    "jquery.tmpl": "0.0.2",
+    "jstree": "^3.3.2",
+    "minifyify": "^7.3.3",
+    "moment": "^2.13.0",
+    "objtree": "^0.1.1",
+    "octokit": "^0.10.4",
+    "css-stringify": "^2.0.0"
+  }
+}

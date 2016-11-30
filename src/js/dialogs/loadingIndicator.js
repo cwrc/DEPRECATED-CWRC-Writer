@@ -1,6 +1,9 @@
-define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+'use strict';
+
+var $ = require('jquery');
+var jqueryUi = require('jquery-ui');
     
-return function(writer) {
+function LoadingIndicator(writer) {
     var w = writer;
     
     $(document.body).append(''+
@@ -32,9 +35,10 @@ return function(writer) {
         progressLabel.text('Loading Document');
         progressBar.progressbar('value', 5);
     });
-    w.event('processingDocument').subscribe(function() {
+    w.event('processingDocument').subscribe(function(percentComplete) {
+        var val = percentComplete === undefined ? 50 : percentComplete;
         progressLabel.text('Processing Document');
-        progressBar.progressbar('value', 50);
+        progressBar.progressbar('value', val);
     });
     w.event('documentLoaded').subscribe(function(success, docBody) {
         progressBar.progressbar('value', 100);
@@ -67,4 +71,4 @@ return function(writer) {
     };
 };
 
-});
+module.exports = LoadingIndicator;

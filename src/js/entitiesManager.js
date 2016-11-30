@@ -1,4 +1,7 @@
-define(['jquery', 'entity'], function($, Entity) {
+'use strict';
+
+var $ = require('jquery');
+var Entity = require('./entity.js');
 
 /**
  * @class EntitiesManager
@@ -214,6 +217,4 @@ EntitiesManager.prototype = {
     }
 };
 
-return EntitiesManager;
-
-});
+module.exports = EntitiesManager;

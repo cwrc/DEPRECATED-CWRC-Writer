@@ -1,13 +1,20 @@
-define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+'use strict';
+
+var $ = require('jquery');
+var jqueryUi = require('jquery-ui');
     
-return function(writer) {
+function Help(writer) {
     var w = writer;
     
-    var docsMappings;
+    var docsMappings = {};
     
-    require(['text!docsMappings.js'], function(mappings) {
-       docsMappings = $.parseJSON(mappings); 
-    });
+//    require(['text!docsMappings.js'], function(mappings) {
+//       docsMappings = $.parseJSON(mappings); 
+//    });
+    
+//    $.getJSON('docsMappings.js', function(data) {
+//        docsMappings = data;
+//    });
     
     $(document.body).append(''+
     '<div id="helpDialog">'+
@@ -84,4 +91,4 @@ return function(writer) {
     };
 };
 
-});
+module.exports = Help;

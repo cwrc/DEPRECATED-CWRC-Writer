@@ -1,6 +1,9 @@
-define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+'use strict';
+
+var $ = require('jquery');
+var jqueryUi = require('jquery-ui');
     
-return function(writer) {
+function Message(writer) {
     var w = writer;
     
     function createMessageDialog(config) {
@@ -79,4 +82,4 @@ return function(writer) {
     };
 };
 
-});
+module.exports = Message;

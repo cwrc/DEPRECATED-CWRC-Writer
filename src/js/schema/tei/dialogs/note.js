@@ -1,6 +1,8 @@
-define(['jquery', 'jquery-ui', 'tinymce', 'dialogForm'], function($, jqueryUi, tinymce, DialogForm) {
-    
-return function(id, writer) {
+var $ = require('jquery');
+var tinymce = require('tinymce');
+var DialogForm = require('../../../dialogs/dialogForm.js');
+
+module.exports = function(id, writer) {
     var w = writer;
     
     var iframe = null;
@@ -122,5 +124,3 @@ return function(id, writer) {
         }
     };
 };
-
-});

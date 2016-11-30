@@ -1,6 +1,9 @@
-define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+'use strict';
+
+var $ = require('jquery');
+var jqueryUi = require('jquery-ui');
     
-return function(writer) {
+function AddSchema(writer) {
     var w = writer;
     
     // TODO add validation
@@ -60,4 +63,4 @@ return function(writer) {
     };
 };
 
-});
+module.exports = AddSchema;

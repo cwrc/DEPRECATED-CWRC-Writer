@@ -1,5 +1,9 @@
 // TODO add IDs
-define(['jquery', 'entity', 'jquery.xpath'], function($, Entity) {
+'use strict';
+
+var $ = require('jquery');
+var jqueryXpath = require('jquery-xpath/jquery.xpath.js');
+var Entity = require('../entity.js');
 
 function Mapper(config) {
     this.w = config.writer;
@@ -168,10 +172,14 @@ Mapper.prototype = {
      */
     loadMappings: function(schemaMappingId) {
         var dfd = $.Deferred();
-        require(['schema/' + schemaMappingId + '/mappings'], $.proxy(function(mappings) {
-            this.mappings = mappings;
+        $.getScript('js/schema/' + schemaMappingId + '/mappings.js', function(data, status, xhr) {
+            console.log(data);
             dfd.resolve();
-        }, this));
+        });
+//        require(['js/schema/' + schemaMappingId + '/mappings.js'], $.proxy(function(mappings) {
+//            this.mappings = mappings;
+//            dfd.resolve();
+//        }, this));
         return dfd;
     },
 
@@ -364,6 +372,4 @@ Mapper.prototype = {
     }
 };
 
-return Mapper;
-
-});
+module.exports = Mapper;

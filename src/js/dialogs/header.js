@@ -1,6 +1,9 @@
-define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+'use strict';
+
+var $ = require('jquery');
+var jqueryUi = require('jquery-ui');
     
-return function(writer) {
+function Header(writer) {
     var w = writer;
     
     $('#headerButtons').append(''+
@@ -74,4 +77,4 @@ return function(writer) {
     };
 };
 
-});
+module.exports = Header;

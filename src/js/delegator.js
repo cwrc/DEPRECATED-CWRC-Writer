@@ -1,10 +1,12 @@
-define(['jquery', 'octokit'], function($, Octokit) {
+'use strict';
+var $ = require('jquery');
+var Octokit = require('octokit');
 
 /**
  * @class Delegator
  * @param {Writer} writer
  */
-return function(writer) {
+function Delegator(writer) {
     var w = writer;
     
     /**
@@ -144,7 +146,7 @@ return function(writer) {
     
     
     function _getDocumentationBranch() {
-        var octo = new Octokit({token: '15286e8222a7bc13504996e8b451d82be1cba397'});
+        var octo = Octokit.new({token: '15286e8222a7bc13504996e8b451d82be1cba397'});
         var templateRepo = octo.getRepo('cwrc', 'CWRC-Writer-Documentation');
         return templateRepo.getBranch('master');
     }
@@ -174,7 +176,7 @@ return function(writer) {
      */
     
     function _getTemplateBranch() {
-        var octo = new Octokit({token: '15286e8222a7bc13504996e8b451d82be1cba397'});
+        var octo = Octokit.new({token: '15286e8222a7bc13504996e8b451d82be1cba397'});
         var templateRepo = octo.getRepo('cwrc', 'CWRC-Writer-Templates');
         // if we're on development then also get the templates development branch
         var forceDev = true;
@@ -375,4 +377,4 @@ return function(writer) {
     return del;
 };
 
-});
+module.exports = Delegator;

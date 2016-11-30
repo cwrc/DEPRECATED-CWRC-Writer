@@ -1,10 +1,13 @@
-define(['jquery', 'objtree'], function($, objTree) {
+'use strict';
+
+var $ = require('jquery');
+var objTree = require('objtree/objtree.js');
 
 /**
  * @class Utilities
  * @param {Writer} writer
  */
-return function(writer) {
+function Utilities(writer) {
     var w = writer;
     
     var useLocalStorage = false;//supportsLocalStorage();
@@ -1117,4 +1120,4 @@ return function(writer) {
     return u;
 };
 
-});
+module.exports = Utilities;

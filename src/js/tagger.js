@@ -1,10 +1,13 @@
-define(['jquery', 'entity'], function($, Entity) {
+'use strict';
+
+var $ = require('jquery');
+var Entity = require('./entity.js');
 
 /**
  * @class Tagger
  * @param {Writer} writer
  */
-return function(writer) {
+function Tagger(writer) {
     var w = writer;
     
     /**
@@ -940,4 +943,4 @@ return function(writer) {
     return tagger;
 };
 
-});
+module.exports = Tagger;
