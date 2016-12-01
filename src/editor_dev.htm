@@ -17,15 +17,6 @@
         <script type="text/javascript" src ="lib/tinymce/plugins.js"></script>
     </head>
 	<body>
-		<div id="cwrc_wrapper">
-		    <div id="cwrc_main" class="ui-layout-center">
-		        <div class="ui-layout-center">
-		            <form method="post" action="">
-		                <textarea id="editor" name="editor" class="tinymce"></textarea>
-		            </form>
-		        </div>
-		    </div>
-		</div>
 		<script type="text/javascript" src="js/app.js"></script>
 		<script type="text/javascript" src="js/delegator.js"></script>
 		<script type="text/javascript" src ="lib/cwrc/cD.js"></script>
@@ -33,20 +24,33 @@
             function doInit(config) {
                 config.delegator = Delegator;
                 config.mode = 'xml';
-                //config.buttons1 = 'schematags,editTag,removeTag,|,addperson,addplace,adddate,addorg,addtitle,addcorrection,addlink';
                 writer = new CWRCWriter(config);
                 writer.init('editor');
+                
+                $.when(
+                    $.getScript('js/layout.js'),
+                    $.getScript('js/modules/entitiesList.js'),
+                    $.getScript('js/modules/relations.js'),
+                    $.getScript('js/modules/selection.js'),
+                    $.getScript('js/modules/structureTree.js'),
+                    $.getScript('js/modules/validation.js')
+                ).then(function() {
+                    setupLayoutAndModules(writer, EntitiesList, Relations, Selection, StructureTree, Validation);
+                });
+                
+                
+                writer.fileManager.loadInitialDocument(window.location.hash);
                 //writer.event('writerInitialized').subscribe(doResize);
                 //$(window).on('resize', doResize);
                 
-                writer.event('writerInitialized').subscribe(function(writer) {
-                    writer.fileManager.loadInitialDocument(window.location.hash);
+                //writer.event('writerInitialized').subscribe(function(writer) {
+                    
                     /*
                     require(['modules/entitiesList', 'modules/structureTree', 'modules/validation'
                     ], function(EntitiesList, StructureTree, Validation) {
                         setupLayoutAndModules(writer, EntitiesList, StructureTree, Validation);
                     });*/
-                });
+                //});
             }
             
             (function() {
@@ -72,5 +76,38 @@
                 });
             }());
         </script>
+		<div id="cwrc_loadingMask"><div>Loading CWRC-Writer</div></div>
+		<div id="cwrc_wrapper">
+		    <div id="cwrc_header" class="cwrc ui-layout-north">
+		        <h1>CWRC-Writer v0.9</h1>
+		        <div id="headerButtons"></div>
+		    </div>
+		    <div class="cwrc ui-layout-west">
+		        <div id="westTabs" class="tabs">
+		            <ul>
+		                <li><a href="#entities">Entities</a></li>
+		                <li><a href="#structure">Structure</a></li>
+		                <li><a href="#relations">Relations</a></li>
+		            </ul>
+		            <div id="westTabsContent" class="ui-layout-content"></div>
+		        </div>
+		    </div>
+		    <div id="cwrc_main" class="ui-layout-center">
+		        <div class="ui-layout-center">
+		            <form method="post" action="">
+		                <textarea id="editor" name="editor" class="tinymce"></textarea>
+		            </form>
+		        </div>
+		        <div class="cwrc ui-layout-south">
+		            <div id="southTabs" class="tabs">
+		                <ul>
+		                    <li><a href="#validation">Validation</a></li>
+		                    <li><a href="#selection">Markup</a></li>
+		                </ul>
+		                <div id="southTabsContent" class="ui-layout-content"></div>
+		            </div>
+		        </div>
+		    </div>
+		</div>
 	</body>
 </html>

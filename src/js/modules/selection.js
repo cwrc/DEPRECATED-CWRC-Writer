@@ -1,4 +1,6 @@
-define(['jquery','jquery.snippet'], function($, snippet) {
+//define(['jquery','jquery.snippet'], function($, snippet) {
+
+var $ = require('jquery');
     
 /**
  * @class Selection
@@ -6,7 +8,7 @@ define(['jquery','jquery.snippet'], function($, snippet) {
  * @param {Writer} config.writer
  * @param {String} config.parentId
  */
-return function(config) {
+function Selection(config) {
     
     var w = config.writer;
     
@@ -74,4 +76,4 @@ return function(config) {
     return selection;
 };
 
-});
+module.exports = Selection;

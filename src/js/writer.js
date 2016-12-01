@@ -730,7 +730,7 @@ function CWRCWriter(config) {
                 if (w.isReadOnly === true) {
                     ed.on('PreInit', function(e) {
                         var body = ed.getBody();
-                        body.setAttribute('contenteditable', false)
+                        body.removeAttribute('contenteditable');
                     });
                 }
                 

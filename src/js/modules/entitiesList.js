@@ -1,4 +1,7 @@
-define(['jquery', 'jquery-ui', 'jquery.contextmenu'], function($, jqueryUi, jqueryContextMenu) {
+//define(['jquery', 'jquery-ui', 'jquery.contextmenu'], function($, jqueryUi, jqueryContextMenu) {
+'use strict';
+
+var $ = require('jquery');
     
 /**
  * @class EntitiesList
@@ -7,7 +10,7 @@ define(['jquery', 'jquery-ui', 'jquery.contextmenu'], function($, jqueryUi, jque
  * @param {Writer} config.writer
  * @param {String} config.parentId
  */
-return function(config) {
+function EntitiesList(config) {
     
     var w = config.writer;
     
@@ -267,4 +270,4 @@ return function(config) {
     return pm;
 };
 
-});
+module.exports = EntitiesList;

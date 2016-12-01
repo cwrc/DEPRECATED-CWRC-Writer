@@ -1,6 +1,4 @@
 function setupLayoutAndModules(w, EntitiesList, Relations, Selection, StructureTree, Validation) {
-    var $ = require('jquery');
-    
     w.layout = $('#cwrc_wrapper').layout({
         defaults: {
             maskIframesOnResize: true,

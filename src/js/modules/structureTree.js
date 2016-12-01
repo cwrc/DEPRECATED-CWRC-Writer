@@ -1,4 +1,8 @@
-define(['jquery', 'jquery-ui', 'jquery.jstree'], function($, jqueryUi, jsTree) {
+//define(['jquery', 'jquery-ui', 'jquery.jstree'], function($, jqueryUi, jsTree) {
+'use strict';
+
+var $ = require('jquery');
+var jstree = require('jstree');
 
 // overwrite show submenu, add our custom filter input
 $.vakata.context._show_submenu = function (o) {
@@ -69,7 +73,7 @@ $(document).on('context_show.vakata', function(e, data) {
  * @param {Writer} config.writer
  * @param {String} config.parentId
  */
-return function(config) {
+function StructureTree(config) {
     var w = config.writer;
     
     var id = 'tree';
@@ -729,7 +733,7 @@ return function(config) {
                 name: 'cwrc',
                 icons: false,
                 url: true,
-                dir: w.cwrcRootUrl + 'js/lib/jstree/themes',
+                dir: w.cwrcRootUrl + '/lib/jquery/jstree/themes',
                 responsive: false
             },
             data: {
@@ -962,4 +966,4 @@ return function(config) {
     return tree;
 };
 
-});
+module.exports = StructureTree;

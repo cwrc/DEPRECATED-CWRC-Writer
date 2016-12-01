@@ -1,4 +1,7 @@
-define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+//define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+'use strict';
+
+var $ = require('jquery');
 
 /**
  * @class Relations
@@ -6,7 +9,7 @@ define(['jquery', 'jquery-ui'], function($, jqueryUi) {
  * @param {Writer} config.writer
  * @param {String} config.parentId
  */
-return function(config) {
+function Relations(config) {
     
     var w = config.writer;
     
@@ -132,4 +135,4 @@ return function(config) {
     return pm;
 };
 
-});
+module.exports = Relations;

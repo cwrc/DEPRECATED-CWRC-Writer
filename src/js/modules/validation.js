@@ -1,4 +1,7 @@
-define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+//define(['jquery', 'jquery-ui'], function($, jqueryUi) {
+'use strict';
+
+var $ = require('jquery');
     
 /**
  * @class Validation
@@ -6,7 +9,7 @@ define(['jquery', 'jquery-ui'], function($, jqueryUi) {
  * @param {Writer} config.writer
  * @param {String} config.parentId
  */
-return function(config) {
+function Validation(config) {
     
     var w = config.writer;
     
@@ -207,4 +210,4 @@ return function(config) {
     return validation;
 };
 
-});
+module.exports = Validation;
