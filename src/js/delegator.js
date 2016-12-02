@@ -258,6 +258,10 @@ function Delegator(writer) {
         branch.contents(path).then(function(template) {
             path = path.replace('.xml', '');
             window.location.hash = '#'+path;
+            // byte order mark fix
+            if (template.charCodeAt(0) == 65279) {
+                template = template.substr(1);
+            }
             var xml = $.parseXML(template);
             callback.call(w, xml);
         });

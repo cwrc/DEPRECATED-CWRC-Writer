@@ -44,7 +44,7 @@
     
     "jquery": "xcopy node_modules\\jquery\\dist\\jquery.js build\\lib\\jquery\\ /E /Y && npm run jquery-ui && npm run jquery:plugins",
     "jquery-ui": "xcopy node_modules\\jquery-ui\\dist\\jquery-ui.js build\\lib\\jquery\\ /E /Y",
-    "jquery:plugins": "copy /b src\\js\\lib\\jquery\\plugins\\*.js+node_modules\\jstree\\dist\\jstree.js build\\lib\\jquery\\plugins.js && xcopy src\\js\\lib\\jquery\\plugins\\jstree\\themes\\* build\\lib\\jquery\\jstree\\themes\\ /E /Y",
+    "jquery:plugins": "copy /b src\\js\\lib\\jquery\\plugins\\*.js+node_modules\\jstree\\dist\\jstree.js+node_modules\\jquery-xpath\\jquery.xpath.js build\\lib\\jquery\\plugins.js && xcopy src\\js\\lib\\jquery\\plugins\\jstree\\themes\\* build\\lib\\jquery\\jstree\\themes\\ /E /Y",
     
     "build": "npm run clean && npm run build:images && npm run build:css && npm run build:html && npm run build:js",
     "build:js": "npm run jquery && npm run tinymce:copy && npm run cwrcDialogs && npm run build:extrajs && npm run browserify:delegator && npm run browserify",
@@ -82,6 +82,7 @@
     "jquery": "global:$",
     "tinymce": "global:tinymce",
     "jquery-ui": "global:$",
+    "jquery-xpath": "global:$",
     "jstree": "global:$",
     "jquery.watermark": "global:$",
     "jquery.snippet": "global:$"

@@ -36,10 +36,11 @@
                     $.getScript('js/modules/validation.js')
                 ).then(function() {
                     setupLayoutAndModules(writer, EntitiesList, Relations, Selection, StructureTree, Validation);
+                    writer.fileManager.loadInitialDocument(window.location.hash);
                 });
                 
                 
-                writer.fileManager.loadInitialDocument(window.location.hash);
+                
                 //writer.event('writerInitialized').subscribe(doResize);
                 //$(window).on('resize', doResize);
                 
