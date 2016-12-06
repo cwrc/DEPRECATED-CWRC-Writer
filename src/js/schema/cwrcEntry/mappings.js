@@ -186,39 +186,28 @@ note: {
     }
 },
 
-// TODO fix citation
 citation: {
-    parentTag: 'BIBCITS',
-    textTag: 'BIBCIT',
+    parentTag: 'BIBCIT',
     isNote: true,
-    getNoteContent: function(entity, returnString) {
-        var xml = $.parseXML(entity.getCustomValue('content'));
-        if (returnString) {
-            return $(xml).text();
-        } else {
-            return xml;
-        }
-    },
     mapping: function(entity) {
-        var range = entity.getRange();
-        var id = range.annotationId;
-        var offsetId = range.offsetId;
-        var content = entity.getCustomValue('content');
-        
-        var xml = '<BIBCITS';
-        if (id) xml += ' annotationId="'+id+'"';
-        if (offsetId) xml += ' offsetId="'+offsetId+'"';
-        xml += '><BIBCIT';
-        if (id) xml += ' annotationId="'+id+'"';
+        var tag = entity.getTag();
+        var xml = Mapper.getTagAndDefaultAttributes(entity);
         xml += '>';
-        xml += content;
-        xml += '</BIBCIT></BIBCITS>';
+        
+        var content = entity.getNoteContent();
+        if (content) {
+            var xmlDoc = $.parseXML(content);
+            var noteContent = $(tag, xmlDoc).first()[0];
+            xml += noteContent.innerHTML;
+        }
+        
+        xml += '</'+tag+'>';
         return xml;
     },
     reverseMapping: function(xml) {
         return Mapper.getDefaultReverseMapping(xml, {
             cwrcInfo: {id: 'cwrc:BIBCIT/@REF'},
-            customValues: {content: '.'}
+            noteContent: '.'
         }, 'cwrc');
     },
     annotation: function(entity, format) {

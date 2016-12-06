@@ -95,19 +95,23 @@ return function(id, writer) {
                 setTimeout(el.update, 50);
             });
             
+            var noteUrl = writer.schemaManager.getCurrentSchema().entityTemplates.note;
             if (dialog.mode === DialogForm.ADD) {
-                var noteUrl = writer.schemaManager.getCurrentSchema().entityTemplates.note;
                 cwrcWriter.fileManager.loadDocumentFromUrl(noteUrl);
             } else {
-                var parent = config.entry.getTag();
-                xmlDoc = $.parseXML(config.entry.getNoteContent());
-                var annotation = $(parent, xmlDoc).first();
-                // remove the annotationId attribute
-                annotation.removeAttr('annotationId');
-                // insert the appropriate wrapper tags
-                var xml = $.parseXML('<'+writer.root+'><'+parent+'></'+parent+'></'+writer.root+'>');
-                var xmlDoc = $(xml).find(parent).append(annotation.contents()).end()[0];
-                cwrcWriter.fileManager.loadDocumentFromXml(xmlDoc);
+                $.ajax({
+                    url: noteUrl,
+                    type: 'GET',
+                    dataType: 'xml',
+                    success: function(doc, status, xhr) {
+                        var parent = config.entry.getTag();
+                        var noteDoc = $.parseXML(config.entry.getNoteContent());
+                        var annotation = $(parent, noteDoc).first();
+                        annotation.removeAttr('annotationId');
+                        var xmlDoc = $(doc).find(parent).replaceWith(annotation).end()[0];
+                        cwrcWriter.fileManager.loadDocumentFromXml(xmlDoc);
+                    }
+                });
             }
         }
         

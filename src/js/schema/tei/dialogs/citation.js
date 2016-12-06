@@ -36,7 +36,19 @@ return function(id, writer) {
         }
 
         iframe = dialog.$el.find('iframe')[0];
-        iframe.src = 'note.htm';
+        var noteUrl = 'note.htm';
+        if (w.isReadOnly) {
+            noteUrl += '?readonly=true';
+            dialog.$el.dialog('option', 'buttons', [{
+                text: 'Close',
+                click: function() {
+                    dialog.$el.trigger('beforeCancel');
+                    dialog.$el.trigger('beforeClose');
+                    dialog.$el.dialog('close');
+                }
+            }]);
+        }
+        iframe.src = noteUrl;
 
         // hack to get the writer
         function getCwrcWriter() {
@@ -53,44 +65,41 @@ return function(id, writer) {
         }
 
         function postSetup() {
-            var schemaId = w.schemaManager.schemaId;
-            var schema = w.schemaManager.schemas[schemaId];
-            var schemaMappingsId = schema.schemaMappingsId;
-            if (schemaMappingsId == 'tei') {
-                iframe.contentWindow.tinymce.DOM.counter = tinymce.DOM.counter + 1;
+            iframe.contentWindow.tinymce.DOM.counter = tinymce.DOM.counter + 1;
 
-                cwrcWriter.event('documentLoaded').subscribe(function() {
-                    // TODO remove forced XML/no overlap
-                    cwrcWriter.mode = cwrcWriter.XML;
-                    cwrcWriter.allowOverlap = false;
+            cwrcWriter.event('documentLoaded').subscribe(function() {
+                // TODO remove forced XML/no overlap
+                cwrcWriter.mode = cwrcWriter.XML;
+                cwrcWriter.allowOverlap = false;
 
-                    cwrcWriter.editor.focus();
-                });
+                cwrcWriter.editor.focus();
+            });
 
-                // in case document is loaded before tree
-                cwrcWriter.event('structureTreeInitialized').subscribe(function(tree) {
-                    setTimeout(tree.update, 50); // need slight delay to get indents working for some reason
-                });
-                cwrcWriter.event('entitiesListInitialized').subscribe(function(el) {
-                    setTimeout(el.update, 50);
-                });
+            // in case document is loaded before tree
+            cwrcWriter.event('structureTreeInitialized').subscribe(function(tree) {
+                setTimeout(tree.update, 50); // need slight delay to get indents working for some reason
+            });
+            cwrcWriter.event('entitiesListInitialized').subscribe(function(el) {
+                setTimeout(el.update, 50);
+            });
 
-                if (dialog.mode === DialogForm.ADD) {
-                    var noteUrl = writer.schemaManager.getCurrentSchema().entityTemplates.citation;
-                    cwrcWriter.fileManager.loadDocumentFromUrl(noteUrl);
-                } else {
-                    var xmlDoc = $.parseXML(config.entry.getNoteContent());
-                    if (xmlDoc.firstChild.nodeName === 'note') {
-                        // remove the annotationId attribute
-                        xmlDoc.firstChild.removeAttribute('annotationId');
-                        // insert the appropriate wrapper tags
-                        var xml = $.parseXML('<TEI><text><body/></text></TEI>');
-                        xmlDoc = $(xml).find('body').append(xmlDoc.firstChild).end()[0];
-                    }
-                    cwrcWriter.fileManager.loadDocumentFromXml(xmlDoc);
-                }
+            var noteUrl = writer.schemaManager.getCurrentSchema().entityTemplates.citation;
+            if (dialog.mode === DialogForm.ADD) {
+                cwrcWriter.fileManager.loadDocumentFromUrl(noteUrl);
             } else {
-                alert('Current schema not supported yet!');
+                $.ajax({
+                    url: noteUrl,
+                    type: 'GET',
+                    dataType: 'xml',
+                    success: function(doc, status, xhr) {
+                        var parent = config.entry.getTag();
+                        var noteDoc = $.parseXML(config.entry.getNoteContent());
+                        var annotation = $(parent, noteDoc).first();
+                        annotation.removeAttr('annotationId');
+                        var xmlDoc = $(doc).find(parent).replaceWith(annotation).end()[0];
+                        cwrcWriter.fileManager.loadDocumentFromXml(xmlDoc);
+                    }
+                });
             }
         }
 

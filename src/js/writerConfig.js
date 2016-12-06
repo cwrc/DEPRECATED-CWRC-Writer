@@ -29,7 +29,8 @@
             "cssUrl": "http://cwrc.ca/templates/css/orlando.css",
             "schemaMappingsId": "orlando",
             "entityTemplates": {
-                "note": "js/schema/orlando/xml/note_events.xml"
+                "note": "js/schema/orlando/xml/note_events.xml",
+                "citation": "js/schema/orlando/xml/citation_events.xml"
             }
         },
         "biography": {
@@ -38,7 +39,8 @@
             "cssUrl": "http://cwrc.ca/templates/css/orlando.css",
             "schemaMappingsId": "orlando",
             "entityTemplates": {
-                "note": "js/schema/orlando/xml/note_biography.xml"
+                "note": "js/schema/orlando/xml/note_biography.xml",
+                "citation": "js/schema/orlando/xml/citation_biography.xml"
             }
         },
         "writing": {
@@ -47,7 +49,8 @@
             "cssUrl": "http://cwrc.ca/templates/css/orlando.css",
             "schemaMappingsId": "orlando",
             "entityTemplates": {
-                "note": "js/schema/orlando/xml/note_writing.xml"
+                "note": "js/schema/orlando/xml/note_writing.xml",
+                "citation": "js/schema/orlando/xml/citation_writing.xml"
             }
         },
         "cwrcEntry": {
@@ -56,7 +59,8 @@
             "cssUrl": "http://cwrc.ca/templates/css/cwrc.css",
             "schemaMappingsId": "cwrcEntry",
             "entityTemplates": {
-                "note": "js/schema/cwrcEntry/xml/note.xml"
+                "note": "js/schema/cwrcEntry/xml/note.xml",
+                "citation": "js/schema/cwrcEntry/xml/citation.xml"
             }
         }
     },
