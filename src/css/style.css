@@ -620,6 +620,11 @@ html, body {
 
 .annotationDialog .tagAs {
     font-size: 16px;
+    display: inline-block;
+    width: 98%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .annotationDialog .attributes {
