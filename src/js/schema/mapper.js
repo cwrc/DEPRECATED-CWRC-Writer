@@ -352,7 +352,7 @@ Mapper.prototype = {
      * @returns {Array}
      */
     getUrlAttributes: function() {
-        return this.mappings.urlAttributes;
+        return this.mappings.urlAttributes || [];
     },
     
     /**
@@ -360,7 +360,15 @@ Mapper.prototype = {
      * @returns {Array}
      */
     getPopupAttributes: function() {
-        return this.mappings.popupAttributes;
+        return this.mappings.popupAttributes || [];
+    },
+    
+    /**
+     * Returns the element names that should be displayed in a popup.
+     * @returns {Array}
+     */
+    getPopupElements: function() {
+        return this.mappings.popupElements || [];
     }
 };
 

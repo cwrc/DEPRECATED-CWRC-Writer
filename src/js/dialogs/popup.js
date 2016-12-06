@@ -3,7 +3,8 @@ define(['jquery', 'jquery-ui', 'jquery.popup'], function($, jqueryUi, jPopup) {
 return function(writer) {
     var w = writer;
     
-    var popupSelector = '';
+    var attributeSelector = '';
+    var elementSelector = '';
     var linkSelector = '';
     
     var popupId = w.getUniqueId('popupDialog');
@@ -67,7 +68,35 @@ return function(writer) {
         window.open(url);
     }
     
-    var tagPopup = function(popupId) {
+    var doPopup = function(text) {
+        $popupEl.parent().off('mouseover', doMouseOver);
+        $popupEl.parent().off('mouseout', doMouseOut);
+        $popupEl.parent().find('.ui-dialog-title').off('click', doClick);
+        
+        $popupEl.popup('option', 'dialogClass', 'tagPopup');
+        $popupEl.popup('option', 'title', text);
+        $popupEl.popup('open');
+        
+        var $titleEl = $popupEl.parent().find('.ui-dialog-title');
+        $titleEl.css('white-space', 'nowrap') // change whitespace handling to accurately get width
+        var width = Math.min(200, $popupEl.parent().find('.ui-dialog-title').width())+30;
+        $titleEl.css('white-space', 'normal')
+        $popupEl.popup('option', 'width', width);
+        
+        doPosition();
+        
+        clearTimeout(popupCloseId);
+        $currentTag.one('mouseout', function() {
+            popupCloseId = setTimeout(function() {
+                $popupEl.popup('close');
+            }, 1000);
+        });
+        
+        $popupEl.parent().on('mouseover', doMouseOver);
+        $popupEl.parent().on('mouseout', doMouseOut);
+    }
+    
+    var attributePopup = function(popupId) {
         setCurrentTag(popupId);
         
         var popText = null;
@@ -81,26 +110,20 @@ return function(writer) {
         }
         
         if (popText != null) {
-            $popupEl.parent().off('mouseover', doMouseOver);
-            $popupEl.parent().off('mouseout', doMouseOut);
-            $popupEl.parent().find('.ui-dialog-title').off('click', doClick);
-            
-            $popupEl.popup('option', 'dialogClass', 'tagPopup');
-            $popupEl.popup('option', 'title', popText);
-            $popupEl.popup('open');
-            var width = $popupEl.parent().find('.ui-dialog-title').width();
-            $popupEl.popup('option', 'width', width+30);
-            doPosition();
-            
-            clearTimeout(popupCloseId);
-            $currentTag.one('mouseout', function() {
-                popupCloseId = setTimeout(function() {
-                    $popupEl.popup('close');
-                }, 1000);
-            });
-            
-            $popupEl.parent().on('mouseover', doMouseOver);
-            $popupEl.parent().on('mouseout', doMouseOut);
+            doPopup(popText);
+        }
+    };
+    
+    var elementPopup = function(popupId) {
+        setCurrentTag(popupId);
+        
+        var popKeys = w.schemaManager.mapper.getPopupElements();
+        var tag = $currentTag.attr('_tag');
+        if (popKeys.indexOf(tag) !== -1) {
+            var popText = $currentTag[0].textContent;
+            if (popText != '') {
+                doPopup(popText);
+            }
         }
     };
     
@@ -118,33 +141,19 @@ return function(writer) {
         }
         
         if (url != null) {
-            $popupEl.parent().off('mouseover', doMouseOver);
-            $popupEl.parent().off('mouseout', doMouseOut);
-            $popupEl.parent().find('.ui-dialog-title').off('click', doClick);
-            
-            $popupEl.popup('option', 'dialogClass', 'linkPopup');
-            $popupEl.popup('option', 'title', url);
-            $popupEl.popup('open');
-            var width = $popupEl.parent().find('.ui-dialog-title').width();
-            $popupEl.popup('option', 'width', width+30);
-            doPosition();
-            
-            clearTimeout(popupCloseId);
-            $currentTag.one('mouseout', function() {
-                popupCloseId = setTimeout(function() {
-                    $popupEl.popup('close');
-                }, 1000);
-            });
-            
-            $popupEl.parent().on('mouseover', doMouseOver);
-            $popupEl.parent().on('mouseout', doMouseOut);
+            doPopup(url);
             $popupEl.parent().find('.ui-dialog-title').on('click', doClick);
         }
     };
     
-    var popupMouseover = function(e) {
+    var attributeMouseover = function(e) {
         var id = this.getAttribute('id') || this.getAttribute('name');
-        tagPopup(id);
+        attributePopup(id);
+    }
+    
+    var elementMouseover = function(e) {
+        var id = this.getAttribute('id') || this.getAttribute('name');
+        elementPopup(id);
     }
     
     var linkMouseover = function(e) {
@@ -154,17 +163,28 @@ return function(writer) {
     
     var setupListeners = function() {
         var body = $(w.editor.getBody());
-        body.off('mouseover', popupSelector, popupMouseover);
+        body.off('mouseover', attributeSelector, attributeMouseover);
+        body.off('mouseover', elementSelector, elementMouseover);
         body.off('mouseover', linkSelector, linkMouseover);
         
-        var popKeys = w.schemaManager.mapper.getPopupAttributes();
-        popupSelector = '';
-        $.map(popKeys, function(val, i) {
-            popupSelector += '['+val+']';
-            if (i < popKeys.length-1) popupSelector += ',';
+        var attKeys = w.schemaManager.mapper.getPopupAttributes();
+        attributeSelector = '';
+        $.map(attKeys, function(val, i) {
+            attributeSelector += '['+val+']';
+            if (i < attKeys.length-1) attributeSelector += ',';
         });
-        if (popupSelector != '') {
-            body.on('mouseover', popupSelector, popupMouseover);
+        if (attributeSelector != '') {
+            body.on('mouseover', attributeSelector, attributeMouseover);
+        }
+        
+        var elKeys = w.schemaManager.mapper.getPopupElements();
+        elementSelector = '';
+        $.map(elKeys, function(val, i) {
+            elementSelector += '[_tag="'+val+'"]';
+            if (i < elKeys.length-1) elementSelector += ',';
+        });
+        if (elementSelector != '') {
+            body.on('mouseover', elementSelector, elementMouseover);
         }
         
         var urlKeys = w.schemaManager.mapper.getUrlAttributes();
@@ -186,7 +206,7 @@ return function(writer) {
             if (type === 'link') {
                 linkPopup(config.id);
             } else {
-                tagPopup(config.id);
+                attributePopup(config.id);
             }
         }
     }

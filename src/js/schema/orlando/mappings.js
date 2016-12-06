@@ -26,6 +26,7 @@ header: 'ORLANDOHEADER',
 blockElements: ['DIV0', 'DIV1', 'EVENT', 'ORLANDOHEADER', 'DOCAUTHOR', 'DOCEDITOR', 'DOCEXTENT', 'PUBLICATIONSTMT', 'TITLESTMT', 'PUBPLACE', 'L', 'P', 'HEADING', 'CHRONEVENT', 'CHRONSTRUCT'],
 urlAttributes: ['URL', 'REF'],
 popupAttributes: ['PLACEHOLDER'],
+popupElements: ['RESEARCHNOTE', 'SCHOLARNOTE'],
 
 listeners: {
     tagAdded: function(tag) {
