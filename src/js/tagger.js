@@ -436,32 +436,48 @@ return function(writer) {
      */
     tagger.addEntity = function(type) {
         var result = w.utilities.isSelectionValid();
-        if (result === w.VALID) {
-            w.editor.currentBookmark = w.editor.selection.getBookmark(1);
-            w.dialogManager.show(type, {type: type});
-        } else if (result === w.NO_SELECTION) {
+        if (result === w.NO_SELECTION) {
             w.dialogManager.show('message', {
                 title: 'Error',
                 msg: 'Please select some text before adding an entity.',
                 type: 'error'
             });
-        } else if (result === w.OVERLAP) {
-            if (w.allowOverlap === true) {
-                w.editor.currentBookmark = w.editor.selection.getBookmark(1);
-                w.dialogManager.show(type, {type: type});
-            } else {
-                w.dialogManager.confirm({
-                    title: 'Warning',
-                    msg: 'You are attempting to create overlapping entities or to create an entity across sibling XML tags, which is not allowed in this editor mode.<br/><br/>If you wish to continue, the editor mode will be switched to <b>XML and RDF (Overlapping Entities)</b> and only RDF will be created for the entity you intend to add.<br/><br/>Do you wish to continue?',
-                    callback: function(confirmed) {
-                        if (confirmed) {
-                            w.allowOverlap = true;
-                            w.mode = w.XMLRDF;
-                            w.editor.currentBookmark = w.editor.selection.getBookmark(1);
-                            w.dialogManager.show(type, {type: type});
+        } else {
+            w.editor.currentBookmark = w.editor.selection.getBookmark(1);
+            if (result === w.VALID) {
+                var childName = w.schemaManager.mapper.getParentTag(type)
+                var validParents = w.utilities.getParentsForTag({tag: childName, returnType: 'names'});
+                var parentTag = w.editor.currentBookmark.rng.commonAncestorContainer;
+                while (parentTag.nodeType !== Node.ELEMENT_NODE) {
+                    parentTag = parentTag.parentNode;
+                }
+                var parentName = parentTag.getAttribute('_tag');
+                var isValid = validParents.indexOf(parentName) !== -1;
+                if (isValid) {
+                    w.dialogManager.show(type, {type: type});
+                } else {
+                    w.dialogManager.show('message', {
+                        title: 'Invalid XML',
+                        msg: 'The element <b>'+childName+'</b> is not a valid child of <b>'+parentName+'</b>.<br/><br/>Valid parents for '+childName+' are:<br/><ul><li>'+validParents.join('</li><li>')+'</ul>',
+                        type: 'error'
+                    });
+                }
+            } else if (result === w.OVERLAP) {
+                if (w.allowOverlap === true) {
+                    w.dialogManager.show(type, {type: type});
+                } else {
+                    w.dialogManager.confirm({
+                        title: 'Warning',
+                        msg: 'You are attempting to create overlapping entities or to create an entity across sibling XML tags, which is not allowed in this editor mode.<br/><br/>If you wish to continue, the editor mode will be switched to <b>XML and RDF (Overlapping Entities)</b> and only RDF will be created for the entity you intend to add.<br/><br/>Do you wish to continue?',
+                        callback: function(confirmed) {
+                            if (confirmed) {
+                                w.allowOverlap = true;
+                                w.mode = w.XMLRDF;
+                                w.dialogManager.show(type, {type: type});
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         }
     };

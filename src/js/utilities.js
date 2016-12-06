@@ -369,6 +369,17 @@ return function(writer) {
     };
 
     /**
+     * Verifies that the child has a valid parent.
+     * @param {String} childName The child tag name
+     * @param {String} parentName The parent tag name
+     * @return {Boolean}
+     */
+    u.isTagValidChildOfParent = function(childName, parentName) {
+        var validParents = u.getParentsForTag({tag: childName, returnType: 'names'})
+        return validParents.indexOf(parentName) !== -1;
+    };
+    
+    /**
      * Check to see if any of the entities overlap.
      * @returns {Boolean}
      */
