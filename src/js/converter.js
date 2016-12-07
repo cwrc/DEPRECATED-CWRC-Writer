@@ -655,7 +655,7 @@ return function(writer) {
             if (root.nodeName.toLowerCase() !== w.root.toLowerCase()) {
                 w.dialogManager.show('message', {
                     title: 'Schema Mismatch',
-                    msg: 'The wrong schema is specified.<br/>Schema root: '+w.root+'<br/>Document root: '+root.nodeName,
+                    msg: 'The wrong schema is specified.<br/>Schema root: '+w.root+'<br/>Document root: '+root.nodeName+'<br/><br/>Go to <b>Settings</b> to change the schema association.',
                     type: 'error'
                 });
             } else if (w.showModeMessage === true) {
