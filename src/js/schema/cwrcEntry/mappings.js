@@ -26,7 +26,7 @@ header: 'CWRCHEADER',
 blockElements: [],
 urlAttributes: ['URL', 'REF'],
 popupAttributes: [],
-elementAttributes: [],
+popupElements: [],
 
 listeners: {
     tagAdded: function(tag) {
