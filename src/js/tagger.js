@@ -601,7 +601,7 @@ return function(writer) {
             var content = tagger.addEntityTag(id, type, tag);
             var isNote = w.schemaManager.mapper.isEntityTypeNote(type);
             if (isNote) {
-                var xmlcontent = w.schemaManager.mapper.getNoteContentForEntity(entity, true);
+                var xmlcontent = w.schemaManager.mapper.getNoteContentForEntity(entity);
                 content = xmlcontent.documentElement.textContent.trim();
             }
             entity.setContent(content);
