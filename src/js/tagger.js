@@ -540,7 +540,8 @@ return function(writer) {
             if (info.noteContent) {
                 entity.setNoteContent(info.noteContent);
             }
-            var content = w.schemaManager.mapper.getNoteContentForEntity(entity, true);
+            var xmlcontent = w.schemaManager.mapper.getNoteContentForEntity(entity);
+            var content = xmlcontent.documentElement.textContent.trim();
             entity.setContent(content);
         }
     }
@@ -600,7 +601,8 @@ return function(writer) {
             var content = tagger.addEntityTag(id, type, tag);
             var isNote = w.schemaManager.mapper.isEntityTypeNote(type);
             if (isNote) {
-                content = w.schemaManager.mapper.getNoteContentForEntity(entity, true);
+                var xmlcontent = w.schemaManager.mapper.getNoteContentForEntity(entity, true);
+                content = xmlcontent.documentElement.textContent.trim();
             }
             entity.setContent(content);
             
