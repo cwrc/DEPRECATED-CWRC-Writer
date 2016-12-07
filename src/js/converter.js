@@ -598,7 +598,8 @@ return function(writer) {
             processEntities($(doc.documentElement));
         }
 
-//        convertEntityTags(doc);
+        // TODO add flag
+        convertEntityTags(doc);
         
         var root = doc.documentElement;
 
