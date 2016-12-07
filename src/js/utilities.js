@@ -926,21 +926,6 @@ return function(writer) {
         return tags;
     };
     
-    function _getParentElementsFromDef(defName, defHits, level, parents) {
-        $('define:has(ref[name="'+defName+'"])', w.schemaManager.schemaXML).each(function(index, el) {
-            var name = $(el).attr('name');
-            if (!defHits[name]) {
-                defHits[name] = true;
-                var element = $(el).find('element').first();
-                if (element.length == 1) {
-                    parents.push({name: element.attr('name'), level: level+0});
-                } else {
-                    _getParentElementsFromDef(name, defHits, level+1, parents);
-                }
-            }
-        });
-    }
-    
     /**
      * @param tag The element name to get parents of
      * @param returnType Either: "array", "object", "names" (which is an array of just the element names)
@@ -948,6 +933,22 @@ return function(writer) {
     u.getParentsForTag = function(config) {
         var tag = config.tag;
         var parents = [];
+        
+        function _getParentElementsFromDef(defName, defHits, level, parents) {
+            $('define:has(ref[name="'+defName+'"]),start:has(ref[name="'+defName+'"])', w.schemaManager.schemaXML).each(function(index, el) {
+                var name = $(el).attr('name');
+                if (!defHits[name]) {
+                    defHits[name] = true;
+                    var $ref = $(el).find('ref[name="'+defName+'"]');
+                    var $element = $ref.parents('element').first();
+                    if ($element.length === 1) {
+                        parents.push({name: $element.attr('name'), level: level+0});
+                    } else {
+                        _getParentElementsFromDef(name, defHits, level+1, parents);
+                    }
+                }
+            });
+        }
         
         if (useLocalStorage) {
             var localData = localStorage['cwrc.'+tag+'.parents'];
@@ -957,38 +958,42 @@ return function(writer) {
         }
         
         if (parents.length === 0) {
-            
-//            var element = _getElement(config.tag);
-//            // can't find element in define so try path
-//            if (element === null && config.path !== undefined) {
-//                element = u.getJsonEntryFromPath(config.path);
-//            }
-//            if (element === null) {
-//                if (window.console) {
-//                    console.warn('Cannot find element for:'+config.tag);
-//                }
-//            } else {
-//                var defHits = {};
-//                var level = 0;
-//                _getChildrenJSON(element, defHits, level, config.type, children);
-//            }
-            
-            
-            
             var element = $('element[name="'+tag+'"]', w.schemaManager.schemaXML);
-            var defName = element.parents('define').attr('name');
-            var defHits = {};
-            var level = 0;
-            _getParentElementsFromDef(defName, defHits, level, parents);
-            parents.sort(function(a, b) {
-                if (a.name > b.name) return 1;
-                if (a.name < b.name) return -1;
-                return 0;
-            });
-            
-            if (useLocalStorage) {
-                localStorage['cwrc.'+tag+'.parents'] = JSON.stringify(parents);
+            if (element.length === 1) {
+                var parent = element.parent();
+                while(parent.length !== 0) {
+                    if (parent[0].nodeName === 'define' || parent[0].nodeName === 'element') {
+                        break;
+                    } else {
+                        parent = parent.parent();
+                    }
+                }
+                
+                var parentName = parent.attr('name');
+                if (parent[0].nodeName === 'define') {
+                    var defHits = {};
+                    var level = 0;
+                    _getParentElementsFromDef(parentName, defHits, level, parents);
+                    parents.sort(function(a, b) {
+                        if (a.name > b.name) return 1;
+                        if (a.name < b.name) return -1;
+                        return 0;
+                    });
+                } else if (parent[0].nodeName === 'element') {
+                    parents.push({name: parentName, level: 0});
+                }
+                
+                if (useLocalStorage) {
+                    localStorage['cwrc.'+tag+'.parents'] = JSON.stringify(parents);
+                }
+            } else {
+                if (window.console) {
+                    console.warn('getParentsForTag: multiple element entries for',tag);
+                }
             }
+            
+            
+            
         }
         
         var i;
