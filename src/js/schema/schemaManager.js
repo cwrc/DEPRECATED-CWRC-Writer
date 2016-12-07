@@ -227,8 +227,7 @@ return function(writer, config) {
                     processSchema();
                 }
             }, function(resp) {
-                var status = resp[1];
-                w.dialogManager.show('message', {title: 'Error', msg: 'Error loading schema: '+status, type: 'error'});
+                w.dialogManager.show('message', {title: 'Error', msg: 'Error loading schema from: '+schemaUrl, type: 'error'});
                 if (callback) callback(false);
             });
         } else {
@@ -244,7 +243,7 @@ return function(writer, config) {
     sm.loadSchemaCSS = function(url) {
         $('#schemaRules', w.editor.dom.doc).remove();
         
-        $.get(url, function(data) {
+        $.ajax({url: url}).then(function(data) {
             sm.currentCSS = url;
             
             var cssObj = cssParser(data);
@@ -268,6 +267,8 @@ return function(writer, config) {
             
             $('head', w.editor.dom.doc).append('<style id="schemaRules" type="text/css" />');
             $('#schemaRules', w.editor.dom.doc).text(cssString);
+        }, function(err) {
+            w.dialogManager.show('message', {title: 'Error', msg: 'Error loading schema CSS from: '+url, type: 'error'});
         });
     };
     

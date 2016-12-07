@@ -171,6 +171,10 @@ Mapper.prototype = {
         require(['schema/' + schemaMappingId + '/mappings'], $.proxy(function(mappings) {
             this.mappings = mappings;
             dfd.resolve();
+        }, this), $.proxy(function(err) {
+            var module = err.requireModules[0];
+            this.w.dialogManager.show('message', {title: 'Error', msg: 'Error loading schema mappings from: '+module, type: 'error'});
+            dfd.reject();
         }, this));
         return dfd;
     },

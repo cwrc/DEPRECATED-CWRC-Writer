@@ -510,11 +510,10 @@ return function(writer) {
                     });
                     
                     if (schemaId === undefined) {
-                        schemaId = 'customSchema';
-                        w.schemaManager.schemas.customSchema = {
+                        schemaId = w.schemaManager.addSchema({
                             name: 'Custom Schema',
                             url: schemaUrl
-                        };
+                        });
                     }
                 } else if (node.nodeName === 'xml-stylesheet') {
                     var xmlStylesheetData = node.data;
@@ -549,15 +548,17 @@ return function(writer) {
         if (schemaId === undefined) {
             w.dialogManager.show('message', {
                 title: 'Error',
-                msg: 'Couldn\'t load the document because the schema could not be determined.',
+                msg: 'The schema could not be determined but the document was loaded anyways.',
                 type: 'error'
             });
-            w.event('documentLoaded').publish(false, doc);
+            doBasicProcessing(doc);
         } else {
             if (schemaId !== w.schemaManager.schemaId) {
                 w.schemaManager.loadSchema(schemaId, false, loadSchemaCss, function(success) {
                     if (success) {
                         doProcessing(doc);
+                    } else {
+                        doBasicProcessing(doc);
                     }
                 });
             } else {
@@ -566,6 +567,23 @@ return function(writer) {
         }
     };
 
+    function doBasicProcessing(doc) {
+        w.entitiesManager.reset();
+        w.structs = {};
+        w.triples = [];
+        w.deletedEntities = {};
+        w.deletedStructs = {};
+        
+        $(doc).find('rdf\\:RDF, RDF').remove();
+        var root = doc.documentElement;
+        var editorString = converter.buildEditorString(root);
+        w.editor.setContent(editorString, {format: 'raw'});
+        
+        w.editor.undoManager.clear()
+        
+        w.event('documentLoaded').publish(false, w.editor.getBody());
+    }
+    
     function doProcessing(doc) {
         // reset the stores
         w.entitiesManager.reset();
