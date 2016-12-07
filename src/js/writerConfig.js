@@ -26,7 +26,7 @@
         "events": {
             "name": "Events Schema",
             "url": "http://cwrc.ca/schemas/orlando_event_v2.rng",
-            "cssUrl": "http://cwrc.ca/templates/css/orlando.css",
+            "cssUrl": "http://cwrc.ca/templates/css/orlando_v2_cwrc-writer.css",
             "schemaMappingsId": "orlando",
             "entityTemplates": {
                 "note": "js/schema/orlando/xml/note_events.xml",
@@ -36,7 +36,7 @@
         "biography": {
             "name": "Biography Schema",
             "url": "http://cwrc.ca/schemas/orlando_biography_v2.rng",
-            "cssUrl": "http://cwrc.ca/templates/css/orlando.css",
+            "cssUrl": "http://cwrc.ca/templates/css/orlando_v2_cwrc-writer.css",
             "schemaMappingsId": "orlando",
             "entityTemplates": {
                 "note": "js/schema/orlando/xml/note_biography.xml",
@@ -46,7 +46,7 @@
         "writing": {
             "name": "Writing Schema",
             "url": "http://cwrc.ca/schemas/orlando_writing_v2.rng",
-            "cssUrl": "http://cwrc.ca/templates/css/orlando.css",
+            "cssUrl": "http://cwrc.ca/templates/css/orlando_v2_cwrc-writer.css",
             "schemaMappingsId": "orlando",
             "entityTemplates": {
                 "note": "js/schema/orlando/xml/note_writing.xml",
