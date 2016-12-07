@@ -958,9 +958,9 @@ return function(writer) {
         }
         
         if (parents.length === 0) {
-            var element = $('element[name="'+tag+'"]', w.schemaManager.schemaXML);
-            if (element.length === 1) {
-                var parent = element.parent();
+            var elements = $('element[name="'+tag+'"]', w.schemaManager.schemaXML);
+            elements.each(function(index, el) {
+                var parent = $(el).parent();
                 while(parent.length !== 0) {
                     if (parent[0].nodeName === 'define' || parent[0].nodeName === 'element') {
                         break;
@@ -986,14 +986,7 @@ return function(writer) {
                 if (useLocalStorage) {
                     localStorage['cwrc.'+tag+'.parents'] = JSON.stringify(parents);
                 }
-            } else {
-                if (window.console) {
-                    console.warn('getParentsForTag: multiple element entries for',tag);
-                }
-            }
-            
-            
-            
+            });
         }
         
         var i;
