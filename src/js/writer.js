@@ -299,7 +299,10 @@ return function(config) {
         // TODO move to keyup
         // redo/undo listener
         if ((evt.which == 89 || evt.which == 90) && evt.ctrlKey) {
-            w.event('contentChanged').publish(w.editor);
+            var doUpdate = w.tagger.findNewAndDeletedTags();
+            if (doUpdate) {
+                w.event('contentChanged').publish(w.editor);
+            }
         }
         
         w.event('writerKeydown').publish(evt);
