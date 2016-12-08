@@ -177,7 +177,7 @@ return function(writer) {
         
         // deleted and duplicate structs
         for (var id in w.structs) {
-            var nodes = w.editor.dom.select('#'+id);
+            var nodes = w.editor.dom.select('[id="'+id+'"]');
             if (nodes.length === 0) {
                 updateRequired = true;
                 w.deletedStructs[id] = w.structs[id];
