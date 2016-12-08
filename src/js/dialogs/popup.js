@@ -33,18 +33,19 @@ return function(writer) {
         $popupEl.popup('option', 'position', {
             using: function(topLeft, posObj) {
                 var $popupEl = posObj.element.element;
+                var $editorBody = $(w.editor.getBody());
+                var $docBody = $(document.body);
+                
                 var tagOffset = $currentTag.offset();
                 var frameOffset = $(w.editor.iframeElement).offset();
-                var scrollTop = $(w.editor.getBody()).scrollTop();
+                var editorScrollTop = $editorBody.scrollTop();
+                var editorScrollLeft = $editorBody.scrollLeft();
+                var docScrollTop = $docBody.scrollTop();
+                var docScrollLeft = $docBody.scrollLeft();
                 
-                var actualOffset = frameOffset.top + tagOffset.top + $currentTag.height();
-                var docHeight = $(document.body).height();
-                if (actualOffset+30 > docHeight) {
-                    // TODO not working
-                    // topLeft.top = actualOffset-(docHeight+30);
-                }
-                topLeft.top = actualOffset;// - (docHeight + scrollTop);
-                topLeft.left = frameOffset.left + tagOffset.left;
+                topLeft.top = frameOffset.top + tagOffset.top + $currentTag.height() - editorScrollTop - docScrollTop;
+                topLeft.left = frameOffset.left + tagOffset.left - editorScrollLeft - docScrollLeft;
+                
                 $popupEl.css({
                    top: topLeft.top+'px',
                    left: topLeft.left+'px'
