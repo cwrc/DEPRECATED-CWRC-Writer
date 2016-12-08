@@ -138,7 +138,8 @@ Entity.prototype = {
         this.title = Entity.getTitleFromContent(this.content);
     },
     getTitle: function() {
-        return this.title;
+        var cwrcTitle = this.getLookupInfo().name;
+        return cwrcTitle || this.title;
     },
     
     getAttribute: function(key) {
