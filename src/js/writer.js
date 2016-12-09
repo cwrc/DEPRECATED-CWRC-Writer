@@ -781,7 +781,9 @@ return function(config) {
                     ed.addCommand('getDocumentationForTag', w.delegator.getHelp);
                     
                     // highlight tracking
-                    body.on('mouseup', _onMouseUpHandler).on('keydown',_onKeyDownHandler).on('keyup',_onKeyUpHandler);
+                    body.on('keydown',_onKeyDownHandler).on('keyup',_onKeyUpHandler);
+                    // attach mouseUp to doc because body doesn't always extend to full height of editor panel
+                    $(ed.iframeElement.contentDocument).on('mouseup', _onMouseUpHandler);
                     
                     w.isInitialized = true;
                     w.event('writerInitialized').publish(w);
