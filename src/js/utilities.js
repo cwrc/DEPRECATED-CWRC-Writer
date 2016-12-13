@@ -493,7 +493,7 @@ return function(writer) {
         while (continueQuery && context != null) {
             continueQuery = matchingFunc.call(this, context);
             if (continueQuery == undefined) continueQuery = true;
-            context = context['$parent'];
+            context = context.$parent;
         }
     }
 
@@ -564,15 +564,19 @@ return function(writer) {
         return null;
     }
 
-    function _getElement(name) {
-        var defs = w.schemaManager.schemaJSON.grammar.define;
-        for (var i = 0, len = defs.length; i < len; i++) {
-            var d = defs[i];
-            if (d.element != null) {
-                if (d.element['@name'] == name) return d.element;
+    /**
+     * Get the element entries for the element name
+     * @param {String} name The element name
+     * @returns {Array}
+     */
+    function _getElementEntries(name) {
+        var matches = [];
+        _queryDown(w.schemaManager.schemaJSON.grammar, function(item) {
+            if (item.$key === 'element' && item['@name'] === name) {
+                matches.push(item);
             }
-        }
-        return null;
+        });
+        return matches;
     }
 
     function isArray(obj) {
@@ -643,22 +647,14 @@ return function(writer) {
         // first get the direct types
         var hits = [];
         _queryDown(currEl, function(item) {
+            if (item.$key === 'element' && item !== currEl) return false; // we're inside a different element so stop querying down
+            
             if (item[type] != null) {
                 hits = hits.concat(item[type]); // use concat incase item[type] is an array
             }
         });
         for (var i = 0; i < hits.length; i++) {
             var child = hits[i];
-            if (level > 0) {
-                var match = false;
-                _queryUp(child['$parent']['$parent'], function(item) {
-                    if (item.element) {
-                        match = true;
-                        return false;
-                    }
-                });
-                if (match) return; // don't get elements/attributes from other elements
-            }
             
             var docs = null;
             _queryDown(child, function(item) {
@@ -705,7 +701,7 @@ return function(writer) {
                         childObj.required = !refParentProps.optional;
                     } else {
                         childObj.required = true;
-                        _queryUp(child['$parent'], function(item) {
+                        _queryUp(child.$parent, function(item) {
                             if (item.optional) {
                                 childObj.required = false;
                                 return false;
@@ -754,34 +750,22 @@ return function(writer) {
         // now process the references
         hits = [];
         _queryDown(currEl, function(item) {
+            if (item.$key === 'element' && item !== currEl) return false; // we're inside a different element so stop querying down
+            
             if (item.ref) {
-                if (isArray(item.ref)) {
-                    hits = hits.concat(item.ref);
-                } else {
-                    hits.push(item.ref);
-                }
+                hits = hits.concat(item.ref); // use concat incase item.ref is an array
             }
         });
         
         for (var i = 0; i < hits.length; i++) {
             var ref = hits[i];
             var name = ref['@name'];
-            if (level > 0) {
-                var match = false;
-                _queryUp(ref, function(item) {
-                    if (item.element) {
-                        match = true;
-                        return false;
-                    }
-                });
-                if (match) return; // don't get attributes from other elements
-            }
 
             // store optional value
             var optional = null;
             _queryUp(ref, function(item) {
-                if (item['$parent'] && item['$parent']['$key']) {
-                    var parentKey = item['$parent']['$key'];
+                if (item.$parent && item.$parent.$key) {
+                    var parentKey = item.$parent.$key;
                     if (parentKey == 'choice' || parentKey == 'optional' || parentKey == 'zeroOrMore') {
                         // we're taking choice to mean optional, even though it could mean a requirement to choose one or more elements
                         optional = true;
@@ -823,34 +807,37 @@ return function(writer) {
         }
         
         if (children.length == 0) {
-            var element = _getElement(config.tag);
-            // can't find element in define so try path
-            if (element === null && config.path !== undefined) {
-                element = u.getJsonEntryFromPath(config.path);
+            var elements = [];
+            if (config.path) {
+                var element = u.getJsonEntryFromPath(config.path);
+                if (element !== null) {
+                    elements.push(element);
+                }
+            } else {
+                elements = _getElementEntries(config.tag);
             }
-            if (element === null) {
+            if (elements.length == 0) {
                 if (window.console) {
                     console.warn('Cannot find element for: '+config.tag);
                 }
             } else {
-                var defHits = {};
-                var level = 0;
-                _getChildrenJSON(element, defHits, level, config.type, children);
-                
-                if (children.indexOf('anyName') != -1) {
-                    children = [];
-                    // anyName means include all elements
-                    for (i = 0; i < w.schemaManager.schema.elements.length; i++) {
-                        var el = w.schemaManager.schema.elements[i];
-                        children.push({
-                            name: el
-                        });
+                for (var i = 0; i < elements.length; i++) {
+                    var element = elements[i];
+                    var defHits = {};
+                    var level = 0;
+                    _getChildrenJSON(element, defHits, level, config.type, children);
+                    
+                    if (children.indexOf('anyName') != -1) {
+                        children = [];
+                        // anyName means include all elements
+                        for (i = 0; i < w.schemaManager.schema.elements.length; i++) {
+                            var el = w.schemaManager.schema.elements[i];
+                            children.push({
+                                name: el
+                            });
+                        }
                     }
                 }
-                
-                // get from XML, slower
-    //            var element = $('element[name="'+config.tag+'"]', w.schemaManager.schemaXML);
-    //            _getChildrenXML(element, defHits, level, config.type, children);
                 
                 children.sort(function(a, b) {
                     if (a.name > b.name) return 1;
@@ -890,22 +877,21 @@ return function(writer) {
     u.getJsonEntryFromPath = function(path) {
         var context = w.schemaManager.schemaJSON.grammar;
         var match = null;
-        var doGet = function(item) {
-            if (item['@name'] && item['@name'] === tag) {
-                context = item;
-                if (i === tags.length - 1) {
-                    match = item;
-                }
-                return true;
-            }
-        };
         
         var tags = path.split('/');
         for (var i = 0; i < tags.length; i++) {
             var tag = tags[i];
             if (tag !== '') {
                 tag = tag.replace(/\[\d+\]$/, ''); // remove any indexing
-                _queryDown(context, doGet, true);
+                _queryDown(context, function(item) {
+                    if (item['@name'] && item['@name'] === tag) {
+                        context = item;
+                        if (i === tags.length - 1) {
+                            match = item;
+                        }
+                        return true;
+                    }
+                }, true);
             }
         }
         return match;
@@ -927,30 +913,50 @@ return function(writer) {
     };
     
     /**
-     * @param tag The element name to get parents of
-     * @param returnType Either: "array", "object", "names" (which is an array of just the element names)
+     * Gets a list from the schema of valid parents for a particular tag
+     * @param config The config object
+     * @param config.tag The element name to get parents of
+     * @param [config.path] The path to the tag (optional)
+     * @param config.returnType Either: "array", "object", "names" (which is an array of just the element names)
      */
     u.getParentsForTag = function(config) {
-        var tag = config.tag;
         var parents = [];
         
-        function _getParentElementsFromDef(defName, defHits, level, parents) {
-            $('define:has(ref[name="'+defName+'"]),start:has(ref[name="'+defName+'"])', w.schemaManager.schemaXML).each(function(index, el) {
-                var name = $(el).attr('name');
-                if (!defHits[name]) {
-                    defHits[name] = true;
-                    var $ref = $(el).find('ref[name="'+defName+'"]');
-                    var $element = $ref.parents('element').first();
-                    if ($element.length === 1) {
-                        parents.push({name: $element.attr('name'), level: level+0});
-                    } else {
-                        _getParentElementsFromDef(name, defHits, level+1, parents);
-                    }
+        function _getParentElementsFromDefJson(defName, defHits, level, parents) {
+            var context = w.schemaManager.schemaJSON.grammar.define;
+            var matches = [];
+            _queryDown(context, function(item) {
+                if (item.$key === 'ref' && item['@name'] === defName) {
+                    matches.push(item);
                 }
             });
+            
+            for (var i = 0; i < matches.length; i++) {
+                var item = matches[i];
+                var parent = item.$parent;
+                while (parent !== undefined) {
+                    if (parent.$key === 'element' || parent.$key === 'define') {
+                        break;
+                    } else {
+                        parent = parent.$parent;
+                    }
+                }
+                if (parent.$key === 'element') {
+                    parents.push({
+                        name: parent['@name'],
+                        level: level
+                    });
+                } else {
+                    if (!defHits[parent['@name']]) {
+                        defHits[parent['@name']] = true;
+                        _getParentElementsFromDefJson(parent['@name'], defHits, level+1, parents);
+                    }
+                }
+            }
         }
         
         if (useLocalStorage) {
+            var tag = config.tag;
             var localData = localStorage['cwrc.'+tag+'.parents'];
             if (localData) {
                 parents = JSON.parse(localData);
@@ -958,35 +964,42 @@ return function(writer) {
         }
         
         if (parents.length === 0) {
-            var elements = $('element[name="'+tag+'"]', w.schemaManager.schemaXML);
-            elements.each(function(index, el) {
-                var parent = $(el).parent();
-                while(parent.length !== 0) {
-                    if (parent[0].nodeName === 'define' || parent[0].nodeName === 'element') {
-                        break;
-                    } else {
-                        parent = parent.parent();
+            var elements = [];
+            if (config.path) {
+                var element = u.getJsonEntryFromPath(config.path);
+                if (element !== null) {
+                    elements.push(element);
+                }
+            } else {
+                elements = _getElementEntries(config.tag);
+            }
+            if (elements.length == 0) {
+                if (window.console) {
+                    console.warn('Cannot find element for: '+config.tag);
+                }
+            } else {
+                for (var i = 0; i < elements.length; i++) {
+                    var el = elements[i];
+                    var parent = el.$parent;
+                    while (parent !== undefined) {
+                        if (parent.$key === 'define' || parent.$key === 'element') {
+                            break;
+                        } else {
+                            parent = parent.$parent;
+                        }
+                    }
+                    
+                    if (parent.$key === 'define') {
+                        var defName = parent['@name'];
+                        var defHits = [];
+                        var level = 0;
+                        _getParentElementsFromDefJson(defName, defHits, level, parents)
+                        
+                    } else if (parent.$key === 'element') {
+                        parents.push({name: parent['@name'], level: 0});
                     }
                 }
-                
-                var parentName = parent.attr('name');
-                if (parent[0].nodeName === 'define') {
-                    var defHits = {};
-                    var level = 0;
-                    _getParentElementsFromDef(parentName, defHits, level, parents);
-                    parents.sort(function(a, b) {
-                        if (a.name > b.name) return 1;
-                        if (a.name < b.name) return -1;
-                        return 0;
-                    });
-                } else if (parent[0].nodeName === 'element') {
-                    parents.push({name: parentName, level: 0});
-                }
-                
-                if (useLocalStorage) {
-                    localStorage['cwrc.'+tag+'.parents'] = JSON.stringify(parents);
-                }
-            });
+            }
         }
         
         var i;
