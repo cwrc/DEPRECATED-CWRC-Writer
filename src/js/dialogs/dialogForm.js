@@ -130,8 +130,13 @@ DialogForm.processForm = function(dialogInstance) {
     }
 };
 
-function initAttributeWidget(dialogInstance) {
-    var tag = dialogInstance.w.schemaManager.mapper.getParentTag(dialogInstance.type);
+function initAttributeWidget(dialogInstance, config) {
+    var tag;
+    if (config.entry) {
+        tag = config.entry.tag
+    } else {
+        tag = dialogInstance.w.schemaManager.mapper.getParentTag(dialogInstance.type);
+    }
     var atts = dialogInstance.w.utilities.getChildrenForTag({tag: tag, type: 'attribute', returnType: 'array'});
     dialogInstance.attributesWidget.buildWidget(atts);
     dialogInstance.attWidgetInit = true;
@@ -146,7 +151,7 @@ DialogForm.prototype = {
         
         if (this.attributesWidget != null) {
             if (this.attWidgetInit === false) {
-                initAttributeWidget(this);
+                initAttributeWidget(this, config);
             }
             this.attributesWidget.reset();
         }
@@ -202,6 +207,12 @@ DialogForm.prototype = {
                 $('[data-type="tagAs"]', this.$el).html(cwrcInfo.name);
             }
             
+            this.currentData.customValues = customValues;
+            this.currentData.properties = {
+                tag: config.entry.tag
+            }
+            
+            // populate form
             var that = this;
             $('[data-type]', this.$el).each(function(index, el) {
                 var formEl = $(this);
