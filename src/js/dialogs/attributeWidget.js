@@ -120,7 +120,7 @@ AttributeWidget.prototype = {
 //                if ($('list', attDef).length > 0) {
 //                    currAttString += '<input type="text" name="'+att.name+'" value="'+att.defaultValue+'"/>';
 //                } else if ($('choice', attDef).length > 0) {
-                if (att.choices) {
+                if (att.choices && att.choices.length > 0) {
                     currAttString += '<select name="'+att.name+'">';
                     var attVal, selected;
                     for (var j = 0; j < att.choices.length; j++) {
