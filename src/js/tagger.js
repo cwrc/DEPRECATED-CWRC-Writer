@@ -14,9 +14,10 @@ return function(writer) {
     
     /**
      * Inserts entity boundary tags around the supplied DOM range.
-     * @param {string} id The id of the entity 
-     * @param {string} type The entity type
-     * @param {range} range The DOM range to insert the tags around
+     * @param {String} id The id of the entity 
+     * @param {String} type The entity type
+     * @param {Range} range The DOM range to insert the tags around
+     * @param {String} [tag] The element name
      */
     tagger.insertBoundaryTags = function(id, type, range, tag) {
         var parentTag;
@@ -433,8 +434,9 @@ return function(writer) {
     /**
      * Displays the appropriate dialog for adding an entity
      * @param {String} type The entity type
+     * @param {String} [tag] The element name
      */
-    tagger.addEntity = function(type) {
+    tagger.addEntity = function(type, tag) {
         var result = w.utilities.isSelectionValid();
         if (result === w.NO_SELECTION) {
             w.dialogManager.show('message', {
@@ -445,7 +447,12 @@ return function(writer) {
         } else {
             w.editor.currentBookmark = w.editor.selection.getBookmark(1);
             if (result === w.VALID) {
-                var childName = w.schemaManager.mapper.getParentTag(type)
+                var childName;
+                if (tag !== undefined) {
+                    childName = tag;
+                } else {
+                    childName = w.schemaManager.mapper.getParentTag(type);
+                }
                 var validParents = w.utilities.getParentsForTag({tag: childName, returnType: 'names'});
                 var parentTag = w.editor.currentBookmark.rng.commonAncestorContainer;
                 while (parentTag.nodeType !== Node.ELEMENT_NODE) {
