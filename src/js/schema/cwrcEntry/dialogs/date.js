@@ -110,18 +110,22 @@ return function(id, writer) {
         }
     });
     
-    var toggleDate = function(type) {
+    var toggleDate = function(tag) {
         $('#'+id+'_date').hide();
         $('#'+id+'_range').hide();
         $dateInput.val('');
         $startDate.val('');
         $endDate.val('');
-        if (type === 'DATERANGE') {
+        if (tag === 'DATERANGE') {
             $('#'+id+'_range').show();
         } else {
             $('#'+id+'_date').show();
         }
         
+        var atts = w.utilities.getChildrenForTag({tag: tag, type: 'attribute', returnType: 'array'});
+        dialog.attributesWidget.buildWidget(atts);
+        dialog.attWidgetInit = true;
+        dialog.attributesWidget.reset();
     };
     
     dialog.$el.on('beforeShow', function(e, config) {
