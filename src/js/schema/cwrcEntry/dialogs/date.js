@@ -107,6 +107,7 @@ return function(id, writer) {
             var instance = $(this).data("datepicker");
             var date = $.datepicker.parseDate(instance.settings.dateFormat || $.datepicker._defaults.dateFormat, selectedDate, instance.settings);
             dateRange.not(this).datepicker("option", option, date);
+            $(this).change();
         }
     });
     
