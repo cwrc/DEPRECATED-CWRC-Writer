@@ -922,8 +922,8 @@ return function(writer) {
     u.getParentsForTag = function(config) {
         var parents = [];
         
-        function _getParentElementsFromDefJson(defName, defHits, level, parents) {
-            var context = w.schemaManager.schemaJSON.grammar.define;
+        function _getParentElementsFromJson(defName, defHits, level, parents) {
+            var context = w.schemaManager.schemaJSON.grammar;
             var matches = [];
             _queryDown(context, function(item) {
                 if (item.$key === 'ref' && item['@name'] === defName) {
@@ -949,7 +949,7 @@ return function(writer) {
                 } else {
                     if (!defHits[parent['@name']]) {
                         defHits[parent['@name']] = true;
-                        _getParentElementsFromDefJson(parent['@name'], defHits, level+1, parents);
+                        _getParentElementsFromJson(parent['@name'], defHits, level+1, parents);
                     }
                 }
             }
@@ -993,7 +993,7 @@ return function(writer) {
                         var defName = parent['@name'];
                         var defHits = [];
                         var level = 0;
-                        _getParentElementsFromDefJson(defName, defHits, level, parents)
+                        _getParentElementsFromJson(defName, defHits, level, parents)
                         
                     } else if (parent.$key === 'element') {
                         parents.push({name: parent['@name'], level: 0});
