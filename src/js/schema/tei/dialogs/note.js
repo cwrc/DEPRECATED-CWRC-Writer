@@ -82,19 +82,23 @@ module.exports = function(id, writer) {
                 setTimeout(el.update, 50);
             });
             
+            var noteUrl = writer.schemaManager.getCurrentSchema().entityTemplates.note;
             if (dialog.mode === DialogForm.ADD) {
-                var noteUrl = writer.schemaManager.getCurrentSchema().entityTemplates.note;
                 cwrcWriter.fileManager.loadDocumentFromUrl(noteUrl);
             } else {
-                var xmlDoc = $.parseXML(config.entry.getNoteContent());
-                if (xmlDoc.firstChild.nodeName === 'note') {
-                    // remove the annotationId attribute
-                    xmlDoc.firstChild.removeAttribute('annotationId');
-                    // insert the appropriate wrapper tags
-                    var xml = $.parseXML('<TEI><text><body/></text></TEI>');
-                    xmlDoc = $(xml).find('body').append(xmlDoc.firstChild).end()[0];
-                }
-                cwrcWriter.fileManager.loadDocumentFromXml(xmlDoc);
+                $.ajax({
+                    url: noteUrl,
+                    type: 'GET',
+                    dataType: 'xml',
+                    success: function(doc, status, xhr) {
+                        var parent = config.entry.getTag();
+                        var noteDoc = $.parseXML(config.entry.getNoteContent());
+                        var annotation = $(parent, noteDoc).first();
+                        annotation.removeAttr('annotationId');
+                        var xmlDoc = $(doc).find(parent).replaceWith(annotation).end()[0];
+                        cwrcWriter.fileManager.loadDocumentFromXml(xmlDoc);
+                    }
+                });
             }
         }
         

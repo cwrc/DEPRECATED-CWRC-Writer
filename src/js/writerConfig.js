@@ -26,28 +26,31 @@
         "events": {
             "name": "Events Schema",
             "url": "http://cwrc.ca/schemas/orlando_event_v2.rng",
-            "cssUrl": "http://cwrc.ca/templates/css/orlando.css",
+            "cssUrl": "http://cwrc.ca/templates/css/orlando_v2_cwrc-writer.css",
             "schemaMappingsId": "orlando",
             "entityTemplates": {
-                "note": "js/schema/orlando/xml/note_events.xml"
+                "note": "js/schema/orlando/xml/note_events.xml",
+                "citation": "js/schema/orlando/xml/citation_events.xml"
             }
         },
         "biography": {
             "name": "Biography Schema",
             "url": "http://cwrc.ca/schemas/orlando_biography_v2.rng",
-            "cssUrl": "http://cwrc.ca/templates/css/orlando.css",
+            "cssUrl": "http://cwrc.ca/templates/css/orlando_v2_cwrc-writer.css",
             "schemaMappingsId": "orlando",
             "entityTemplates": {
-                "note": "js/schema/orlando/xml/note_biography.xml"
+                "note": "js/schema/orlando/xml/note_biography.xml",
+                "citation": "js/schema/orlando/xml/citation_biography.xml"
             }
         },
         "writing": {
             "name": "Writing Schema",
             "url": "http://cwrc.ca/schemas/orlando_writing_v2.rng",
-            "cssUrl": "http://cwrc.ca/templates/css/orlando.css",
+            "cssUrl": "http://cwrc.ca/templates/css/orlando_v2_cwrc-writer.css",
             "schemaMappingsId": "orlando",
             "entityTemplates": {
-                "note": "js/schema/orlando/xml/note_writing.xml"
+                "note": "js/schema/orlando/xml/note_writing.xml",
+                "citation": "js/schema/orlando/xml/citation_writing.xml"
             }
         },
         "cwrcEntry": {
@@ -56,7 +59,8 @@
             "cssUrl": "http://cwrc.ca/templates/css/cwrc.css",
             "schemaMappingsId": "cwrcEntry",
             "entityTemplates": {
-                "note": "js/schema/cwrcEntry/xml/note.xml"
+                "note": "js/schema/cwrcEntry/xml/note.xml",
+                "citation": "js/schema/cwrcEntry/xml/citation.xml"
             }
         }
     },

@@ -17,9 +17,10 @@ function Tagger(writer) {
     
     /**
      * Inserts entity boundary tags around the supplied DOM range.
-     * @param {string} id The id of the entity 
-     * @param {string} type The entity type
-     * @param {range} range The DOM range to insert the tags around
+     * @param {String} id The id of the entity 
+     * @param {String} type The entity type
+     * @param {Range} range The DOM range to insert the tags around
+     * @param {String} [tag] The element name
      */
     tagger.insertBoundaryTags = function(id, type, range, tag) {
         var parentTag;
@@ -180,7 +181,7 @@ function Tagger(writer) {
         
         // deleted and duplicate structs
         for (var id in w.structs) {
-            var nodes = w.editor.dom.select('#'+id);
+            var nodes = w.editor.dom.select('[id="'+id+'"]');
             if (nodes.length === 0) {
                 updateRequired = true;
                 w.deletedStructs[id] = w.structs[id];
@@ -436,35 +437,57 @@ function Tagger(writer) {
     /**
      * Displays the appropriate dialog for adding an entity
      * @param {String} type The entity type
+     * @param {String} [tag] The element name
      */
-    tagger.addEntity = function(type) {
+    tagger.addEntity = function(type, tag) {
         var result = w.utilities.isSelectionValid();
-        if (result === w.VALID) {
-            w.editor.currentBookmark = w.editor.selection.getBookmark(1);
-            w.dialogManager.show(type, {type: type});
-        } else if (result === w.NO_SELECTION) {
+        if (result === w.NO_SELECTION) {
             w.dialogManager.show('message', {
                 title: 'Error',
                 msg: 'Please select some text before adding an entity.',
                 type: 'error'
             });
-        } else if (result === w.OVERLAP) {
-            if (w.allowOverlap === true) {
-                w.editor.currentBookmark = w.editor.selection.getBookmark(1);
-                w.dialogManager.show(type, {type: type});
-            } else {
-                w.dialogManager.confirm({
-                    title: 'Warning',
-                    msg: 'You are attempting to create overlapping entities or to create an entity across sibling XML tags, which is not allowed in this editor mode.<br/><br/>If you wish to continue, the editor mode will be switched to <b>XML and RDF (Overlapping Entities)</b> and only RDF will be created for the entity you intend to add.<br/><br/>Do you wish to continue?',
-                    callback: function(confirmed) {
-                        if (confirmed) {
-                            w.allowOverlap = true;
-                            w.mode = w.XMLRDF;
-                            w.editor.currentBookmark = w.editor.selection.getBookmark(1);
-                            w.dialogManager.show(type, {type: type});
+        } else {
+            w.editor.currentBookmark = w.editor.selection.getBookmark(1);
+            if (result === w.VALID) {
+                var childName;
+                if (tag !== undefined) {
+                    childName = tag;
+                } else {
+                    childName = w.schemaManager.mapper.getParentTag(type);
+                }
+                var validParents = w.utilities.getParentsForTag({tag: childName, returnType: 'names'});
+                var parentTag = w.editor.currentBookmark.rng.commonAncestorContainer;
+                while (parentTag.nodeType !== Node.ELEMENT_NODE) {
+                    parentTag = parentTag.parentNode;
+                }
+                var parentName = parentTag.getAttribute('_tag');
+                var isValid = validParents.indexOf(parentName) !== -1;
+                if (isValid) {
+                    w.dialogManager.show(type, {type: type});
+                } else {
+                    w.dialogManager.show('message', {
+                        title: 'Invalid XML',
+                        msg: 'The element <b>'+childName+'</b> is not a valid child of <b>'+parentName+'</b>.<br/><br/>Valid parents for '+childName+' are:<br/><ul><li>'+validParents.join('</li><li>')+'</ul>',
+                        type: 'error'
+                    });
+                }
+            } else if (result === w.OVERLAP) {
+                if (w.allowOverlap === true) {
+                    w.dialogManager.show(type, {type: type});
+                } else {
+                    w.dialogManager.confirm({
+                        title: 'Warning',
+                        msg: 'You are attempting to create overlapping entities or to create an entity across sibling XML tags, which is not allowed in this editor mode.<br/><br/>If you wish to continue, the editor mode will be switched to <b>XML and RDF (Overlapping Entities)</b> and only RDF will be created for the entity you intend to add.<br/><br/>Do you wish to continue?',
+                        callback: function(confirmed) {
+                            if (confirmed) {
+                                w.allowOverlap = true;
+                                w.mode = w.XMLRDF;
+                                w.dialogManager.show(type, {type: type});
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         }
     };
@@ -527,7 +550,8 @@ function Tagger(writer) {
             if (info.noteContent) {
                 entity.setNoteContent(info.noteContent);
             }
-            var content = w.schemaManager.mapper.getNoteContentForEntity(entity, true);
+            var xmlcontent = w.schemaManager.mapper.getNoteContentForEntity(entity);
+            var content = xmlcontent.documentElement.textContent.trim();
             entity.setContent(content);
         }
     }
@@ -587,7 +611,8 @@ function Tagger(writer) {
             var content = tagger.addEntityTag(id, type, tag);
             var isNote = w.schemaManager.mapper.isEntityTypeNote(type);
             if (isNote) {
-                content = w.schemaManager.mapper.getNoteContentForEntity(entity, true);
+                var xmlcontent = w.schemaManager.mapper.getNoteContentForEntity(entity);
+                content = xmlcontent.documentElement.textContent.trim();
             }
             entity.setContent(content);
             

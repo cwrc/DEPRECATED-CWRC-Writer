@@ -304,7 +304,10 @@ function CWRCWriter(config) {
         // TODO move to keyup
         // redo/undo listener
         if ((evt.which == 89 || evt.which == 90) && evt.ctrlKey) {
-            w.event('contentChanged').publish(w.editor);
+            var doUpdate = w.tagger.findNewAndDeletedTags();
+            if (doUpdate) {
+                w.event('contentChanged').publish(w.editor);
+            }
         }
         
         w.event('writerKeydown').publish(evt);
@@ -729,8 +732,7 @@ function CWRCWriter(config) {
                 
                 if (w.isReadOnly === true) {
                     ed.on('PreInit', function(e) {
-                        var body = ed.getBody();
-                        body.removeAttribute('contenteditable');
+                        ed.getBody().removeAttribute('contenteditable');
                     });
                 }
                 
@@ -778,7 +780,9 @@ function CWRCWriter(config) {
                     ed.addCommand('getDocumentationForTag', w.delegator.getHelp);
                     
                     // highlight tracking
-                    body.on('mouseup', _onMouseUpHandler).on('keydown',_onKeyDownHandler).on('keyup',_onKeyUpHandler);
+                    body.on('keydown',_onKeyDownHandler).on('keyup',_onKeyUpHandler);
+                    // attach mouseUp to doc because body doesn't always extend to full height of editor panel
+                    $(ed.iframeElement.contentDocument).on('mouseup', _onMouseUpHandler);
                     
                     w.isInitialized = true;
                     w.event('writerInitialized').publish(w);

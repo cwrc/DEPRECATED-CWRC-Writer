@@ -48,6 +48,12 @@ function FileManager(writer) {
             'Cancel': function() {
                 edit.dialog('close');
             }
+        },
+        open: function(e) {
+            var $text = $(this).find('textarea');
+            $text.focus();
+            $text[0].setSelectionRange(0, 0);
+            $text.scrollTop(0);
         }
     });
     

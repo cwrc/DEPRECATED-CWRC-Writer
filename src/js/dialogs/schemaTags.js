@@ -176,7 +176,7 @@ function SchemaTags(writer) {
             } else {
                 var type = w.schemaManager.mapper.getEntityTypeForTag(key);
                 if (type != null) {
-                    w.tagger.addEntity(type);
+                    w.tagger.addEntity(type, key);
                     return;
                 }
             }

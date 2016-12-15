@@ -9,7 +9,9 @@
     </rdf:RDF>
     <text>
         <body>
-            <bibl/>
+            <note>
+                <bibl/>
+            </note>
         </body>
     </text>
 </TEI>

@@ -28,6 +28,7 @@ header: 'ORLANDOHEADER',
 blockElements: ['DIV0', 'DIV1', 'EVENT', 'ORLANDOHEADER', 'DOCAUTHOR', 'DOCEDITOR', 'DOCEXTENT', 'PUBLICATIONSTMT', 'TITLESTMT', 'PUBPLACE', 'L', 'P', 'HEADING', 'CHRONEVENT', 'CHRONSTRUCT'],
 urlAttributes: ['URL', 'REF'],
 popupAttributes: ['PLACEHOLDER'],
+popupElements: ['RESEARCHNOTE', 'SCHOLARNOTE'],
 
 listeners: {
     tagAdded: function(tag) {
@@ -222,25 +223,28 @@ note: {
     }
 },
 
-//TODO support for multiple BIBCIT within BIBCITS
 citation: {
-    parentTag: 'BIBCITS',
-    textTag: 'BIBCIT',
+    parentTag: 'BIBCIT',
     isNote: true,
     mapping: function(entity) {
-        var rangeString = Mapper.getRangeString(entity);
-        var content = entity.getNoteContent();
-        
+        var tag = entity.getTag();
         var xml = Mapper.getTagAndDefaultAttributes(entity);
-        xml += '><BIBCIT'+rangeString+'>';
-        xml += content;
-        xml += '</BIBCIT>';
-        xml += '</BIBCITS>';
+        xml += '>';
+        
+        var content = entity.getNoteContent();
+        if (content) {
+            var xmlDoc = $.parseXML(content);
+            var noteContent = $(tag, xmlDoc).first()[0];
+            xml += noteContent.innerHTML;
+        }
+        
+        xml += '</'+tag+'>';
         return xml;
     },
     reverseMapping: function(xml) {
         return Mapper.getDefaultReverseMapping(xml, {
-            noteContent: './text()'
+            cwrcInfo: {id: 'cwrc:BIBCIT/@REF'},
+            noteContent: '.'
         }, 'cwrc');
     },
     annotation: function(entity, format) {

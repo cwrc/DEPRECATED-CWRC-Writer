@@ -13,6 +13,8 @@ blockElements: [],
 urlAttributes: [],
 // Attributes that should be shown in a popup in the editor
 popupAttributes: [],
+// Elements, whose contents should be shown in a popup in the editor
+popupElements: [],
 
 listeners: {
     // Listeners to CWRC-Writer events can go here and will subscribe upon mappings load

@@ -43,6 +43,18 @@ function DialogForm(config) {
             text: 'Cancel',
             click: $.proxy(function() {
                 this.$el.trigger('beforeCancel');
+                
+                if (this.showConfig.convertedEntity === true) {
+                    var $tag = $('#'+this.showConfig.entry.id, this.w.editor.getBody());
+                    $tag.removeAttr('_entity _type class name');
+                    this.w.entitiesManager.removeEntity(this.showConfig.entry.id);
+                    var attributes = {};
+                    $.each($($tag[0].attributes), function(index, att) {
+                        attributes[att.name] = att.value;
+                    });
+                    this.w.tagger.editStructureTag($tag, attributes);
+                }
+                
                 this.$el.trigger('beforeClose');
                 this.$el.dialog('close');
             }, this)
@@ -127,8 +139,13 @@ DialogForm.processForm = function(dialogInstance) {
     }
 };
 
-function initAttributeWidget(dialogInstance) {
-    var tag = dialogInstance.w.schemaManager.mapper.getParentTag(dialogInstance.type);
+function initAttributeWidget(dialogInstance, config) {
+    var tag;
+    if (config.entry) {
+        tag = config.entry.tag
+    } else {
+        tag = dialogInstance.w.schemaManager.mapper.getParentTag(dialogInstance.type);
+    }
     var atts = dialogInstance.w.utilities.getChildrenForTag({tag: tag, type: 'attribute', returnType: 'array'});
     dialogInstance.attributesWidget.buildWidget(atts);
     dialogInstance.attWidgetInit = true;
@@ -139,11 +156,13 @@ DialogForm.prototype = {
     constructor: DialogForm,
     
     show: function(config) {
+        this.showConfig = config;
+        
         this.mode = config.entry ? DialogForm.EDIT : DialogForm.ADD;
         
         if (this.attributesWidget != null) {
             if (this.attWidgetInit === false) {
-                initAttributeWidget(this);
+                initAttributeWidget(this, config);
             }
             this.attributesWidget.reset();
         }
@@ -199,6 +218,12 @@ DialogForm.prototype = {
                 $('[data-type="tagAs"]', this.$el).html(cwrcInfo.name);
             }
             
+            this.currentData.customValues = customValues;
+            this.currentData.properties = {
+                tag: config.entry.tag
+            }
+            
+            // populate form
             var that = this;
             $('[data-type]', this.$el).each(function(index, el) {
                 var formEl = $(this);

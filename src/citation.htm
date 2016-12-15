@@ -56,9 +56,25 @@
                     $('iframe',writer.editor.getContainer()).height($(window).height() - uiHeight);
 				}
 				
+				function getParameterByName(name, url) {
+                    if (!url) url = window.location.href;
+                    name = name.replace(/[\[\]]/g, "\\$&");
+                    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                        results = regex.exec(url);
+                    if (!results) return null;
+                    if (!results[2]) return '';
+                    return decodeURIComponent(results[2].replace(/\+/g, " "));
+                }
+				
 				function doInit(config) {
+				    var readonly = getParameterByName('readonly');
+                    if (readonly == 'true') {
+                        config.readonly = true;
+                    }
+                    
 					config.delegator = Delegator;
 					config.mode = 'xml';
+					config.showModeMessage = false;
 					config.buttons1 = 'schematags,editTag,removeTag,|,addperson,addplace,adddate,addorg,addtitle,addcorrection,addlink';
 					writer = new Writer(config);
 					writer.init('editor');
