@@ -1,4 +1,5 @@
 var $ = require('jquery');
+require('../../../lib/jquery/plugins/jquery.watermark.min.js');
 var DialogForm = require('../../../dialogs/dialogForm.js');
 
 module.exports = function(id, writer) {

@@ -4,7 +4,7 @@
 'use strict';
 
 var $ = require('jquery');
-var jqueryUi = require('jquery-ui');
+require('jquery-ui');
 
 //cross browser xml node finder
 //http://www.steveworkman.com/html5-2/javascript/2011/improving-javascript-xml-node-finding-performance-by-2000/

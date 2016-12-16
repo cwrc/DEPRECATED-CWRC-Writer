@@ -1,7 +1,7 @@
 'use strict';
 
 var $ = require('jquery');
-var jqueryUi = require('jquery-ui');
+require('jquery-ui');
     
 function AddSchema(writer) {
     var w = writer;

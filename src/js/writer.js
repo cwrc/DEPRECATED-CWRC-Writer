@@ -1,7 +1,14 @@
 'use strict';
 
 var $ = require('jquery');
+
 var tinymce = require('tinymce');
+require('cwrc-contextmenu');
+require('cwrc-path');
+require('schematags');
+require('treepaste');
+
+var Layout = require('./layout.js');
 var EventManager = require('./eventManager.js');
 var Utilities = require('./utilities.js');
 var SchemaManager = require('./schema/schemaManager.js');
@@ -599,11 +606,16 @@ function CWRCWriter(config) {
     
     /**
      * Initialize the editor.
-     * @param {String} textareaId The ID of the textarea to transform into the editor.
+     * @param {String} containerId The ID of the container to transform into the editor.
      */
-    w.init = function(textareaId) {
+    w.init = function(containerId) {
 
         w.eventManager = new EventManager(w);
+        
+        var textareaId = 'editor';
+        w.layout = new Layout(w, {container: $('#'+containerId), textareaId: textareaId});
+        w.layout.init();
+        
         w.schemaManager = new SchemaManager(w, {schemas: config.schemas});
         w.entitiesManager = new EntitiesManager(w);
         w.utilities = new Utilities(w);
@@ -615,14 +627,14 @@ function CWRCWriter(config) {
             showEntityBrackets: true,
             showStructBrackets: false
         });
-        w.dialogManager = new DialogManager(w);
+        
         
         if (config.delegator != null) {
             w.delegator = new config.delegator(w);
         } else {
             alert('Error: you must specify a delegator in the CWRCWriter config for full functionality!');
         }
-        if (textareaId == null) {
+        if (containerId == null) {
             alert('Error: no ID supplied for CWRCWriter!');
         }
         
@@ -701,7 +713,7 @@ function CWRCWriter(config) {
             
             valid_elements: '*[*]', // allow everything
             
-            plugins: 'paste,schematags,cwrc_contextmenu,cwrcpath',
+            plugins: 'schematags,cwrc_contextmenu,cwrcpath', //paste
             toolbar1: config.buttons1 == undefined ? 'schematags,|,addperson,addplace,adddate,addorg,addcitation,addnote,addtitle,addcorrection,addkeyword,addlink,|,editTag,removeTag,|,addtriple,|,viewmarkup,editsource,|,validate,savebutton,loadbutton' : config.buttons1,
             toolbar2: config.buttons2 == undefined ? 'cwrcpath' : config.buttons2,
             toolbar3: config.buttons3 == undefined ? '' : config.buttons3,
@@ -923,6 +935,8 @@ function CWRCWriter(config) {
 //                        });
             }
         });
+        
+        w.dialogManager = new DialogManager(w);
     };
     
     return w;

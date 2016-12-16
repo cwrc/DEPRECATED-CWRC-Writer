@@ -2,7 +2,7 @@
 'use strict';
 
 var $ = require('jquery');
-var jqueryUi = require('jquery-ui');
+require('jquery-ui');
 
 // a bridge between the CWRC-Writer and the cwrcDialogs
 function CwrcDialogBridge(writer, config) {

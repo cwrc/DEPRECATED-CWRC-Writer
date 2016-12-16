@@ -23,55 +23,39 @@
   },
   "homepage": "https://github.com/cwrc/CWRC-Writer#readme",
   "config": {
-    "tinymceDir": "D:\\git\\tinymce",
-    "cwrcDialogsDir": "D:\\git\\CWRC-Dialogs"
+    "cwrcDialogsDir": "D:/git/CWRC-Dialogs"
   },
   "scripts": {
-    "clean": "rmdir build /s /q & mkdir build\\css & mkdir build\\img & mkdir build\\js & mkdir build\\js\\modules & mkdir build\\lib",
+    "clean": "rimraf build && mkdirp build/js && mkdirp build/lib",
     
-    "browserify": "browserify src\\js\\writer.js --debug --standalone CWRCWriter > build\\js\\app.js",
-    "browserify:min": "browserify src\\js\\writer.js --debug --standalone CWRCWriter -p [ minifyify -- p app.js.map --output build/app.js.map ] > build\\js\\app.js",
-    "browserify:delegator": "browserify src\\js\\delegator.js --debug --standalone Delegator > build\\js\\delegator.js",
+    "browserify": "browserify src/js/writer.js --debug --standalone CWRCWriter > build/js/app.js",
+    "browserify:min": "browserify src/js/writer.js --debug --standalone CWRCWriter -p [ minifyify -- p app.js.map --output build/app.js.map ] > build/js/app.js",
+    "browserify:delegator": "browserify src/js/delegator.js --debug --standalone Delegator > build/js/delegator.js",
     
-    "browserify:modules": "npm run browserify:ent && npm run browserify:rel && npm run browserify:sel && npm run browserify:str && npm run browserify:val",
-    "browserify:ent": "browserify src\\js\\modules\\entitiesList.js --debug --standalone EntitiesList > build\\js\\modules\\entitiesList.js",
-    "browserify:rel": "browserify src\\js\\modules\\relations.js --debug --standalone Relations > build\\js\\modules\\relations.js",
-    "browserify:sel": "browserify src\\js\\modules\\selection.js --debug --standalone Selection > build\\js\\modules\\selection.js",
-    "browserify:str": "browserify src\\js\\modules\\structureTree.js --debug --standalone StructureTree > build\\js\\modules\\structureTree.js",
-    "browserify:val": "browserify src\\js\\modules\\validation.js --debug --standalone Validation > build\\js\\modules\\validation.js",
+    "watch": "watchify src/js/writer.js --debug --standalone CWRCWriter -o build/js/app.js --verbose",
     
-    "watch": "watchify src\\js\\writer.js --debug --standalone CWRCWriter -o build\\js\\app.js --verbose",
+    "jquery": "copyfiles -f node_modules/jquery/dist/jquery.js build/lib/jquery/ && npm run jquery-ui && npm run jquery:jstree",
+    "browserify:jquery": "browserify -r jquery --standalone jquery > build/lib/jquery/jquery.js",
+    "jquery-ui": "copyfiles -f node_modules/jquery-ui/dist/jquery-ui.js build/lib/jquery/",
+    "jquery:jstree": "copyfiles -f \"src/js/lib/jquery/plugins/jstree/themes/cwrc/*\" build/lib/jquery/jstree/themes/cwrc",
     
-    "jquery": "xcopy node_modules\\jquery\\dist\\jquery.js build\\lib\\jquery\\ /E /Y && npm run jquery-ui && npm run jquery:plugins",
-    "jquery-ui": "xcopy node_modules\\jquery-ui\\dist\\jquery-ui.js build\\lib\\jquery\\ /E /Y",
-    "jquery:plugins": "copy /b src\\js\\lib\\jquery\\plugins\\*.js+node_modules\\jstree\\dist\\jstree.js+node_modules\\jquery-xpath\\jquery.xpath.js build\\lib\\jquery\\plugins.js && xcopy src\\js\\lib\\jquery\\plugins\\jstree\\themes\\* build\\lib\\jquery\\jstree\\themes\\ /E /Y",
+    "build": "npm run clean && npm run build:js && npm run build:images && npm run build:css && npm run build:html",
+    "build:js": "npm run browserify && npm run browserify:delegator && npm run jquery && npm run tinymce:copy && npm run cwrcDialogs && npm run build:extrajs",
+    "build:images": "copyfiles -u 1 \"src/img/**/*\" build/",
+    "build:css": "copyfiles -u 1 \"src/css/**/*\" build/",
+    "build:html": "copyfiles -u 1 \"src/*.htm\" build/",
+    "build:extrajs": "copyfiles -u 2 src/js/writerConfig.js build/js/",
     
-    "build": "npm run clean && npm run build:images && npm run build:css && npm run build:html && npm run build:js",
-    "build:js": "npm run jquery && npm run tinymce:copy && npm run cwrcDialogs && npm run build:extrajs && npm run browserify:delegator && npm run browserify",
-    "build:images": "xcopy src\\img build\\img\\ /E",
-    "build:css": "xcopy src\\css build\\css\\ /E",
-    "build:html": "xcopy src\\*.htm build\\ ",
-    "build:extrajs": "copy src\\js\\writerConfig.js build\\js\\writerConfig.js & copy src\\js\\layout.js build\\js\\layout.js",
+    "schema": "mkdirp build/js/schema && copyfiles -u 3 \"src/js/schema/**/*\" build/js/schema/",
+    "schema:tei": "mkdirp build/js/schema/tei && browserify src/js/schema/tei/dialogs_map.js > build/js/schema/tei/dialogs.js && browserify src/js/schema/tei/mappings.js > build/js/schema/tei/mappings.js",
     
-    "schema": "mkdir build\\js\\schema & xcopy src\\js\\schema\\* build\\js\\schema\\ /E /Y",
-    "schema:tei": "mkdir build\\js\\schema\\tei & browserify src\\js\\schema\\tei\\dialogs_map.js > build\\js\\schema\\tei\\dialogs.js && browserify src\\js\\schema\\tei\\mappings.js > build\\js\\schema\\tei\\mappings.js",
-    
-    "tinymce": "npm run tinymce:theme && npm run tinymce:bundle && npm run tinymce:copy",
-    "tinymce:theme": "grunt --gruntfile %npm_package_config_tinymceDir%\\Gruntfile.js bolt-build:modern-theme && grunt --gruntfile %npm_package_config_tinymceDir%\\Gruntfile.js copy:bolt-themes",
-    "tinymce:build": "grunt --gruntfile %npm_package_config_tinymceDir%\\Gruntfile.js",
-    "tinymce:bundle": "grunt --gruntfile %npm_package_config_tinymceDir%\\Gruntfile.js bundle:source --themes=modern --plugins=paste",
-    "tinymce:importjs": "xcopy %npm_package_config_tinymceDir%\\js\\tinymce\\* node_modules\\tinymce\\ /E /Y",
-    "tinymce:copy": "npm run tinymce:copyjs && npm run tinymce:copyskin",
-    "tinymce:copyjs": "npm run tinymce:plugins && mkdir build\\lib\\tinymce & copy node_modules\\tinymce\\tinymce.full.js build\\lib\\tinymce\\tinymce.js && copy src\\js\\tinymce_plugins\\plugins.js build\\lib\\tinymce\\plugins.js && del src\\js\\tinymce_plugins\\plugins.js",
-    
-    "tinymce:plugins": "del src\\js\\tinymce_plugins\\plugins.js & copy /b src\\js\\tinymce_plugins\\*.js src\\js\\tinymce_plugins\\plugins.js",
-    
-    "tinymce:copyskin": "npm run tinymce:copyimg && npm run tinymce:copyfonts && npm run tinymce:copycss",
-    "tinymce:copyimg": "xcopy %npm_package_config_tinymceDir%\\js\\tinymce\\skins\\lightgray\\img build\\lib\\tinymce\\skins\\lightgray\\img\\ /E /Y",
-    "tinymce:copyfonts": "xcopy %npm_package_config_tinymceDir%\\js\\tinymce\\skins\\lightgray\\fonts build\\lib\\tinymce\\skins\\lightgray\\fonts\\ /E /Y",
-    "tinymce:copycss": "xcopy %npm_package_config_tinymceDir%\\js\\tinymce\\skins\\lightgray\\*.css build\\lib\\tinymce\\skins\\lightgray\\ /E /Y",
+    "tinymce": "npm run tinymce:copy",
+    "tinymce:copy": "npm run tinymce:copytheme && npm run tinymce:copyskin",
+    "tinymce:copytheme": "copyfiles -u 2 \"node_modules/tinymce/themes/modern/**/*\" build/js/",
+    "tinymce:copyskin": "copyfiles -u 2 \"node_modules/tinymce/skins/lightgray/**/*\" build/js/",    
+    "tinymce:plugins": "rimraf src/js/tinymce_plugins/plugins.js && minify \"src/js/tinymce_plugins/\"",
 
-    "cwrcDialogs": "mkdir build\\lib\\cwrc & xcopy %npm_package_config_cwrcDialogsDir%\\dist\\* build\\lib\\cwrc\\ /E /Y"
+    "cwrcDialogs": "mkdirp build/lib/cwrc && copyfiles -u 4 \"%npm_package_config_cwrcDialogsDir%/dist/**/*\" build/lib/cwrc/"
   },
   "browserify": {
     "transform": [
@@ -79,21 +63,37 @@
     ]
   },
   "browserify-shim": {
-    "jquery": "global:$",
-    "tinymce": "global:tinymce",
-    "jquery-ui": "global:$",
-    "jquery-xpath": "global:$",
-    "jstree": "global:$",
-    "jquery.watermark": "global:$",
-    "jquery.snippet": "global:$"
+    "jquery": "$",
+    "jquery-ui": {"depends": ["jquery:jQuery"]},
+    "jquery-layout": {"exports": "$.fn.layout", "depends": ["jquery:jQuery"]},
+    "jquery-layout.resizeTab": {"depends": ["jquery-layout"]},
+    "jstree": {"exports": "$.fn.vakata", "depends": ["jquery:jQuery"]},
+    "jquery-xpath": {"exports": "$.fn.xpath", "depends": ["jquery:jQuery"]}
+  },
+  "browser": {
+    "jquery": "./node_modules/jquery/dist/jquery.js",
+    "jquery-ui": "./node_modules/jquery-ui/dist/jquery-ui.js",
+    "jquery-layout": "./src/js/lib/jquery/plugins/jquery.layout-latest.js",
+    "jstree": "./node_modules/jstree/dist/jstree.js",
+    "jquery-xpath": "./node_modules/jquery-xpath/jquery.xpath.js",
+    "cwrc-contextmenu": "./src/js/tinymce_plugins/cwrc_contextmenu.js",
+    "cwrc-path": "./src/js/tinymce_plugins/cwrc_path.js",
+    "schematags": "./src/js/tinymce_plugins/schematags.js",
+    "treepaste": "./src/js/tinymce_plugins/treepaste.js"
   },
   "devDependencies": {
+    "copyfiles": "^1.0.0",
+    "mkdirp": "^0.5.1",
+    "rimraf": "^2.5.4",
+    
     "browserify": "^13.0.1",
     "browserify-shim": "^3.2.0",
+    "deamdify": "^0.2.0",
     "grunt": "^1.0.1",
     "watchify": "^3.7.0",
     "minifier": "^0.8.0",
     
+    "tinymce": "^4.5.0",
     "jquery": "^3.1.0",
     "jquery-ui": "^1.12.0",
     "jquery-xpath": "^0.3.1",

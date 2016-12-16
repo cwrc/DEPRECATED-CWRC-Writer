@@ -1,115 +1,178 @@
-function setupLayoutAndModules(w, EntitiesList, Relations, Selection, StructureTree, Validation) {
-    w.layout = $('#cwrc_wrapper').layout({
-        defaults: {
-            maskIframesOnResize: true,
-            resizable: true,
-            slidable: false
-        },
-        north: {
-            size: 35,
-            spacing_open: 0,
-            minSize: 35,
-            maxSize: 60,
-            closable: false
-        },
-        west: {
-            size: 'auto',
-            minSize: 325,
-            onresize: function(region, pane, state, options) {
-                var tabsHeight = $('#westTabs > ul').outerHeight();
-                $('#westTabsContent').height(state.layoutHeight - tabsHeight);
-    //                    $.layout.callbacks.resizeTabLayout(region, pane);
-            }
-        }
-    });
-    w.layout.panes.center.layout({
-        defaults: {
-            maskIframesOnResize: true,
-            resizable: true,
-            slidable: false
-        },
-        center: {
-            onresize: function(region, pane, state, options) {
-                var uiHeight = 4;
-                var toolbar = $('.mce-toolbar-grp', w.editor.getContainer());
-                if (toolbar.is(':visible')) {
-                    uiHeight += toolbar.outerHeight();
+'use strict';
+
+var $ = require('jquery');
+require('jquery-ui');
+require('jquery-layout');
+
+var StructureTree = require('./modules/structureTree.js');
+var EntitiesList = require('./modules/entitiesList.js')
+var Validation = require('./modules/validation.js');
+var Relations = require('./modules/relations.js');
+var Selection = require('./modules/selection.js');
+
+function Layout(w, config) {
+    this.w = w;
+    this.container = config.container;
+    this.textareaId = config.textareaId;
+}
+
+Layout.prototype = {
+    constructor: Layout,
+    
+    init: function() {
+        $(this.container).html(
+            '<div id="cwrc_loadingMask"><div>Loading CWRC-Writer</div></div>'+
+            '<div id="cwrc_wrapper">'+
+                '<div id="cwrc_header" class="cwrc ui-layout-north">'+
+                    '<h1>CWRC-Writer v0.9</h1>'+
+                    '<div id="headerButtons"></div>'+
+                '</div>'+
+                '<div class="cwrc ui-layout-west">'+
+                    '<div id="westTabs" class="tabs">'+
+                        '<ul>'+
+                            '<li><a href="#entities">Entities</a></li>'+
+                            '<li><a href="#structure">Structure</a></li>'+
+                            '<li><a href="#relations">Relations</a></li>'+
+                        '</ul>'+
+                        '<div id="westTabsContent" class="ui-layout-content"></div>'+
+                    '</div>'+
+                '</div>'+
+                '<div id="cwrc_main" class="ui-layout-center">'+
+                    '<div class="ui-layout-center">'+
+                        '<form method="post" action="">'+
+                            '<textarea id="'+this.textareaId+'" name="editor" class="tinymce"></textarea>'+
+                        '</form>'+
+                    '</div>'+
+                    '<div class="cwrc ui-layout-south">'+
+                        '<div id="southTabs" class="tabs">'+
+                            '<ul>'+
+                                '<li><a href="#validation">Validation</a></li>'+
+                                '<li><a href="#selection">Markup</a></li>'+
+                            '</ul>'+
+                            '<div id="southTabsContent" class="ui-layout-content"></div>'+
+                        '</div>'+
+                    '</div>'+
+                '</div>'+
+            '</div>'
+        );
+    
+        var layout = $('#cwrc_wrapper', this.container).layout({
+            defaults: {
+                maskIframesOnResize: true,
+                resizable: true,
+                slidable: false
+            },
+            north: {
+                size: 35,
+                spacing_open: 0,
+                minSize: 35,
+                maxSize: 60,
+                closable: false
+            },
+            west: {
+                size: 'auto',
+                minSize: 325,
+                onresize: function(region, pane, state, options) {
+                    var tabsHeight = $('#westTabs > ul').outerHeight();
+                    $('#westTabsContent').height(state.layoutHeight - tabsHeight);
+        //                    $.layout.callbacks.resizeTabLayout(region, pane);
                 }
-                $('iframe', w.editor.getContainer()).height(state.layoutHeight - uiHeight);
             }
-        },
-        south: {
-            size: 250,
-            resizable: true,
-            initClosed: true,
+        });
+        
+        layout.panes.center.layout({
+            defaults: {
+                maskIframesOnResize: true,
+                resizable: true,
+                slidable: false
+            },
+            center: {
+                onresize: function(region, pane, state, options) {
+                    var uiHeight = 4;
+                    var toolbar = $('.mce-toolbar-grp', this.w.editor.getContainer());
+                    if (toolbar.is(':visible')) {
+                        uiHeight += toolbar.outerHeight();
+                    }
+                    $('iframe', this.w.editor.getContainer()).height(state.layoutHeight - uiHeight);
+                }
+            },
+            south: {
+                size: 250,
+                resizable: true,
+                initClosed: true,
+                activate: function(event, ui) {
+                    $.layout.callbacks.resizeTabLayout(event, ui);
+                },
+        //                onopen_start: function(region, pane, state, options) {
+        //                    var southTabs = $('#southTabs');
+        //                    if (!southTabs.hasClass('ui-tabs')) {
+        //                        
+        //                    }
+        //                },
+                onresize: function(region, pane, state, options) {
+                    var tabsHeight = $('#southTabs > ul').outerHeight();
+                    $('#southTabsContent').height(state.layoutHeight - tabsHeight);
+                }
+            }
+        });
+        
+        $('#cwrc_header h1').click(function() {
+            window.location = 'http://www.cwrc.ca';
+        });
+        
+//        new StructureTree({writer: this.w, parentId: 'westTabsContent'});
+        new EntitiesList({writer: this.w, parentId: 'westTabsContent'});
+        new Relations({writer: this.w, parentId: 'westTabsContent'});
+        new Validation({writer: this.w, parentId: 'southTabsContent'});
+        new Selection({writer: this.w, parentId: 'southTabsContent'});
+        
+        $('#westTabs').tabs({
+            active: 1,
             activate: function(event, ui) {
                 $.layout.callbacks.resizeTabLayout(event, ui);
             },
-    //                onopen_start: function(region, pane, state, options) {
-    //                    var southTabs = $('#southTabs');
-    //                    if (!southTabs.hasClass('ui-tabs')) {
-    //                        
-    //                    }
-    //                },
-            onresize: function(region, pane, state, options) {
-                var tabsHeight = $('#southTabs > ul').outerHeight();
-                $('#southTabsContent').height(state.layoutHeight - tabsHeight);
+            create: function(event, ui) {
+                $('#westTabs').parent().find('.ui-corner-all:not(button)').removeClass('ui-corner-all');
             }
-        }
-    });
-    
-    $('#cwrc_header h1').click(function() {
-        window.location = 'http://www.cwrc.ca';
-    });
-    
-    new StructureTree({writer: w, parentId: 'westTabsContent'});
-    new EntitiesList({writer: w, parentId: 'westTabsContent'});
-    new Relations({writer: w, parentId: 'westTabsContent'});
-    new Validation({writer: w, parentId: 'southTabsContent'});
-    new Selection({writer: w, parentId: 'southTabsContent'});
-    
-    $('#westTabs').tabs({
-        active: 1,
-        activate: function(event, ui) {
-            $.layout.callbacks.resizeTabLayout(event, ui);
-        },
-        create: function(event, ui) {
-            $('#westTabs').parent().find('.ui-corner-all:not(button)').removeClass('ui-corner-all');
-        }
-    });
-    $('#southTabs').tabs({
-        active: 1,
-        activate: function(event, ui) {
-            $.layout.callbacks.resizeTabLayout(event, ui);
-        },
-        create: function(event, ui) {
-            $('#southTabs').parent().find('.ui-corner-all:not(button)').removeClass('ui-corner-all');
-        }
-    });
-    
-    var isLoading = false;
-    var doneLayout = false;
-    var onLoad = function() {
-        isLoading = true;
-    };
-    var onLoadDone = function() {
-        isLoading = false;
-        if (doneLayout) {
-            $('#cwrc_loadingMask').fadeOut();
-            w.event('documentLoaded').unsubscribe(onLoadDone);
-        }
-    };
-    w.event('loadingDocument').subscribe(onLoad);
-    w.event('documentLoaded').subscribe(onLoadDone);
-    
-    setTimeout(function() {
-        w.layout.options.onresizeall_end = function() {
-            doneLayout = true;
-            if (isLoading === false) {
+        });
+        $('#southTabs').tabs({
+            active: 1,
+            activate: function(event, ui) {
+                $.layout.callbacks.resizeTabLayout(event, ui);
+            },
+            create: function(event, ui) {
+                $('#southTabs').parent().find('.ui-corner-all:not(button)').removeClass('ui-corner-all');
+            }
+        });
+        
+        var isLoading = false;
+        var doneLayout = false;
+        var onLoad = function() {
+            isLoading = true;
+        };
+        var onLoadDone = function() {
+            isLoading = false;
+            if (doneLayout) {
                 $('#cwrc_loadingMask').fadeOut();
-                w.layout.options.onresizeall_end = null;
+                this.w.event('documentLoaded').unsubscribe(onLoadDone);
             }
         };
-        w.layout.resizeAll(); // now that the editor is loaded, set proper sizing
-    }, 250);
+        this.w.event('loadingDocument').subscribe(onLoad);
+        this.w.event('documentLoaded').subscribe(onLoadDone);
+        
+        setTimeout(function() {
+            layout.options.onresizeall_end = function() {
+                doneLayout = true;
+                if (isLoading === false) {
+                    $('#cwrc_loadingMask').fadeOut();
+                    layout.options.onresizeall_end = null;
+                }
+            };
+            layout.resizeAll(); // now that the editor is loaded, set proper sizing
+        }, 250);
+        
+        return layout;
+    }
 }
+
+module.exports = Layout;

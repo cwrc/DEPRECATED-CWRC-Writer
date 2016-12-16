@@ -1,3 +1,33 @@
+// converted using: https://github.com/umdjs/umd/blob/master/templates/jqueryPlugin.js
+
+(function (factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['jquery'], factory);
+    } else if (typeof module === 'object' && module.exports) {
+        // Node/CommonJS
+        module.exports = function( root, jQuery ) {
+            if ( jQuery === undefined ) {
+                // require('jQuery') returns a factory that requires window to
+                // build a jQuery instance, we normalize how we use modules
+                // that require this pattern but the window provided is a noop
+                // if it's defined (how jquery works)
+                if ( typeof window !== 'undefined' ) {
+                    jQuery = require('jquery');
+                }
+                else {
+                    jQuery = require('jquery')(root);
+                }
+            }
+            factory(jQuery);
+            return jQuery;
+        };
+    } else {
+        // Browser globals
+        factory(jQuery);
+    }
+}(function ($) {
+
 /**
  * @preserve
  * jquery.layout 1.4.4
@@ -30,8 +60,6 @@
  */
 
 // NOTE: For best readability, view with a fixed-width font and tabs equal to 4-chars
-
-;(function ($) {
 
 // alias Math methods - used a lot!
 var	min		= Math.min
@@ -5128,7 +5156,7 @@ $.fn.layout = function (opts) {
 }
 
 
-})( jQuery );
+//})( jQuery );
 
 
 
@@ -5148,7 +5176,7 @@ $.fn.layout = function (opts) {
  *
  * @see: http://groups.google.com/group/jquery-ui-layout
  */
-;(function ($) {
+//;(function ($) {
 
 if (!$.layout) return;
 
@@ -5604,7 +5632,7 @@ $.layout.state = {
 $.layout.onCreate.push( $.layout.state._create );
 $.layout.onUnload.push( $.layout.state._unload );
 
-})( jQuery );
+//})( jQuery );
 
 
 
@@ -5625,7 +5653,7 @@ $.layout.onUnload.push( $.layout.state._unload );
  * Docs: [ to come ]
  * Tips: [ to come ]
  */
-;(function ($) {
+//;(function ($) {
 
 if (!$.layout) return;
 
@@ -5872,7 +5900,7 @@ $.layout.buttons = {
 $.layout.onLoad.push(  $.layout.buttons._load );
 //$.layout.onUnload.push( $.layout.buttons._unload );
 
-})( jQuery );
+//})( jQuery );
 
 
 
@@ -5894,7 +5922,7 @@ $.layout.onLoad.push(  $.layout.buttons._load );
  * TODO: Extend logic to handle other problematic zooming in browsers
  * TODO: Add hotkey/mousewheel bindings to _instantly_ respond to these zoom event
  */
-(function ($) {
+//(function ($) {
 
 // tell Layout that the plugin is available
 $.layout.plugins.browserZoom = true;
@@ -5967,7 +5995,7 @@ $.layout.browserZoom = {
 $.layout.onReady.push( $.layout.browserZoom._init );
 
 
-})( jQuery );
+//})( jQuery );
 
 
 
@@ -5987,7 +6015,7 @@ $.layout.onReady.push( $.layout.browserZoom._init );
  *	Author:		Kevin Dalman (kevin@jquery-dev.com)
  *	@preserve	jquery.layout.slideOffscreen-1.1.js
  */
-;(function ($) {
+//;(function ($) {
 
 // Add a new "slideOffscreen" effect
 if ($.effects) {
@@ -6072,4 +6100,53 @@ if ($.effects) {
 
 }
 
-})( jQuery );
+//})( jQuery );
+
+
+
+/**
+ *  UI Layout Callback: resizeTabLayout
+ *
+ *  Requires Layout 1.3.0.rc29.15 or later
+ *
+ *  This callback is used when a tab-panel is the container for a layout
+ *  The tab-layout can be initialized either before or after the tabs are created
+ *  Assign this callback to the tabs.show event:
+ *  - if the layout HAS been fully initialized already, it will be resized
+ *  - if the layout has NOT fully initialized, it will attempt to do so
+ *      - if it cannot initialize, it will try again next time the tab is accessed
+ *      - it also looks for ANY visible layout *inside* teh tab and resize/init it
+ *
+ *  SAMPLE:
+ *  < jQuery UI 1.9: $("#elem").tabs({ show: $.layout.callbacks.resizeTabLayout });
+ *  > jQuery UI 1.9: $("#elem").tabs({ activate: $.layout.callbacks.resizeTabLayout });
+ *  $("body").layout({ center__onresize: $.layout.callbacks.resizeTabLayout });
+ *
+ *  Version:    1.3 - 2013-01-12
+ *  Author:     Kevin Dalman (kevin@jquery-dev.com)
+ */
+//;(function ($) {
+var _ = $.layout;
+
+// make sure the callbacks branch exists
+if (!_.callbacks) _.callbacks = {};
+
+// this callback is bound to the tabs.show event OR to layout-pane.onresize event
+_.callbacks.resizeTabLayout = function (x, ui) {
+    // may be called EITHER from layout-pane.onresize OR tabs.show/activate
+    var $P = ui.jquery ? ui : $(ui.newPanel || ui.panel);
+    // find all VISIBLE layouts inside this pane/panel and resize them
+    $P.filter(":visible").find(".ui-layout-container:visible").andSelf().each(function(){
+        var layout = $(this).data("layout");
+        if (layout) {
+            layout.options.resizeWithWindow = false; // set option just in case not already set
+            layout.resizeAll();
+        }
+    });
+};
+//})( jQuery );
+
+
+
+
+}));

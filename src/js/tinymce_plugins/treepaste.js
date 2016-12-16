@@ -9,6 +9,10 @@
  */
 
 (function() {
+    'use strict';
+
+    var tinymce = require('tinymce');
+    
     var each = tinymce.each,
         defs = {
             paste_auto_cleanup_on_paste : true,

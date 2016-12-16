@@ -13,7 +13,8 @@
 'use strict';
 
 var $ = require('jquery');
-var jqueryUi = require('jquery-ui');
+require('jquery-ui');
+require('./lib/jquery/plugins/jquery.popup.js');
 var DialogForm = require('./dialogs/dialogForm.js');
 
 //var cD = require('cwrcDialogs');

@@ -2,7 +2,7 @@
 'use strict';
 
 var $ = require('jquery');
-var jqueryUi = require('jquery-ui');
+require('jquery-ui');
 var cwrcDialogBridge = require('./cwrcDialogBridge.js');
 
 function CwrcOrg(writer) {

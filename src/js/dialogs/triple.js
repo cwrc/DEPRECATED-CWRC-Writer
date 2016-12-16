@@ -1,7 +1,8 @@
 'use strict';
 
 var $ = require('jquery');
-var jqueryUi = require('jquery-ui');
+require('../lib/jquery/plugins/jquery.watermark.min.js');
+require('jquery-ui');
     
 function Triple(writer) {
     var w = writer;

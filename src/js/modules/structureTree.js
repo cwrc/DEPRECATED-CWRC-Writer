@@ -2,7 +2,7 @@
 'use strict';
 
 var $ = require('jquery');
-var jstree = require('jstree');
+require('jstree');
 
 // overwrite show submenu, add our custom filter input
 $.vakata.context._show_submenu = function (o) {
@@ -53,6 +53,7 @@ $.vakata.context._show_submenu = function (o) {
         top: (e.offset().top-filterParent.height())
     }).width(e.outerWidth()-2);
 };
+
 $(document).on('context_hide.vakata', function(e) {
     var filterParent = $('.filterParent', e.element);
     filterParent.hide();

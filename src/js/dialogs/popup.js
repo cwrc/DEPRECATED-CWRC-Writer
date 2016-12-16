@@ -2,7 +2,7 @@
 'use strict';
 
 var $ = require('jquery');
-var jqueryUi = require('jquery-ui');
+require('jquery-ui');
     
 function Popup(writer) {
     var w = writer;

@@ -1,4 +1,6 @@
-(function(tinymce) {
+'use strict';
+
+var tinymce = require('tinymce');
     
 tinymce.PluginManager.add('schematags', function(editor) {
     
@@ -322,5 +324,3 @@ tinymce.PluginManager.add('schematags', function(editor) {
         panel: filterPanel
     });
 });
-
-})(tinymce);

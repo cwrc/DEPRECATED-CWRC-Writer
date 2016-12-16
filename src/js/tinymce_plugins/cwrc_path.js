@@ -1,3 +1,7 @@
+'use strict';
+
+var tinymce = require('tinymce');
+
 tinymce.PluginManager.add('cwrcpath', function(editor) {
     tinymce.ui.CWRCPath = tinymce.ui.Path.extend({
         postRender: function() {
