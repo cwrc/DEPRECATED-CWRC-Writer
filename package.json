@@ -55,7 +55,9 @@
     "tinymce:copyskin": "copyfiles -u 2 \"node_modules/tinymce/skins/lightgray/**/*\" build/js/",    
     "tinymce:plugins": "rimraf src/js/tinymce_plugins/plugins.js && minify \"src/js/tinymce_plugins/\"",
 
-    "cwrcDialogs": "mkdirp build/lib/cwrc && copyfiles -u 4 \"%npm_package_config_cwrcDialogsDir%/dist/**/*\" build/lib/cwrc/"
+    "cwrcDialogs": "npm run cwrcDialogs:import",
+    "cwrcDialogs:import": "copyfiles -u 4 \"%npm_package_config_cwrcDialogsDir%/js/**/*\" temp/cwrc/",
+    "cwrcDialogs:build": "browserify temp/cwrc/cD.js --debug --standalone cD > build/js/cD.js"
   },
   "browserify": {
     "transform": [
@@ -68,7 +70,10 @@
     "jquery-layout": {"exports": "$.fn.layout", "depends": ["jquery:jQuery"]},
     "jquery-layout.resizeTab": {"depends": ["jquery-layout"]},
     "jstree": {"exports": "$.fn.vakata", "depends": ["jquery:jQuery"]},
-    "jquery-xpath": {"exports": "$.fn.xpath", "depends": ["jquery:jQuery"]}
+    "jquery-xpath": {"exports": "$.fn.xpath", "depends": ["jquery:jQuery"]},
+    
+    "bootstrap": {"depends": ["jquery:jQuery"]},
+    "bootstrap-datepicker": {"exports": "$.fn.datepicker", "depends": ["jquery:jQuery"]}
   },
   "browser": {
     "jquery": "./node_modules/jquery/dist/jquery.js",
@@ -79,7 +84,11 @@
     "cwrc-contextmenu": "./src/js/tinymce_plugins/cwrc_contextmenu.js",
     "cwrc-path": "./src/js/tinymce_plugins/cwrc_path.js",
     "schematags": "./src/js/tinymce_plugins/schematags.js",
-    "treepaste": "./src/js/tinymce_plugins/treepaste.js"
+    "treepaste": "./src/js/tinymce_plugins/treepaste.js",
+    
+    "cwrcDialogs": "./temp/cwrc/cD.js",
+    "bootstrap": "./node_modules/bootstrap/dist/js/bootstrap.js",
+    "bootstrap-datepicker": "./temp/cwrc/lib/bootstrap-datepicker.js"
   },
   "devDependencies": {
     "copyfiles": "^1.0.0",
@@ -103,6 +112,9 @@
     "moment": "^2.13.0",
     "objtree": "^0.1.1",
     "octokit": "^0.10.4",
-    "css-stringify": "^2.0.0"
+    "css-stringify": "^2.0.0",
+    
+    "bootstrap": "^3.2.0",
+    "knockout": "^2.3.0"
   }
 }

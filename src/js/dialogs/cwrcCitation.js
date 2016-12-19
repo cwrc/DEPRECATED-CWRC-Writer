@@ -2,6 +2,7 @@
 
 var $ = require('jquery');
 require('jquery-ui');
+var cD = require('cwrcDialogs');
 var cwrcDialogBridge = require('./cwrcDialogBridge.js');
     
 function CwrcCitation(writer) {

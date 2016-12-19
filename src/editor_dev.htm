@@ -16,13 +16,13 @@
 	<body>
 		<script type="text/javascript" src="js/app.js"></script>
 		<script type="text/javascript" src="js/delegator.js"></script>
-		<script type="text/javascript" src ="lib/cwrc/cD.js"></script>
 		<script type="text/javascript">
             function doInit(config) {
                 config.delegator = Delegator;
                 config.mode = 'xml';
                 writer = new CWRCWriter(config);
                 writer.init('cwrcWriterContainer');
+                writer.fileManager.loadInitialDocument(window.location.hash);
             }
             
             (function() {

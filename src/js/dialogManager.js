@@ -16,8 +16,7 @@ var $ = require('jquery');
 require('jquery-ui');
 require('./lib/jquery/plugins/jquery.popup.js');
 var DialogForm = require('./dialogs/dialogForm.js');
-
-//var cD = require('cwrcDialogs');
+var cD = require('cwrcDialogs');
 
 var AddSchema = require('./dialogs/addSchema.js');
 var FileManager = require('./dialogs/fileManager.js');

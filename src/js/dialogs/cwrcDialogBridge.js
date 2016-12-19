@@ -3,6 +3,7 @@
 
 var $ = require('jquery');
 require('jquery-ui');
+var cD = require('cwrcDialogs');
 
 // a bridge between the CWRC-Writer and the cwrcDialogs
 function CwrcDialogBridge(writer, config) {
