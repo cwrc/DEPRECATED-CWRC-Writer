@@ -8,7 +8,13 @@ var Entity = require('../entity.js');
 function Mapper(config) {
     this.w = config.writer;
 
-    this.mappings = {};
+    this.currentMappingsId = undefined;
+
+    // can't require mappings outside of constructor due to circular dependency of mappings on static Mapper methods
+    this.mappings = {
+        empty: require('./empty_mappings.js'),
+        tei: require('./tei/mappings.js')
+    };
 }
 
 Mapper.TEXT_SELECTION = '[[[editorText]]]'; // constant represents the user's text selection when adding an entity
@@ -167,33 +173,41 @@ Mapper.prototype = {
 
     /**
      * Loads the mappings for the specified schema.
-     * @param schemaMappingId {String} The schema mapping ID.
+     * @param schemaMappingsId {String} The schema mapping ID.
      * @returns {Deferred} Deferred object that resolves when the mappings are loaded.
      */
-    loadMappings: function(schemaMappingId) {
-        var dfd = $.Deferred();
-        $.getScript('js/schema/' + schemaMappingId + '/mappings.js', function(data, status, xhr) {
-            console.log(data);
-            dfd.resolve();
-        });
-        return dfd;
+    loadMappings: function(schemaMappingsId) {
+        this.clearMappings();
+        this.currentMappingsId = schemaMappingsId;
+        
+        // process mappings
+        var mappings = this.getMappings();
+        if (mappings.listeners !== undefined) {
+            for (var event in mappings.listeners) {
+                this.w.event(event).subscribe(mappings.listeners[event]);
+            }
+        }
     },
 
     clearMappings: function() {
-        if (this.mappings.listeners !== undefined) {
-            for (var event in this.mappings.listeners) {
-                this.w.event(event).unsubscribe(this.mappings.listeners[event]);
+        var mappings = this.getMappings();
+        if (mappings.listeners !== undefined) {
+            for (var event in mappings.listeners) {
+                this.w.event(event).unsubscribe(mappings.listeners[event]);
             }
         }
-        this.mappings = {};
     },
     
     getMappings: function() {
-        return this.mappings;
+        if (this.currentMappingsId !== undefined) {
+            return this.mappings[this.currentMappingsId];
+        } else {
+            return this.mappings.empty;
+        }
     },
 
     getMapping: function(entity) {
-        var mapping = this.mappings.entities[entity.getType()].mapping;
+        var mapping = this.getMappings().entities[entity.getType()].mapping;
         if (mapping === undefined) {
             return ['', '']; // return array of empty strings if there is no mapping
         }
@@ -212,7 +226,7 @@ Mapper.prototype = {
      * @returns {Object} The entity object.
      */
     getReverseMapping: function(xml, type) {
-        var entry = this.mappings.entities[type];
+        var entry = this.getMappings().entities[type];
         var mapping = entry.reverseMapping;
         if (mapping) {
             return mapping(xml);
@@ -235,9 +249,10 @@ Mapper.prototype = {
             tag = el.nodeName;
         }
 
+        var mappings = this.getMappings();
         var resultType = null;
-        for (var type in this.mappings.entities) {
-            var xpath = this.mappings.entities[type].xpathSelector;
+        for (var type in mappings.entities) {
+            var xpath = mappings.entities[type].xpathSelector;
             if (xpath !== undefined && isElement) {
                 var result = Mapper.getXpathResult(el, xpath, this.w.schemaManager.getCurrentSchema().schemaMappingsId);
                 if (result !== undefined) {
@@ -245,7 +260,7 @@ Mapper.prototype = {
                     break; // prioritize xpath
                 }
             } else {
-                var parentTag = this.mappings.entities[type].parentTag;
+                var parentTag = mappings.entities[type].parentTag;
                 if (($.isArray(parentTag) && parentTag.indexOf(tag) !== -1) || parentTag === tag) {
                     resultType = type;
                 }
@@ -260,7 +275,7 @@ Mapper.prototype = {
      * @return {Boolean}
      */
     isEntityTypeNote: function(type) {
-        var isNote = this.mappings.entities[type].isNote;
+        var isNote = this.getMappings().entities[type].isNote;
         if (isNote === undefined) {
             return false;
         } else {
@@ -275,7 +290,7 @@ Mapper.prototype = {
      * @returns {String|Array|XML}
      */
     getNoteContentForEntity: function(entity, returnString) {
-        var entry = this.mappings.entities[entity.getType()];
+        var entry = this.getMappings().entities[entity.getType()];
         if (entry.isNote) {
             var content;
             if (entry.getNoteContent !== undefined) {
@@ -304,7 +319,7 @@ Mapper.prototype = {
      * @returns {String}
      */
     getParentTag: function(type) {
-        var tag = this.mappings.entities[type].parentTag;
+        var tag = this.getMappings().entities[type].parentTag;
         if (tag === undefined) {
             return '';
         }
@@ -320,7 +335,7 @@ Mapper.prototype = {
      * @returns {String}
      */
     getTextTag: function(type) {
-        var tag = this.mappings.entities[type].textTag;
+        var tag = this.getMappings().entities[type].textTag;
         if (tag === undefined) {
             return '';
         }
@@ -332,7 +347,7 @@ Mapper.prototype = {
      * @returns {String}
      */
     getHeaderTag: function() {
-        return this.mappings.header;
+        return this.getMappings().header;
     },
 
     /**
@@ -340,7 +355,7 @@ Mapper.prototype = {
      * @returns {String}
      */
     getIdAttributeName: function() {
-        return this.mappings.id;
+        return this.getMappings().id;
     },
 
     /**
@@ -348,7 +363,7 @@ Mapper.prototype = {
      * @returns {Array}
      */
     getBlockLevelElements: function() {
-        return this.mappings.blockElements;
+        return this.getMappings().blockElements;
     },
     
     /**
@@ -356,7 +371,7 @@ Mapper.prototype = {
      * @returns {Array}
      */
     getUrlAttributes: function() {
-        return this.mappings.urlAttributes || [];
+        return this.getMappings().urlAttributes || [];
     },
     
     /**
@@ -364,7 +379,7 @@ Mapper.prototype = {
      * @returns {Array}
      */
     getPopupAttributes: function() {
-        return this.mappings.popupAttributes || [];
+        return this.getMappings().popupAttributes || [];
     },
     
     /**
@@ -372,7 +387,7 @@ Mapper.prototype = {
      * @returns {Array}
      */
     getPopupElements: function() {
-        return this.mappings.popupElements || [];
+        return this.getMappings().popupElements || [];
     }
 };
 

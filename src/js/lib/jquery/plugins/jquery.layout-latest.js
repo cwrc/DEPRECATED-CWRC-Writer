@@ -6136,7 +6136,7 @@ _.callbacks.resizeTabLayout = function (x, ui) {
     // may be called EITHER from layout-pane.onresize OR tabs.show/activate
     var $P = ui.jquery ? ui : $(ui.newPanel || ui.panel);
     // find all VISIBLE layouts inside this pane/panel and resize them
-    $P.filter(":visible").find(".ui-layout-container:visible").andSelf().each(function(){
+    $P.filter(":visible").find(".ui-layout-container:visible").addBack().each(function(){
         var layout = $(this).data("layout");
         if (layout) {
             layout.options.resizeWithWindow = false; // set option just in case not already set

@@ -1,7 +1,7 @@
 'use strict';
 
 var $ = require('jquery');
-var objTree = require('objtree/objtree.js');
+var ObjTree = require('objtree');
 
 /**
  * @class Utilities
@@ -56,7 +56,7 @@ function Utilities(writer) {
         if ($.type(xml) == 'string') {
             xml = u.stringToXML(xml);
         }
-        var xotree = new XML.ObjTree();
+        var xotree = new ObjTree();
         xotree.attr_prefix = '@';
         var json = xotree.parseDOM(xml);
         return json;

@@ -66,7 +66,7 @@ AttributeWidget.prototype = {
         previousVals = previousVals || {};
         
         $('.attributeSelector ul, .level1Atts, .highLevelAtts, .schemaHelp', this.$parent).empty();
-        isDirty = false;
+        this.isDirty = false;
         
         if (this.showSchemaHelp && tag !== undefined) {
             var helpText = this.w.editor.execCommand('getDocumentationForTag', tag);

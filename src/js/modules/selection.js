@@ -1,6 +1,7 @@
 //define(['jquery','jquery.snippet'], function($, snippet) {
 
 var $ = require('jquery');
+var Prism = require('prismjs');
     
 /**
  * @class Selection
@@ -48,18 +49,13 @@ function Selection(config) {
             var escapedContents = w.utilities.escapeHTMLString(xmlString);   //$('#selectionContents')[0].innerHTML
             if (escapedContents.length < 100000) {
                 if (escapedContents != '\uFEFF') {
-                    $('#selection').html('<pre>'+escapedContents+'</pre>');
-                    $('#selection > pre').snippet('html', {
-                        style: 'typical',
-                        transparent: true,
-                        showNum: false,
-                        menu: false
-                    });
+                    $('#selection').html('<pre><code class="language-markup">'+escapedContents+'</code></pre>');
+                    Prism.highlightElement($('#selection code')[0]);
                 } else {
-                    $('#selection').html('<pre>Nothing selected.</pre>');
+                    $('#selection').html('<pre><code>Nothing selected.</code></pre>');
                 }
             } else {
-                $('#selection').html('<pre>The selection is too large to display.</pre>');
+                $('#selection').html('<pre><code>The selection is too large to display.</code></pre>');
             }
         }
     }

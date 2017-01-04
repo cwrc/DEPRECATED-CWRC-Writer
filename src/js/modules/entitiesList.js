@@ -2,7 +2,7 @@
 'use strict';
 
 var $ = require('jquery');
-require('../lib/jquery/plugins/jquery.contextmenu.min.js');
+require('jquery-contextmenu');
     
 /**
  * @class EntitiesList

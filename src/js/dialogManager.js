@@ -106,6 +106,10 @@ function DialogManager(writer) {
     // dialog name, class map
     var dialogs = {};
     
+    var schemaDialogs = {
+        tei: require('./schema/tei/dialogs_map.js')
+    };
+    
     /**
      * @lends DialogManager.prototype
      */
@@ -179,31 +183,19 @@ function DialogManager(writer) {
         }
     }
 
-    var schemaDialogs = {};
     var dialogNames = ['citation', 'correction', 'date', 'keyword', 'link', 'note', 'org', 'person', 'place', 'title'];
 
     var loadSchemaDialogs = function() {
-        var schemaId = w.schemaManager.schemaId;
         var schemaMappingsId = w.schemaManager.getCurrentSchema().schemaMappingsId;
-
+        
         // TODO destroy previously loaded dialogs
-        if (schemaDialogs[schemaMappingsId] == null) {
-            var parent = schemaDialogs[schemaMappingsId] = {};
-            var schemaDialogNames = [];
-            schemaDialogNames = $.map(dialogNames, function(name, i) {
-                return 'schema/'+schemaMappingsId+'/dialogs/'+name;
-            });
-            require(schemaDialogNames, function() {
-                if (arguments.length != schemaDialogNames.length) {
-                    alert('error loading schema dialogs');
-                } else {
-                    for (var i = 0; i < arguments.length; i++) {
-                        var name = dialogNames[i];
-                        var id = schemaMappingsId+'_'+name+'Form';
-                        parent[name] = new arguments[i](id, w);
-                    }
-                }
-            });
+        for (var dialogName in schemaDialogs[schemaMappingsId]) {
+            var dialog = schemaDialogs[schemaMappingsId][dialogName];
+            if (dialog.show === undefined) {
+                // need to init
+                var id = schemaMappingsId+'_'+dialogName+'Form';
+                schemaDialogs[schemaMappingsId][dialogName] = new dialog(id, w);
+            }
         }
     };
 

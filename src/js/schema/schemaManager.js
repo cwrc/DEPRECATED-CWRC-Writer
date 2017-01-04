@@ -94,8 +94,6 @@ function SchemaManager(writer, config) {
      * @param {Function} callback Callback for when the load is complete
      */
     sm.loadSchema = function(schemaId, startText, loadCss, callback) {
-        sm.mapper.clearMappings();
-        
         var schemaEntry = sm.schemas[schemaId];
         if (schemaEntry !== undefined) {
             sm.schemaId = schemaId;
@@ -103,21 +101,15 @@ function SchemaManager(writer, config) {
             var schemaUrl = schemaEntry.url;
             var schemaMappingsId = schemaEntry.schemaMappingsId;
             
+            sm.mapper.loadMappings(schemaMappingsId);
+            
             $.when(
                 $.ajax({
                     url: schemaUrl,
                     dataType: 'xml'
-                }),
-                sm.mapper.loadMappings(schemaMappingsId)
-            ).then(function(resp1, resp2) {
-                // process mappings
-                if (sm.mapper.mappings.listeners !== undefined) {
-                    for (var event in sm.mapper.mappings.listeners) {
-                        w.event(event).subscribe(sm.mapper.mappings.listeners[event]);
-                    }
-                }
-                
-                var data = resp1[0];
+                })
+            ).then(function(resp1) {
+                var data = resp1;
                 
                 sm.schemaXML = data;
                 // get root element

@@ -1,4 +1,3 @@
-var $ = require('jquery');
 var DialogForm = require('../../dialogs/dialogForm.js');
 
 var citation = require('./dialogs/citation.js');

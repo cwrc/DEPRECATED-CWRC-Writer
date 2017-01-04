@@ -94,7 +94,7 @@ Layout.prototype = {
                         uiHeight += toolbar.outerHeight();
                     }
                     $('iframe', this.w.editor.getContainer()).height(state.layoutHeight - uiHeight);
-                }
+                }.bind(this)
             },
             south: {
                 size: 250,
@@ -120,7 +120,7 @@ Layout.prototype = {
             window.location = 'http://www.cwrc.ca';
         });
         
-//        new StructureTree({writer: this.w, parentId: 'westTabsContent'});
+        new StructureTree({writer: this.w, parentId: 'westTabsContent'});
         new EntitiesList({writer: this.w, parentId: 'westTabsContent'});
         new Relations({writer: this.w, parentId: 'westTabsContent'});
         new Validation({writer: this.w, parentId: 'southTabsContent'});
@@ -156,7 +156,7 @@ Layout.prototype = {
                 $('#cwrc_loadingMask').fadeOut();
                 this.w.event('documentLoaded').unsubscribe(onLoadDone);
             }
-        };
+        }.bind(this);
         this.w.event('loadingDocument').subscribe(onLoad);
         this.w.event('documentLoaded').subscribe(onLoadDone);
         
