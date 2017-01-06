@@ -3,6 +3,13 @@
 
 var $ = require('jquery');
 require('jquery-ui');
+
+// need styles loaded before loading cwrcDialogs
+$(document.head).append(''+
+    '<link type="text/css" rel="stylesheet" href="css/cD/css/cD.css" />'+
+    '<link type="text/css" rel="stylesheet" href="css/cD/css/font-awesome.css" />'+
+    '<link type="text/css" rel="stylesheet" href="css/bootstrap/css/bootstrap.css" />'
+);
 var cD = require('cwrcDialogs');
 
 // a bridge between the CWRC-Writer and the cwrcDialogs

@@ -1,15 +1,3 @@
-//define([
-//    'jquery',
-//    'jquery-ui',
-//    'cwrcDialogs',
-//    'dialogs/addSchema','dialogs/fileManager','dialogs/loadingIndicator','dialogs/header','dialogs/message','dialogs/triple',
-//    'dialogs/cwrcPerson','dialogs/cwrcOrg','dialogs/cwrcPlace','dialogs/cwrcTitle','dialogs/cwrcCitation',
-//    'dialogs/schemaTags','dialogs/help','dialogs/copyPaste','dialogs/popup'
-//], function($, jqueryui, cD,
-//        AddSchema, FileManager, LoadingIndicator, Header, Message, Triple,
-//        CwrcPerson, CwrcOrg, CwrcPlace, CwrcTitle, CwrcCitation,
-//        SchemaTags, Help, CopyPaste, Popup
-//) {
 'use strict';
 
 var $ = require('jquery');

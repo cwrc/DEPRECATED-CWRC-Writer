@@ -35,6 +35,7 @@ function Popup(writer) {
     
     var doPosition = function() {
         $popupEl.popup('option', 'position', {
+            my: 'center', at: 'center', of: $currentTag,
             using: function(topLeft, posObj) {
                 var $popupEl = posObj.element.element;
                 var $editorBody = $(w.editor.getBody());

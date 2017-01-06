@@ -716,6 +716,8 @@ function StructureTree(config) {
         });
     });
     
+    $(document.head).append('<link type="text/css" rel="stylesheet" href="lib/jquery/jstree/themes/default/cwrc.css" />');
+    
 //    $.vakata.dnd.settings.helper_left = 15;
 //    $.vakata.dnd.settings.helper_top = 20;
     
@@ -731,7 +733,7 @@ function StructureTree(config) {
             check_callback: true, // enable tree modifications
             animation: false,
             themes: {
-                name: 'cwrc',
+                name: 'default',
                 icons: false,
                 url: true,
                 dir: w.cwrcRootUrl + '/lib/jquery/jstree/themes',
@@ -941,9 +943,9 @@ function StructureTree(config) {
     });
     $(document).on('dnd_move.vakata', function(e, data) {
         // adjust marker pos for our styles
-        var marker = $('#jstree-marker');
-        var o = marker.offset();
-        marker.offset({top: o.top-6, left: o.left-2});
+//        var marker = $('#jstree-marker');
+//        var o = marker.offset();
+//        marker.offset({top: o.top-6, left: o.left-2});
     });
     $tree.on('copy_node.jstree', function(e, data) {
         _onDragDrop(data, true);

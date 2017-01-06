@@ -14,6 +14,7 @@ function Layout(w, config) {
     this.w = w;
     this.container = config.container;
     this.textareaId = config.textareaId;
+    this.ui = null;
 }
 
 Layout.prototype = {
@@ -21,7 +22,7 @@ Layout.prototype = {
     
     init: function() {
         $(this.container).html(
-            '<div id="cwrc_loadingMask"><div>Loading CWRC-Writer</div></div>'+
+            '<div id="cwrc_loadingMask" class="cwrc"><div>Loading CWRC-Writer</div></div>'+
             '<div id="cwrc_wrapper">'+
                 '<div id="cwrc_header" class="cwrc ui-layout-north">'+
                     '<h1>CWRC-Writer v0.9</h1>'+
@@ -55,8 +56,8 @@ Layout.prototype = {
                 '</div>'+
             '</div>'
         );
-    
-        var layout = $('#cwrc_wrapper', this.container).layout({
+        
+        this.ui = $('#cwrc_wrapper', this.container).layout({
             defaults: {
                 maskIframesOnResize: true,
                 resizable: true,
@@ -80,7 +81,7 @@ Layout.prototype = {
             }
         });
         
-        layout.panes.center.layout({
+        this.ui.panes.center.layout({
             defaults: {
                 maskIframesOnResize: true,
                 resizable: true,
@@ -147,9 +148,11 @@ Layout.prototype = {
         
         var isLoading = false;
         var doneLayout = false;
+        
         var onLoad = function() {
             isLoading = true;
-        };
+            this.w.event('loadingDocument').unsubscribe(onLoad);
+        }.bind(this);
         var onLoadDone = function() {
             isLoading = false;
             if (doneLayout) {
@@ -157,21 +160,23 @@ Layout.prototype = {
                 this.w.event('documentLoaded').unsubscribe(onLoadDone);
             }
         }.bind(this);
-        this.w.event('loadingDocument').subscribe(onLoad);
-        this.w.event('documentLoaded').subscribe(onLoadDone);
-        
-        setTimeout(function() {
-            layout.options.onresizeall_end = function() {
+        var doResize = function() {
+            this.ui.options.onresizeall_end = function() {
                 doneLayout = true;
                 if (isLoading === false) {
                     $('#cwrc_loadingMask').fadeOut();
-                    layout.options.onresizeall_end = null;
+                    this.ui.options.onresizeall_end = null;
                 }
-            };
-            layout.resizeAll(); // now that the editor is loaded, set proper sizing
-        }, 250);
+            }.bind(this);
+            this.ui.resizeAll(); // now that the editor is loaded, set proper sizing
+            this.w.event('documentLoaded').unsubscribe(doResize);
+        }.bind(this);
         
-        return layout;
+        this.w.event('loadingDocument').subscribe(onLoad);
+        this.w.event('documentLoaded').subscribe(onLoadDone);
+        this.w.event('writerInitialized').subscribe(doResize);
+        
+        return this.ui;
     }
 }
 
