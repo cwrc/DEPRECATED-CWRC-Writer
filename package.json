@@ -34,9 +34,8 @@
     
     "watch": "watchify src/js/writer.js --debug --standalone CWRCWriter -o build/js/app.js --verbose",
     
-    "jquery": "copyfiles -f node_modules/jquery/dist/jquery.js build/lib/jquery/ && npm run jquery-ui && npm run jquery:jstree",
+    "jquery": "npm run jquery:jstree",
     "browserify:jquery": "browserify -r jquery --standalone jquery > build/lib/jquery/jquery.js",
-    "jquery-ui": "copyfiles -f node_modules/jquery-ui/dist/jquery-ui.js build/lib/jquery/",
     "jquery:jstree": "copyfiles -f \"node_modules/jstree/dist/themes/default/*\" build/lib/jquery/jstree/themes/default && copyfiles -f src/js/lib/jquery/plugins/jstree/themes/cwrc/cwrc.css build/lib/jquery/jstree/themes/default",
     
     "build": "npm run clean && npm run build:js && npm run build:images && npm run build:css && npm run build:html",
@@ -56,7 +55,7 @@
     "tinymce:plugins": "rimraf src/js/tinymce_plugins/plugins.js && minify \"src/js/tinymce_plugins/\"",
     
     "cwrcDialogs": "npm run cwrcDialogs:importcss && npm run cwrcDialogs:importjs && npm run cwrcDialogs:build && npm run bootstrap",
-    "cwrcDialogs:importcss": "copyfiles -f %npm_package_config_cwrcDialogsDir%/css/cD.css build/css/cD/css/ && copyfiles -f %npm_package_config_cwrcDialogsDir%/font-awesome/css/font-awesome.css build/css/cD/css/ && copyfiles -f \"%npm_package_config_cwrcDialogsDir%/font-awesome/fonts/*\" build/css/fonts/",
+    "cwrcDialogs:importcss": "copyfiles -f %npm_package_config_cwrcDialogsDir%/css/cD.css build/css/cD/css/ && copyfiles -f %npm_package_config_cwrcDialogsDir%/font-awesome/css/font-awesome.css build/css/cD/css/ && copyfiles -f \"%npm_package_config_cwrcDialogsDir%/font-awesome/fonts/*\" build/css/cD/fonts/",
     "cwrcDialogs:importjs": "copyfiles -u 4 \"%npm_package_config_cwrcDialogsDir%/js/**/*\" temp/cwrc/",
     "cwrcDialogs:build": "browserify temp/cwrc/cD.js --debug --standalone cD > build/js/cD.js",
     "bootstrap": "copyfiles -f %npm_package_config_cwrcDialogsDir%/css/bootstrap.css build/css/bootstrap/css/ && copyfiles -f \"node_modules/bootstrap/dist/fonts/*\" build/css/bootstrap/fonts/"
@@ -69,7 +68,7 @@
   },
   "browserify-shim": {
     "jquery": "$",
-    "jquery-ui": {"depends": ["jquery:jQuery"]},
+    "jquery-ui": {"exports": "$.ui", "depends": ["jquery:jQuery"]},
     "jquery-layout": {"exports": "$.fn.layout", "depends": ["jquery:jQuery"]},
     "jquery-contextmenu": {"exports": "$.fn.contextMenu", "depends": ["jquery:jQuery"]},
     "jstree": {"exports": "$.fn.vakata", "depends": ["jquery:jQuery"]},
@@ -83,7 +82,7 @@
   },
   "browser": {
     "jquery": "./node_modules/jquery/dist/jquery.js",
-    "jquery-ui": "./node_modules/jquery-ui/dist/jquery-ui.js",
+    "jquery-ui": "./node_modules/jquery-ui-dist/jquery-ui.js",
     "jquery-layout": "./src/js/lib/jquery/plugins/jquery.layout-latest.js",
     "jquery-contextmenu": "./src/js/lib/jquery/plugins/jquery.contextmenu.min.js",
     "jstree": "./node_modules/jstree/dist/jstree.js",
@@ -112,13 +111,14 @@
     
     "tinymce": "^4.5.0",
     "jquery": "^3.1.0",
-    "jquery-ui": "^1.12.0",
+    "jquery-ui-dist": "^1.12",
     "jquery-xpath": "^0.3.1",
     "jquery.tmpl": "0.0.2",
     "jstree": "^3.3.2",
     "minifyify": "^7.3.3",
     "moment": "^2.13.0",
     "octokit": "^0.10.4",
+    "css-parse": "^2.0.0",
     "css-stringify": "^2.0.0",
     "prismjs": "^1.6.0",
     
