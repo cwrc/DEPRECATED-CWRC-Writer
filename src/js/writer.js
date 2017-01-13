@@ -239,14 +239,14 @@ function CWRCWriter(config) {
     w.showToolbar = function() {
         $('.mce-toolbar-grp', w.editor.getContainer()).first().show();
         if (w.layout) {
-            w.layout.resizeAll();
+            w.layout.ui.resizeAll();
         }
     }
     
     w.hideToolbar = function() {
         $('.mce-toolbar-grp', w.editor.getContainer()).first().hide();
         if (w.layout) {
-            w.layout.resizeAll();
+            w.layout.ui.resizeAll();
         }
     }
 

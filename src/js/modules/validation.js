@@ -41,7 +41,7 @@ function Validation(config) {
     
     // TODO decouple
     function showValidation() {
-        w.layout.center.children.layout1.open('south');
+        w.layout.ui.center.children.layout1.open('south');
         $('#southTabs').tabs('option', 'active', 0);
     }
     
