@@ -4,6 +4,7 @@ var $ = require('jquery');
 require('jquery-ui');
 require('./lib/jquery/plugins/jquery.popup.js');
 var DialogForm = require('./dialogs/dialogForm.js');
+
 var cD = require('cwrcDialogs');
 
 var AddSchema = require('./dialogs/addSchema.js');
@@ -169,6 +170,8 @@ function DialogManager(writer) {
     }
 
     if (w.initialConfig.cwrcDialogs !== undefined) {
+        cD.initialize();
+        
         var conf = w.initialConfig.cwrcDialogs;
         if (conf.cwrcApiUrl) cD.setCwrcApi(conf.cwrcApiUrl);
         if (conf.repositoryBaseObjectUrl) cD.setRepositoryBaseObjectURL(conf.repositoryBaseObjectUrl);
