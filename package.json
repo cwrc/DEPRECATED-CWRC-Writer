@@ -85,6 +85,7 @@
     "jquery-ui": "./node_modules/jquery-ui-dist/jquery-ui.js",
     "jquery-layout": "./src/js/lib/jquery/plugins/jquery.layout-latest.js",
     "jquery-contextmenu": "./src/js/lib/jquery/plugins/jquery.contextmenu.min.js",
+    "jquery-watermark": "./src/js/lib/jquery/plugins/jquery.watermark.min.js",
     "jstree": "./node_modules/jstree/dist/jstree.js",
     "objtree": "./src/js/lib/objtree/ObjTree.js",
     "jquery-xpath": "./node_modules/jquery-xpath/jquery.xpath.js",

@@ -1,10 +1,8 @@
-define(['jquery',
-        'jquery-ui',
-        'moment',
-        'dialogForm'
-], function($, jqueryUi, moment, DialogForm) {
-    
-return function(id, writer) {
+var $ = require('jquery');
+var moment = require('moment/moment');
+var DialogForm = require('../../../dialogs/dialogForm.js');
+
+module.exports = function(id, writer) {
     var w = writer;
     var today = new Date();
     var upperLimit = today.getFullYear() + 10;
@@ -233,5 +231,3 @@ return function(id, writer) {
         }
     };
 };
-
-});

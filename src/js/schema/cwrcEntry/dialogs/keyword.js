@@ -1,6 +1,8 @@
-define(['jquery', 'jquery-ui', 'dialogForm', 'jquery.watermark'], function($, jqueryUi, DialogForm) {
-    
-return function(id, writer) {
+var $ = require('jquery');
+require('jquery-watermark');
+var DialogForm = require('../../../dialogs/dialogForm.js');
+
+module.exports = function(id, writer) {
     var w = writer;
     
     var html = ''+
@@ -31,5 +33,3 @@ return function(id, writer) {
         }
     };
 };
-
-});

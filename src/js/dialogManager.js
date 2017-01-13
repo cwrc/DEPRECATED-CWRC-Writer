@@ -107,7 +107,9 @@ function DialogManager(writer) {
     var dialogs = {};
     
     var schemaDialogs = {
-        tei: require('./schema/tei/dialogs_map.js')
+        tei: require('./schema/tei/dialogs_map.js'),
+        orlando: require('./schema/orlando/dialogs_map.js'),
+        cwrcEntry: require('./schema/cwrcEntry/dialogs_map.js')
     };
     
     /**

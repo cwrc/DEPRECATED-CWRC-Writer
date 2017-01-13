@@ -13,7 +13,9 @@ function Mapper(config) {
     // can't require mappings outside of constructor due to circular dependency of mappings on static Mapper methods
     this.mappings = {
         empty: require('./empty_mappings.js'),
-        tei: require('./tei/mappings.js')
+        tei: require('./tei/mappings.js'),
+        orlando: require('./orlando/mappings.js'),
+        cwrcEntry: require('./cwrcEntry/mappings.js')
     };
 }
 
