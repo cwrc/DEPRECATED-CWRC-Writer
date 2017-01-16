@@ -19,6 +19,13 @@ html, body {
     width: 100%;
 }
 
+#cwrcDialogWrapper {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	z-index: 100;
+}
+
 .cwrc {
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: 14px;

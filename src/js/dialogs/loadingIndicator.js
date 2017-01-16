@@ -50,10 +50,12 @@ function LoadingIndicator(writer) {
                 }
             });
         } else {
-            progressLabel.text('Document Loaded');
-            loadingIndicator.fadeOut(1000, function() {
-                loadingIndicator.dialog('close');
-            });
+            loadingIndicator.dialog('close');
+            // FIXME need to close immediately because of problems if there's another modal showing
+//            progressLabel.text('Document Loaded');
+//            loadingIndicator.fadeOut(1000, function() {
+//                loadingIndicator.dialog('close');
+//            });
         }
     });
     w.event('schemaLoaded').subscribe(function() {

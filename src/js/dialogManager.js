@@ -42,23 +42,16 @@ function handleResize(dialogEl) {
     }
 }
 
+$(document.body).append('<div class="cwrc" id="cwrcDialogWrapper"></div>');
+
 // add event listeners to all of our jquery ui dialogs
 $.extend($.ui.dialog.prototype.options, {
+    appendTo: '#cwrcDialogWrapper',
     create: function(e) {
         $(e.target).on('dialogopen', function(event) {
-            // wrap our dialogs in the cwrc css scope
-            var $dialog = $(event.target).parent('.ui-dialog');
-            var $overlay = $dialog.parent().find('.ui-widget-overlay').detach();
-            $dialog.before($overlay); // need to insert before so dialog is useable
-            $dialog.prev('.ui-widget-overlay').addBack().wrapAll('<div class="cwrc" style="position: fixed; top: 0px; left: 0px; z-index: 100;"/>');
-            
             handleResize($(event.target));
             $(window).on('resize', $.proxy(handleResize, this, $(event.target)));
         }).on('dialogclose', function(event) {
-            var $dialog = $(event.target).parent('.ui-dialog');
-            $dialog.find('.ui-widget-overlay').remove();
-            $dialog.unwrap();
-            
             $(window).off('resize', $.proxy(handleResize, this, $(event.target)));
         });
     }
@@ -66,31 +59,16 @@ $.extend($.ui.dialog.prototype.options, {
 
 // do the same for tooltips
 $.extend($.ui.tooltip.prototype.options, {
-    create: function(event) {
-        $(event.target).on('tooltipopen', function(event, ui) {
-            $(ui.tooltip).wrap('<div class="cwrc" />');
-        }).on('tooltipclose', function(event, ui) {
-            $(ui.tooltip).unwrap();
-        });
-    }
+    appendTo: '#cwrcDialogWrapper'
 });
 // do the same for popups
 $.extend($.custom.popup.prototype.options, {
+    appendTo: '#cwrcDialogWrapper',
     create: function(e) {
         $(e.target).on('popupopen', function(event) {
-            // wrap our dialogs in the cwrc css scope
-            var $dialog = $(event.target).parent('.ui-dialog');
-            var $overlay = $dialog.parent().find('.ui-widget-overlay').detach();
-            $dialog.before($overlay); // need to insert before so dialog is useable
-            $dialog.prev('.ui-widget-overlay').addBack().wrapAll('<div class="cwrc" style="position: fixed; top: 0px; left: 0px; z-index: 100;"/>');
-            
             handleResize($(event.target));
             $(window).on('resize', $.proxy(handleResize, this, $(event.target)));
         }).on('popupclose', function(event) {
-            var $dialog = $(event.target).parent('.ui-dialog');
-            $dialog.find('.ui-widget-overlay').remove();
-            $dialog.unwrap();
-            
             $(window).off('resize', $.proxy(handleResize, this, $(event.target)));
         });
     }

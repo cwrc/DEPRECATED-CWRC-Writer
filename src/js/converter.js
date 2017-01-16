@@ -654,6 +654,8 @@ function Converter(writer) {
         // reset the undo manager
         w.editor.undoManager.clear();
 
+        w.event('documentLoaded').publish(true, w.editor.getBody());
+        
         var msgObj = {};
         if (w.isReadOnly !== true) {
             if (root.nodeName.toLowerCase() !== w.root.toLowerCase()) {
@@ -680,8 +682,6 @@ function Converter(writer) {
                 });
             }
         }
-        
-        w.event('documentLoaded').publish(true, w.editor.getBody());
     }
 
     // Needs to be public, to be able to process documents after the schema
