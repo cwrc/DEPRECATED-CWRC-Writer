@@ -167,18 +167,18 @@ AttributeWidget.prototype = {
         });
         
         $('input, select, option', this.$parent).change(function(event) {
-            isDirty = true;
+            this.isDirty = true;
         });
 //        .keyup(function(event) {
 //            if (event.keyCode == '13') {
 //                event.preventDefault();
-//                if (isDirty) t.result();
+//                if (this.isDirty) t.result();
 //                else t.cancel(); 
 //            }
 //        });
         
         $('select, option', this.$parent).click(function(event) {
-            isDirty = true;
+            this.isDirty = true;
         });
     },
     reset: function() {
