@@ -96,149 +96,43 @@ function StructureTree(config) {
     var ignoreSelect = false;
     
     var $tree; // tree reference
-    
-    w.event('loadingDocument').subscribe(function() {
-        tree.clear();
-    });
-    w.event('documentLoaded').subscribe(function() {
-        tree.update();
-    });
-    w.event('schemaLoaded').subscribe(function() {
-        tree.update();
-    });
-    w.event('nodeChanged').subscribe(function(currentNode) {
-        tree.highlightNode(currentNode);
-    });
-    w.event('contentChanged').subscribe(function() {
-        tree.update();
-    });
-    w.event('contentCopied').subscribe(function() {
-        if (tree.currentlySelectedNodes.length > 0) {
-            var clone = $('#'+tree.currentlySelectedNodes[0], w.editor.getBody()).clone();
-            w.editor.copiedElement.element = clone.wrapAll('<div />').parent()[0];
-            w.editor.copiedElement.selectionType = tree.selectionType;
-        }
-    });
-    w.event('contentPasted').subscribe(function() {
-        tree.update();
-    });
-    w.event('writerKeydown').subscribe(function(evt) {
-        if (tree.currentlySelectedNodes.length > 0) {
-            var nodeId = tree.currentlySelectedNodes[0];
-            
-            // browsers have trouble deleting divs, so use the tree and jquery as a workaround
-            if (evt.which == 8 || evt.which == 46) {
-                    // cancel keyboard delete
-                    // TODO doesn't cancel quickly enough
-                    tinymce.dom.Event.cancel(evt);
-                    if (tree.selectionType == tree.NODE_SELECTED) {
-                        w.tagger.removeStructureTag(nodeId, true);
-                    } else {
-                        w.tagger.removeStructureTagContents(nodeId);
-                        w.selectStructureTag(nodeId, true);
-                    }
-            } else if (evt.ctrlKey == false && evt.metaKey == false && evt.which >= 48 && evt.which <= 90) {
-                // handle alphanumeric characters when whole tree node is selected
-                // remove the selected node and set the focus to the closest node
-                if (tree.selectionType == tree.NODE_SELECTED) {
-                    var currNode = $('#'+nodeId, w.editor.getBody());
-                    var collapseToStart = true;
-                    var newCurrentNode = currNode.nextAll('[_tag]')[0];
-                    if (newCurrentNode == null) {
-                        newCurrentNode = currNode.parent().nextAll('[_tag]')[0];
-                        if (newCurrentNode == null) {
-                            collapseToStart = false;
-                            newCurrentNode = currNode.prevAll('[_tag]')[0];
-                        }
-                    }
-                    w.tagger.removeStructureTag(nodeId, true);
-                    if (newCurrentNode != null) {
-                        var rng = w.editor.selection.getRng(true);
-                        rng.selectNodeContents(newCurrentNode);
-                        rng.collapse(collapseToStart);
-                        w.editor.selection.setRng(rng);
-                    }
-                }
-            }
-        }
-    });
-    w.event('writerKeyup').subscribe(function(evt) {
-        // if the user's typing we don't want the currentlySelectedNodes to be set
-        // calling highlightNode will clear currentlySelectedNodes
-//        if (tree.currentlySelectedNodes.length > 0) {
-//            var currNode = $('#'+tree.currentlySelectedNodes[0], w.editor.getBody())[0];
-//            tree.highlightNode(currNode);
-//        }
-    });
-    
-    w.event('entityAdded').subscribe(function(entityId) {
-        tree.update();
-    });
-    w.event('entityRemoved').subscribe(function(entityId) {
-        tree.update();
-    });
-    w.event('entityFocused').subscribe(function(entityId) {
-        if (!ignoreSelect) {
-            var entityNode = $('[name="'+entityId+'"]', w.editor.getBody())[0];
-            tree.highlightNode(entityNode);
-        }
-        ignoreSelect = false;
-    });
-    w.event('entityPasted').subscribe(function(entityId) {
-        tree.update();
-    });
-    w.event('tagAdded').subscribe(function(tag) {
-        tree.update();
-    });
-    w.event('tagEdited').subscribe(function(tag) {
-        tree.update();
-    });
-    w.event('tagRemoved').subscribe(function(tagId) {
-        tree.update();
-    });
-    w.event('tagContentsRemoved').subscribe(function(tagId) {
-        tree.update();
-    });
-    w.event('tagSelected').subscribe(function(tagId) {
-//        tree.currentlySelectedNodes = [tagId];
-//        tree.selectNode(tagId, false);
-        if (!ignoreSelect) {
-            tree.selectNode(tagId, false);
-        }
-        ignoreSelect = false;
-    });
-    
+    var initialized = false; // has $tree been initialized
+    var updatePending = false;
     
     /**
      * Updates the tree to reflect the document structure.
      */
     tree.update = function() {
-        var treeRef = $.jstree.reference('#'+id);
-        // store open nodes to re-open after updating
-        var openNodes = [];
-        $('#cwrc_tree_root', $tree).find('li.jstree-open').each(function () {
-            var id = $(this).attr('name');
-            openNodes.push(id);
-        });
-        
-        tree.clear();
-        
-        var rootNode = $('[_tag="'+w.root+'"]', w.editor.getBody());
-        if (rootNode.length === 0) {
-            // fallback if schema/root has changed
-            rootNode = $('[_tag]', w.editor.getBody()).first();
-        }
-        var rootData = _processNode(rootNode, 0);
-        if (rootData != null) {
-            rootData.li_attr.id = 'cwrc_tree_root';
-            _doUpdate(rootNode.children(), rootData, 0, rootData);
-            treeRef.create_node(null, rootData);
-//            treeRef._themeroller();
-            _onNodeLoad($('#cwrc_tree_root', $tree).first());
-            
-            $.each(openNodes, function (i, val) {
-                treeRef.open_node($('li[name='+val+']', $tree), null, false); 
+        if (initialized) {
+            var treeRef = $.jstree.reference('#'+id);
+            // store open nodes to re-open after updating
+            var openNodes = [];
+            $('#cwrc_tree_root', $tree).find('li.jstree-open').each(function () {
+                var id = $(this).attr('name');
+                openNodes.push(id);
             });
+            
+            tree.clear();
+            
+            var rootNode = $('[_tag="'+w.root+'"]', w.editor.getBody());
+            if (rootNode.length === 0) {
+                // fallback if schema/root has changed
+                rootNode = $('[_tag]', w.editor.getBody()).first();
+            }
+            var rootData = _processNode(rootNode, 0);
+            if (rootData != null) {
+                rootData.li_attr.id = 'cwrc_tree_root';
+                _doUpdate(rootNode.children(), rootData, 0, rootData);
+                treeRef.create_node(null, rootData);
+    //            treeRef._themeroller();
+                _onNodeLoad($('#cwrc_tree_root', $tree).first());
+                
+                $.each(openNodes, function (i, val) {
+                    treeRef.open_node($('li[name='+val+']', $tree), null, false); 
+                });
+            }
+        } else {
+            updatePending = true;
         }
     };
     
@@ -960,7 +854,123 @@ function StructureTree(config) {
         //console.log(e.which);
     });
     $tree.on('loaded.jstree', function(e, data) {
+        initialized = true;
+        if (updatePending) {
+            tree.update();
+            updatePending = false;
+        }
         w.event('structureTreeInitialized').publish(tree);
+    });
+    
+    w.event('loadingDocument').subscribe(function() {
+        tree.clear();
+    });
+    w.event('documentLoaded').subscribe(function() {
+        tree.update();
+    });
+    w.event('schemaLoaded').subscribe(function() {
+        tree.update();
+    });
+    w.event('nodeChanged').subscribe(function(currentNode) {
+        tree.highlightNode(currentNode);
+    });
+    w.event('contentChanged').subscribe(function() {
+        tree.update();
+    });
+    w.event('contentCopied').subscribe(function() {
+        if (tree.currentlySelectedNodes.length > 0) {
+            var clone = $('#'+tree.currentlySelectedNodes[0], w.editor.getBody()).clone();
+            w.editor.copiedElement.element = clone.wrapAll('<div />').parent()[0];
+            w.editor.copiedElement.selectionType = tree.selectionType;
+        }
+    });
+    w.event('contentPasted').subscribe(function() {
+        tree.update();
+    });
+    w.event('writerKeydown').subscribe(function(evt) {
+        if (tree.currentlySelectedNodes.length > 0) {
+            var nodeId = tree.currentlySelectedNodes[0];
+            
+            // browsers have trouble deleting divs, so use the tree and jquery as a workaround
+            if (evt.which == 8 || evt.which == 46) {
+                    // cancel keyboard delete
+                    // TODO doesn't cancel quickly enough
+                    tinymce.dom.Event.cancel(evt);
+                    if (tree.selectionType == tree.NODE_SELECTED) {
+                        w.tagger.removeStructureTag(nodeId, true);
+                    } else {
+                        w.tagger.removeStructureTagContents(nodeId);
+                        w.selectStructureTag(nodeId, true);
+                    }
+            } else if (evt.ctrlKey == false && evt.metaKey == false && evt.which >= 48 && evt.which <= 90) {
+                // handle alphanumeric characters when whole tree node is selected
+                // remove the selected node and set the focus to the closest node
+                if (tree.selectionType == tree.NODE_SELECTED) {
+                    var currNode = $('#'+nodeId, w.editor.getBody());
+                    var collapseToStart = true;
+                    var newCurrentNode = currNode.nextAll('[_tag]')[0];
+                    if (newCurrentNode == null) {
+                        newCurrentNode = currNode.parent().nextAll('[_tag]')[0];
+                        if (newCurrentNode == null) {
+                            collapseToStart = false;
+                            newCurrentNode = currNode.prevAll('[_tag]')[0];
+                        }
+                    }
+                    w.tagger.removeStructureTag(nodeId, true);
+                    if (newCurrentNode != null) {
+                        var rng = w.editor.selection.getRng(true);
+                        rng.selectNodeContents(newCurrentNode);
+                        rng.collapse(collapseToStart);
+                        w.editor.selection.setRng(rng);
+                    }
+                }
+            }
+        }
+    });
+    w.event('writerKeyup').subscribe(function(evt) {
+        // if the user's typing we don't want the currentlySelectedNodes to be set
+        // calling highlightNode will clear currentlySelectedNodes
+//        if (tree.currentlySelectedNodes.length > 0) {
+//            var currNode = $('#'+tree.currentlySelectedNodes[0], w.editor.getBody())[0];
+//            tree.highlightNode(currNode);
+//        }
+    });
+    
+    w.event('entityAdded').subscribe(function(entityId) {
+        tree.update();
+    });
+    w.event('entityRemoved').subscribe(function(entityId) {
+        tree.update();
+    });
+    w.event('entityFocused').subscribe(function(entityId) {
+        if (!ignoreSelect) {
+            var entityNode = $('[name="'+entityId+'"]', w.editor.getBody())[0];
+            tree.highlightNode(entityNode);
+        }
+        ignoreSelect = false;
+    });
+    w.event('entityPasted').subscribe(function(entityId) {
+        tree.update();
+    });
+    w.event('tagAdded').subscribe(function(tag) {
+        tree.update();
+    });
+    w.event('tagEdited').subscribe(function(tag) {
+        tree.update();
+    });
+    w.event('tagRemoved').subscribe(function(tagId) {
+        tree.update();
+    });
+    w.event('tagContentsRemoved').subscribe(function(tagId) {
+        tree.update();
+    });
+    w.event('tagSelected').subscribe(function(tagId) {
+//        tree.currentlySelectedNodes = [tagId];
+//        tree.selectNode(tagId, false);
+        if (!ignoreSelect) {
+            tree.selectNode(tagId, false);
+        }
+        ignoreSelect = false;
     });
     
     // add to writer
