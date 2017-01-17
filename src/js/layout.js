@@ -15,17 +15,36 @@ function Layout(w, config) {
     this.container = config.container;
     this.textareaId = config.textareaId;
     this.ui = null;
+    
+    this.mode = null; // 'reader' or 'annotator'
 }
 
 Layout.prototype = {
     constructor: Layout,
     
     init: function() {
+        var cwrcName = 'CWRC-Writer';
+        var version = '0.9';
+        var southTabs = ''+
+        '<div class="cwrc ui-layout-south">'+
+            '<div id="southTabs" class="tabs">'+
+                '<ul>'+
+                    '<li><a href="#validation">Validation</a></li>'+
+                    '<li><a href="#selection">Markup</a></li>'+
+                '</ul>'+
+                '<div id="southTabsContent" class="ui-layout-content"></div>'+
+            '</div>'+
+        '</div>';
+        if (this.w.isReadOnly) {
+            this.mode = 'reader';
+            cwrcName = 'CWRC-Reader';
+            southTabs = '';
+        }
         $(this.container).html(
-            '<div id="cwrc_loadingMask" class="cwrc"><div>Loading CWRC-Writer</div></div>'+
+            '<div id="cwrc_loadingMask" class="cwrc"><div>Loading '+cwrcName+'</div></div>'+
             '<div id="cwrc_wrapper">'+
                 '<div id="cwrc_header" class="cwrc ui-layout-north">'+
-                    '<h1>CWRC-Writer v0.9</h1>'+
+                    '<h1>'+cwrcName+' v.'+version+'</h1>'+
                     '<div id="headerButtons"></div>'+
                 '</div>'+
                 '<div class="cwrc ui-layout-west">'+
@@ -44,15 +63,7 @@ Layout.prototype = {
                             '<textarea id="'+this.textareaId+'" name="editor" class="tinymce"></textarea>'+
                         '</form>'+
                     '</div>'+
-                    '<div class="cwrc ui-layout-south">'+
-                        '<div id="southTabs" class="tabs">'+
-                            '<ul>'+
-                                '<li><a href="#validation">Validation</a></li>'+
-                                '<li><a href="#selection">Markup</a></li>'+
-                            '</ul>'+
-                            '<div id="southTabsContent" class="ui-layout-content"></div>'+
-                        '</div>'+
-                    '</div>'+
+                    southTabs+
                 '</div>'+
             '</div>'
         );
@@ -61,7 +72,8 @@ Layout.prototype = {
             defaults: {
                 maskIframesOnResize: true,
                 resizable: true,
-                slidable: false
+                slidable: false,
+                fxName: 'none' // 'slide'
             },
             north: {
                 size: 35,
@@ -76,7 +88,7 @@ Layout.prototype = {
                 onresize: function(region, pane, state, options) {
                     var tabsHeight = $('#westTabs > ul').outerHeight();
                     $('#westTabsContent').height(state.layoutHeight - tabsHeight);
-        //                    $.layout.callbacks.resizeTabLayout(region, pane);
+//                    $.layout.callbacks.resizeTabLayout(region, pane);
                 }
             }
         });
@@ -104,12 +116,6 @@ Layout.prototype = {
                 activate: function(event, ui) {
                     $.layout.callbacks.resizeTabLayout(event, ui);
                 },
-        //                onopen_start: function(region, pane, state, options) {
-        //                    var southTabs = $('#southTabs');
-        //                    if (!southTabs.hasClass('ui-tabs')) {
-        //                        
-        //                    }
-        //                },
                 onresize: function(region, pane, state, options) {
                     var tabsHeight = $('#southTabs > ul').outerHeight();
                     $('#southTabsContent').height(state.layoutHeight - tabsHeight);
@@ -124,8 +130,10 @@ Layout.prototype = {
         new StructureTree({writer: this.w, parentId: 'westTabsContent'});
         new EntitiesList({writer: this.w, parentId: 'westTabsContent'});
         new Relations({writer: this.w, parentId: 'westTabsContent'});
-        new Validation({writer: this.w, parentId: 'southTabsContent'});
-        new Selection({writer: this.w, parentId: 'southTabsContent'});
+        if (!this.w.isReadOnly) {
+            new Validation({writer: this.w, parentId: 'southTabsContent'});
+            new Selection({writer: this.w, parentId: 'southTabsContent'});
+        }
         
         $('#westTabs').tabs({
             active: 1,
@@ -136,15 +144,17 @@ Layout.prototype = {
                 $('#westTabs').parent().find('.ui-corner-all:not(button)').removeClass('ui-corner-all');
             }
         });
-        $('#southTabs').tabs({
-            active: 1,
-            activate: function(event, ui) {
-                $.layout.callbacks.resizeTabLayout(event, ui);
-            },
-            create: function(event, ui) {
-                $('#southTabs').parent().find('.ui-corner-all:not(button)').removeClass('ui-corner-all');
-            }
-        });
+        if (!this.w.isReadOnly) {
+            $('#southTabs').tabs({
+                active: 1,
+                activate: function(event, ui) {
+                    $.layout.callbacks.resizeTabLayout(event, ui);
+                },
+                create: function(event, ui) {
+                    $('#southTabs').parent().find('.ui-corner-all:not(button)').removeClass('ui-corner-all');
+                }
+            });
+        }
         
         var isLoading = false;
         var doneLayout = false;
@@ -168,6 +178,27 @@ Layout.prototype = {
                     $('#cwrc_loadingMask').fadeOut();
                     this.ui.options.onresizeall_end = null;
                 }
+                if (this.w.isReadOnly) {
+                    if ($('#annotateLink').length === 0) {
+                        $('#headerLink').hide();
+                        $('#headerButtons').append('<div id="annotateLink"><h2>Annotate</h2></div>');
+                        
+                        $('#annotateLink').click(function(e) {
+                            if (this.mode === 'reader') {
+                                // TODO check credentials
+                                this.activateAnnotator();
+                                $('h2', e.currentTarget).text('Read');
+                            } else {
+                                this.activateReader();
+                                $('h2', e.currentTarget).text('Annotate');
+                            }
+                        }.bind(this));
+                        
+                        this.w.settings.hideAdvanced();
+                        
+                        this.activateReader();
+                    }
+                }
             }.bind(this);
             this.ui.resizeAll(); // now that the editor is loaded, set proper sizing
         }.bind(this);
@@ -177,6 +208,27 @@ Layout.prototype = {
         this.w.event('writerInitialized').subscribe(doResize);
         
         return this.ui;
+    },
+    
+    activateReader: function() {
+        this.w.isAnnotator = false;
+        this.ui.open('west');
+        this.w.hideToolbar();
+        
+        this.w.editor.plugins.cwrc_contextmenu.disabled = true;
+        
+        this.mode = 'reader';
+    },
+    
+    activateAnnotator: function() {
+        this.w.isAnnotator = true;
+        this.ui.open('west');
+        this.w.showToolbar();
+        
+        this.w.editor.plugins.cwrc_contextmenu.disabled = false;
+        this.w.editor.plugins.cwrc_contextmenu.entityTagsOnly = true;
+        
+        this.mode = 'annotator';
     }
 }
 
