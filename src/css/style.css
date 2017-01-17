@@ -141,8 +141,9 @@ html, body {
     padding: 5px;
 }
 
-#entitiesOptions > div {
-    padding-bottom: 5px;
+#sortBy > span {
+    float: left;
+    margin: 0.4em;
 }
 
 .entitiesList {

@@ -158,6 +158,7 @@ Layout.prototype = {
             if (doneLayout) {
                 $('#cwrc_loadingMask').fadeOut();
                 this.w.event('documentLoaded').unsubscribe(onLoadDone);
+                doResize();
             }
         }.bind(this);
         var doResize = function() {
@@ -169,7 +170,6 @@ Layout.prototype = {
                 }
             }.bind(this);
             this.ui.resizeAll(); // now that the editor is loaded, set proper sizing
-            this.w.event('documentLoaded').unsubscribe(doResize);
         }.bind(this);
         
         this.w.event('loadingDocument').subscribe(onLoad);
