@@ -25,7 +25,7 @@ var CwrcCitation = require('./dialogs/cwrcCitation.js');
 
 function handleResize(dialogEl) {
     if (dialogEl.is(':visible')) {
-        if (dialogEl.parent('.ui-dialog').hasClass('linkPopup') == false && dialogEl.parent('.ui-dialog').hasClass('tagPopup') == false) {
+        if (dialogEl.parent('.ui-dialog').hasClass('popup') == false) {
             var winWidth = $(window).width();
             var winHeight = $(window).height();
             var dialogWidth = dialogEl.dialog('option', 'width');

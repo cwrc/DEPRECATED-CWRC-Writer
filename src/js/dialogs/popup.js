@@ -74,12 +74,12 @@ function Popup(writer) {
         window.open(url);
     }
     
-    var doPopup = function(text) {
+    var doPopup = function(text, type) {
         $popupEl.parent().off('mouseover', doMouseOver);
         $popupEl.parent().off('mouseout', doMouseOut);
         $popupEl.parent().find('.ui-dialog-title').off('click', doClick);
         
-        $popupEl.popup('option', 'dialogClass', 'tagPopup');
+        $popupEl.popup('option', 'dialogClass', 'popup '+type);
         $popupEl.popup('option', 'title', text);
         $popupEl.popup('open');
         
@@ -116,7 +116,7 @@ function Popup(writer) {
         }
         
         if (popText != null) {
-            doPopup(popText);
+            doPopup(popText, 'tag');
         }
     };
     
@@ -128,7 +128,7 @@ function Popup(writer) {
         if (popKeys.indexOf(tag) !== -1) {
             var popText = $currentTag[0].textContent;
             if (popText != '') {
-                doPopup(popText);
+                doPopup(popText, 'tag');
             }
         }
     };
@@ -147,7 +147,7 @@ function Popup(writer) {
         }
         
         if (url != null) {
-            doPopup(url);
+            doPopup(url, 'link');
             $popupEl.parent().find('.ui-dialog-title').on('click', doClick);
         }
     };

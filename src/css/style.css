@@ -678,22 +678,26 @@ html, body {
     margin-left: 5px;
 }
 
-.cwrc .linkPopup.ui-dialog .ui-dialog-content, .cwrc .tagPopup.ui-dialog .ui-dialog-content {
-	padding: 0;
+.cwrc .popup.ui-dialog .ui-widget-header {
+    border: none;
+    background-color: #ffffff;
+    font-weight: normal;
 }
 
-.cwrc .linkPopup.ui-dialog .ui-dialog-title {
+.cwrc .popup.ui-dialog .ui-widget-content {
+    padding: 0;
+}
+
+.cwrc .popup.ui-dialog .ui-dialog-title {
+    width: auto;
+    overflow: auto;
+    white-space: normal;
+    max-height: 250px;
+}
+
+.cwrc .link.ui-dialog .ui-dialog-title {
 	text-decoration: underline;
 	cursor: pointer;
-	width: auto;
-	overflow: visible;
-	white-space: normal;
-}
-
-.cwrc .tagPopup.ui-dialog .ui-dialog-title {
-	width: auto;
-	overflow: visible;
-	white-space: normal;
 }
 
 .attributeWidget label {
