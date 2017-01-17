@@ -19,8 +19,8 @@
             "cssUrl": "http://cwrc.ca/templates/css/tei.css",
             "schemaMappingsId": "tei",
             "entityTemplates": {
-                "note": "js/schema/tei/xml/note.xml",
-                "citation": "js/schema/tei/xml/citation.xml"
+                "note": "schema/tei/xml/note.xml",
+                "citation": "schema/tei/xml/citation.xml"
             }
         },
         "events": {
@@ -29,8 +29,8 @@
             "cssUrl": "http://cwrc.ca/templates/css/orlando_v2_cwrc-writer.css",
             "schemaMappingsId": "orlando",
             "entityTemplates": {
-                "note": "js/schema/orlando/xml/note_events.xml",
-                "citation": "js/schema/orlando/xml/citation_events.xml"
+                "note": "schema/orlando/xml/note_events.xml",
+                "citation": "schema/orlando/xml/citation_events.xml"
             }
         },
         "biography": {
@@ -39,8 +39,8 @@
             "cssUrl": "http://cwrc.ca/templates/css/orlando_v2_cwrc-writer.css",
             "schemaMappingsId": "orlando",
             "entityTemplates": {
-                "note": "js/schema/orlando/xml/note_biography.xml",
-                "citation": "js/schema/orlando/xml/citation_biography.xml"
+                "note": "schema/orlando/xml/note_biography.xml",
+                "citation": "schema/orlando/xml/citation_biography.xml"
             }
         },
         "writing": {
@@ -49,8 +49,8 @@
             "cssUrl": "http://cwrc.ca/templates/css/orlando_v2_cwrc-writer.css",
             "schemaMappingsId": "orlando",
             "entityTemplates": {
-                "note": "js/schema/orlando/xml/note_writing.xml",
-                "citation": "js/schema/orlando/xml/citation_writing.xml"
+                "note": "schema/orlando/xml/note_writing.xml",
+                "citation": "schema/orlando/xml/citation_writing.xml"
             }
         },
         "cwrcEntry": {
@@ -59,8 +59,8 @@
             "cssUrl": "http://cwrc.ca/templates/css/cwrc.css",
             "schemaMappingsId": "cwrcEntry",
             "entityTemplates": {
-                "note": "js/schema/cwrcEntry/xml/note.xml",
-                "citation": "js/schema/cwrcEntry/xml/citation.xml"
+                "note": "schema/cwrcEntry/xml/note.xml",
+                "citation": "schema/cwrcEntry/xml/citation.xml"
             }
         }
     },

@@ -45,8 +45,7 @@
     "build:html": "copyfiles -u 1 \"src/*.htm\" build/",
     "build:extrajs": "copyfiles -u 2 src/js/writerConfig.js build/js/",
     
-    "schema": "mkdirp build/js/schema && copyfiles -u 3 \"src/js/schema/**/*\" build/js/schema/",
-    "schema:tei": "mkdirp build/js/schema/tei && browserify src/js/schema/tei/dialogs_map.js > build/js/schema/tei/dialogs.js && browserify src/js/schema/tei/mappings.js > build/js/schema/tei/mappings.js",
+    "schema": "mkdirp build/schema && copyfiles -u 3 \"src/js/schema/*/xml/*\" build/schema/",
     
     "tinymce": "npm run tinymce:copy",
     "tinymce:copy": "npm run tinymce:copytheme && npm run tinymce:copyskin",

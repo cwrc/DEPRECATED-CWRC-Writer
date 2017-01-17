@@ -1,174 +1,63 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
-	<head>
-		<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-		<title>CWRC-Writer</title>
- 		
-		<script type="text/javascript" src="js/config.js"></script>
-        <script type="text/javascript" src="js/lib/require/require.js"></script>
-
-		<link type="text/css" rel="stylesheet" href="css/style.css" />
-		
-		<link type="text/css" rel="stylesheet" href="css/cwrcstyle/jquery-ui.css" />
-		<link type="text/css" rel="stylesheet" href="css/layout-default-latest.css" />
-		<link type="text/css" rel="stylesheet" href="js/lib/snippet/jquery.snippet.css" />
-		
-		<link type="text/css" rel="stylesheet" href="js/lib/cwrcDialogs/css/bootstrap.css" />
-        <link type="text/css" rel="stylesheet" href="js/lib/cwrcDialogs/css/datepicker.css" />
-        <link type="text/css" rel="stylesheet" href="js/lib/cwrcDialogs/fonts/font-awesome/css/font-awesome.min.css" />
-        <link type="text/css" rel="stylesheet" href="js/lib/cwrcDialogs/css/cD.css" />
-
-		<script type="text/javascript">
-			require.config({baseUrl: 'js'});
+    <head>
+        <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+        <title>CWRC-Writer</title>
+        
+        <link type="text/css" rel="stylesheet" href="css/style.css" />
+        <link type="text/css" rel="stylesheet" href="css/layout-default-latest.css" />
+        <link type="text/css" rel="stylesheet" href="css/cwrc12/jquery-ui.css" />
+    </head>
+    <body>
+        <script type="text/javascript" src="js/app.js"></script>
+        <script type="text/javascript" src="js/delegator.js"></script>
+        <script type="text/javascript">
+	        function getParameterByName(name, url) {
+	            if (!url) url = window.location.href;
+	            name = name.replace(/[\[\]]/g, "\\$&");
+	            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+	                results = regex.exec(url);
+	            if (!results) return null;
+	            if (!results[2]) return '';
+	            return decodeURIComponent(results[2].replace(/\+/g, " "));
+	        }
 	        
-	        // and the 'jquery-private' module, in the
-	        // jquery-private.js file:
-	        define('jquery-private', ['jquery'], function ($) {
-	            return $.noConflict(true);
-	        });
-	
-	        require(['jquery', 'knockout'], function($, knockout) {
-	            window.ko = knockout; // requirejs shim isn't working for knockout
-	            
-	            require(['writer',
-	                     'delegator',
-	                     'jquery.layout',
-	                     'jquery.tablayout'
-	            ], function(Writer, Delegator) {
-	                $(function() {
-	                    cwrcWriterInit.call(window, $, Writer, Delegator);
-	                });
-	            });
-	        });
-	        
-			function cwrcWriterInit($, Writer, Delegator) {
-				cwrc_params = {};
-				
-				writer = null;
-				
-				function doResize() {
-				    var uiHeight = 4;
-                    var toolbar = $('.mce-toolbar-grp',writer.editor.getContainer());
-                    if (toolbar.is(':visible')) {
-                        uiHeight += toolbar.outerHeight();
+            function doInit(config) {
+                var readonly = getParameterByName('readonly');
+                if (readonly == 'true') {
+                    config.readonly = true;
+                }
+                config.delegator = Delegator;
+                config.mode = 'xml';
+                config.buttons1 = 'schematags,editTag,removeTag,|,addperson,addplace,adddate,addorg,addcitation,addtitle,addcorrection,addkeyword,addlink';
+                writer = new CWRCWriter(config);
+                writer.init('cwrcWriterContainer');
+            }
+            
+            (function() {
+                var configXHR = $.ajax({url: 'js/writerConfig.js', dataType: 'json'});
+                var projectXHR = $.ajax({url: 'http://apps.testing.cwrc.ca/editor/documents/info/projectname'});
+                $.when(
+                    configXHR,
+                    projectXHR
+                ).then(function(config, project) {
+                    config = config[0];
+                    project = project[0];
+                    config.project = project;
+                    config.cwrcRootUrl = window.location.protocol+'//'+window.location.host+window.location.pathname.replace(window.location.pathname.split('/').pop(),'');
+                    doInit(config);
+                },function(xhr) {
+                    if (configXHR.state() === 'resolved') {
+                        var config = $.parseJSON(configXHR.responseText);
+                        config.cwrcRootUrl = window.location.protocol+'//'+window.location.host+window.location.pathname.replace(window.location.pathname.split('/').pop(),'');
+                        doInit(config);
+                    } else {
+                        alert('Error loading writerConfig.js');
                     }
-                    $('iframe',writer.editor.getContainer()).height($(window).height() - uiHeight);
-				}
-				
-				function getParameterByName(name, url) {
-				    if (!url) url = window.location.href;
-				    name = name.replace(/[\[\]]/g, "\\$&");
-				    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-				        results = regex.exec(url);
-				    if (!results) return null;
-				    if (!results[2]) return '';
-				    return decodeURIComponent(results[2].replace(/\+/g, " "));
-				}
-				
-				function doInit(config) {
-				    var readonly = getParameterByName('readonly');
-			        if (readonly == 'true') {
-			            config.readonly = true;
-			        }
-				    
-					config.delegator = Delegator;
-					config.mode = 'xml';
-					config.showModeMessage = false;
-					config.buttons1 = 'schematags,editTag,removeTag,|,addperson,addplace,adddate,addorg,addcitation,addtitle,addcorrection,addkeyword,addlink',
-					writer = new Writer(config);
-					writer.init('editor');
-					writer.event('writerInitialized').subscribe(doResize);
-					$(window).on('resize', doResize);
-					
-					writer.event('writerInitialized').subscribe(function(writer) {
-						// load modules then do the setup
-						require(['modules/entitiesList', 'modules/structureTree', 'modules/validation'
-						], function(EntitiesList, StructureTree, Validation) {
-							setupLayoutAndModules(writer, EntitiesList, StructureTree, Validation);
-						});
-					});
-				}
-				
-				function setupLayoutAndModules(w, EntitiesList, StructureTree, Validation) {
-					w.layout = $('#cwrc_wrapper').layout({
-						defaults: {
-							maskIframesOnResize: true,
-							resizable: true,
-							slidable: false
-						},
-						west: {
-							size: 'auto',
-							minSize: 225,
-							onresize: function(region, pane, state, options) {
-								var tabsHeight = $('#westTabs > ul').outerHeight();
-								$('#westTabsContent').height(state.layoutHeight - tabsHeight);
-					//					$.layout.callbacks.resizeTabLayout(region, pane);
-							}
-						}
-					});
-					
-					new StructureTree({writer: w, parentId: 'westTabsContent'});
-					new EntitiesList({writer: w, parentId: 'westTabsContent'});
-					new Validation({writer: w, parentId: 'southTabsContent'});
-					
-					$('#westTabs').tabs({
-						active: 1,
-						activate: function(event, ui) {
-							$.layout.callbacks.resizeTabLayout(event, ui);
-						},
-						create: function(event, ui) {
-							$('#westTabs').parent().find('.ui-corner-all').removeClass('ui-corner-all');
-						}
-					});
-					
-					setTimeout(function() {
-						w.layout.resizeAll(); // now that the editor is loaded, set proper sizing
-					}, 250);
-				}
-				
-				(function() {
-					var configXHR = $.ajax({url: 'js/writerConfig.js', dataType: 'json'});
-					var projectXHR = $.ajax({url: 'http://apps.testing.cwrc.ca/editor/documents/info/projectname'});
-					$.when(
-						configXHR,
-						projectXHR
-					).then(function(config, project) {
-						config = config[0];
-						project = project[0];
-						config.project = project;
-						config.cwrcRootUrl = window.location.protocol+'//'+window.location.host+window.location.pathname.replace(window.location.pathname.split('/').pop(),'');
-						doInit(config);
-					},function(xhr) {
-						if (configXHR.state() === 'resolved') {
-							var config = $.parseJSON(configXHR.responseText);
-							config.cwrcRootUrl = window.location.protocol+'//'+window.location.host+window.location.pathname.replace(window.location.pathname.split('/').pop(),'');
-							doInit(config);
-						} else {
-							alert('Error loading writerConfig.js');
-						}
-					});
-				}());
-			}
-		</script>
-	</head>
-<body>
-<div id="cwrc_wrapper">
-	<div class="cwrc ui-layout-west">
-		<div id="westTabs" class="tabs">
-			<ul>
-				<li><a href="#entities">Entities</a></li>
-				<li><a href="#structure">Markup</a></li>
-			</ul>
-			<div id="westTabsContent" class="ui-layout-content">
-			</div>
-		</div>
-	</div>
-	<div id="cwrc_main" class="ui-layout-center">
-		<form method="post" action="">
-			<textarea id="editor" name="editor" class="tinymce"></textarea>
-		</form>
-	</div>
-</div>
-</body>
+                });
+            }());
+        </script>
+        <div id="cwrcWriterContainer" style="height: 100%; width: 100%;"></div>
+    </body>
 </html>
