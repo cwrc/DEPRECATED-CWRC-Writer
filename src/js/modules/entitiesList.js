@@ -13,6 +13,7 @@ return function(config) {
     
     var metaKeys = ['_id', '_ref'];
     var showMetaKeys = false;
+    var showCustomValues = true;
     
     $('#'+config.parentId).append('<div id="entities" class="tabWithLayout">'+
             '<ul class="entitiesList ui-layout-center"></ul>'+
@@ -231,8 +232,12 @@ return function(config) {
     
     function _buildEntity(entity) {
         var infoString = '<ul>';
+        
+        var attributes = entity.getAttributes();
+        var customValues = entity.getCustomValues();
+        var urlAttributes = w.schemaManager.mapper.getUrlAttributes();
+        
         var buildString = function(infoObject) {
-            var urlAttributes = w.schemaManager.mapper.getUrlAttributes();
             for (var infoKey in infoObject) {
                 if (showMetaKeys || metaKeys.indexOf(infoKey) == -1) {
                     var info = infoObject[infoKey];
@@ -248,7 +253,12 @@ return function(config) {
                 }
             }
         };
-        buildString(entity.getAttributes());
+        
+        buildString(attributes);
+        if (showCustomValues) {
+            buildString(customValues);
+        }
+
         infoString += '</ul>';
         return '<li class="'+entity.getType()+'" name="'+entity.getId()+'">'+
             '<span class="box"/><span class="entityTitle">'+entity.getTitle()+'</span><div class="info">'+infoString+'</div>'+

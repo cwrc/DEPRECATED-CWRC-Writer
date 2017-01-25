@@ -614,6 +614,7 @@ AnnotationsManager.prototype = {
                 }
     
                 // certainty
+                // FIXME not used
                 var certainty = rdf.find('cw\\:hasCertainty, hasCertainty').attr('rdf:resource');
                 if (certainty && certainty != '') {
                     certainty = certainty.split('#')[1];
@@ -621,7 +622,7 @@ AnnotationsManager.prototype = {
                         // fix for discrepancy between schemas
                         certainty = 'reasonably certain';
                     }
-                    propObj.certainty = certainty;
+//                    propObj.certainty = certainty; // not used so don't include
                 }
     
                 // cwrcInfo (from cwrcDialogs lookups)
