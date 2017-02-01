@@ -6,8 +6,8 @@ require('jquery-ui');
 function Header(writer) {
     var w = writer;
     
-    $('#headerButtons').append(''+
-    '<div id="headerLink"><h2>Edit Header</h2></div>');
+    $('#headerButtons').prepend(''+
+    '<div id="headerLink">Edit Header</div>');
     
     $(document.body).append(''+
     '<div id="headerDialog">'+

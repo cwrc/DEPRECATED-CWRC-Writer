@@ -79,42 +79,46 @@ html, body {
 }
 
 #cwrc_header {
-    padding: 0 10px;
+	overflow: hidden;
     color: #eee;
     background-color: #455372;
     border-bottom: 1px solid #ccc;
-    overflow: hidden;
-    background-image: url(../img/cwrc_logo_small.png);
-    background-repeat: no-repeat;
-    background-position: left center;
 }
 
-#cwrc_header h1 {
-    float: left;
-    cursor: pointer;
-    margin-top: 10px;
-    margin-left: 55px;
+#headerParent {
+    display: table;
+    height: 35px;
+    width: 100%;
+    overflow: hidden;
 }
 
 #headerButtons {
-	margin-top: 10px;
+	display: table-cell;
+    vertical-align: middle;
+    text-align: right;
 }
 
 #headerButtons > div {
-    float: right;
-    cursor: pointer;
-    margin-left: 20px;
+	display: inline-block;
+	margin-right: 15px;
+	cursor: pointer;
+}
+
+#titleLink {
+	display: table-cell;
+	vertical-align: middle;
+	color: #eee;
+	font-weight: bold;
+	text-decoration: none;
+	padding: 0 0 0 40px;
+    background-image: url(../img/cwrc_logo_small.png);
+    background-repeat: no-repeat;
+    background-position: 5px center;
 }
 
 #helpLink {
     background: url("../img/help.png") no-repeat scroll 0 0 transparent;
     padding-left: 20px;
-}
-
-#helpLink h2 {
-    display: inline-block;
-    margin-left: 2px;
-    vertical-align: top;
 }
 
 #helpDialog iframe {

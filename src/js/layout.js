@@ -44,8 +44,10 @@ Layout.prototype = {
             '<div id="cwrc_loadingMask" class="cwrc"><div>Loading '+cwrcName+'</div></div>'+
             '<div id="cwrc_wrapper">'+
                 '<div id="cwrc_header" class="cwrc ui-layout-north">'+
-                    '<h1>'+cwrcName+' v.'+version+'</h1>'+
-                    '<div id="headerButtons"></div>'+
+                    '<div id="headerParent" class="ui-widget">'+
+                        '<a id="titleLink" href="http://www.cwrc.ca" target="_blank">'+cwrcName+' v.'+version+'</a>'+
+                        '<div id="headerButtons"></div>'+
+                    '</div>'+
                 '</div>'+
                 '<div class="cwrc ui-layout-west">'+
                     '<div id="westTabs" class="tabs">'+
@@ -121,10 +123,6 @@ Layout.prototype = {
                     $('#southTabsContent').height(state.layoutHeight - tabsHeight);
                 }
             }
-        });
-        
-        $('#cwrc_header h1').click(function() {
-            window.location = 'http://www.cwrc.ca';
         });
         
         new StructureTree({writer: this.w, parentId: 'westTabsContent'});

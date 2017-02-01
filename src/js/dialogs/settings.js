@@ -26,9 +26,9 @@ function Settings(writer, config) {
     var $settingsDialog;
     var $writer = $('#cwrc_wrapper');
     
-    $('#headerButtons').append(''+
-    '<div id="helpLink"><h2>Help</h2></div>'+
-    '<div id="settingsLink"><h2>Settings</h2></div>');
+    $('#headerButtons').prepend(''+
+    '<div id="settingsLink">Settings</div>'+
+    '<div id="helpLink">Help</div>');
     
     $(document.body).append(''+
     '<div id="settingsDialog">'+
