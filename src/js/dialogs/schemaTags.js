@@ -1,7 +1,7 @@
 'use strict';
 
 var $ = require('jquery');
-require('jquery-ui');
+require('jquery-ui-core');
 var AttributeWidget = require('./attributeWidget.js');
     
 function SchemaTags(writer) {

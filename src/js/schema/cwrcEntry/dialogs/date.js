@@ -1,6 +1,8 @@
 var $ = require('jquery');
 var moment = require('moment/moment');
 var DialogForm = require('../../../dialogs/dialogForm.js');
+require('jquery-ui/ui/widgets/button');
+require('jquery-ui/ui/widgets/datepicker');
 
 module.exports = function(id, writer) {
     var w = writer;
@@ -48,8 +50,6 @@ module.exports = function(id, writer) {
         id: id,
         type: 'date',
         title: 'Tag Date',
-        height: 620,
-        width: 550,
         html: html
     });
     

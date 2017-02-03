@@ -1,5 +1,6 @@
 var $ = require('jquery');
 var DialogForm = require('../../../dialogs/dialogForm.js');
+require('jquery-ui/ui/widgets/button');
 
 module.exports = function(id, writer) {
     var w = writer;
@@ -22,7 +23,7 @@ module.exports = function(id, writer) {
         writer: w,
         id: id,
         width: 350,
-        height: 370,
+        height: 350,
         type: 'link',
         title: 'Tag Link',
         html: html

@@ -2,6 +2,9 @@
 'use strict';
 
 var $ = require('jquery');
+require('jquery-ui-core');
+require('jquery-ui/ui/widgets/button');
+require('jquery-ui/ui/widgets/controlgroup');
 require('jquery-contextmenu');
     
 /**
@@ -42,7 +45,7 @@ function EntitiesList(config) {
         w.entitiesList.update('category');
         w.entitiesManager.highlightEntity(w.entitiesManager.getCurrentEntity());
     });
-    $('#sortBy').buttonset();
+    $('#sortBy').controlgroup();
 //    $('#metaKeys').button().click(function() {
 //        showMetaKeys = !showMetaKeys;
 //        w.entitiesList.update();

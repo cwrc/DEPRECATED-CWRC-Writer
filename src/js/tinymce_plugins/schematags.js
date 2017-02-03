@@ -1,7 +1,9 @@
 'use strict';
 
+var $ = require('jquery');
 var tinymce = require('tinymce');
-    
+require('jquery-watermark');
+
 tinymce.PluginManager.add('schematags', function(editor) {
     
     // re-implementing tinymce.ui.Menu so that we can set autohide to false

@@ -2,7 +2,10 @@
 'use strict';
 
 var $ = require('jquery');
-require('../lib/jquery/plugins/jquery.contextmenu.min.js');
+require('jquery-ui-core');
+require('jquery-ui/ui/widgets/button');
+require('jquery-contextmenu');
+require('jquery-layout');
 
 /**
  * @class Relations

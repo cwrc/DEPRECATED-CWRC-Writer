@@ -4,7 +4,8 @@
 'use strict';
 
 var $ = require('jquery');
-require('jquery-ui');
+require('jquery-ui-core');
+require('jquery-ui/ui/widgets/dialog');
 
 //cross browser xml node finder
 //http://www.steveworkman.com/html5-2/javascript/2011/improving-javascript-xml-node-finding-performance-by-2000/

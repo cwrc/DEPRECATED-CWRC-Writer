@@ -27,8 +27,7 @@ module.exports = function(id, writer) {
     var dialog = new DialogForm({
         writer: w,
         id: id,
-        width: 400,
-        height: 450,
+        height: 500,
         type: 'org',
         title: 'Tag Organization',
         html: html

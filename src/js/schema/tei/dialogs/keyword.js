@@ -1,6 +1,7 @@
 var $ = require('jquery');
 require('jquery-watermark');
 var DialogForm = require('../../../dialogs/dialogForm.js');
+require('jquery-ui/ui/widgets/button');
 
 module.exports = function(id, writer) {
     var w = writer;

@@ -1,12 +1,19 @@
+'use strict';
+
 var $ = require('jquery');
+require('jquery-ui-core');
+require('jquery-ui/ui/widgets/dialog');
+require('jquery-ui/ui/widgets/accordion');
+require('jquery-ui/ui/widgets/button');
+require('jquery-ui/ui/widgets/controlgroup');
+
 var AttributeWidget = require('./attributeWidget.js');
-    
 function DialogForm(config) {
     this.w = config.writer;
     var id = config.id;
     var title = config.title;
     var height = config.height || 650;
-    var width = config.width || 400;
+    var width = config.width || 575;
     var html = config.html;
     var $writer = $('#cwrc_wrapper');
     
@@ -72,7 +79,7 @@ function DialogForm(config) {
         var transform = formEl.data('transform');
         switch (transform) {
             case 'buttonset':
-                formEl.buttonset();
+                formEl.controlgroup();
                 break;
             case 'accordion':
                 formEl.accordion({

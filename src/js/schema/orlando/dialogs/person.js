@@ -20,10 +20,9 @@ module.exports = function(id, writer) {
     var dialog = new DialogForm({
         writer: w,
         id: id,
-        width: 350,
-        height: 350,
         type: 'person',
         title: 'Tag Person',
+        height: 400,
         html: html
     });
     

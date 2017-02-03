@@ -1,7 +1,7 @@
 'use strict';
 
 var $ = require('jquery');
-require('jquery-ui');
+require('jquery-ui-core');
     
 function FileManager(writer) {
     var w = writer;

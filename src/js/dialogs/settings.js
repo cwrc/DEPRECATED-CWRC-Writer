@@ -1,7 +1,8 @@
 'use strict';
 
 var $ = require('jquery');
-require('jquery-ui');
+require('jquery-ui-core');
+require('jquery-ui/ui/widgets/button');
     
 function Settings(writer, config) {
     var w = writer;
@@ -85,7 +86,7 @@ function Settings(writer, config) {
         '<label>Schema</label>'+
         '<select name="schema">'+
         '</select>'+
-        '<br/><button type="button">Add Schema</button>'+
+        '<br/><br/><button type="button">Add Schema</button>'+
     '</div>'+
     '</div>'+
     '</div>');
@@ -136,8 +137,8 @@ function Settings(writer, config) {
         resizable: false,
         dialogClass: 'splitButtons',
         closeOnEscape: true,
-        height: 350,
-        width: 350,
+        height: 400,
+        width: 450,
         position: { my: "center", at: "center", of: $writer },
         autoOpen: false,
         buttons: [{

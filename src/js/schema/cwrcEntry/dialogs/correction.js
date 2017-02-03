@@ -19,7 +19,7 @@ module.exports = function(id, writer) {
     var dialog = new DialogForm({
         writer: w,
         id: id,
-        width: 350,
+        width: 385,
         height: 400,
         type: 'correction',
         title: 'Tag Correction',

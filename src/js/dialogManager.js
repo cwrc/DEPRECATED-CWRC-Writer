@@ -1,8 +1,10 @@
 'use strict';
 
 var $ = require('jquery');
-require('jquery-ui');
-require('./lib/jquery/plugins/jquery.popup.js');
+require('jquery-ui-core');
+require('jquery-ui/ui/widgets/dialog');
+require('jquery-ui/ui/widgets/tooltip');
+require('jquery-popup');
 var DialogForm = require('./dialogs/dialogForm.js');
 
 var cD = require('cwrcDialogs');

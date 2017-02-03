@@ -1,8 +1,13 @@
 var $ = require('jquery');
+
 var moment = require('moment/moment');
 var DialogForm = require('../../../dialogs/dialogForm.js');
+require('jquery-ui-core');
+require('jquery-ui/ui/widgets/datepicker');
+require('jquery-ui/ui/widgets/button');
 
 module.exports = function(id, writer) {
+    
     var w = writer;
     var today = new Date();
     var upperLimit = today.getFullYear() + 10;
@@ -41,8 +46,6 @@ module.exports = function(id, writer) {
         id: id,
         type: 'date',
         title: 'Tag Date',
-        height: 580,
-        width: 400,
         html: html
     });
     

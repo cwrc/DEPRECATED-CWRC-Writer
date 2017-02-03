@@ -1,7 +1,7 @@
 'use strict';
 
 var $ = require('jquery');
-require('jquery-ui');
+require('jquery-ui-core');
     
 function AddSchema(writer) {
     var w = writer;
@@ -13,11 +13,11 @@ function AddSchema(writer) {
             '<label>Schema Name</label>'+
             '<input type="text" name="name" value=""/>'+
         '</div>'+
-        '<div>'+
+        '<div style="margin-top: 10px;">'+
             '<label>Schema URL</label>'+
             '<input type="text" name="url" value=""/>'+
         '</div>'+
-        '<div>'+
+        '<div style="margin-top: 10px;">'+
             '<label>Schema CSS URL</label>'+
             '<input type="text" name="cssUrl" value=""/>'+
         '</div>'+
@@ -33,8 +33,8 @@ function AddSchema(writer) {
             $('#addSchemaDialog').parent().find('.ui-dialog-titlebar-close').hide();
         },
         title: 'Add Schema',
-        height: 170,
-        width: 300,
+        height: 300,
+        width: 250,
         position: { my: "center", at: "center", of: $writer },
         autoOpen: false,
         buttons: {

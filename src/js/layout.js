@@ -1,8 +1,11 @@
 'use strict';
 
 var $ = require('jquery');
-require('jquery-ui');
+
+require('jquery-ui-core');
 require('jquery-layout');
+
+require('jquery-ui/ui/widgets/tabs');
 
 var StructureTree = require('./modules/structureTree.js');
 var EntitiesList = require('./modules/entitiesList.js')

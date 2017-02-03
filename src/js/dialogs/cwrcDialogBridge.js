@@ -2,7 +2,7 @@
 'use strict';
 
 var $ = require('jquery');
-require('jquery-ui');
+require('jquery-ui-core');
 
 var cD = require('cwrcDialogs');
 $(document.head).append(''+

@@ -1,7 +1,9 @@
 'use strict';
 
 var $ = require('jquery');
-require('jquery-ui');
+require('jquery-ui-core');
+require('jquery-ui/ui/widgets/dialog');
+require('jquery-ui/ui/widgets/progressbar');
     
 function LoadingIndicator(writer) {
     var w = writer;

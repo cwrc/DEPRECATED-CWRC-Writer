@@ -27,8 +27,8 @@ module.exports = function(id, writer) {
         id: id,
         type: 'place',
         title: 'Tag Place',
-        height: 400,
-        width: 450,
+        width: 650,
+        height: 450,
         html: html
     });
     

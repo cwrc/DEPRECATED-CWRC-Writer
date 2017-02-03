@@ -35,6 +35,7 @@
     "watch": "watchify src/js/writer.js --debug --standalone CWRCWriter -o build/js/app.js --verbose",
     
     "jquery": "npm run jquery:jstree",
+    "jquery:copy": "copyfiles -f node_modules/jquery/dist/jquery.js build/lib/jquery/",
     "browserify:jquery": "browserify -r jquery --standalone jquery > build/lib/jquery/jquery.js",
     "jquery:jstree": "copyfiles -f \"node_modules/jstree/dist/themes/default/*\" build/lib/jquery/jstree/themes/default && copyfiles -f src/js/lib/jquery/plugins/jstree/themes/cwrc/cwrc.css build/lib/jquery/jstree/themes/default",
     
@@ -53,7 +54,7 @@
     "tinymce:copyskin": "copyfiles -u 2 \"node_modules/tinymce/skins/lightgray/**/*\" build/js/",    
     "tinymce:plugins": "rimraf src/js/tinymce_plugins/plugins.js && minify \"src/js/tinymce_plugins/\"",
     
-    "cwrcDialogs": "npm run cwrcDialogs:importcss && npm run cwrcDialogs:importjs && npm run cwrcDialogs:build && npm run bootstrap",
+    "cwrcDialogs": "npm run cwrcDialogs:importcss && npm run cwrcDialogs:importjs && npm run bootstrap",
     "cwrcDialogs:importcss": "copyfiles -f %npm_package_config_cwrcDialogsDir%/css/cD.css build/css/cD/css/ && copyfiles -f %npm_package_config_cwrcDialogsDir%/font-awesome/css/font-awesome.css build/css/cD/css/ && copyfiles -f \"%npm_package_config_cwrcDialogsDir%/font-awesome/fonts/*\" build/css/cD/fonts/",
     "cwrcDialogs:importjs": "copyfiles -u 4 \"%npm_package_config_cwrcDialogsDir%/js/**/*\" temp/cwrc/",
     "cwrcDialogs:build": "browserify temp/cwrc/cD.js --debug --standalone cD > build/js/cD.js",
@@ -67,24 +68,24 @@
   },
   "browserify-shim": {
     "jquery": "$",
-    "jquery-ui": {"exports": "$.ui", "depends": ["jquery:jQuery"]},
     "jquery-layout": {"exports": "$.fn.layout", "depends": ["jquery:jQuery"]},
-    "jquery-contextmenu": {"exports": "$.fn.contextMenu", "depends": ["jquery:jQuery"]},
     "jstree": {"exports": "$.fn.vakata", "depends": ["jquery:jQuery"]},
     "jquery-xpath": {"exports": "$.fn.xpath", "depends": ["jquery:jQuery"]},
-    
+    "jquery-watermark": {"exports": "$.fn.watermark", "depends": ["jquery:jQuery"]},
+  
     "prismjs": {"exports": "Prism"},
     "objtree": {"exports": "ObjTree"},
-    
+  
     "bootstrap": {"depends": ["jquery:jQuery"]},
     "bootstrap-datepicker": {"exports": "$.fn.datepicker", "depends": ["jquery:jQuery"]}
   },
   "browser": {
     "jquery": "./node_modules/jquery/dist/jquery.js",
-    "jquery-ui": "./node_modules/jquery-ui-dist/jquery-ui.js",
+    "jquery-ui-core": "./src/js/lib/jquery/jquery-ui-core.js",
     "jquery-layout": "./src/js/lib/jquery/plugins/jquery.layout-latest.js",
     "jquery-contextmenu": "./src/js/lib/jquery/plugins/jquery.contextmenu.min.js",
     "jquery-watermark": "./src/js/lib/jquery/plugins/jquery.watermark.min.js",
+    "jquery-popup": "./src/js/lib/jquery/plugins/jquery.popup.js",
     "jstree": "./node_modules/jstree/dist/jstree.js",
     "objtree": "./src/js/lib/objtree/ObjTree.js",
     "jquery-xpath": "./node_modules/jquery-xpath/jquery.xpath.js",
@@ -104,14 +105,14 @@
     
     "browserify": "^13.0.1",
     "browserify-shim": "^3.2.0",
-    "deamdify": "^0.2.0",
+    "deamdify": "au-phiware/deamdify",
     "grunt": "^1.0.1",
     "watchify": "^3.7.0",
     "minifier": "^0.8.0",
     
     "tinymce": "^4.5.0",
     "jquery": "^3.1.0",
-    "jquery-ui-dist": "^1.12",
+    "jquery-ui": "1.12",
     "jquery-xpath": "^0.3.1",
     "jquery.tmpl": "0.0.2",
     "jstree": "^3.3.2",
