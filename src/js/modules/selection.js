@@ -15,7 +15,7 @@ function Selection(config) {
     
     var lastUpdate = new Date().getTime();
     
-    $(document.body).append('<link type="text/css" rel="stylesheet" href="css/prism.css" />');
+    $(document.body).append('<link type="text/css" rel="stylesheet" href="'+w.cwrcRootUrl+'css/prism.css" />');
     $('#'+config.parentId).append('<div id="selection" style="margin-left: 10px; overflow: hidden;"></div>');
     $(document.body).append('<div id="selectionContents" style="display: none;"></div>');
     

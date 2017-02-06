@@ -83,6 +83,13 @@ $.extend($.custom.popup.prototype.options, {
 function DialogManager(writer) {
     var w = writer;
 
+    // TODO ensure only gets added once
+    $(document.head).append(''+
+        '<link type="text/css" rel="stylesheet" href="'+w.cwrcRootUrl+'css/cD/css/cD.css" />'+
+        '<link type="text/css" rel="stylesheet" href="'+w.cwrcRootUrl+'css/cD/css/font-awesome.css" />'+
+        '<link type="text/css" rel="stylesheet" href="'+w.cwrcRootUrl+'css/bootstrap/css/bootstrap.css" />'
+    );
+    
     // dialog name, class map
     var dialogs = {};
     

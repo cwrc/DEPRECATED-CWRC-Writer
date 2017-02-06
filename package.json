@@ -29,7 +29,7 @@
     "copyfiles": "npm run copy:images && npm run copy:css && npm run copy:html && npm run copy:xml && npm run copy:js && npm run copy:jstree && npm run copy:tinymce",
     "copy:images": "copyfiles -u 1 \"src/img/**/*\" build/",
     "copy:css": "copyfiles -u 1 \"src/css/**/*\" build/ && copyfiles -f node_modules/prismjs/themes/prism.css build/css/",
-    "copy:html": "copyfiles -u 1 \"src/*.htm\" build/",
+    "copy:html": "copyfiles -u 1 \"src/html/*\" build/ && copyfiles -u 1 \"src/*.htm\" build/",
     "copy:xml": "copyfiles -u 3 \"src/js/schema/*/xml/*\" build/schema/",
     "copy:js": "copyfiles -u 2 src/js/writerConfig.js build/js/",
     "copy:jstree": "copyfiles -f \"node_modules/jstree/dist/themes/default/*\" build/css/jstree/themes/default && copyfiles -f src/css/jstree/themes/cwrc/cwrc.css build/css/jstree/themes/default",

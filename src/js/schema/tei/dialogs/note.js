@@ -34,7 +34,7 @@ module.exports = function(id, writer) {
     
     dialog.$el.on('beforeShow', function(e, config) {
         iframe = dialog.$el.find('iframe')[0];
-        var noteUrl = 'note.htm';
+        var noteUrl = 'html/note.htm';
         if (w.isReadOnly) {
             noteUrl += '?readonly=true';
             $('#'+id+'_type').buttonset('disable');
@@ -82,7 +82,7 @@ module.exports = function(id, writer) {
                 setTimeout(el.update, 50);
             });
             
-            var noteUrl = writer.schemaManager.getCurrentSchema().entityTemplates.note;
+            var noteUrl = writer.cwrcRootUrl + writer.schemaManager.getCurrentSchema().entityTemplates.note;
             if (dialog.mode === DialogForm.ADD) {
                 cwrcWriter.fileManager.loadDocumentFromUrl(noteUrl);
             } else {

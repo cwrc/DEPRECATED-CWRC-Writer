@@ -610,7 +610,7 @@ function StructureTree(config) {
         });
     });
     
-    $(document.head).append('<link type="text/css" rel="stylesheet" href="css/jstree/themes/default/cwrc.css" />');
+    $(document.head).append('<link type="text/css" rel="stylesheet" href="'+w.cwrcRootUrl+'css/jstree/themes/default/cwrc.css" />');
 //    $.vakata.dnd.settings.helper_left = 15;
 //    $.vakata.dnd.settings.helper_top = 20;
     
@@ -629,7 +629,7 @@ function StructureTree(config) {
                 name: 'default',
                 icons: false,
                 url: true,
-                dir: w.cwrcRootUrl + '/css/jstree/themes',
+                dir: w.cwrcRootUrl + 'css/jstree/themes',
                 responsive: false
             },
             data: {

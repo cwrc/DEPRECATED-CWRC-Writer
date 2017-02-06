@@ -5,13 +5,13 @@
         <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
         <title>CWRC-Writer</title>
         
-        <link type="text/css" rel="stylesheet" href="css/style.css" />
-        <link type="text/css" rel="stylesheet" href="css/layout-default-latest.css" />
-        <link type="text/css" rel="stylesheet" href="css/cwrc12/jquery-ui.css" />
+        <link type="text/css" rel="stylesheet" href="../css/style.css" />
+        <link type="text/css" rel="stylesheet" href="../css/layout-default-latest.css" />
+        <link type="text/css" rel="stylesheet" href="../css/cwrc12/jquery-ui.css" />
     </head>
     <body>
-        <script type="text/javascript" src="js/app.js"></script>
-        <script type="text/javascript" src="js/delegator.js"></script>
+        <script type="text/javascript" src="../js/app.js"></script>
+        <script type="text/javascript" src="../js/delegator.js"></script>
         <script type="text/javascript">
 	        function getParameterByName(name, url) {
 	            if (!url) url = window.location.href;
@@ -36,7 +36,7 @@
             }
             
             (function() {
-                var configXHR = $.ajax({url: 'js/writerConfig.js', dataType: 'json'});
+                var configXHR = $.ajax({url: '../js/writerConfig.js', dataType: 'json'});
                 var projectXHR = $.ajax({url: 'http://apps.testing.cwrc.ca/editor/documents/info/projectname'});
                 $.when(
                     configXHR,
@@ -45,12 +45,12 @@
                     config = config[0];
                     project = project[0];
                     config.project = project;
-                    config.cwrcRootUrl = window.location.protocol+'//'+window.location.host+window.location.pathname.replace(window.location.pathname.split('/').pop(),'');
+                    config.cwrcRootUrl = window.location.protocol+'//'+window.location.host+'/'+window.location.pathname.split('/')[1]+'/';
                     doInit(config);
                 },function(xhr) {
                     if (configXHR.state() === 'resolved') {
                         var config = $.parseJSON(configXHR.responseText);
-                        config.cwrcRootUrl = window.location.protocol+'//'+window.location.host+window.location.pathname.replace(window.location.pathname.split('/').pop(),'');
+                        config.cwrcRootUrl = window.location.protocol+'//'+window.location.host+'/'+window.location.pathname.split('/')[1]+'/';
                         doInit(config);
                     } else {
                         alert('Error loading writerConfig.js');

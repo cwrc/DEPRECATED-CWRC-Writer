@@ -5,11 +5,6 @@ var $ = require('jquery');
 require('jquery-ui-core');
 
 var cD = require('cwrcDialogs');
-$(document.head).append(''+
-    '<link type="text/css" rel="stylesheet" href="css/cD/css/cD.css" />'+
-    '<link type="text/css" rel="stylesheet" href="css/cD/css/font-awesome.css" />'+
-    '<link type="text/css" rel="stylesheet" href="css/bootstrap/css/bootstrap.css" />'
-);
 
 // a bridge between the CWRC-Writer and the cwrcDialogs
 function CwrcDialogBridge(writer, config) {
