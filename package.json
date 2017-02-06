@@ -26,8 +26,8 @@
     "cwrcDialogsDir": "D:/git/CWRC-Dialogs"
   },
   "scripts": {
-    "clean": "rimraf build && rimraf temp",
     "build": "npm run clean && npm run copyfiles && npm run build:js",
+    "clean": "rimraf build && rimraf temp",
     
     "build:js": "npm run cwrcDialogs && npm run browserify && npm run browserify:delegator",
     
@@ -37,7 +37,7 @@
     "copy:html": "copyfiles -u 1 \"src/*.htm\" build/",
     "copy:xml": "copyfiles -u 3 \"src/js/schema/*/xml/*\" build/schema/",
     "copy:js": "copyfiles -u 2 src/js/writerConfig.js build/js/",
-    "copy:jstree": "copyfiles -f \"node_modules/jstree/dist/themes/default/*\" build/lib/jquery/jstree/themes/default && copyfiles -f src/js/lib/jquery/plugins/jstree/themes/cwrc/cwrc.css build/lib/jquery/jstree/themes/default",
+    "copy:jstree": "copyfiles -f \"node_modules/jstree/dist/themes/default/*\" build/css/jstree/themes/default && copyfiles -f src/css/jstree/themes/cwrc/cwrc.css build/css/jstree/themes/default",
     "copy:tinymce": "npm run tinymce:copytheme && npm run tinymce:copyskin",
     "tinymce:copytheme": "copyfiles -u 2 \"node_modules/tinymce/themes/modern/**/*\" build/js/",
     "tinymce:copyskin": "copyfiles -u 2 \"node_modules/tinymce/skins/lightgray/**/*\" build/js/",
