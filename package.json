@@ -22,14 +22,9 @@
     "url": "https://github.com/jchartrand/CWRC-Writer/issues"
   },
   "homepage": "https://github.com/cwrc/CWRC-Writer#readme",
-  "config": {
-    "cwrcDialogsDir": "D:/git/CWRC-Dialogs"
-  },
   "scripts": {
     "build": "npm run clean && npm run copyfiles && npm run build:js",
-    "clean": "rimraf build && rimraf temp",
-    
-    "build:js": "npm run cwrcDialogs && npm run browserify && npm run browserify:delegator",
+    "clean": "rimraf build",
     
     "copyfiles": "npm run copy:images && npm run copy:css && npm run copy:html && npm run copy:xml && npm run copy:js && npm run copy:jstree && npm run copy:tinymce",
     "copy:images": "copyfiles -u 1 \"src/img/**/*\" build/",
@@ -42,16 +37,17 @@
     "tinymce:copytheme": "copyfiles -u 2 \"node_modules/tinymce/themes/modern/**/*\" build/js/",
     "tinymce:copyskin": "copyfiles -u 2 \"node_modules/tinymce/skins/lightgray/**/*\" build/js/",
     
+    "build:js": "npm run cwrcDialogs && npm run browserify && npm run browserify:delegator",
+    
     "browserify": "browserify src/js/writer.js --debug --standalone CWRCWriter > build/js/app.js",
     "browserify:min": "browserify src/js/writer.js --standalone CWRCWriter -p [ minifyify -- p app.js.map --output build/app.js.map ] > build/js/app.js",
     "browserify:delegator": "browserify src/js/delegator.js --debug --standalone Delegator > build/js/delegator.js",
     
     "watch": "watchify src/js/writer.js --debug --standalone CWRCWriter -o build/js/app.js --verbose",
     
-    "cwrcDialogs": "npm run cwrcDialogs:importjs && npm run cwrcDialogs:importcss && npm run cwrcDialogs:bootstrap",
-    "cwrcDialogs:importjs": "copyfiles -u 4 \"%npm_package_config_cwrcDialogsDir%/js/**/*\" temp/cwrc/",
-    "cwrcDialogs:importcss": "copyfiles -f %npm_package_config_cwrcDialogsDir%/css/cD.css build/css/cD/css/ && copyfiles -f %npm_package_config_cwrcDialogsDir%/font-awesome/css/font-awesome.css build/css/cD/css/ && copyfiles -f \"%npm_package_config_cwrcDialogsDir%/font-awesome/fonts/*\" build/css/cD/fonts/",
-    "cwrcDialogs:bootstrap": "copyfiles -f %npm_package_config_cwrcDialogsDir%/css/bootstrap.css build/css/bootstrap/css/ && copyfiles -f \"node_modules/bootstrap/dist/fonts/*\" build/css/bootstrap/fonts/"
+    "cwrcDialogs": "npm run cwrcDialogs:importcss && npm run cwrcDialogs:bootstrap",
+    "cwrcDialogs:importcss": "copyfiles -f node_modules/cwrc-dialogs/css/cD.css build/css/cD/css/ && copyfiles -f node_modules/cwrc-dialogs/font-awesome/css/font-awesome.css build/css/cD/css/ && copyfiles -f \"node_modules/cwrc-dialogs/font-awesome/fonts/*\" build/css/cD/fonts/",
+    "cwrcDialogs:bootstrap": "copyfiles -f node_modules/cwrc-dialogs/css/bootstrap.css build/css/bootstrap/css/ && copyfiles -f \"node_modules/bootstrap/dist/fonts/*\" build/css/bootstrap/fonts/"
   },
   "browserify": {
     "transform": [
@@ -66,10 +62,7 @@
     "jquery-watermark": {"exports": "$.fn.watermark", "depends": ["jquery:jQuery"]},
   
     "prismjs": {"exports": "Prism"},
-    "objtree": {"exports": "ObjTree"},
-  
-    "bootstrap": {"depends": ["jquery:jQuery"]},
-    "bootstrap-datepicker": {"exports": "$.fn.datepicker", "depends": ["jquery:jQuery"]}
+    "objtree": {"exports": "ObjTree"}
   },
   "browser": {
     "jquery": "./node_modules/jquery/dist/jquery.js",
@@ -89,9 +82,7 @@
     "schematags": "./src/js/tinymce_plugins/schematags.js",
     "treepaste": "./src/js/tinymce_plugins/treepaste.js",
     
-    "cwrcDialogs": "./temp/cwrc/cD.js",
-    "bootstrap": "./node_modules/bootstrap/dist/js/bootstrap.js",
-    "bootstrap-datepicker": "./temp/cwrc/lib/bootstrap-datepicker.js"
+    "cwrcDialogs": "./node_modules/cwrc-dialogs/js/cD.js"
   },
   "devDependencies": {
     "copyfiles": "^1.0.0",
@@ -106,6 +97,8 @@
     "minifier": "^0.8.0",
     "minifyify": "^7.3.3",
     
+    "cwrc-dialogs": "cwrc/CWRC-Dialogs#npm",
+    
     "tinymce": "^4.5.0",
     "jquery": "^3.1.0",
     "jquery-ui": "1.12",
@@ -116,9 +109,6 @@
     "octokit": "^0.10.4",
     "css-parse": "^2.0.0",
     "css-stringify": "^2.0.0",
-    "prismjs": "^1.6.0",
-    
-    "bootstrap": "^3.2.0",
-    "knockout": "^2.3.0"
+    "prismjs": "^1.6.0"
   }
 }
