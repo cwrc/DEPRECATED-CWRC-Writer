@@ -346,7 +346,7 @@ function StructureTree(config) {
                         if (content.nodeType !== undefined) {
                             var root = $(tag, content).first();
                             
-                            function processChildren(children, parent, id) {
+                            var processChildren = function(children, parent, id) {
                                 children.each(function(index, el) {
                                     if (parent.children == null) parent.children = [];
                                     var childData = {
