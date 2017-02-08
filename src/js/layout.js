@@ -13,19 +13,22 @@ var Validation = require('./modules/validation.js');
 var Relations = require('./modules/relations.js');
 var Selection = require('./modules/selection.js');
 
-function Layout(w, config) {
+function Layout(w) {
     this.w = w;
-    this.container = config.container;
-    this.textareaId = config.textareaId;
     this.ui = null;
-    
     this.mode = null; // 'reader' or 'annotator'
 }
 
 Layout.prototype = {
     constructor: Layout,
     
-    init: function() {
+    /**
+     * Initialize the layout
+     * @param {jQuery|Element} container The container that will contain the layout
+     * @param {String} textareaId The ID to assign to the editor textarea
+     * @returns jquery-ui class
+     */
+    init: function(container, textareaId) {
         var cwrcName = 'CWRC-Writer';
         var version = '0.9';
         var southTabs = ''+
@@ -43,7 +46,7 @@ Layout.prototype = {
             cwrcName = 'CWRC-Reader';
             southTabs = '';
         }
-        $(this.container).html(
+        $(container).html(
             '<div id="cwrc_loadingMask" class="cwrc"><div>Loading '+cwrcName+'</div></div>'+
             '<div id="cwrc_wrapper">'+
                 '<div id="cwrc_header" class="cwrc ui-layout-north">'+
@@ -65,7 +68,7 @@ Layout.prototype = {
                 '<div id="cwrc_main" class="ui-layout-center">'+
                     '<div class="ui-layout-center">'+
                         '<form method="post" action="">'+
-                            '<textarea id="'+this.textareaId+'" name="editor" class="tinymce"></textarea>'+
+                            '<textarea id="'+textareaId+'" name="editor" class="tinymce"></textarea>'+
                         '</form>'+
                     '</div>'+
                     southTabs+
@@ -73,7 +76,7 @@ Layout.prototype = {
             '</div>'
         );
         
-        this.ui = $('#cwrc_wrapper', this.container).layout({
+        this.ui = $('#cwrc_wrapper').layout({
             defaults: {
                 maskIframesOnResize: true,
                 resizable: true,

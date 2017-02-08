@@ -8,7 +8,6 @@ require('cwrc-path');
 require('schematags');
 require('treepaste');
 
-var Layout = require('./layout.js');
 var EventManager = require('./eventManager.js');
 var Utilities = require('./utilities.js');
 var SchemaManager = require('./schema/schemaManager.js');
@@ -49,8 +48,9 @@ function CWRCWriter(config) {
     
     w.baseUrl = window.location.protocol+'//'+window.location.host+'/'; // the url for referencing various external services
     w.cwrcRootUrl = config.cwrcRootUrl; // the url which points to the root of the cwrcwriter location
-    if (w.cwrcRootUrl == null) {
-        alert('Error: you must specify the cwrcRootUrl in the CWRCWriter config!');
+    if (w.cwrcRootUrl == null || w.cwrcRootUrl == '') {
+        if (window.console) console.info("using default cwrcRootUrl");
+        w.cwrcRootUrl = window.location.protocol+'//'+window.location.host+'/'+window.location.pathname.split('/')[1]+'/';
     }
     
     w.currentDocId = null;
@@ -609,12 +609,16 @@ function CWRCWriter(config) {
      * @param {String} containerId The ID of the container to transform into the editor.
      */
     w.init = function(containerId) {
-
         w.eventManager = new EventManager(w);
         
         var textareaId = 'editor';
-        w.layout = new Layout(w, {container: $('#'+containerId), textareaId: textareaId});
-        w.layout.init();
+        if (config.layout != null) {
+            w.layout = new config.layout(w);
+            w.layout.init($('#'+containerId), textareaId);
+        } else {
+            alert('Error: you must specify a layout in the CWRCWriter config!');
+            return;
+        }
         
         w.schemaManager = new SchemaManager(w, {schemas: config.schemas});
         w.entitiesManager = new EntitiesManager(w);

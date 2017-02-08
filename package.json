@@ -26,24 +26,21 @@
     "build": "npm run clean && npm run copyfiles && npm run build:js",
     "clean": "rimraf build",
     
-    "copyfiles": "npm run copy:images && npm run copy:css && npm run copy:html && npm run copy:xml && npm run copy:js && npm run copy:jstree && npm run copy:tinymce",
+    "copyfiles": "npm run copy:images && npm run copy:css && npm run copy:html && npm run copy:xml && npm run copy:jstree && npm run copy:tinymce",
     "copy:images": "copyfiles -u 1 \"src/img/**/*\" build/",
     "copy:css": "copyfiles -u 1 \"src/css/**/*\" build/ && copyfiles -f node_modules/prismjs/themes/prism.css build/css/",
     "copy:html": "copyfiles -u 1 \"src/html/*\" build/ && copyfiles -u 1 \"src/*.htm\" build/",
     "copy:xml": "copyfiles -u 3 \"src/js/schema/*/xml/*\" build/schema/",
-    "copy:js": "copyfiles -u 2 src/js/writerConfig.js build/js/",
     "copy:jstree": "copyfiles -f \"node_modules/jstree/dist/themes/default/*\" build/css/jstree/themes/default && copyfiles -f src/css/jstree/themes/cwrc/cwrc.css build/css/jstree/themes/default",
     "copy:tinymce": "npm run tinymce:copytheme && npm run tinymce:copyskin",
     "tinymce:copytheme": "copyfiles -u 2 \"node_modules/tinymce/themes/modern/**/*\" build/js/",
     "tinymce:copyskin": "copyfiles -u 2 \"node_modules/tinymce/skins/lightgray/**/*\" build/js/",
     
-    "build:js": "npm run cwrcDialogs && npm run browserify && npm run browserify:delegator",
+    "build:js": "npm run cwrcDialogs && npm run app",
     
-    "browserify": "browserify src/js/writer.js --debug --standalone CWRCWriter > build/js/app.js",
-    "browserify:min": "browserify src/js/writer.js --standalone CWRCWriter -p [ minifyify -- p app.js.map --output build/app.js.map ] > build/js/app.js",
-    "browserify:delegator": "browserify src/js/delegator.js --debug --standalone Delegator > build/js/delegator.js",
+    "app": "browserify src/js/app.js --debug --standalone getCWRCWriter > build/js/app.js",
     
-    "watch": "watchify src/js/writer.js --debug --standalone CWRCWriter -o build/js/app.js --verbose",
+    "watch": "watchify src/js/app.js --debug --standalone getCWRCWriter -o build/js/app.js --verbose",
     
     "cwrcDialogs": "npm run cwrcDialogs:importcss && npm run cwrcDialogs:bootstrap",
     "cwrcDialogs:importcss": "copyfiles -f node_modules/cwrc-dialogs/css/cD.css build/css/cD/css/ && copyfiles -f node_modules/cwrc-dialogs/font-awesome/css/font-awesome.css build/css/cD/css/ && copyfiles -f \"node_modules/cwrc-dialogs/font-awesome/fonts/*\" build/css/cD/fonts/",
@@ -91,7 +88,6 @@
     "browserify": "^13.0.1",
     "browserify-shim": "^3.2.0",
     "deamdify": "au-phiware/deamdify",
-    "grunt": "^1.0.1",
     "watchify": "^3.7.0",
     "minifier": "^0.8.0",
     "minifyify": "^7.3.3",

@@ -1,4 +1,4 @@
-{
+module.exports = {
     "cwrcRootUrl": "",
     "cwrcDialogs": {
         "cwrcApiUrl": "http://apps.testing.cwrc.ca/islandora/cwrc_entities/v1/",
@@ -65,4 +65,4 @@
         }
     },
     "defaultDocument": "templates/letter"
-}
+};
