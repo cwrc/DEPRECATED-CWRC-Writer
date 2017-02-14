@@ -25,7 +25,6 @@
   "scripts": {
     "build": "npm run clean && npm run copyfiles && npm run build:js",
     "clean": "rimraf build",
-    
     "copyfiles": "npm run copy:images && npm run copy:css && npm run copy:html && npm run copy:xml && npm run copy:jstree && npm run copy:tinymce",
     "copy:images": "copyfiles -u 1 \"src/img/**/*\" build/",
     "copy:css": "copyfiles -u 1 \"src/css/**/*\" build/ && copyfiles -f node_modules/prismjs/themes/prism.css build/css/",
@@ -35,74 +34,99 @@
     "copy:tinymce": "npm run tinymce:copytheme && npm run tinymce:copyskin",
     "tinymce:copytheme": "copyfiles -u 2 \"node_modules/tinymce/themes/modern/**/*\" build/js/",
     "tinymce:copyskin": "copyfiles -u 2 \"node_modules/tinymce/skins/lightgray/**/*\" build/js/",
-    
     "build:js": "npm run cwrcDialogs && npm run app",
-    
     "app": "browserify src/js/app.js --debug --standalone getCWRCWriter > build/js/app.js",
-    
     "watch": "watchify src/js/app.js --debug --standalone getCWRCWriter -o build/js/app.js --verbose",
-    
     "cwrcDialogs": "npm run cwrcDialogs:importcss && npm run cwrcDialogs:bootstrap",
     "cwrcDialogs:importcss": "copyfiles -f node_modules/cwrc-dialogs/css/cD.css build/css/cD/css/ && copyfiles -f node_modules/cwrc-dialogs/font-awesome/css/font-awesome.css build/css/cD/css/ && copyfiles -f \"node_modules/cwrc-dialogs/font-awesome/fonts/*\" build/css/cD/fonts/",
     "cwrcDialogs:bootstrap": "copyfiles -f node_modules/cwrc-dialogs/css/bootstrap.css build/css/bootstrap/css/ && copyfiles -f \"node_modules/bootstrap/dist/fonts/*\" build/css/bootstrap/fonts/"
   },
   "browserify": {
     "transform": [
-      "browserify-shim"
+      "browserify-shim",
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015"
+          ]
+        }
+      ]
     ]
   },
   "browserify-shim": {
     "jquery": "$",
-    "jquery-layout": {"exports": "$.fn.layout", "depends": ["jquery:jQuery"]},
-    "jstree": {"exports": "$.fn.vakata", "depends": ["jquery:jQuery"]},
-    "jquery-xpath": {"exports": "$.fn.xpath", "depends": ["jquery:jQuery"]},
-    "jquery-watermark": {"exports": "$.fn.watermark", "depends": ["jquery:jQuery"]},
-  
-    "prismjs": {"exports": "Prism"},
-    "objtree": {"exports": "ObjTree"}
+    "jquery-layout": {
+      "exports": "$.fn.layout",
+      "depends": [
+        "jquery:jQuery"
+      ]
+    },
+    "jstree": {
+      "exports": "$.fn.vakata",
+      "depends": [
+        "jquery:jQuery"
+      ]
+    },
+    "jquery-xpath": {
+      "exports": "$.fn.xpath",
+      "depends": [
+        "jquery:jQuery"
+      ]
+    },
+    "jquery-watermark": {
+      "exports": "$.fn.watermark",
+      "depends": [
+        "jquery:jQuery"
+      ]
+    },
+    "prismjs": {
+      "exports": "Prism"
+    },
+    "objtree": {
+      "exports": "ObjTree"
+    }
   },
   "browser": {
     "jquery": "./node_modules/jquery/dist/jquery.js",
     "jquery-xpath": "./node_modules/jquery-xpath/jquery.xpath.js",
     "jstree": "./node_modules/jstree/dist/jstree.js",
-    
     "jquery-ui-core": "./src/js/lib/jquery/jquery-ui-core.js",
     "jquery-layout": "./src/js/lib/jquery/plugins/jquery.layout-latest.js",
     "jquery-contextmenu": "./src/js/lib/jquery/plugins/jquery.contextmenu.min.js",
     "jquery-watermark": "./src/js/lib/jquery/plugins/jquery.watermark.min.js",
     "jquery-popup": "./src/js/lib/jquery/plugins/jquery.popup.js",
-    
     "objtree": "./src/js/lib/objtree/ObjTree.js",
-    
     "cwrc-contextmenu": "./src/js/tinymce_plugins/cwrc_contextmenu.js",
     "cwrc-path": "./src/js/tinymce_plugins/cwrc_path.js",
     "schematags": "./src/js/tinymce_plugins/schematags.js",
     "treepaste": "./src/js/tinymce_plugins/treepaste.js",
-    
     "cwrcDialogs": "./node_modules/cwrc-dialogs/js/cD.js"
   },
   "devDependencies": {
-    "copyfiles": "^1.0.0",
-    "mkdirp": "^0.5.1",
-    "rimraf": "^2.5.4",
+    "babel-preset-es2015": "6.22.0",
+    "babelify": "7.3.0",
     "browserify": "^13.0.1",
     "browserify-shim": "^3.2.0",
-    "deamdify": "au-phiware/deamdify",
-    "watchify": "^3.7.0",
-    "minifier": "^0.8.0",
-    "minifyify": "^7.3.3",
-    
+    "copyfiles": "^1.0.0",
+    "css-parse": "^2.0.0",
+    "css-stringify": "^2.0.0",
     "cwrc-dialogs": "cwrc/CWRC-Dialogs#npm",
-    "tinymce": "^4.5.0",
+    "deamdify": "au-phiware/deamdify",
     "jquery": "^3.1.0",
     "jquery-ui": "1.12",
     "jquery-xpath": "^0.3.1",
     "jquery.tmpl": "0.0.2",
+    "js-cookie": "2.1.3",
     "jstree": "^3.3.2",
+    "minifier": "^0.8.0",
+    "minifyify": "^7.3.3",
+    "mkdirp": "^0.5.1",
     "moment": "^2.13.0",
     "octokit": "^0.10.4",
-    "css-parse": "^2.0.0",
-    "css-stringify": "^2.0.0",
-    "prismjs": "^1.6.0"
+    "prismjs": "^1.6.0",
+    "rimraf": "^2.5.4",
+    "tinymce": "^4.5.0",
+    "watchify": "^3.7.0"
   }
 }
