@@ -888,7 +888,8 @@ function CWRCWriter(config) {
                 });
                 ed.addButton('savebutton', {title: 'Save', image: w.cwrcRootUrl+'img/save.png',
                     onclick: function() {
-                        w.fileManager.saveDocument();
+                       // w.fileManager.saveDocument();
+                       w.delegator.save()
                     }
                 });
                 ed.addButton('saveasbutton', {title: 'Save As', image: w.cwrcRootUrl+'img/save_as.png',
@@ -903,7 +904,8 @@ function CWRCWriter(config) {
                 });
                 ed.addButton('loadbutton', {title: 'Load', image: w.cwrcRootUrl+'img/folder_page.png',
                     onclick: function() {
-                        w.dialogManager.show('filemanager', {type: 'loader'});
+                        //w.dialogManager.show('filemanager', {type: 'loader'});
+                        w.delegator.load()
                     }
                 });
                 

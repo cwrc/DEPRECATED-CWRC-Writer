@@ -368,6 +368,14 @@ function Delegator(writer) {
             }
         });
     };
+
+    del.save = function(){
+        w.fileManager.saveDocument();
+    };
+
+    del.load = function() {
+        w.dialogManager.show('filemanager', {type: 'loader'});
+    }
     
     /**
      * @callback Delegator~saveDocumentCallback
