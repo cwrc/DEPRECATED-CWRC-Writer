@@ -176,9 +176,6 @@ XML.ObjTree.prototype.parseElement = function ( elem ) {
                 cnt[key] ++;
                 this.addNode( retval, key, cnt[key], val );
                 
-                if (window.console) {
-                    console.log(typeof(val), key, val);
-                }
                 // CHANGED
                 // add parent property
                 // add key property
