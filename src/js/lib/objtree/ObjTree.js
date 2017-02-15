@@ -1,3 +1,7 @@
+/**
+ * added custom key & parent properties (see CHANGED) 
+ */
+
 // ========================================================================
 //  XML.ObjTree -- XML source code from/to JavaScript object like E4X
 // ========================================================================
