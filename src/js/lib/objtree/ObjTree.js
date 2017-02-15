@@ -176,13 +176,16 @@ ObjTree.prototype.parseElement = function ( elem ) {
                 if ( ! val ) continue;
                 if ( typeof(cnt[key]) == "undefined" ) cnt[key] = 0;
                 cnt[key] ++;
-                this.addNode( retval, key, cnt[key], val );
                 
                 // CHANGED
                 // add parent property
                 // add key property
-            	val['$parent'] = retval;
-            	val['$key'] = key;
+                if (typeof(val) == "object") {
+                    val['$parent'] = retval;
+                    val['$key'] = key;
+                }
+                
+                this.addNode( retval, key, cnt[key], val );
             }
         }
     }
