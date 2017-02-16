@@ -62,12 +62,7 @@
         "jquery:jQuery"
       ]
     },
-    "jstree": {
-      "exports": "$.fn.vakata",
-      "depends": [
-        "jquery:jQuery"
-      ]
-    },
+    
     "jquery-xpath": {
       "exports": "$.fn.xpath",
       "depends": [
@@ -90,7 +85,7 @@
   "browser": {
     "jquery": "./node_modules/jquery/dist/jquery.js",
     "jquery-xpath": "./node_modules/jquery-xpath/jquery.xpath.js",
-    "jstree": "./node_modules/jstree/dist/jstree.js",
+    
     "jquery-ui-core": "./src/js/lib/jquery/jquery-ui-core.js",
     "jquery-layout": "./src/js/lib/jquery/plugins/jquery.layout-latest.js",
     "jquery-contextmenu": "./src/js/lib/jquery/plugins/jquery.contextmenu.min.js",
