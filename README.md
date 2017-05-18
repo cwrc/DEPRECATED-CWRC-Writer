@@ -5,7 +5,7 @@ CWRC-Writer
 
 The Canadian Writing Research Collaboratory (CWRC) is developing an in-browser text markup editor (CWRC-Writer) for use by collaborative scholarly editing projects.  [Project Site](http://www.cwrc.ca/projects/infrastructure-projects/technical-projects/cwrc-writer/)
 
-A newer and more modular version of the CWRC-Writer is under development at [CWRC-WriterBase](https://github.com/jchartrand/CWRC-WriterBase).  See [CWRC-GitWriter](https://github.com/jchartrand/cwrc-gitwriter) for a fully configured example.
+<b>NOTE:  A newer and more modular version of the CWRC-Writer is under development at [CWRC-WriterBase](https://github.com/jchartrand/CWRC-WriterBase) and should be used in preference to this repository.  See [CWRC-GitWriter](https://github.com/jchartrand/cwrc-gitwriter) for a fully configured example.</b>
 
 ## Table of Contents
 
