@@ -240,6 +240,7 @@ function Converter(writer) {
      */
     converter.buildXMLString = function(node) {
         var xmlString = '';
+        var nbspTest = new RegExp(String.fromCharCode(160), 'g'); // test for nbsp
 
         function doBuild(currentNode) {
             var tags = _nodeToStringArray(currentNode);
@@ -248,7 +249,7 @@ function Converter(writer) {
                 if (el.nodeType == Node.ELEMENT_NODE) {
                     doBuild($(el));
                 } else if (el.nodeType == Node.TEXT_NODE) {
-                    xmlString += el.data;
+                    xmlString += el.data.replace(nbspTest, ' '); // replace nbsp with regular space
                 }
             });
             xmlString += tags[1];
