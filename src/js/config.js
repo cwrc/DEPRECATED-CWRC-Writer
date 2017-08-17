@@ -2,7 +2,7 @@ var require = {
     paths: {
         'text': 'lib/require/text', // requirejs text plugin
 
-        'jquery': ['http://code.jquery.com/jquery-1.9.1.min','lib/jquery/jquery-1.9.1'],
+        'jquery': ['//code.jquery.com/jquery-1.9.1.min','lib/jquery/jquery-1.9.1'],
         'jquery-ui': ['lib/jquery/jquery-ui-1.10.4.min'],
         'jquery-migrate': ['lib/jquery/jquery-migrate-1.2.1'],
         'jquery.layout': 'lib/jquery/jquery.layout.min',
@@ -36,7 +36,7 @@ var require = {
         'attributeWidget': 'dialogs/attributeWidget',
         
         // cwrcDialogs
-        'knockout': ['http://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min'],
+        'knockout': ['//cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min'],
         'bootstrap': ['https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min'],
         'bootstrap-datepicker': 'lib/cwrcDialogs/js/lib/bootstrap-datepicker',
         'cwrc-api': 'lib/cwrcDialogs/js/cwrc-api',
