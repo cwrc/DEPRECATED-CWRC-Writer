@@ -245,7 +245,7 @@ return function(writer, config) {
                     var convertedSelectors = [];
                     for (var j = 0; j < rule.selectors.length; j++) {
                         var selector = rule.selectors[j];
-                        var newSelector = selector.replace(/(^|,|\s)(\w+)/g, function(str, p1, p2, offset, s) {
+                        var newSelector = selector.replace(/(^|,|\s)(#?\w+)/g, function(str, p1, p2, offset, s) {
                             return p1+'*[_tag="'+p2+'"]';
                         });
                         convertedSelectors.push(newSelector);
