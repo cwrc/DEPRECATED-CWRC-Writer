@@ -666,7 +666,7 @@ return function(writer) {
         var root = $(w.root+', '+w.root.toLowerCase(), doc)[0];
 
         if (root != null) {
-            var editorString = converter.buildEditorString(root);
+            var editorString = converter.buildEditorString(root, !w.isReadOnly);
             w.editor.setContent(editorString, {format: 'raw'}); // format is raw to prevent html parser and serializer from messing up whitespace
 
             insertEntities();
