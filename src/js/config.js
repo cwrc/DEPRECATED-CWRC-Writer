@@ -1,4 +1,5 @@
 var require = {
+    waitSeconds: 15,
     paths: {
         'text': 'lib/require/text', // requirejs text plugin
 
